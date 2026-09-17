@@ -6,21 +6,26 @@ The project is no longer following a Builder-first integration order. The workin
 
 Status: **NOW**.
 
-### 0.1 U-Boot — audit, document, freeze
+### 0.1 U-Boot — audit complete; curate and hand off
 
 Repository: `ArthurKoba/u-boot-fullhan`.
 
-The FH8626V100 port is already a working modern open-source U-Boot implementation and is used on the target camera. Treat it as near-production, not as a new porting project.
+The FH8626V100 port is a working modern open-source U-Boot implementation already used on the target camera. The 2026-09-17 source/architecture audit found no missing capability required by the currently exercised OpenIPC boot/recovery/update path.
 
-Current work is to:
+The remaining work is contribution curation rather than feature development:
 
-- verify the current FH8626V100 branch against the actual operational needs of OpenIPC;
-- distinguish required boot/recovery/update features from optional vendor/development commands;
-- audit the port against current U-Boot/OpenIPC layout and contribution conventions;
-- document intentionally omitted functionality when it is not required;
-- change working code only for a concrete defect, missing required capability or contribution-quality issue.
+- preserve the hardware-working behavior and the strict Fullhan ROM size contract;
+- make the ANJIA AJL33PQ0866 board-specific boundary explicit instead of presenting the current artifact as universal FH8626V100;
+- fold the final `ethaddr` WIP fix into a clean logical commit;
+- keep generic DesignWare prerequisites separate/reviewable from Fullhan-specific quirks;
+- document the Boot ROM container reconstruction provenance clearly;
+- run current U-Boot contribution/style/checkpatch gates over the curated series;
+- ask OpenIPC maintainers which U-Boot repository ownership they want before publishing an organization-level source/artifact layout;
+- integrate the resulting board-specific boot artifact into OpenIPC Firmware image assembly with the FH8626-specific NOR offsets.
 
-A future OpenIPC-owned general U-Boot fork/repository strategy is a separate long-term organizational question and is not a blocker for this camera.
+Detailed findings are in `docs/hardware/uboot-port.md`.
+
+A future broader OpenIPC-owned Fullhan U-Boot repository/fork strategy can grow from this work but is not a blocker for the camera.
 
 ### 0.2 Linux/kernel — audit and upstream reconciliation
 
