@@ -4,6 +4,8 @@ This document records the currently observed FH8626V100 working refs and the own
 
 Checked: `2026-09-17`.
 
+Before using any ownership rule or preparing work for OpenIPC, read `openipc-upstream-rules.md` and re-open the relevant live upstream sources linked there. This file records project-specific refs and sequencing; `openipc-upstream-rules.md` records the external OpenIPC rules that can change independently of this project. Upstream repository-local instructions override cached summaries.
+
 ## Current observed refs
 
 ### U-Boot
@@ -16,7 +18,7 @@ Checked: `2026-09-17`.
 
 The branch is a modern upstream-U-Boot-based FH8626V100 port and is already hardware-used. Its current job is audit/freeze and contribution cleanup, not reimplementation.
 
-There is no requirement in this project that an OpenIPC-owned Fullhan U-Boot repository already exist before this camera can use the working port. A future OpenIPC U-Boot repository/fork strategy is a separate organizational task.
+OpenIPC currently uses multiple SoC/family-specific U-Boot repositories rather than one universal source repository. The future upstream destination for FH8626V100 must therefore be rechecked with the live OpenIPC organization/rules when contribution work begins; do not assume an old organizational layout.
 
 ### Linux/kernel
 
@@ -27,6 +29,8 @@ There is no requirement in this project that an OpenIPC-owned Fullhan U-Boot rep
 - FH8626 series: two commits
 
 The operator reports that FH8626V100 kernel support has already been submitted to upstream OpenIPC. Before changing or curating this branch, locate the exact upstream pull request and verify its current head, status, review comments and relation to the local branch.
+
+As checked on 2026-09-17, the public `OpenIPC/linux` branch table does not yet list FH8626V100, so local branch existence must not be confused with completed upstream integration.
 
 ### Divinus
 
@@ -63,35 +67,40 @@ Future Builder work must start by reconciling against the then-current upstream 
 
 ## Ownership routing
 
-The current OpenIPC repository rules and this project's architecture imply the following destination table:
+The current OpenIPC repository rules and this project's architecture imply the following destination table. Revalidate the OpenIPC side against `openipc-upstream-rules.md` before acting on it.
 
 | Change/artifact | Owning repository |
 |---|---|
 | Camera-level hardware/media facts, evidence boundaries, target contracts | `anjia-ajl33pq0866-fh8626v100-reverse` |
-| Kernel source, platform support, kernel patches | `openipc-linux` |
-| Divinus HAL/media/transport implementation | `openipc-divinus` |
+| Kernel source, platform support, kernel patches | `OpenIPC/linux` contribution path |
+| Kernel configuration selected by the OpenIPC image build | `OpenIPC/firmware` where appropriate |
+| Divinus HAL/media/transport implementation | Divinus owning repository |
 | Majestic implementation bugs/features | Majestic owning repository/maintainers |
-| Shared SoC-family packages, load scripts, runtime integration, rootfs infrastructure | `openipc-firmware` |
-| One specific retail camera/device profile and per-device deltas | `openipc-builder` |
+| Shared SoC-family packages, load scripts, runtime integration, rootfs infrastructure | `OpenIPC/firmware` |
+| One specific retail camera/device profile and per-device deltas | `OpenIPC/builder` |
+| Probing/bring-up tooling intended for OpenIPC | `OpenIPC/ipctool` where appropriate |
+| FH8626 U-Boot source | `ArthurKoba/u-boot-fullhan` until upstream ownership is explicitly chosen |
 | Mutable reverse-analysis state | canonical Ghidra MCP project |
 | Heavy/unique primary evidence | project Google Drive evidence store |
 
-Firmware's own current rules explicitly route kernel patches to `OpenIPC/linux` and support for one retail camera model to `OpenIPC/builder`. Builder's current rules describe it as a thin per-device overlay and state that reusable/common code belongs upstream in Firmware or the component repository that owns it.
+Firmware's current rules explicitly route kernel patches to `OpenIPC/linux` and support for one retail camera model to `OpenIPC/builder`. Builder's current rules describe it as a thin per-device overlay and state that reusable/common code belongs in Firmware or the component repository that owns it. These are externally maintained rules and must be refreshed before contribution work.
 
 ## Reconciliation method
 
 For each repository:
 
-1. inspect the current repository and current upstream/base before editing;
-2. identify the preserved FH8626 state and distinguish hardware-proven behavior from source-only/WIP work;
-3. compare it against current camera contracts in this repository;
-4. classify every changed file by owning repository before moving/deleting anything;
-5. preserve unique evidence and working behavior even when current placement is wrong;
-6. remove generated binaries, debug scaffolding and obsolete experiments only after their role/provenance is understood;
-7. rebuild accepted changes on a clean working branch from the verified target base;
-8. group work into coherent commits owned by that repository;
-9. build/test at the appropriate evidence level;
-10. leave final pull-request creation to the repository owner.
+1. read `openipc-upstream-rules.md` and refresh the relevant live upstream sources;
+2. inspect the current repository and current upstream/base before editing;
+3. identify the preserved FH8626 state and distinguish hardware-proven behavior from source-only/WIP work;
+4. compare it against current camera contracts in this repository;
+5. classify every changed file by owning repository before moving/deleting anything;
+6. preserve unique evidence and working behavior even when current placement is wrong;
+7. remove generated binaries, debug scaffolding and obsolete experiments only after their role/provenance is understood;
+8. rebuild accepted changes on a clean working branch from the verified target base;
+9. group work into coherent commits owned by that repository;
+10. build/test at the appropriate evidence level;
+11. re-read current contribution/PR gates before declaring the series upstream-ready;
+12. leave final pull-request creation to the repository owner.
 
 ## Active order
 
