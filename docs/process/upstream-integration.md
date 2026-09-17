@@ -58,16 +58,20 @@ Detailed technical state: `docs/hardware/uboot-port.md`.
 ### Linux/kernel
 
 - repository: `ArthurKoba/openipc-linux`
-- branch: `fullhan-fh8626v100`
-- observed tip: `ebf5d776c748edbd58c1aaf8be9d5b2639a16834`
-- parent lineage used by the FH8626 series: `fullhan-fh8852v200`
-- FH8626 series: two commits
+- verified base: `fullhan-fh8852v200@ee1ef844294bfa1ff15b2f0522d35c987a16a220`
+- PR-facing/integration branch: `fullhan-fh8626v100@0dfafa643770d78389e444c03f46f1711662eda6`
+- isolated MTD topic: `fix/fh8626v100-openipc-mtd-layout@28a923a9d9598a9a4e2c6c0ee4b2eee26698731e`
+- reconstruction workspace: `rework/fh8626v100-clean-series@761eb23213dac9f9a5e7df4fe103842a077580d6`
 
-The operator reports that FH8626V100 kernel support has already been submitted to upstream OpenIPC. Before changing or curating this branch, locate the exact upstream pull request and verify its current head, status, review comments and relation to the local branch.
+The previous `ebf5d776...` locator is stale after identity rewrite/repoint. The live integration branch is `0dfafa64...`.
 
-As checked on 2026-09-17, the public `OpenIPC/linux` branch table does not yet list FH8626V100, so local branch existence must not be confused with completed upstream integration.
+The two-commit Linux migration is being reconstructed into a subsystem-oriented series. Findings include the MTD mismatch, mandatory Fullhan boardconfig copy input, board-profile pin selection, neutral one-bit SD0 Kconfig naming, PWM v2 backend selection, non-DT AXI-DMA platform registration, independently reviewable clock/pinctrl/PWM/RTC/DWC2 fixes, JL1101 support, MAC propagation and checksum-feature correction. Hardware-tested static RMII behavior is deliberately preserved.
 
-The first kernel reconciliation output must include the exact final `uImage` size because current `fh8626v100-mainline` assumes the standard OpenIPC 2 MiB kernel partition.
+The historical accepted `uImage` was 1,583,456 bytes and proves the tested tree fit 2 MiB. The reconstruction is not yet promoted to build/hardware acceptance.
+
+As rechecked on 2026-09-18, the public OpenIPC/linux branch list still does not show FH8626V100. The operator reports an upstream submission exists, but the exact PR number/status is not independently verified through the currently accessible API.
+
+Detailed audit: `docs/process/fh8626-kernel-series-audit.md`.
 
 ### Divinus
 
@@ -83,7 +87,7 @@ The preservation commit contains the newest native-HAL/media/ISP/audio/transport
 
 - repository: `ArthurKoba/openipc-firmware`
 - branch: `fh8626v100-platform`
-- observed tip: `6db66c53971fda8ba733f370a965e52cd53fb61b`
+- observed tip: `f4bf49da6ef355c9e733e00d774efe403513b1d4`
 - upstream/base at preservation time: repository `master`
 - preservation shape: one WIP commit
 

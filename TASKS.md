@@ -51,10 +51,19 @@ Detailed audit and migration contract: `docs/hardware/uboot-port.md`.
 
 ## P0 — kernel reconciliation
 
-20. Audit `ArthurKoba/openipc-linux` branch `fullhan-fh8626v100` against the accepted platform contracts in this repository.
-21. Locate and verify the exact upstream FH8626V100 kernel pull request, its current state, comments and any drift from the local branch.
-22. Review board/kernel configuration and built-in/module choices. Keep open kernel/platform support distinct from proprietary Fullhan media modules.
-23. Build and measure the final OpenIPC `uImage` as the immediate U-Boot/layout gate; avoid changing kernel functionality unless a defect, upstream review issue, regression or justified size/config cleanup is found.
+20. **Static platform/history audit is substantially complete.** Current authority: `docs/process/fh8626-kernel-series-audit.md`.
+21. Keep `fullhan-fh8626v100@0dfafa643770d78389e444c03f46f1711662eda6` read-only while cleanup proceeds.
+22. Finish the remaining static source/config pass for required build inputs and Kconfig/backend relationships.
+23. Reconstruct a final no-fixup Linux branch from `fullhan-fh8852v200@ee1ef844294bfa1ff15b2f0522d35c987a16a220` using the intended ten-commit structure in the audit.
+24. Platform commit from the start must contain: required FH8626 boardconfig, boardconfig-driven pin selection, standard OpenIPC MTD layout, RTC opt-in, neutral one-bit SD0 option, and legacy/AXI DMA registration behind their Kconfig symbols.
+25. Preserve the hardware-tested FH8626 static RMII policy; keep JL1101, MAC and checksum changes independently reviewable.
+26. Do not carry the unrelated SADC string-copy cleanup or fork-local workflow/audit metadata into Linux.
+27. Update the Firmware AJL kernel fragment to select `CONFIG_FH8626V100_SD0_1BIT=y` when the final Linux symbol is fixed.
+28. Locate/verify the exact upstream OpenIPC FH8626V100 pull request if accessible. Current inspection does not independently identify it; do not invent its number/status.
+29. Owner-side validation gate: export final patches, run kernel contribution checks, build the exact OpenIPC image and record final `uImage` size. Historical hardware-accepted size was 1,583,456 bytes but does not validate the reconstructed tree.
+30. Keep the standard 2 MiB kernel partition; if the final image exceeds it, audit config/compression/built-ins first.
+31. Retest behavior-changing areas as required before promoting the reconstruction beyond `SOURCE_CONFIRMED / AUDIT`.
+32. Only after validation, perform the single owner-authorized update of PR-facing history if still required.
 
 ## P0 — firmware ownership sanitation
 

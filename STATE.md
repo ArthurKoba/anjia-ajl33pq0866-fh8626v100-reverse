@@ -2,7 +2,7 @@
 
 Status: `ACTIVE / UBOOT_OPENIPC_NATIVE_SOURCE_READY / KERNEL_GATE / DIVINUS_REFERENCE / MAJESTIC_TARGET`.
 
-Checked: `2026-09-17`.
+Checked: `2026-09-18`.
 
 ## Authority
 
@@ -89,13 +89,23 @@ Detailed findings: `docs/hardware/uboot-port.md`.
 
 Repository: `ArthurKoba/openipc-linux`.
 
-- branch: `fullhan-fh8626v100`
-- observed tip: `ebf5d776c748edbd58c1aaf8be9d5b2639a16834`
-- current FH8626V100 series: two commits over the `fullhan-fh8852v200` lineage
+- PR-facing/integration branch: `fullhan-fh8626v100`
+- live observed tip: `0dfafa643770d78389e444c03f46f1711662eda6`
+- verified parent lineage: `fullhan-fh8852v200@ee1ef844294bfa1ff15b2f0522d35c987a16a220`
+- isolated OpenIPC MTD fix: `fix/fh8626v100-openipc-mtd-layout@28a923a9d9598a9a4e2c6c0ee4b2eee26698731e`
+- reconstruction workspace: `rework/fh8626v100-clean-series@761eb23213dac9f9a5e7df4fe103842a077580d6`
 
-The exercised platform support is hardware-proven across boot, Ethernet, storage, watchdog, GPIO/pinmux, PWM, USB and the board paths documented in this repository. The operator reports that FH8626V100 kernel support has already been submitted upstream; the exact upstream PR/status must be independently verified before deciding whether further kernel work is required.
+The former `ebf5d776c748edbd58c1aaf8be9d5b2639a16834` locator is stale after branch identity rewrite/repoint and is not the current integration tip.
 
-The immediate kernel task is also the final OpenIPC layout gate: build the intended OpenIPC `uImage`, measure it exactly, and make the standard 2 MiB partition the default target. A historical 3 MiB reservation is not a reason to retain a custom partition map.
+The exercised historical platform remains `HARDWARE_PASS`. Its accepted `uImage` was 1,583,456 bytes, so the tested tree fit the standard 2 MiB kernel partition.
+
+The current reconstruction is `SOURCE_CONFIRMED / AUDIT`, not new hardware acceptance. It has identified and corrected the OpenIPC MTD contract, required Fullhan boardconfig input, retail-specific SD0 Kconfig naming, PWM v2 backend selection and missing non-DT AXI-DMA platform registration; generic fixes are being separated from SoC enablement while hardware-tested RMII behavior is preserved.
+
+The PR-facing branch is intentionally untouched. The final series will be rebuilt once more from the verified base, then handed to the owner for authoritative validation before any single submission-branch history update.
+
+As rechecked on 2026-09-18, the public OpenIPC/linux branch list still does not show FH8626V100. The operator reports an upstream submission exists, but the exact PR number/status has not been independently verified through the currently accessible API.
+
+Detailed audit: `docs/process/fh8626-kernel-series-audit.md`.
 
 ### Divinus
 
@@ -113,7 +123,7 @@ The tip contains the newest native-HAL/media/ISP/audio/transport migration work.
 Repository: `ArthurKoba/openipc-firmware`.
 
 - branch: `fh8626v100-platform`
-- observed tip: `6db66c53971fda8ba733f370a965e52cd53fb61b`
+- observed tip: `f4bf49da6ef355c9e733e00d774efe403513b1d4`
 - relation to its preserved base: one WIP commit
 - top commit: `WIP: preserve FH8626V100 platform integration state`
 
