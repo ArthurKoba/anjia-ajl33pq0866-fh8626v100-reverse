@@ -1,6 +1,6 @@
 # Current project state
 
-Status: `ACTIVE / MAJESTIC_FIRST / DIVINUS_REFERENCE`.
+Status: `ACTIVE / FOUNDATION_AUDIT / DIVINUS_REFERENCE / MAJESTIC_TARGET`.
 
 Checked: `2026-09-17`.
 
@@ -21,6 +21,77 @@ Checked: `2026-09-17`.
 - Stock lens selection uses GPIO4/GPIO14 and coordinates switching with the media pipeline.
 - `/dev/fh_pwm` PTZ control is hardware-proven on the exercised board after correcting swapped motor connectors.
 
+## Current repository checkpoints
+
+These refs are working-state locators, not automatic upstream bases or contribution sets.
+
+### U-Boot
+
+Repository: `ArthurKoba/u-boot-fullhan`.
+
+- branch: `fh8626v100-mainline`
+- observed tip: `ae63365e10b38e5b9ed3bd5173a0ed3e5c8f9996`
+- relation to repository `main`: five FH8626V100 commits ahead
+- top preservation commit: `WIP: preserve latest FH8626V100 U-Boot state`
+
+The port is already hardware-used and near-production. It is based on modern open-source U-Boot rather than copied vendor U-Boot code. Current work is an OpenIPC/U-Boot feature and contribution-quality audit, not a new port.
+
+### Linux/kernel
+
+Repository: `ArthurKoba/openipc-linux`.
+
+- branch: `fullhan-fh8626v100`
+- observed tip: `ebf5d776c748edbd58c1aaf8be9d5b2639a16834`
+- current FH8626V100 series: two commits over the `fullhan-fh8852v200` lineage
+
+The exercised platform support is hardware-proven across boot, Ethernet, storage, watchdog, GPIO/pinmux, PWM, USB and the board paths documented in this repository. The operator reports that FH8626V100 kernel support has already been submitted upstream; the exact upstream PR/status must be independently verified before deciding whether any further kernel work is required.
+
+### Divinus
+
+Repository: `ArthurKoba/openipc-divinus`.
+
+- branch: `fh8626v100-canonical`
+- observed tip: `1e624bd5aca97ba772413d2b00a10314d1db039f`
+- base integration commit: `8d400262898e8e82df6171fde7e8911ec7930249` (`Add generic FH8626V100 platform support`)
+- top preservation commit: `WIP: preserve FH8626V100 native HAL migration state`
+
+The tip contains the newest native-HAL/media/ISP/audio/transport migration work. That final WIP state has not yet completed physical-camera acceptance. The next Divinus task is to build the exact latest candidate, deploy it to the camera, validate it end-to-end, and repair only reproduced failures before curating an upstream-ready series.
+
+### Firmware
+
+Repository: `ArthurKoba/openipc-firmware`.
+
+- branch: `fh8626v100-platform`
+- observed tip: `6db66c53971fda8ba733f370a965e52cd53fb61b`
+- relation to its preserved base: one WIP commit
+- top commit: `WIP: preserve FH8626V100 platform integration state`
+
+This branch is a preservation snapshot, not an accepted repository layout. The snapshot currently mixes kernel patches, board-specific support, a large Divinus patch, proprietary Fullhan modules/libraries, camera media-owner/ISP source and host tests. Every retained item must be classified by ownership before cleanup or upstream preparation.
+
+### Builder
+
+Repository: `ArthurKoba/openipc-builder`.
+
+- branch: `fh8626v100-anjia-ajl33pq0866`
+- observed tip: `bcf8658e4aa612ee9afda8c28d52d8ad1674e2f1`
+- stable pre-Majestic checkpoint: `5603a701c8812aebc705c42e933ebae48aed805f`
+- Divinus/device-profile predecessor: `c7577cb3f70b4531e9ec9e686c5275bf5f170c3d`
+- Majestic experiment: the single commit `bcf8658e...` on top of `5603a701...`
+
+The pre-Majestic checkpoint is the reference device-integration baseline while Divinus is completed. The later Majestic commit is an isolated experiment and must not silently become the Builder baseline. Builder itself is currently behind/diverged from newer upstream `master`, so any later Builder work must begin by verifying the current upstream base rather than extending the old branch in place.
+
+## Ownership boundary discovered during reconciliation
+
+The current OpenIPC repository rules reinforce the intended split:
+
+- kernel source and kernel patches belong in `openipc-linux`;
+- support specific to one retail camera belongs in `openipc-builder`;
+- Divinus implementation belongs in `openipc-divinus`;
+- genuinely shared firmware packages, SoC-family drivers/load scripts and rootfs integration belong in `openipc-firmware`;
+- camera-level contracts and evidence remain here.
+
+Existing WIP placement is evidence of historical integration work, not proof of correct ownership.
+
 ## Sensor / ISP / media
 
 Durable camera contracts are documented under `docs/sensor/`, `docs/isp/`, `docs/media/` and `docs/architecture/`.
@@ -29,33 +100,23 @@ Broad reverse of the exercised stock path is not an active objective. New revers
 
 Static/source/reverse coverage is not equivalent to target runtime acceptance. Hardware acceptance remains explicitly labeled.
 
-## Majestic
-
-Majestic is the preferred product path.
-
-A recent FH8852-family Majestic build can start on FH8626V100 with the retained proprietary Fullhan stack. The acceptance boundary is to pin a reproducible candidate and validate:
-
-1. VI startup;
-2. VENC startup;
-3. sustained RTSP;
-4. ISP/color/exposure/day-night behavior;
-5. audio behavior.
-
-Process startup alone is not media acceptance.
-
 ## Divinus
 
-Divinus remains an open reference and diagnostic implementation.
+Divinus is the open reference path that must be closed before the Majestic product transition. Existing FH8626 source is substantial, but the latest native migration must still be tested on the physical camera before it can be called accepted.
 
-Native FH8626 work reached the camera but is not the preferred product baseline. Known reference-path mismatches include ISP runtime-bank/statistics handling, frontend address-domain semantics, frame-wait behavior and RTSP fd/parser ownership.
+## Majestic
+
+Majestic remains the intended product path after the Divinus reference implementation is closed.
+
+An FH8852-family Majestic experiment exists in the preserved Builder branch and process startup has been observed historically, but that is not a current product baseline. Majestic acceptance still requires a pinned reproducible candidate followed by VI -> VENC -> sustained RTSP -> ISP -> audio/control validation.
 
 ## Audio
 
-RTX microphone and speaker paths are hardware-proven on this board. Further audio work should be driven by concrete capture, playback or two-way-audio integration requirements.
+RTX microphone and speaker paths are hardware-proven on this board. Product-streamer integration remains to be validated in the selected final path.
 
-## PTZ
+## PTZ and illumination
 
-The accepted low-level backend is `/dev/fh_pwm`. Remaining work is higher-level calibration and integration/autotracking rather than rediscovery of the motor backend.
+The accepted low-level PTZ backend is `/dev/fh_pwm`. Illumination/IR-cut board contracts are already documented. Remaining work is service/streamer/product integration and calibration, not rediscovery of the electrical backend.
 
 ## Curated source
 
@@ -63,7 +124,7 @@ Reusable camera-specific engineering components are retained under:
 
 `source/fh8626v100/components/`
 
-The tree contains independent board/control/diagnostic/media/platform/sensor components plus standalone media contracts and host tests. It is intentionally not a monolithic owner/application build. Production changes belong in the OpenIPC repository that owns each component.
+They are implementation references and contracts, not a license to duplicate the same source into Firmware, Builder and Divinus. Production code belongs in the repository that owns the component.
 
 ## Evidence
 
@@ -74,6 +135,12 @@ The retained GC1054 vendor sensor binary is external evidence:
 
 Firmware, dumps and other heavy primary evidence remain external and SHA-addressed.
 
-## Next engineering phase
+## Immediate engineering sequence
 
-Prepare and reconcile the related OpenIPC implementation repositories against the camera contracts preserved here. Keep camera-level authority in this repository and move implementation changes into the repository that owns each component.
+1. audit/freeze U-Boot;
+2. audit/reconcile kernel and exact upstream PR state;
+3. classify the mixed Firmware preservation snapshot by repository ownership;
+4. build and target-test the latest Divinus candidate until its FH8626 path is complete;
+5. transition the product path to Majestic;
+6. integrate shared runtime pieces into Firmware;
+7. rebuild the final thin Builder device profile last.
