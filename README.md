@@ -67,6 +67,7 @@ Exact engineering refs are recorded in `docs/process/upstream-integration.md`.
 4. `ROADMAP.md` — staged project direction.
 5. `docs/README.md` — subsystem documentation map.
 6. `docs/architecture/reverse-analysis.md` — Ghidra MCP reverse boundary.
-7. `evidence/README.md` and `evidence/MANIFEST.tsv` — external evidence rules and index.
+7. `docs/process/openipc-upstream-rules.md` — cached OpenIPC ownership/contribution rules, mandatory live-source links and refresh procedure before related-repository work.
+8. `evidence/README.md` and `evidence/MANIFEST.tsv` — external evidence rules and index.
 
 Agents must not create pull requests. See `AGENTS.md`.
