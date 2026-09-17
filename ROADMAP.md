@@ -6,32 +6,47 @@ The project is no longer following a Builder-first integration order. The workin
 
 Status: **NOW**.
 
-### 0.1 U-Boot — audit complete; curate and hand off
+### 0.1 U-Boot — migrate from stock-compatible layout to OpenIPC-native layout, then curate
 
 Repository: `ArthurKoba/u-boot-fullhan`.
 
-The FH8626V100 port is a working modern open-source U-Boot implementation already used on the target camera. The 2026-09-17 source/architecture audit found no missing capability required by the currently exercised OpenIPC boot/recovery/update path.
+The FH8626V100 port is a working modern open-source U-Boot implementation already used on the target camera. The 2026-09-17 source/architecture audit found no missing capability required by the already exercised boot/recovery path.
 
-The remaining work is contribution curation rather than feature development:
+The currently proven partitioning is a stock-compatible migration/reference state, not the final OpenIPC product layout.
 
-- preserve the hardware-working behavior and the strict Fullhan ROM size contract;
-- make the ANJIA AJL33PQ0866 board-specific boundary explicit instead of presenting the current artifact as universal FH8626V100;
+The target is to converge on the current OpenIPC 8 MiB NOR geometry where technically possible:
+
+`256k(boot),64k(env),2048k(kernel),5120k(rootfs),-(rootfs_data)`
+
+FH8626 can potentially match the first 320 KiB exactly by using:
+
+- `0x00000..0x0ffff` — Fullhan Boot ROM container / DDR parameters;
+- `0x10000..0x3ffff` — 192 KiB U-Boot slot;
+- `0x40000..0x4ffff` — OpenIPC environment;
+- `0x50000` — kernel start, already matching OpenIPC.
+
+Current work is to:
+
+- build and measure the final intended FH8626 OpenIPC kernel image;
+- use the standard OpenIPC 2 MiB kernel / `0x250000` rootfs boundary if the final kernel fits;
+- if it does not fit, first audit kernel config/compression/size before accepting a special partition map;
+- change the reconstructed Fullhan U-Boot descriptor from flash offset `0x20000` to `0x10000` and move environment storage to `0x40000` for the OpenIPC-native target;
+- keep the already-proven stock-compatible target/state as a recovery and migration reference rather than forcing its partitioning into the product design;
+- hardware-test the new descriptor/layout on a recoverable board before calling it accepted;
+- make the ANJIA AJL33PQ0866 board-specific boundary explicit instead of presenting the artifact as universal FH8626V100;
 - fold the final `ethaddr` WIP fix into a clean logical commit;
 - keep generic DesignWare prerequisites separate/reviewable from Fullhan-specific quirks;
 - document the Boot ROM container reconstruction provenance clearly;
 - run current U-Boot contribution/style/checkpatch gates over the curated series;
-- ask OpenIPC maintainers which U-Boot repository ownership they want before publishing an organization-level source/artifact layout;
-- integrate the resulting board-specific boot artifact into OpenIPC Firmware image assembly with the FH8626-specific NOR offsets.
+- ask OpenIPC maintainers which U-Boot repository ownership they want before publishing organization-level source/artifacts.
 
-Detailed findings are in `docs/hardware/uboot-port.md`.
-
-A future broader OpenIPC-owned Fullhan U-Boot repository/fork strategy can grow from this work but is not a blocker for the camera.
+Detailed findings and migration design are in `docs/hardware/uboot-port.md`.
 
 ### 0.2 Linux/kernel — audit and upstream reconciliation
 
 Repository: `ArthurKoba/openipc-linux`.
 
-FH8626V100 kernel/platform support is already hardware-proven across the exercised board platform. The default action is therefore review and reconciliation rather than further feature development.
+FH8626V100 kernel/platform support is already hardware-proven across the exercised board platform. The default action is review and reconciliation rather than feature development.
 
 Current work is to:
 
@@ -39,13 +54,14 @@ Current work is to:
 - verify the exact upstream pull-request state and reconcile any review comments or drift;
 - audit configuration, built-in/module choices and OpenIPC conventions;
 - explicitly classify retained proprietary Fullhan media modules separately from open kernel/platform support;
-- change kernel code only when a defect, upstream review issue or real platform regression requires it.
+- measure the final target `uImage` because it determines whether standard OpenIPC 8 MiB partitioning is viable;
+- change kernel code only when a defect, upstream review issue, regression or justified config/size cleanup requires it.
 
 ### 0.3 Firmware — ownership and placement audit
 
 Repository: `ArthurKoba/openipc-firmware`.
 
-The current FH8626V100 firmware branch is a preservation snapshot, not an accepted final architecture. It currently mixes several ownership domains and must be classified before any cleanup is performed.
+The current FH8626V100 firmware branch is a preservation snapshot, not an accepted final architecture. It currently mixes several ownership domains and must be classified before cleanup.
 
 Routing rule:
 
@@ -54,6 +70,8 @@ Routing rule:
 - Divinus implementation -> `openipc-divinus`;
 - camera-level hardware/media contracts -> this repository;
 - genuinely shared SoC-family runtime packages, load scripts and legally/provenance-acceptable vendor runtime dependencies -> `openipc-firmware`.
+
+The historical FH8626 `3 MiB kernel / rootfs at 0x450000` rule is not a permanent requirement. If the final kernel fits the normal 2 MiB OpenIPC partition, drop the special layout and use the standard image assembly path.
 
 Do not delete or move material merely because its present location is wrong. First identify its current owner, provenance and active dependency, then curate it into the repository that owns it.
 
