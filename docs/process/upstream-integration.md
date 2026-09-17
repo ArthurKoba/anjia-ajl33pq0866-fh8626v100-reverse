@@ -2,7 +2,7 @@
 
 This document records the currently observed FH8626V100 working refs and the ownership rules to use when reconciling them. The refs are preservation/checkpoint locators, not automatic future bases or ready-to-submit contribution series.
 
-Checked: `2026-09-17`.
+Checked: `2026-09-18`.
 
 Before using any ownership rule or preparing work for OpenIPC, read `openipc-upstream-rules.md` and re-open the relevant live upstream sources linked there. This file records project-specific refs and sequencing; `openipc-upstream-rules.md` records external OpenIPC rules that can change independently. Repository-local upstream instructions override cached summaries.
 
