@@ -1,41 +1,108 @@
 # Related repository integration
 
-This document records known FH8626V100 engineering refs that can be used as starting locators when the related OpenIPC repositories are reconciled.
+This document records the currently observed FH8626V100 working refs and the ownership rules to use when reconciling them. The refs are preservation/checkpoint locators, not automatic future bases or ready-to-submit contribution series.
 
-The refs are not assumed to be the current integration bases. Verify each remote repository when that phase begins.
+Checked: `2026-09-17`.
 
-## Known refs
+## Current observed refs
 
-- `ArthurKoba/openipc-builder`
-  - branch `fh8626v100-anjia-ajl33pq0866`
-  - known engineering tip `bcf8658e4aa612ee9afda8c28d52d8ad1674e2f1`
-  - earlier checkpoint `5603a701c8812aebc705c42e933ebae48aed805f`
-- `ArthurKoba/openipc-divinus`
-  - branch `fh8626v100-canonical`
-  - known engineering tip `1e624bd5aca97ba772413d2b00a10314d1db039f`
-- `ArthurKoba/openipc-firmware`
-  - branch `fh8626v100-platform`
-  - known engineering tip `6db66c53971fda8ba733f370a965e52cd53fb61b`
-- `ArthurKoba/openipc-linux`
-  - branch `fullhan-fh8626v100`
-  - known engineering tip `ebf5d776c748edbd58c1aaf8be9d5b2639a16834`
-- `ArthurKoba/u-boot-fullhan`
-  - branch `fh8626v100-mainline`
-  - known engineering tip `ae63365e10b38e5b9ed3bd5173a0ed3e5c8f9996`
+### U-Boot
 
-## Integration rule
+- repository: `ArthurKoba/u-boot-fullhan`
+- branch: `fh8626v100-mainline`
+- observed tip: `ae63365e10b38e5b9ed3bd5173a0ed3e5c8f9996`
+- repository `main`: `cc8c034e78eba6b2a3845783889b80753bb1af1e`
+- relation: five FH8626V100 commits ahead of `main`
 
-For each component repository:
+The branch is a modern upstream-U-Boot-based FH8626V100 port and is already hardware-used. Its current job is audit/freeze and contribution cleanup, not reimplementation.
 
-1. inspect the current repository/upstream base;
-2. compare existing FH8626 work against the camera contracts in this repository;
-3. retain only changes that remain technically relevant;
-4. remove generated binaries, debug scaffolding and obsolete experiments from the contribution set;
-5. rebuild accepted changes on a clean working branch from the verified target base;
-6. group work into coherent, reviewable commits;
-7. build/test the curated result at the appropriate evidence level;
-8. leave final PR creation to the repository owner.
+There is no requirement in this project that an OpenIPC-owned Fullhan U-Boot repository already exist before this camera can use the working port. A future OpenIPC U-Boot repository/fork strategy is a separate organizational task.
 
-## Authority
+### Linux/kernel
 
-This camera repository owns camera-level hardware/media facts. Component repositories own their implementation code. If integration work reveals a new camera contract, update the relevant camera documentation here and then implement against that contract in the component repository.
+- repository: `ArthurKoba/openipc-linux`
+- branch: `fullhan-fh8626v100`
+- observed tip: `ebf5d776c748edbd58c1aaf8be9d5b2639a16834`
+- parent lineage used by the FH8626 series: `fullhan-fh8852v200`
+- FH8626 series: two commits
+
+The operator reports that FH8626V100 kernel support has already been submitted to upstream OpenIPC. Before changing or curating this branch, locate the exact upstream pull request and verify its current head, status, review comments and relation to the local branch.
+
+### Divinus
+
+- repository: `ArthurKoba/openipc-divinus`
+- branch: `fh8626v100-canonical`
+- observed tip: `1e624bd5aca97ba772413d2b00a10314d1db039f`
+- generic FH8626 integration commit: `8d400262898e8e82df6171fde7e8911ec7930249`
+- preservation commit: `1e624bd5aca97ba772413d2b00a10314d1db039f` (`WIP: preserve FH8626V100 native HAL migration state`)
+
+The preservation commit contains the newest native-HAL/media/ISP/audio/transport work. It is not yet hardware acceptance. Build and target-test this exact latest source before deciding what to keep or change.
+
+### Firmware
+
+- repository: `ArthurKoba/openipc-firmware`
+- branch: `fh8626v100-platform`
+- observed tip: `6db66c53971fda8ba733f370a965e52cd53fb61b`
+- upstream/base at preservation time: repository `master`
+- preservation shape: one WIP commit
+
+The WIP is intentionally treated as a recovery snapshot. It currently includes multiple ownership domains in one commit: kernel patches/config, board-specific support, Divinus patching, proprietary Fullhan modules/libraries, and a large camera/media source/test tree. Do not use its current directory placement as architectural authority.
+
+### Builder
+
+- repository: `ArthurKoba/openipc-builder`
+- branch: `fh8626v100-anjia-ajl33pq0866`
+- observed tip: `bcf8658e4aa612ee9afda8c28d52d8ad1674e2f1`
+- stable pre-Majestic checkpoint: `5603a701c8812aebc705c42e933ebae48aed805f`
+- preceding Divinus/device integration commit: `c7577cb3f70b4531e9ec9e686c5275bf5f170c3d`
+- current upstream `master` has advanced beyond the preserved branch; the branch is diverged
+
+`5603a701...` is the deliberate rollback/reference point before the Majestic experiment. The next commit, `bcf8658e...`, adds the preserved Majestic experiment. Do not combine these two states when reasoning about the Divinus baseline.
+
+Future Builder work must start by reconciling against the then-current upstream `master`. These preserved SHAs are evidence/reference points, not future contribution bases.
+
+## Ownership routing
+
+The current OpenIPC repository rules and this project's architecture imply the following destination table:
+
+| Change/artifact | Owning repository |
+|---|---|
+| Camera-level hardware/media facts, evidence boundaries, target contracts | `anjia-ajl33pq0866-fh8626v100-reverse` |
+| Kernel source, platform support, kernel patches | `openipc-linux` |
+| Divinus HAL/media/transport implementation | `openipc-divinus` |
+| Majestic implementation bugs/features | Majestic owning repository/maintainers |
+| Shared SoC-family packages, load scripts, runtime integration, rootfs infrastructure | `openipc-firmware` |
+| One specific retail camera/device profile and per-device deltas | `openipc-builder` |
+| Mutable reverse-analysis state | canonical Ghidra MCP project |
+| Heavy/unique primary evidence | project Google Drive evidence store |
+
+Firmware's own current rules explicitly route kernel patches to `OpenIPC/linux` and support for one retail camera model to `OpenIPC/builder`. Builder's current rules describe it as a thin per-device overlay and state that reusable/common code belongs upstream in Firmware or the component repository that owns it.
+
+## Reconciliation method
+
+For each repository:
+
+1. inspect the current repository and current upstream/base before editing;
+2. identify the preserved FH8626 state and distinguish hardware-proven behavior from source-only/WIP work;
+3. compare it against current camera contracts in this repository;
+4. classify every changed file by owning repository before moving/deleting anything;
+5. preserve unique evidence and working behavior even when current placement is wrong;
+6. remove generated binaries, debug scaffolding and obsolete experiments only after their role/provenance is understood;
+7. rebuild accepted changes on a clean working branch from the verified target base;
+8. group work into coherent commits owned by that repository;
+9. build/test at the appropriate evidence level;
+10. leave final pull-request creation to the repository owner.
+
+## Active order
+
+The current execution order is:
+
+1. U-Boot audit/freeze;
+2. Linux/kernel audit and upstream reconciliation;
+3. Firmware ownership/placement audit;
+4. latest Divinus build + physical-camera acceptance and completion;
+5. Majestic product transition;
+6. shared Firmware product integration;
+7. Builder final device profile.
+
+This order intentionally keeps Builder last and prevents the old preservation snapshots from dictating the final architecture.
