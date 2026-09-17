@@ -34,13 +34,17 @@ Repository: `ArthurKoba/u-boot-fullhan`.
 - relation to repository `main`: five FH8626V100 commits ahead
 - top preservation commit: `WIP: preserve latest FH8626V100 U-Boot state`
 
-The 2026-09-17 source/architecture audit found the port functionally complete for the currently exercised OpenIPC boot/recovery/update path on AJL33PQ0866. It is already hardware-used, based on modern open-source U-Boot and internally consistent with the current FH8626 Linux/Firmware NOR layout.
+The 2026-09-17 source/architecture audit found the port functionally complete for the already exercised stock-compatible boot/recovery path on AJL33PQ0866. It is hardware-used and based on modern open-source U-Boot.
 
-No bootloader feature development is currently required. Remaining U-Boot work is contribution curation: make the ANJIA board-specific boundary explicit, preserve the strict `0x2bb00` ROM envelope (the audited build has only 820 bytes of headroom), fold the `ethaddr` WIP into a clean series, document Boot ROM reconstruction provenance, run current U-Boot contribution/style gates, agree OpenIPC repository ownership/artifact naming, then integrate the FH8626-specific image offsets into Firmware assembly.
+The already-proven flash arrangement is now explicitly treated as a **migration/reference layout**, not the final product layout. The target is to converge on current OpenIPC 8 MiB NOR conventions wherever the final FH8626 kernel size permits it.
 
-The current artifact must not be described as a universal FH8626V100 bootloader; persistent compatibility with another FH8626 board requires independent DDR/bootstrap/PHY/GPIO/flash-layout validation.
+The intended native layout is `256k(boot),64k(env),2048k(kernel),5120k(rootfs),-(rootfs_data)`. FH8626 can potentially match the first 320 KiB exactly by placing the 64 KiB Fullhan Boot ROM container at `0x00000`, the 192 KiB U-Boot slot at `0x10000`, environment at `0x40000`, and kernel at the standard OpenIPC `0x50000` boundary. This descriptor/environment relocation is not yet hardware-accepted.
 
-Detailed findings: `docs/hardware/uboot-port.md`.
+The next U-Boot/layout gate is therefore to build and measure the final FH8626 OpenIPC `uImage`. If it fits 2 MiB, the project should use the standard OpenIPC 8 MiB kernel/rootfs layout rather than preserve the historical 3 MiB kernel reservation. If it does not fit, kernel config/compression/size must be reviewed before accepting a SoC-specific partition map.
+
+The current artifact must not be described as a universal FH8626V100 bootloader; persistent compatibility with another FH8626 board requires independent DDR/bootstrap/PHY/GPIO/flash validation.
+
+Detailed findings and migration design: `docs/hardware/uboot-port.md`.
 
 ### Linux/kernel
 
@@ -50,7 +54,9 @@ Repository: `ArthurKoba/openipc-linux`.
 - observed tip: `ebf5d776c748edbd58c1aaf8be9d5b2639a16834`
 - current FH8626V100 series: two commits over the `fullhan-fh8852v200` lineage
 
-The exercised platform support is hardware-proven across boot, Ethernet, storage, watchdog, GPIO/pinmux, PWM, USB and the board paths documented in this repository. The operator reports that FH8626V100 kernel support has already been submitted upstream; the exact upstream PR/status must be independently verified before deciding whether any further kernel work is required.
+The exercised platform support is hardware-proven across boot, Ethernet, storage, watchdog, GPIO/pinmux, PWM, USB and the board paths documented in this repository. The operator reports that FH8626V100 kernel support has already been submitted upstream; the exact upstream PR/status must be independently verified before deciding whether further kernel work is required.
+
+The kernel audit must also measure the final OpenIPC `uImage` because that result decides whether FH8626 can use the standard OpenIPC 2 MiB kernel partition.
 
 ### Divinus
 
@@ -74,7 +80,7 @@ Repository: `ArthurKoba/openipc-firmware`.
 
 This branch is a preservation snapshot, not an accepted repository layout. The snapshot currently mixes kernel patches, board-specific support, a large Divinus patch, proprietary Fullhan modules/libraries, camera media-owner/ISP source and host tests. Every retained item must be classified by ownership before cleanup or upstream preparation.
 
-The current FH8626 Firmware snapshot confirms the same NOR contract as U-Boot/Linux: kernel at `0x50000`, a 1 MiB `rootfs_data` region at `0x350000`, and rootfs at `0x450000`. Upstream OpenIPC's ordinary 8 MiB image assembly uses different generic offsets, so final integration needs an explicit FH8626 assembly path rather than silently reusing the common layout.
+Its historical `3 MiB kernel / 1 MiB rootfs_data / rootfs at 0x450000` arrangement is preservation evidence only. It must not be carried forward automatically. If the final curated FH8626 kernel fits the standard 2 MiB OpenIPC partition, Firmware should drop that special layout and use standard OpenIPC 8 MiB assembly boundaries.
 
 ### Builder
 
@@ -145,10 +151,11 @@ Firmware, dumps and other heavy primary evidence remain external and SHA-address
 
 ## Immediate engineering sequence
 
-1. curate the audited U-Boot port for OpenIPC handoff without changing hardware-proven behavior;
-2. audit/reconcile kernel and exact upstream PR state;
-3. classify the mixed Firmware preservation snapshot by repository ownership;
-4. build and target-test the latest Divinus candidate until its FH8626 path is complete;
-5. transition the product path to Majestic;
-6. integrate shared runtime pieces into Firmware;
-7. rebuild the final thin Builder device profile last.
+1. convert the audited U-Boot work from stock-compatible reference layout toward an OpenIPC-native boot/environment layout and measure the final kernel against the 2 MiB standard partition;
+2. hardware-test that layout and then curate the U-Boot contribution series;
+3. audit/reconcile kernel and exact upstream PR state;
+4. classify the mixed Firmware preservation snapshot by repository ownership;
+5. build and target-test the latest Divinus candidate until its FH8626 path is complete;
+6. transition the product path to Majestic;
+7. integrate shared runtime pieces into Firmware;
+8. rebuild the final thin Builder device profile last.
