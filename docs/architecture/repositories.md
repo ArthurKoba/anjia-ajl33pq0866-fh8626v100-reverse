@@ -4,15 +4,15 @@ This camera project coordinates several implementation repositories. Camera-leve
 
 | Component | Repository | Role |
 |---|---|---|
-| Camera project | `ArthurKoba/anjia-ajl33pq0866-fh8626v100-reverse` | Hardware/media contracts, target source, current state and evidence manifests |
-| Builder | `ArthurKoba/openipc-builder` | Device profile and product-image assembly |
-| Divinus | `ArthurKoba/openipc-divinus` | Open streamer/reference implementation |
-| Firmware | `ArthurKoba/openipc-firmware` | OpenIPC firmware/platform packaging |
-| Linux | `ArthurKoba/openipc-linux` | Kernel/platform changes |
-| U-Boot | `ArthurKoba/u-boot-fullhan` | FH8626 bootloader work where required |
+| Camera project | `ArthurKoba/anjia-ajl33pq0866-fh8626v100-reverse` | Hardware/media contracts, current state, camera-specific retained source and evidence manifests |
+| U-Boot | `ArthurKoba/u-boot-fullhan` | FH8626V100 open-source bootloader port and boot/recovery behavior |
+| Linux | `ArthurKoba/openipc-linux` | Kernel/platform support |
+| Divinus | `ArthurKoba/openipc-divinus` | Open streamer/reference implementation and FH8626 HAL/media integration |
+| Firmware | `ArthurKoba/openipc-firmware` | Shared OpenIPC Buildroot external tree, SoC-family packages/runtime integration and image infrastructure |
+| Builder | `ArthurKoba/openipc-builder` | Thin per-device overlay/profile and final product-image assembly for a named camera |
 | Ghidra MCP infrastructure | `ArthurKoba/ghidra-mcp` | Reverse-analysis service deployment, not camera-level findings |
 
-Known FH8626 engineering refs for the OpenIPC repositories are recorded in `docs/process/upstream-integration.md`.
+Current FH8626 engineering/checkpoint refs are recorded in `docs/process/upstream-integration.md`.
 
 ## Authority boundary
 
@@ -20,6 +20,42 @@ Do not fork camera-level knowledge into implementation repositories. When implem
 
 Ghidra MCP working state is not an implementation repository. Durable reverse conclusions return to this camera project; Ghidra service/deployment changes belong to `ghidra-mcp`.
 
+## Ownership rules
+
+Use repository ownership rather than historical file placement:
+
+- bootloader implementation and boot/recovery features belong in `u-boot-fullhan`;
+- kernel source/platform patches belong in `openipc-linux`;
+- Divinus streamer/HAL/media code belongs in `openipc-divinus`;
+- shared Buildroot packages, SoC-family runtime integration and generic firmware infrastructure belong in `openipc-firmware`;
+- one-camera/device-specific deltas belong in `openipc-builder`;
+- camera-level contracts/evidence remain here.
+
+A preservation branch may contain code in the wrong repository. Treat that as historical integration state, not as proof of ownership.
+
+## Current sequencing
+
+The working sequence is foundation-first:
+
+`U-Boot -> Linux/kernel -> Firmware ownership audit -> Divinus target closure -> Majestic product transition -> Firmware product integration -> Builder final profile`.
+
+U-Boot and kernel are already near-production/hardware-proven and should normally receive audit/reconciliation rather than broad new development. Builder is deliberately last so it consumes stable lower layers instead of becoming a second kernel/firmware/streamer tree.
+
+## Builder boundary
+
+The final Builder device profile should contain only per-device deltas: device defconfig/package selection, first-boot/customizer behavior, board GPIO/bootstrap/default configuration, camera-specific PTZ/audio/illumination settings and size/exclude policy.
+
+Do not leave duplicated kernel patches, generic FH8626 runtime packages or streamer implementation source in Builder after the owning repositories are prepared.
+
+## Firmware boundary
+
+Firmware is not a dumping ground for integration snapshots. In particular:
+
+- kernel patches belong in Linux;
+- one retail-camera profile belongs in Builder;
+- streamer implementation belongs in that streamer repository;
+- proprietary runtime dependencies may be packaged in Firmware only when their role, provenance, redistribution status and scope are explicit and compatible with Firmware policy.
+
 ## Branch policy
 
-Every repository uses working branches for non-trivial changes. Agents do not create pull requests. Upstream-facing work must be curated from a verified upstream base into a coherent contribution series.
+Every repository uses working branches for non-trivial changes. Verify the current upstream/base before extending an old FH8626 preservation branch. Agents do not create pull requests. Upstream-facing work must be curated from a verified current base into a coherent contribution series.
