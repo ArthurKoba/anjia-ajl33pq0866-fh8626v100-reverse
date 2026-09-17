@@ -87,3 +87,13 @@ Do not duplicate camera-level knowledge into those repositories. Record new came
 Before modifying an OpenIPC-related repository or preparing an upstream contribution, agents MUST read `docs/process/openipc-upstream-rules.md` and then re-open the relevant live upstream links listed there. The local document is a cached summary, not authority over upstream. If OpenIPC has changed repository ownership, contribution rules, review gates, branch conventions or U-Boot organization, update the local rule document before continuing.
 
 Repository-local upstream instructions take precedence over this summary. Always inspect the current target repository's `README`, `AGENTS.md` / `CLAUDE.md`, contribution/review files and current base branch before curating a contribution.
+
+
+## Execution model
+
+- This project is operated primarily through browser/API tooling, including Koba MCP Bridge.
+- Do not clone repositories, download source trees, materialize full repositories, or set up local build environments merely to inspect or validate project state.
+- Do not run heavyweight kernel, firmware, Buildroot, Docker, toolchain, or image builds unless the repository owner explicitly asks for that exact operation.
+- The repository owner performs the authoritative heavy builds and hardware runs. Agents prepare precise source changes, history/commit structure, build instructions when requested, and analyze the returned results.
+- Prefer GitHub/API-level inspection of commits, trees, files, diffs, branches, PR state and review comments. Use lightweight static reasoning before asking for any operator-side command.
+- A missing build result is a pending evidence gate, not permission to create a parallel local build environment.
