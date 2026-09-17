@@ -61,13 +61,14 @@ Detailed technical state: `docs/hardware/uboot-port.md`.
 - verified base: `fullhan-fh8852v200@ee1ef844294bfa1ff15b2f0522d35c987a16a220`
 - PR-facing/integration branch: `fullhan-fh8626v100@0dfafa643770d78389e444c03f46f1711662eda6`
 - isolated MTD topic: `fix/fh8626v100-openipc-mtd-layout@28a923a9d9598a9a4e2c6c0ee4b2eee26698731e`
-- reconstruction workspace: `rework/fh8626v100-clean-series@761eb23213dac9f9a5e7df4fe103842a077580d6`
+- exploratory reconstruction: `rework/fh8626v100-clean-series@868bdd8ddde7a35c2c744e5706941d5e1f9faadf`
+- curated staging series: `rework/fh8626v100-final-series@357c2d13e7589db0dbe2bbf89c2ec38b1c036e6e`
 
 The previous `ebf5d776...` locator is stale after identity rewrite/repoint. The live integration branch is `0dfafa64...`.
 
-The two-commit Linux migration is being reconstructed into a subsystem-oriented series. Findings include the MTD mismatch, mandatory Fullhan boardconfig copy input, board-profile pin selection, neutral one-bit SD0 Kconfig naming, PWM v2 backend selection, non-DT AXI-DMA platform registration, independently reviewable clock/pinctrl/PWM/RTC/DWC2 fixes, JL1101 support, MAC propagation and checksum-feature correction. Hardware-tested static RMII behavior is deliberately preserved.
+The two-commit Linux migration has been reconstructed into a 13-commit subsystem-oriented staging series. Findings include the MTD mismatch, mandatory Fullhan boardconfig copy input, board-profile pin selection, neutral one-bit SD0 Kconfig naming, missing PWM v2 Makefile wiring, non-DT AXI-DMA platform registration, independently reviewable clock/pinctrl/PWM/RTC/DWC2 fixes, JL1101 support, MAC propagation and checksum-feature correction. Hardware-tested static RMII behavior is deliberately preserved.
 
-The historical accepted `uImage` was 1,583,456 bytes and proves the tested tree fit 2 MiB. The reconstruction is not yet promoted to build/hardware acceptance.
+The historical accepted `uImage` was 1,583,456 bytes and proves the tested tree fit 2 MiB. The curated `final-series` is source-reviewed but still awaits the owner's authoritative build/check/hardware gates.
 
 As rechecked on 2026-09-18, the public OpenIPC/linux branch list still does not show FH8626V100. The operator reports an upstream submission exists, but the exact PR number/status is not independently verified through the currently accessible API.
 

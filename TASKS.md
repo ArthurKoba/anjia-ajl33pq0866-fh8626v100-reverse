@@ -53,17 +53,17 @@ Detailed audit and migration contract: `docs/hardware/uboot-port.md`.
 
 20. **Static platform/history audit is substantially complete.** Current authority: `docs/process/fh8626-kernel-series-audit.md`.
 21. Keep `fullhan-fh8626v100@0dfafa643770d78389e444c03f46f1711662eda6` read-only while cleanup proceeds.
-22. Finish the remaining static source/config pass for required build inputs and Kconfig/backend relationships.
-23. Reconstruct a final no-fixup Linux branch from `fullhan-fh8852v200@ee1ef844294bfa1ff15b2f0522d35c987a16a220` using the intended ten-commit structure in the audit.
-24. Platform commit from the start must contain: required FH8626 boardconfig, boardconfig-driven pin selection, standard OpenIPC MTD layout, RTC opt-in, neutral one-bit SD0 option, and legacy/AXI DMA registration behind their Kconfig symbols.
-25. Preserve the hardware-tested FH8626 static RMII policy; keep JL1101, MAC and checksum changes independently reviewable.
-26. Do not carry the unrelated SADC string-copy cleanup or fork-local workflow/audit metadata into Linux.
-27. Update the Firmware AJL kernel fragment to select `CONFIG_FH8626V100_SD0_1BIT=y` when the final Linux symbol is fixed.
-28. Locate/verify the exact upstream OpenIPC FH8626V100 pull request if accessible. Current inspection does not independently identify it; do not invent its number/status.
-29. Owner-side validation gate: export final patches, run kernel contribution checks, build the exact OpenIPC image and record final `uImage` size. Historical hardware-accepted size was 1,583,456 bytes but does not validate the reconstructed tree.
-30. Keep the standard 2 MiB kernel partition; if the final image exceeds it, audit config/compression/built-ins first.
-31. Retest behavior-changing areas as required before promoting the reconstruction beyond `SOURCE_CONFIRMED / AUDIT`.
-32. Only after validation, perform the single owner-authorized update of PR-facing history if still required.
+22. **Curated source series complete:** `rework/fh8626v100-final-series@357c2d13e7589db0dbe2bbf89c2ec38b1c036e6e`, 13 coherent commits over the verified base, with no audit metadata or fixup history.
+23. The final tree contains the required FH8626 boardconfig, boardconfig-driven pin selection, standard OpenIPC MTD layout, RTC opt-in, neutral one-bit SD0 option, and legacy/AXI DMA registration behind their Kconfig symbols.
+24. Preserve the hardware-tested FH8626 static RMII policy; JL1101, MAC and checksum changes are independently reviewable.
+25. Do not carry the unrelated SADC string-copy cleanup or fork-local workflow/audit metadata into Linux.
+26. Update the Firmware AJL kernel fragment to select `CONFIG_FH8626V100_SD0_1BIT=y` when Firmware is switched to the curated Linux series. Do not change that symbol alone while Firmware still applies its preserved old kernel patch set.
+27. Locate/verify the exact upstream OpenIPC FH8626V100 pull request if accessible. Current inspection does not independently identify it; do not invent its number/status.
+28. Owner-side validation gate: run the repository's contribution checks, build the exact OpenIPC image from `rework/fh8626v100-final-series`, and record final `uImage` size. Historical hardware-accepted size was 1,583,456 bytes but does not validate the reconstructed tree.
+29. Keep the standard 2 MiB kernel partition; if the final image exceeds it, audit config/compression/built-ins first.
+30. Retest behavior-changing areas, especially the newly registered AXI-DMA path, before promoting the reconstruction beyond `SOURCE_CONFIRMED / AUDIT`.
+31. Only after validation, perform the single owner-authorized update of PR-facing history if still required.
+32. Agent work remains browser/API-first; no agent-side clone, Buildroot setup or heavyweight build unless explicitly requested by the owner.
 
 ## P0 — firmware ownership sanitation
 

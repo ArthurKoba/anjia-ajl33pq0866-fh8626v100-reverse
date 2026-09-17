@@ -13,9 +13,10 @@ Repository: `ArthurKoba/openipc-linux`.
 - verified series base: `fullhan-fh8852v200@ee1ef844294bfa1ff15b2f0522d35c987a16a220`;
 - PR-facing/integration branch: `fullhan-fh8626v100@0dfafa643770d78389e444c03f46f1711662eda6`;
 - isolated OpenIPC MTD correction: `fix/fh8626v100-openipc-mtd-layout@28a923a9d9598a9a4e2c6c0ee4b2eee26698731e`;
-- current reconstruction workspace: `rework/fh8626v100-clean-series@761eb23213dac9f9a5e7df4fe103842a077580d6`.
+- exploratory reconstruction workspace: `rework/fh8626v100-clean-series@868bdd8ddde7a35c2c744e5706941d5e1f9faadf`;
+- curated staging series: `rework/fh8626v100-final-series@357c2d13e7589db0dbe2bbf89c2ec38b1c036e6e`.
 
-The PR-facing branch remains untouched during this audit. The reconstruction branch is not itself intended to become the submitted history; it contains audit-time correction commits and will be rebuilt once more from the verified base after the source review is closed.
+The PR-facing branch remains untouched during this audit. The exploratory `clean-series` contains audit-time corrections and is not submission history. The separate `final-series` has already been rebuilt from the verified base with no fixup/audit commits and is the source candidate for owner validation.
 
 ## Migration chronology
 
@@ -108,9 +109,13 @@ Linux 4.9 explicitly documents that `NETIF_F_HW_CSUM` must not be advertised tog
 
 ### PWM backend and robustness
 
-The Firmware config selects `CONFIG_PWM_FULLHAN=y`, but `PWM_FULLHAN_V21` was only selected for `ARCH_FH885xV200 || ARCH_FH865x`. FH8626 therefore had no Kconfig guarantee that `pwmv2.o`, which supplies the common driver's low-level helpers, would be built.
+The Fullhan base Kconfig already contains a dormant `MACH_FH8626V100` block that defines `FH_PWM_NUM` and selects `PWM_FULLHAN_V21`. Once the FH8626 machine symbol exists, that Kconfig path is sufficient.
 
-Add `ARCH_FH8626V100` to the v2 backend family as a dedicated commit. Keep the separately reviewable shared PWM hardening from the tested tree.
+The actual missing link was in `drivers/pwm/Makefile`: `CONFIG_PWM_FULLHAN_V21` did not build `pwmv2.o`, which supplies the common driver's low-level helpers. The curated series adds only that Makefile wiring.
+
+During the exploratory audit, FH8626 was also added to the preceding `ARCH_FH885xV200 || ARCH_FH865x` Kconfig block; that duplicated the `FH_PWM_NUM` definition. The mistake was detected and is absent from `final-series`.
+
+Keep the separately reviewable shared PWM hardening from the tested tree.
 
 ### AXI DMA registration
 
@@ -140,33 +145,36 @@ The FH8626 SADC v2/v2.1 Kconfig paths themselves are correctly gated on `MACH_FH
 
 Do not mass-reformat recovered `iopad.h` or unrelated legacy Fullhan code merely to make checkpatch quieter. Existing generated pinctrl declarations are intentionally dense, and pre-existing legacy whitespace/FIXME lines are not part of the FH8626 contribution unless a touched semantic change requires them.
 
-## Intended final commit series
+## Curated final staging series
 
-The final contribution candidate should be reconstructed once more from `fullhan-fh8852v200`, with no audit fixups:
+`rework/fh8626v100-final-series@357c2d13e7589db0dbe2bbf89c2ec38b1c036e6e` contains 13 commits over `fullhan-fh8852v200`:
 
-1. `clk: fullhan: fix phase field updates`
-2. `pinctrl: fullhan: keep pin register state in persistent storage`
-3. `ARM: fullhan: add FH8626V100 platform support`
-4. `net: fullhan: add JL1101 PHY variants`
-5. `net: fullhan: accept a MAC address from platform data`
-6. `net: fullhan: avoid contradictory checksum features`
-7. `pwm: fullhan: select the v2 backend for FH8626V100`
-8. `pwm: fullhan: harden configuration and status handling`
-9. `rtc: fullhan: propagate command failures to the RTC core`
-10. `usb: dwc2: treat the Fullhan no-VBUS-GPIO sentinel as optional`
+1. `a68a09e` — `clk: fullhan: fix phase field handling`
+2. `0a0dae2` — `pinctrl: fullhan: keep register state in persistent storage`
+3. `ae9f464` — `pwm: fullhan: build the v2 backend when selected`
+4. `eb6f3eb` — `ARM: fullhan: add FH8626V100 SoC data`
+5. `2b7a6c6` — `ARM: fullhan: add FH8626V100 machine description`
+6. `a1d8bdd` — `ARM: fullhan: enable the FH8626V100 platform`
+7. `f2c06c6` — `ARM: fullhan: register the FH8626 AXI DMA controller`
+8. `35ed593` — `net: fullhan: support JL1101 PHY variants on FH8626V100`
+9. `dbc0038` — `net: fullhan: accept a MAC address from platform data`
+10. `0b8f45a` — `net: fullhan: avoid contradictory checksum features`
+11. `4d04535` — `pwm: fullhan: harden configuration and status handling`
+12. `c8de741` — `rtc: fullhan: propagate command failures to the RTC core`
+13. `357c2d1` — `usb: dwc2: treat the Fullhan no-VBUS-GPIO sentinel as optional`
 
-The platform commit must contain from the start the required boardconfig, boardconfig-driven initial pin selection, final OpenIPC MTD map, RTC opt-in policy, neutral one-bit SD0 symbol and both legacy/AXI DMA platform registrations as selected by Kconfig.
+The final-series tree was compared file-by-file against the exploratory clean-series. Every functional blob is identical. The only two differing blobs are `board.c` and `board_config.fh8626v100.appboard`, where final-series removes ANJIA-specific wording from comments without changing code.
 
-No SADC cleanup, metadata files or audit documentation belongs in the Linux series.
+No SADC cleanup, fork-local metadata or audit documentation is present in Linux.
 
 ## Remaining gates
 
-1. Finish static source/config review of the final reconstructed tree.
-2. Rebuild the final candidate branch from the verified base with the intended ten commits and no fixup history.
-3. Update the Firmware AJL kernel fragment from `CONFIG_FH8626V100_AJL33PQ0866_MMC` to `CONFIG_FH8626V100_SD0_1BIT` in the appropriate integration work.
-4. Remove Firmware-side kernel patches from the eventual upstream Firmware contribution once the Linux branch is authoritative.
-5. Owner-side contribution validation: per-patch `scripts/checkpatch.pl`, exact OpenIPC build, final `uImage` measurement and applicable hardware retest. Project policy keeps heavyweight builds/operator hardware runs owner-side unless explicitly requested.
-6. Keep the 2 MiB kernel partition target; audit config/compression/built-ins before any layout change if the final image does not fit.
-7. Only after those gates, replace the PR-facing branch once if the owner still wants the existing upstream submission history rewritten.
+1. Owner-side contribution validation of `rework/fh8626v100-final-series`: repository/kernel checks, exact OpenIPC build and final `uImage` measurement.
+2. Update the Firmware AJL kernel fragment from `CONFIG_FH8626V100_AJL33PQ0866_MMC` to `CONFIG_FH8626V100_SD0_1BIT` only when Firmware is switched away from its preserved old kernel patch set to the curated Linux series.
+3. Remove Firmware-side duplicate kernel patches from the eventual upstream Firmware contribution once the Linux branch is authoritative.
+4. Retest behavior-changing source deltas as applicable, with special attention to AXI-DMA registration, before promoting the reconstruction beyond `SOURCE_CONFIRMED / AUDIT`.
+5. Keep the 2 MiB kernel partition target; audit config/compression/built-ins before any layout change if the final image does not fit.
+6. Only after those gates, replace the PR-facing branch once if the owner still wants the existing upstream submission history rewritten.
+7. Agents remain browser/API-first and do not create a duplicate local build environment unless explicitly asked.
 
 The exact upstream OpenIPC FH8626 pull-request number/status remains unverified through the currently accessible repository API. Do not invent it or treat local branch existence as proof of upstream acceptance.
