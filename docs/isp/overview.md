@@ -2,11 +2,12 @@
 
 Broad stock reverse for the exercised pipeline is closed. Focused ISP work is resumed only for a concrete blocker.
 
-The exact owner source is the primary implementation oracle below direct hardware evidence. FH8852-family code is structural reference only.
+Current Git contracts are the durable implementation-facing authority. Instruction-level reverse state, xrefs, decompiler output and working annotations live in the canonical Ghidra MCP project. Historical owner binaries/source fragments are evidence inputs, not a second current source tree.
 
 Detailed focused contracts already recovered and retained include:
 
 - exact GC1054 day/night/wlight physical AE controller: `ae-controller.md`;
+- AE integration/acceptance boundary and historical lessons: `ae.md`;
 - NR3D gain/history/writer dependency: `nr3d.md`;
 - shared-register/color generation ownership: `color-hal-contract.md`;
 - current writer/register map: `writer-map.md`.
@@ -16,7 +17,7 @@ Do not reopen those areas broadly unless a current blocker contradicts the retai
 Frozen native Divinus currently has two generic ISP source-parity concerns in addition to AWB-specific work:
 
 1. Frontend barrier: candidate accesses +0x18/+0x68-like offsets through ISP MMIO, while owner behavior uses runtime-context fields. Address domains differ.
-2. Frame wait: candidate introduces `FH8626_ISP_FRAME_WAIT` / `0x40046908` timeout semantics not established by the preserved owner/reverse contract.
+2. Frame wait: candidate introduces `FH8626_ISP_FRAME_WAIT` / `0x40046908` timeout semantics not established by the retained owner/reverse contract.
 
 Do not treat either source mismatch as an automatic hardware failure; repair/justify first, then validate on target if native Divinus is resumed.
 

@@ -25,7 +25,11 @@ The retained GC1054 vendor sensor binary is stored in `evidence/firmware-dumps/s
 
 ## Manifest rule
 
-`MANIFEST.tsv` contains the selected external objects that remain useful to current engineering work. Each entry should have a SHA-256, a clear role and a durable Drive locator.
+`MANIFEST.tsv` contains the selected external objects that remain useful to current engineering work. Each entry has a SHA-256, role, storage backend, durable Drive locator and notes sufficient to identify the artifact.
+
+Current documentation must not depend on an external object that has no manifest row. Historical documents may retain old SHA identities for provenance, but an unindexed historical SHA is provenance-only and is not a promise that the bytes are still retained or retrievable.
+
+When derivation matters, state it explicitly in the role/notes or in the current subsystem document. Do not present a remux, frame extraction, report, generated reverse export or other derivative as an independent primary observation.
 
 ## Rules
 
@@ -33,3 +37,4 @@ The retained GC1054 vendor sensor binary is stored in `evidence/firmware-dumps/s
 - Do not commit generated Ghidra databases, full disassembly exports, build caches or other bulky reproducible derivatives.
 - Preserve unique primary inputs even when a derived analysis can be regenerated.
 - Promote durable reverse conclusions into current documentation/source; keep mutable reverse working state in Ghidra MCP.
+- If a historical SHA becomes relevant to current work again, first restore/locate the object and add a durable manifest row before relying on it.

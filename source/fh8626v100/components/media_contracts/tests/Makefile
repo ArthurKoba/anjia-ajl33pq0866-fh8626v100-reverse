@@ -52,13 +52,10 @@ test_bitrate_observer: test_bitrate_observer.c ../observability/fh8626_bitrate_o
 test_http_client: test_http_client.c ../transport/fh8626_http_client.c
 	$(CC) $(CFLAGS) $(INC) $^ -o $@
 
-gates: run_host_gates.sh
-	./run_host_gates.sh
-
 test: check
 check: all
 	@set -e; for t in $(TESTS); do ./$$t; done
 clean:
 	rm -f $(TESTS)
 
-.PHONY: all test check gates clean
+.PHONY: all test check clean

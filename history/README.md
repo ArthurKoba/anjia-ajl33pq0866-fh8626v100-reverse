@@ -19,4 +19,6 @@ Historical reverse provenance may remain here when it explains the origin of a d
 
 ## Evidence boundary
 
-Heavy primary evidence remains in the Google Drive evidence store and is addressed from Git through `evidence/MANIFEST.tsv` by SHA-256 and locator. Git history preserves human-readable provenance; primary bytes remain external.
+Heavy primary evidence remains in the Google Drive evidence store and selected current objects are addressed from Git through `evidence/MANIFEST.tsv` by SHA-256 and locator. Git history preserves human-readable provenance; primary bytes remain external.
+
+A historical file may preserve a SHA-256 identity for an object that is no longer part of the selected current manifest. Such an identity is **provenance-only**: it documents what was used at that historical point, but it must not be treated as a currently retrievable evidence dependency unless a current `evidence/MANIFEST.tsv` row provides a durable locator.

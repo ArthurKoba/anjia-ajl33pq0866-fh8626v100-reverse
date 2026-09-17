@@ -42,6 +42,8 @@ Keep heavy primary evidence out of Git unless there is a specific documented rea
 
 Record these in `evidence/MANIFEST.tsv`.
 
+A SHA that appears only in `history/` and has no current manifest row is provenance-only. Do not treat it as a current retrievable dependency until the object is re-located/retained and indexed.
+
 ## Evidence classes
 
 Use explicit evidence boundaries when they matter:
@@ -66,9 +68,15 @@ Do not silently promote static/source/reverse coverage into hardware acceptance.
 
 ## Source
 
-`source/` contains target-specific camera engineering material that is useful to preserve or validate. It is not automatically upstream-ready code.
+`source/fh8626v100/components/` contains curated, reusable camera-specific components, contracts and source-level tests. It is not a monolithic firmware/application tree and is not automatically upstream-ready code.
 
-Do not commit build outputs, caches or generated analysis as source. Keep source-level tests and contracts when they materially describe or validate retained implementation behavior.
+Do not retain incomplete owner snapshots, generated reverse reconstructions, probes, build outputs, caches or generated analysis as current source. Keep a component only when it is independently useful for reuse, integration or direct source-level validation.
+
+Run the retained host/source checks with:
+
+`make -C source/fh8626v100/components check`
+
+Host/source checks never imply target hardware acceptance.
 
 ## Related repositories
 

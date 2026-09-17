@@ -29,7 +29,15 @@ int fh_nr3d_kernel_set_verified(struct fh_nr3d_kernel *k, int enabled,
 
     rc = fh_nr3d_kernel_get(k, &cfg);
     if (rc) return rc;
-    if ((cfg.mode != 0) != (enabled != 0)) return -EIO;
+
+    /* Stock periodic execution accepts runtime mode exactly 1. A generic
+     * non-zero check would incorrectly accept other provider modes. */
+    if (enabled) {
+        if (cfg.mode != 1u) return -EIO;
+    } else if (cfg.mode != 0u) {
+        return -EIO;
+    }
+
     if (readback) *readback = cfg;
     return 0;
 }

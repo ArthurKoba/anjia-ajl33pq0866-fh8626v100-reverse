@@ -14,7 +14,7 @@ This was an implementation/diagnostic candidate, not a target or hardware accept
 
 ## Dynamic LTM execution parity
 
-A focused 2026-09-05 audit went beyond decompiler matching and executed the current Apollo ARM instructions under a bounded Ghidra emulator.
+A focused historical Ghidra pass went beyond decompiler matching and executed the relevant Apollo ARM instructions under a bounded emulator.
 
 `REVERSE_CONFIRMED` within the tested domain:
 
@@ -32,7 +32,7 @@ For future native-owner work, preserve volatile sampling order and full-word/mas
 
 ## Public LTM attribute ABI
 
-The same 2026-09-05 current-Ghidra work recovered the stock public LTM attribute surface around `0x2163FC/0x216938`:
+The same reverse work recovered the stock public LTM attribute surface around `0x2163FC/0x216938`:
 
 - the public record is 80 bytes;
 - Set performs sequential in-place clamps and packs twelve nibble fields into the context representation;
@@ -45,7 +45,7 @@ The historical owner exposed separate “hardware enable” and “periodic upda
 
 ## Shared LUT / exact consumer status
 
-The later heavy-reverse handoff repeated the shared `0x316CA8` Q7-like sine-LUT result for D1258, CFEB0/D0238 and the LUT-dependent part of D1DB0. Those results are already retained in exact Drive reverse evidence (`9316c295__REPRODUCE_LUT_316CA8` and the D1DB0/D14 report), so duplicate handoff notes are not retained as additional authority.
+The durable shared `0x316CA8` Q7-like sine-LUT conclusion applies to D1258, CFEB0/D0238 and the LUT-dependent part of D1DB0. Working instruction-level detail and annotations belong in the canonical Ghidra MCP project. Current Git keeps the reusable conclusion and implementation boundary rather than depending on historical report filenames or a Git-side reverse export tree.
 
 ## LTM/WDR boundary
 
@@ -53,4 +53,4 @@ WDR/LTM remains a focused open boundary only if native ISP work becomes necessar
 
 ## Evidence rule
 
-Exact arithmetic/reverse reports may be retained independently of raw exports. Historical helper scripts and generated subsets can be removed once the reproducibility contract and evidence provenance are preserved.
+Current implementation claims should depend on durable Git contracts, canonical Ghidra MCP state, or retrievable external objects indexed in `evidence/MANIFEST.tsv`. Historical report names and generated subsets are provenance, not a second current authority.
