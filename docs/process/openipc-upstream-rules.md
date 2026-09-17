@@ -2,7 +2,7 @@
 
 Status: `CURRENT EXTERNAL-RULE SNAPSHOT`.
 
-Checked against live OpenIPC sources: `2026-09-17`.
+Checked against live OpenIPC sources: `2026-09-18`.
 
 This document is the local project summary of current OpenIPC repository boundaries, contribution rules and review gates relevant to the FH8626V100 / ANJIA AJL33PQ0866 work.
 
@@ -156,6 +156,14 @@ New package/source code must actually be wired into Kconfig/Buildroot and select
 OpenIPC explicitly distinguishes CI/build proof from target proof. A change that can alter camera behavior normally requires actual hardware evidence: affected board, observable symptom, and before/after logs/measurements/stream behavior as appropriate.
 
 For this project, do not convert host tests, successful compilation or static reverse into an upstream hardware claim.
+
+### Current Firmware local verification set
+
+The live Firmware contributor guidance rechecked on 2026-09-18 lists repository-local checks to run where applicable. In addition to the previously recorded shell, selector, workflow and Kconfig tests, it now includes:
+
+`bash .github/scripts/test_check_mac.sh`
+
+Re-open the live Firmware `CLAUDE.md` before contribution preparation instead of treating this list as frozen.
 
 ## Contribution workflow
 

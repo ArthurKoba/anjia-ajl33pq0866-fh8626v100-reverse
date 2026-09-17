@@ -82,6 +82,12 @@ Host/source checks never imply target hardware acceptance.
 
 Changes to related repositories such as `openipc-divinus`, `openipc-builder`, `openipc-firmware`, `openipc-linux` and `u-boot-fullhan` must also use working branches. The no-agent-PR rule applies there as well.
 
+This repository is the coordination authority for cross-repository work. Keep audit notes, contribution workflow, branch roles, current SHAs, evidence status and handoff state here. Do **not** add fork-local `AGENTS.md`, audit reports or other coordination metadata to an OpenIPC component repository merely to guide later agents. Component repositories should contain only implementation and repository-owned documentation that belongs in their eventual contribution.
+
+Before mutating any related-repository branch, determine whether it is the head of an open upstream pull request or otherwise acts as an integration/submission branch. Treat such a branch as read-only during investigation and intermediate development. Create a topic branch such as `audit/*`, `fix/*` or `rework/*` from the known integration head and make checkpoints there.
+
+When a submitted branch needs history cleanup, reconstruct the final coherent series from the verified upstream base on a separate branch, run the applicable static/build/hardware evidence gates, compare the resulting tree with the intended implementation, and only then update the submission branch. If the owner has explicitly authorized a history rewrite, perform one controlled final force update rather than repeatedly force-pushing checkpoints into an active review.
+
 Do not duplicate camera-level knowledge into those repositories. Record new camera contracts here, then implement or reference them in the repository that owns the component.
 
 Before modifying an OpenIPC-related repository or preparing an upstream contribution, agents MUST read `docs/process/openipc-upstream-rules.md` and then re-open the relevant live upstream links listed there. The local document is a cached summary, not authority over upstream. If OpenIPC has changed repository ownership, contribution rules, review gates, branch conventions or U-Boot organization, update the local rule document before continuing.
