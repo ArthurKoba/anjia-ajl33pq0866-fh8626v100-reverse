@@ -1,6 +1,6 @@
 # Current project state
 
-Status: `ACTIVE / UBOOT_OPENIPC_NATIVE_CANDIDATE / DIVINUS_REFERENCE / MAJESTIC_TARGET`.
+Status: `ACTIVE / UBOOT_OPENIPC_NATIVE_SOURCE_READY / KERNEL_GATE / DIVINUS_REFERENCE / MAJESTIC_TARGET`.
 
 Checked: `2026-09-17`.
 
@@ -29,43 +29,59 @@ These refs are working-state locators, not automatic upstream bases or contribut
 
 Repository: `ArthurKoba/u-boot-fullhan`.
 
-Hardware-proven reference:
+Current OpenIPC-native working line:
 
 - branch: `fh8626v100-mainline`
-- sanitized observed tip: `49fe46e9ddb786e232d1359f9cee68c914a3a8db`
-- role: stock-compatible recovery/reference baseline
+- observed tip: `227bcb40f68147864d778f1431973566cca383d8`
+- equivalent development ref: `fh8626v100-openipc-native` at the same tip
+- evidence level: `SOURCE/BUILD ACCEPTED`, not `HARDWARE_PASS`
 
-OpenIPC-native candidate:
+Preserved hardware-proven stock-compatible reference:
 
-- branch: `fh8626v100-openipc-native`
-- observed tip: `99c477674acc250b3177e3ae6eaaa1680c28c809`
-- relation: five commits ahead of `fh8626v100-mainline`
-- evidence level: `SOURCE/BUILD CANDIDATE`, not `HARDWARE_PASS`
+- branch: `fh8626v100-stock-compatible`
+- tip: `49fe46e9ddb786e232d1359f9cee68c914a3a8db`
+- role: recovery/evidence baseline for the already exercised factory-compatible boot geometry
 
-The OpenIPC-native candidate is now implemented rather than merely planned. It changes the production contract to the standard OpenIPC 8 MiB NOR geometry:
+The agreed OpenIPC-native changes are now in the actual U-Boot implementation, not only in roadmap/documentation. `fh8626v100-mainline` was advanced by normal fast-forward after preserving the old hardware-proven state on `fh8626v100-stock-compatible`.
+
+The production contract is the normal OpenIPC 8 MiB NOR geometry:
 
 `256k(boot),64k(env),2048k(kernel),5120k(rootfs),-(rootfs_data)`.
 
-For this board the standard 256 KiB `boot` partition contains a Fullhan-specific internal split only: 64 KiB reconstructed Boot ROM data at `0x00000` and a fixed 192 KiB U-Boot slot at `0x10000`. Environment is at the standard OpenIPC `0x40000`, kernel at `0x50000`, rootfs at `0x250000`, and rootfs_data at `0x750000`.
+For AJL33PQ0866 the standard 256 KiB `boot` partition contains the Fullhan-specific internal split only: 64 KiB reconstructed Boot-ROM/DDR data at `0x00000` and a 192 KiB physical U-Boot slot at `0x10000`. Environment is at `0x40000`, kernel at `0x50000`, rootfs at `0x250000`, and rootfs_data begins at `0x750000`.
 
-The candidate no longer depends on the Fullhan factory environment in production. `kload`, factory GPIO syntax and other stock compatibility are opt-in only in the RAM migration/recovery target. The production environment now uses OpenIPC-style `mtdpartsnor8m`, `setnor8m`, `bootcmdnor`, `uknor8m`, `urnor8m`, `uImage.${soc}` and `rootfs.squashfs.${soc}` contracts and mounts rootfs from `/dev/mtdblock3`.
+Production no longer depends on the factory Fullhan environment. `kload`, factory `gpio <pin> out <0|1>` syntax and other factory compatibility are opt-in only in the RAM migration/recovery target through `CONFIG_FH8626V100_STOCK_COMPAT`.
 
-The board identity is explicit: FH8626V100 support is reusable, while the validated Boot-ROM/DDR data, RMII wiring and persistent-flash migration contract belong to ANJIA AJL33PQ0866 until another FH8626 board is independently proven.
+The production environment now follows the normal OpenIPC NOR naming/semantics rather than carrying FH8626-only updater conventions. It exposes `kernaddr`, `kernsize`, `rootaddr`, `rootsize`, `mtdpartsnor8m`, `setnor8m`, `cmdnor`, `bootcmdnor`, `updatetool`, `ubnor`/`ubwrite`, `uknor`/`ukwrite`, and `urnor`/`urwrite`. Kernel and rootfs use `uImage.${soc}` and `rootfs.squashfs.${soc}`. The U-Boot artifact is deliberately board-qualified as `u-boot-${soc}-${board}-nor.bin` because the recovered Boot-ROM/DDR data is currently proven only for AJL33PQ0866.
 
-The candidate build compiles both production and RAM targets. With TFTP upload, TFTP tuning variables, line editing, autocomplete, long help and `sleep` restored, the production raw U-Boot is `0x2ed18` bytes. The 192 KiB payload slot reserves four bytes for the ROM checksum fixup and still has 4836 bytes of free payload budget.
+The native release packer now emits two useful upper-level artifacts:
 
-The native packer emits a board-specific 256 KiB OpenIPC `boot` artifact plus 64 KiB bootstrap, 192 KiB padded U-Boot, raw production binary, RAM recovery binary and SHA-256 manifest. It validates the relocated U-Boot descriptor (`flash=0x10000`, `size=0x30000`, load/entry `0xa0800000`) while retaining the recovered board Boot-ROM data.
+- `...-boot.bin`: exact 256 KiB OpenIPC `boot` partition;
+- `...-nor.bin`: 320 KiB OpenIPC updater image containing the 256 KiB boot partition followed by an erased 64 KiB environment sector, matching the normal `ubwrite` boundary at kernel offset `0x50000`.
 
-The existing repository workflow still contains stock-artifact post-build checks. The GitHub App available to this project is not permitted to update `.github/workflows/build.yml`, so the auto-run currently compiles both native targets and generates the native artifacts successfully, then reports failure only when the stale workflow looks for the removed stock artifact names. Do not interpret that final workflow status as a compile failure. The workflow itself must be updated by an identity with GitHub workflow-write permission before contribution.
+The native ROM descriptor is generated from the actual linked U-Boot rather than preserving factory descriptor magic. For the verified build at `227bcb40...`, `build.sh` reported:
 
-The remaining hard gates are:
+- raw U-Boot: `0x2ef20`;
+- aligned ROM payload: `0x2f000`;
+- calculated JAMCRC: `0x0c6d419b`;
+- physical U-Boot slot: `0x30000`;
+- boot partition: `0x40000`;
+- NOR updater image: `0x50000`.
 
-1. build and measure the final intended FH8626 OpenIPC `uImage`; it must fit the standard 2 MiB kernel partition or the kernel configuration must be reduced before considering a custom layout;
-2. perform the documented one-time migration with external SPI recovery available;
+The descriptor points to flash offset `0x10000`, retains load/entry `0xa0800000`, uses actual raw size, `0x100`-aligned payload size and the calculated JAMCRC. The remaining bytes in the 192 KiB physical slot stay erased. The historical fixed stock descriptor size/JAMCRC remain only in the stock parser/evidence path.
+
+`build.sh` is now self-validating: it runs the native packer unit tests, builds production U-Boot, generates and inspects the native NOR artifact, then builds the RAM recovery target. The observed build ran 8 native artifact tests successfully, compiled both targets, and the generated artifact inspector accepted the complete native layout/descriptor.
+
+The repository's existing GitHub workflow still has a stale post-build step that looks for the removed stock artifact names and stock descriptor. The GitHub App available to the project has no `workflows` write permission, so `.github/workflows/build.yml` could not be updated through the permitted Bridge path. The workflow therefore ends red after the successful build/self-validation stages. This is an infrastructure/documentation debt, not an implementation compile failure; it must be corrected later by an identity with workflow-write permission. No workaround or fake compatibility artifacts should be added merely to make the stale check green.
+
+The native state still is **not hardware acceptance**. The remaining gates are:
+
+1. build and measure the final intended FH8626 OpenIPC `uImage`; it must fit the standard 2 MiB kernel partition or kernel configuration/compression/built-in choices must be reviewed before considering any custom layout;
+2. perform the documented one-time migration with verified full-flash backup and external SPI recovery available;
 3. cold-boot the complete OpenIPC-native layout on the physical AJL33PQ0866;
-4. verify MTD/environment/kernel/rootfs/network behavior after that cold boot.
+4. verify Boot-ROM -> U-Boot relocation, environment at `0x40000`, MTD map, kernel/rootfs, Ethernet/MAC propagation and normal OpenIPC update variables after the cold boot.
 
-Until those gates pass, keep `fh8626v100-mainline` as the proven recovery baseline and do not replace it with the native candidate.
+Contribution history is not final yet. The native branch accumulated iterative implementation commits and should be rebuilt/squashed into a clean upstream-facing series only after hardware acceptance, so contribution curation does not obscure the exact code that was tested on the camera.
 
 Detailed findings: `docs/hardware/uboot-port.md`.
 
@@ -170,10 +186,10 @@ Firmware, dumps and other heavy primary evidence remain external and SHA-address
 
 ## Immediate engineering sequence
 
-1. build/measure the final FH8626 OpenIPC kernel against the 2 MiB standard partition;
-2. if it fits, hardware-test the complete `fh8626v100-openipc-native` U-Boot/layout migration and retain standard OpenIPC geometry;
-3. after hardware acceptance, curate/squash the native U-Boot contribution series and resolve the workflow update/target OpenIPC repository ownership;
-4. reconcile the kernel with its exact upstream PR state;
+1. reconcile the FH8626 kernel branch/upstream PR and build the final intended OpenIPC `uImage`;
+2. measure that image against the standard 2 MiB kernel partition and audit configuration/compression only if it does not fit;
+3. when matching kernel/rootfs images are ready, hardware-test the complete OpenIPC-native U-Boot/layout migration;
+4. after hardware acceptance, curate the U-Boot history into a clean contribution series and update the stale workflow through an authorized identity;
 5. classify the mixed Firmware preservation snapshot by repository ownership;
 6. build and target-test the latest Divinus candidate until its FH8626 path is complete;
 7. transition the product path to Majestic;
