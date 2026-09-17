@@ -6,43 +6,54 @@ The project is no longer following a Builder-first integration order. The workin
 
 Status: **NOW**.
 
-### 0.1 U-Boot — OpenIPC-native candidate implemented; hardware-accept, then curate
+### 0.1 U-Boot — OpenIPC-native source/build complete; hardware-accept, then curate
 
 Repository: `ArthurKoba/u-boot-fullhan`.
 
-The hardware-proven stock-compatible baseline remains on `fh8626v100-mainline`. The OpenIPC-native product candidate is implemented on `fh8626v100-openipc-native`.
+The agreed OpenIPC-native implementation is now the current FH8626 working line on `fh8626v100-mainline@227bcb40f68147864d778f1431973566cca383d8`. The previously hardware-proven factory-compatible tree is preserved separately as `fh8626v100-stock-compatible@49fe46e9...` for recovery and evidence.
 
-The candidate already uses the standard OpenIPC 8 MiB NOR geometry:
+The current implementation uses the standard OpenIPC 8 MiB NOR geometry:
 
 `256k(boot),64k(env),2048k(kernel),5120k(rootfs),-(rootfs_data)`
 
 with:
 
-- `0x00000..0x0ffff` — board-specific Fullhan Boot ROM / DDR data inside the normal OpenIPC boot partition;
-- `0x10000..0x3ffff` — 192 KiB U-Boot slot;
+- `0x00000..0x0ffff` — board-specific Fullhan Boot-ROM/DDR data inside the normal OpenIPC boot partition;
+- `0x10000..0x3ffff` — 192 KiB physical U-Boot slot;
 - `0x40000..0x4ffff` — OpenIPC environment;
 - `0x50000` — kernel;
 - `0x250000` — rootfs;
 - `0x750000` — rootfs_data.
 
-Production no longer depends on the factory Fullhan environment. OpenIPC-style boot/update variables are compiled in, while factory `kload` and vendor GPIO syntax are migration-only in the RAM target.
+Production no longer depends on the factory Fullhan environment. OpenIPC NOR variables and update semantics are implemented directly: `kernaddr/kernsize`, `rootaddr/rootsize`, `mtdpartsnor8m`, `setnor8m`, `cmdnor`, `bootcmdnor`, `updatetool`, `ubnor/ubwrite`, `uknor/ukwrite`, `urnor/urwrite`. Factory `kload` and vendor GPIO syntax are migration/recovery-only in the RAM target.
 
-The candidate builds both production and RAM configurations. With useful recovery/operator features restored, production raw U-Boot is `0x2ed18` bytes and still has 4836 bytes of payload headroom in the 192 KiB slot.
+The native U-Boot artifact is board-qualified and follows the normal OpenIPC updater boundary: `u-boot-fh8626v100-anjia-ajl33pq0866-nor.bin` is exactly `0x50000` bytes, containing the 256 KiB boot partition plus an erased 64 KiB environment sector.
+
+The Fullhan ROM descriptor is also native rather than factory-fixed. For each build it uses the actual raw U-Boot size, `0x100`-aligned payload size and calculated JAMCRC. Observed source/build result at `227bcb40...`:
+
+- 8 native artifact tests passed;
+- production U-Boot compiled;
+- raw U-Boot `0x2ef20`;
+- aligned ROM payload `0x2f000`;
+- calculated JAMCRC `0x0c6d419b`;
+- generated 256 KiB boot artifact and 320 KiB NOR updater artifact passed self-inspection;
+- RAM migration/recovery U-Boot compiled.
+
+The current GitHub workflow still ends red after these successful stages because its final post-check references removed stock-era artifact names and descriptor values. The permitted Bridge App cannot update workflow files without `workflows` permission. This is deferred infrastructure cleanup, not a reason to preserve obsolete artifacts or alter the native design.
 
 Current work is now to:
 
-1. build and measure the final intended FH8626 OpenIPC `uImage` and target the standard 2 MiB partition;
-2. reduce kernel config/compression/built-in footprint first if it does not fit, before accepting any special layout;
-3. perform the documented native full-layout migration with external SPI recovery available;
-4. cold-boot and verify ROM -> U-Boot -> OpenIPC kernel/rootfs/environment/network on the physical AJL33PQ0866;
-5. only after that hardware gate, promote the candidate and curate/squash the U-Boot contribution series;
-6. update the stale repository workflow to native artifact names using an identity with GitHub workflow-write permission;
-7. run current U-Boot contribution/style/checkpatch gates;
-8. present OpenIPC maintainers with source, hardware evidence, Boot-ROM provenance and artifact scheme and obtain the intended OpenIPC U-Boot repository ownership.
+1. reconcile the FH8626 kernel/upstream PR and build the final intended OpenIPC `uImage`;
+2. prove it fits the standard 2 MiB kernel partition, reducing configuration/compression/built-in footprint first if required;
+3. perform the documented native full-layout migration with verified flash backup and external SPI recovery available;
+4. cold-boot and verify Boot-ROM -> relocated U-Boot -> OpenIPC environment/kernel/rootfs/network on the physical AJL33PQ0866;
+5. exercise the native OpenIPC update/environment contract after boot;
+6. only after that hardware gate, promote the native state to `HARDWARE_PASS` and rebuild/squash the iterative U-Boot history into a clean contribution series;
+7. update the stale repository workflow using an identity with workflow-write permission;
+8. run current U-Boot contribution/style/checkpatch gates;
+9. present OpenIPC maintainers with source, hardware evidence, Boot-ROM provenance and the board-qualified artifact scheme and obtain the intended OpenIPC U-Boot repository ownership.
 
-Do not replace the hardware-proven baseline before native cold boot passes, and do not advertise the board-specific artifact as universal FH8626V100.
-
-Detailed findings are in `docs/hardware/uboot-port.md`.
+Do not advertise the board-specific artifact as universal FH8626V100. Detailed findings are in `docs/hardware/uboot-port.md`.
 
 ### 0.2 Linux/kernel — audit, exact upstream reconciliation, and 2 MiB gate
 
