@@ -83,3 +83,7 @@ Host/source checks never imply target hardware acceptance.
 Changes to related repositories such as `openipc-divinus`, `openipc-builder`, `openipc-firmware`, `openipc-linux` and `u-boot-fullhan` must also use working branches. The no-agent-PR rule applies there as well.
 
 Do not duplicate camera-level knowledge into those repositories. Record new camera contracts here, then implement or reference them in the repository that owns the component.
+
+Before modifying an OpenIPC-related repository or preparing an upstream contribution, agents MUST read `docs/process/openipc-upstream-rules.md` and then re-open the relevant live upstream links listed there. The local document is a cached summary, not authority over upstream. If OpenIPC has changed repository ownership, contribution rules, review gates, branch conventions or U-Boot organization, update the local rule document before continuing.
+
+Repository-local upstream instructions take precedence over this summary. Always inspect the current target repository's `README`, `AGENTS.md` / `CLAUDE.md`, contribution/review files and current base branch before curating a contribution.
