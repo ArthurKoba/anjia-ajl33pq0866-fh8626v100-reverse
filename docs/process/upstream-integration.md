@@ -4,31 +4,50 @@ This document records the currently observed FH8626V100 working refs and the own
 
 Checked: `2026-09-17`.
 
-Before using any ownership rule or preparing work for OpenIPC, read `openipc-upstream-rules.md` and re-open the relevant live upstream sources linked there. This file records project-specific refs and sequencing; `openipc-upstream-rules.md` records the external OpenIPC rules that can change independently of this project. Upstream repository-local instructions override cached summaries.
+Before using any ownership rule or preparing work for OpenIPC, read `openipc-upstream-rules.md` and re-open the relevant live upstream sources linked there. This file records project-specific refs and sequencing; `openipc-upstream-rules.md` records external OpenIPC rules that can change independently. Repository-local upstream instructions override cached summaries.
 
 ## Current observed refs
 
 ### U-Boot
 
-- repository: `ArthurKoba/u-boot-fullhan`
-- branch: `fh8626v100-mainline`
-- observed tip: `ae63365e10b38e5b9ed3bd5173a0ed3e5c8f9996`
+Repository: `ArthurKoba/u-boot-fullhan`.
+
+Hardware-proven recovery/reference branch:
+
+- `fh8626v100-mainline`
+- observed tip: `49fe46e9ddb786e232d1359f9cee68c914a3a8db`
 - repository `main`: `cc8c034e78eba6b2a3845783889b80753bb1af1e`
-- relation: five FH8626V100 commits ahead of `main`
 
-The branch is a modern upstream-U-Boot-based FH8626V100 port and is already hardware-used on ANJIA AJL33PQ0866. The 2026-09-17 audit found no missing capability required by the exercised OpenIPC boot/recovery/update path. Its remaining job is contribution curation and handoff, not reimplementation.
+Implemented OpenIPC-native candidate:
 
-Important handoff boundaries:
+- `fh8626v100-openipc-native`
+- observed tip: `99c477674acc250b3177e3ae6eaaa1680c28c809`
+- five commits ahead of the hardware-proven baseline
+- current evidence level: source/build candidate, not hardware acceptance
 
-- the current artifact is board-specific and must not be advertised as universal FH8626V100;
-- the Fullhan ROM envelope is `0x2bb00`; the audited production build has only 820 bytes of spare room;
-- U-Boot, Linux and the preserved FH8626 Firmware build agree on kernel `0x50000`, `rootfs_data` `0x350000`, rootfs `0x450000`;
-- current generic OpenIPC image assembly uses different ordinary rootfs offsets, so FH8626 needs an explicit assembly path;
-- OpenIPC currently uses multiple SoC/family-specific U-Boot repositories. No current OpenIPC Fullhan U-Boot source repository was identified, so maintainers should choose the source-repository ownership before organization-level publication.
+The native branch targets standard OpenIPC 8 MiB NOR geometry rather than the historical Fullhan partition map:
 
-Recommended source handoff: curate a clean series in `u-boot-fullhan`, provide hardware/migration/provenance evidence, ask OpenIPC maintainers whether they want a new Fullhan/FH8626 repository or another destination, then integrate the agreed board-specific release artifact into Firmware. Do not move U-Boot source into Firmware or Builder.
+`256k(boot),64k(env),2048k(kernel),5120k(rootfs),-(rootfs_data)`.
 
-Detailed technical audit: `docs/hardware/uboot-port.md`.
+The Fullhan-specific board requirement is contained inside the normal 256 KiB `boot` partition: 64 KiB reconstructed Boot-ROM/DDR data followed by a 192 KiB U-Boot slot. The persistent environment is at `0x40000`, kernel at `0x50000`, rootfs at `0x250000` and rootfs_data at `0x750000`.
+
+The native production target uses OpenIPC environment/update conventions and no longer depends on the factory Fullhan environment. Factory `kload` and vendor GPIO syntax remain opt-in only in the RAM migration target.
+
+Observed native build result at `99c47767...`:
+
+- raw production U-Boot: `0x2ed18`;
+- physical U-Boot slot: `0x30000`;
+- free payload budget after four-byte checksum fixup: 4836 bytes;
+- production and RAM targets both compile;
+- native board boot artifact generation succeeds.
+
+The current repository workflow reports red only because its final post-build commands still check the old stock artifact filenames. The available GitHub App is denied workflow-file mutation permission, so that workflow update must be performed later by an identity with GitHub workflow-write access. Do not work around that permission boundary or preserve obsolete artifacts only to satisfy the stale check.
+
+The immediate U-Boot gate is hardware, not additional architecture work: first prove the final FH8626 kernel fits the standard OpenIPC 2 MiB partition, then perform the documented native full-layout migration and cold boot. Keep `fh8626v100-mainline` untouched as recovery authority until that passes.
+
+OpenIPC currently uses multiple SoC/family-specific U-Boot repositories. No OpenIPC Fullhan U-Boot repository was identified during the current check. After hardware acceptance, curate/squash the native series, re-run current U-Boot contribution gates, provide provenance/evidence, and ask OpenIPC maintainers which source repository should own the port. Do not move U-Boot source into Firmware or Builder.
+
+Detailed technical state: `docs/hardware/uboot-port.md`.
 
 ### Linux/kernel
 
@@ -41,6 +60,8 @@ Detailed technical audit: `docs/hardware/uboot-port.md`.
 The operator reports that FH8626V100 kernel support has already been submitted to upstream OpenIPC. Before changing or curating this branch, locate the exact upstream pull request and verify its current head, status, review comments and relation to the local branch.
 
 As checked on 2026-09-17, the public `OpenIPC/linux` branch table does not yet list FH8626V100, so local branch existence must not be confused with completed upstream integration.
+
+The first kernel reconciliation output must include the exact final `uImage` size because the OpenIPC-native U-Boot target now assumes the standard 2 MiB kernel partition.
 
 ### Divinus
 
@@ -60,7 +81,9 @@ The preservation commit contains the newest native-HAL/media/ISP/audio/transport
 - upstream/base at preservation time: repository `master`
 - preservation shape: one WIP commit
 
-The WIP is intentionally treated as a recovery snapshot. It currently includes multiple ownership domains in one commit: kernel patches/config, board-specific support, Divinus patching, proprietary Fullhan modules/libraries, and a large camera/media source/test tree. Do not use its current directory placement as architectural authority.
+The WIP is a recovery snapshot. It currently includes multiple ownership domains in one commit: kernel patches/config, board-specific support, Divinus patching, proprietary Fullhan modules/libraries, and a large camera/media source/test tree. Do not use its current placement as architectural authority.
+
+The historical FH8626-specific 3 MiB kernel / rootfs-at-`0x450000` layout is also preservation state. If the final kernel meets the 2 MiB target, Firmware should converge to ordinary OpenIPC 8 MiB image boundaries.
 
 ### Builder
 
@@ -71,13 +94,13 @@ The WIP is intentionally treated as a recovery snapshot. It currently includes m
 - preceding Divinus/device integration commit: `c7577cb3f70b4531e9ec9e686c5275bf5f170c3d`
 - current upstream `master` has advanced beyond the preserved branch; the branch is diverged
 
-`5603a701...` is the deliberate rollback/reference point before the Majestic experiment. The next commit, `bcf8658e...`, adds the preserved Majestic experiment. Do not combine these two states when reasoning about the Divinus baseline.
+`5603a701...` is the deliberate rollback/reference point before the Majestic experiment. The next commit, `bcf8658e...`, adds the preserved Majestic experiment. Do not combine these states when reasoning about the Divinus baseline.
 
-Future Builder work must start by reconciling against the then-current upstream `master`. These preserved SHAs are evidence/reference points, not future contribution bases.
+Future Builder work must start from then-current upstream `master`. Preserved SHAs are evidence/reference points, not future contribution bases.
 
 ## Ownership routing
 
-The current OpenIPC repository rules and this project's architecture imply the following destination table. Revalidate the OpenIPC side against `openipc-upstream-rules.md` before acting on it.
+Revalidate this table against `openipc-upstream-rules.md` before acting on it.
 
 | Change/artifact | Owning repository |
 |---|---|
@@ -89,17 +112,17 @@ The current OpenIPC repository rules and this project's architecture imply the f
 | Shared SoC-family packages, load scripts, runtime integration, rootfs infrastructure | `OpenIPC/firmware` |
 | One specific retail camera/device profile and per-device deltas | `OpenIPC/builder` |
 | Probing/bring-up tooling intended for OpenIPC | `OpenIPC/ipctool` where appropriate |
-| FH8626 U-Boot source | `ArthurKoba/u-boot-fullhan` until upstream ownership is explicitly chosen |
+| FH8626 U-Boot source | `ArthurKoba/u-boot-fullhan` until OpenIPC ownership is explicitly chosen |
 | Mutable reverse-analysis state | canonical Ghidra MCP project |
 | Heavy/unique primary evidence | project Google Drive evidence store |
 
-Firmware's current rules explicitly route kernel patches to `OpenIPC/linux` and support for one retail camera model to `OpenIPC/builder`. Builder's current rules describe it as a thin per-device overlay and state that reusable/common code belongs in Firmware or the component repository that owns it. These are externally maintained rules and must be refreshed before contribution work.
+Firmware's current rules explicitly route kernel patches to `OpenIPC/linux` and support for one retail camera model to `OpenIPC/builder`. Builder is a thin per-device overlay. These are externally maintained rules and must be refreshed before contribution work.
 
 ## Reconciliation method
 
 For each repository:
 
-1. read `openipc-upstream-rules.md` and refresh the relevant live upstream sources;
+1. read `openipc-upstream-rules.md` and refresh relevant live upstream sources;
 2. inspect the current repository and current upstream/base before editing;
 3. identify the preserved FH8626 state and distinguish hardware-proven behavior from source-only/WIP work;
 4. compare it against current camera contracts in this repository;
@@ -114,14 +137,13 @@ For each repository:
 
 ## Active order
 
-The current execution order is:
+1. build/measure final FH8626 kernel and hardware-accept the implemented OpenIPC-native U-Boot/layout;
+2. curate/handoff U-Boot after that hardware gate;
+3. complete kernel upstream reconciliation;
+4. perform Firmware ownership/placement sanitation;
+5. build + hardware-accept latest Divinus;
+6. transition to Majestic product path;
+7. integrate shared Firmware product pieces;
+8. build the final thin Builder device profile last.
 
-1. U-Boot contribution curation/handoff from the completed audit;
-2. Linux/kernel audit and upstream reconciliation;
-3. Firmware ownership/placement audit;
-4. latest Divinus build + physical-camera acceptance and completion;
-5. Majestic product transition;
-6. shared Firmware product integration;
-7. Builder final device profile.
-
-This order intentionally keeps Builder last and prevents the old preservation snapshots from dictating the final architecture.
+This order keeps the lowest platform contracts OpenIPC-native before higher layers are finalized and prevents preservation snapshots from dictating product architecture.
