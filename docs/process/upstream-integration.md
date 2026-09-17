@@ -16,9 +16,19 @@ Before using any ownership rule or preparing work for OpenIPC, read `openipc-ups
 - repository `main`: `cc8c034e78eba6b2a3845783889b80753bb1af1e`
 - relation: five FH8626V100 commits ahead of `main`
 
-The branch is a modern upstream-U-Boot-based FH8626V100 port and is already hardware-used. Its current job is audit/freeze and contribution cleanup, not reimplementation.
+The branch is a modern upstream-U-Boot-based FH8626V100 port and is already hardware-used on ANJIA AJL33PQ0866. The 2026-09-17 audit found no missing capability required by the exercised OpenIPC boot/recovery/update path. Its remaining job is contribution curation and handoff, not reimplementation.
 
-OpenIPC currently uses multiple SoC/family-specific U-Boot repositories rather than one universal source repository. The future upstream destination for FH8626V100 must therefore be rechecked with the live OpenIPC organization/rules when contribution work begins; do not assume an old organizational layout.
+Important handoff boundaries:
+
+- the current artifact is board-specific and must not be advertised as universal FH8626V100;
+- the Fullhan ROM envelope is `0x2bb00`; the audited production build has only 820 bytes of spare room;
+- U-Boot, Linux and the preserved FH8626 Firmware build agree on kernel `0x50000`, `rootfs_data` `0x350000`, rootfs `0x450000`;
+- current generic OpenIPC image assembly uses different ordinary rootfs offsets, so FH8626 needs an explicit assembly path;
+- OpenIPC currently uses multiple SoC/family-specific U-Boot repositories. No current OpenIPC Fullhan U-Boot source repository was identified, so maintainers should choose the source-repository ownership before organization-level publication.
+
+Recommended source handoff: curate a clean series in `u-boot-fullhan`, provide hardware/migration/provenance evidence, ask OpenIPC maintainers whether they want a new Fullhan/FH8626 repository or another destination, then integrate the agreed board-specific release artifact into Firmware. Do not move U-Boot source into Firmware or Builder.
+
+Detailed technical audit: `docs/hardware/uboot-port.md`.
 
 ### Linux/kernel
 
@@ -106,7 +116,7 @@ For each repository:
 
 The current execution order is:
 
-1. U-Boot audit/freeze;
+1. U-Boot contribution curation/handoff from the completed audit;
 2. Linux/kernel audit and upstream reconciliation;
 3. Firmware ownership/placement audit;
 4. latest Divinus build + physical-camera acceptance and completion;
