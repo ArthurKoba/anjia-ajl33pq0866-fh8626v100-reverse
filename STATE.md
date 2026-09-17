@@ -144,6 +144,14 @@ Repository: `ArthurKoba/openipc-builder`.
 
 The pre-Majestic checkpoint is the reference device-integration baseline while Divinus is completed. The later Majestic commit is an isolated experiment and must not silently become the Builder baseline. Builder itself is currently behind/diverged from newer upstream `master`, so later Builder work must begin from the current upstream base.
 
+## Proprietary media/runtime retirement
+
+The preserved Firmware branch still carries proprietary Fullhan runtime artifacts required by the historical working stack. They are transitional dependencies, not the target upstream architecture.
+
+Current preservation inventory: eight kernel modules (`bgm.ko`, `enc.ko`, `gpio_wave.ko`, `isp.ko`, `jpeg.ko`, `media_process.ko`, `vmm.ko`, `xbus_rpc.ko`), two userspace plug-ins (`libmipi.so`, `libgc1054_mipi.so`) and six firmware/profile `.bin` objects including `rtthread_arc.bin` and GC1054 sensor/profile data.
+
+The project already has substantial source-level ISP/AE/AWB/CCM/media-owner reconstruction. Reuse it rather than restarting ISP reverse wholesale, but do not equate userspace source coverage with replacement of the proprietary kernel modules. Retirement order and acceptance rules are in `docs/process/fh8626-blob-retirement.md`.
+
 ## Ownership boundary
 
 The current OpenIPC repository rules reinforce the intended split:

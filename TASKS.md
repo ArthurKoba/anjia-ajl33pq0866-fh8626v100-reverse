@@ -71,8 +71,11 @@ Detailed audit and migration contract: `docs/hardware/uboot-port.md`.
 25. Inventory every FH8626 item in that snapshot and assign one owning repository before moving or deleting it.
 26. Remove kernel patches from the future Firmware contribution set once the corresponding `openipc-linux` source is authoritative.
 27. Move/curate one-camera behavior toward Builder and Divinus implementation toward Divinus; retain in Firmware only genuinely shared SoC/runtime integration that satisfies Firmware rules and provenance requirements.
-28. Explicitly document proprietary `.ko/.so` dependencies that remain required and distinguish them from open platform support.
-29. Drop the historical FH8626 3 MiB-kernel / `0x450000` rootfs assembly rule when the final measured kernel confirms the standard OpenIPC layout.
+28. Track proprietary media/runtime artifacts through `docs/process/fh8626-blob-retirement.md`. The preservation branch currently contains 16 binary artifacts: eight `.ko`, two `.so` and six `.bin` files. They are migration dependencies/evidence, not the desired final upstream architecture.
+29. Do not delete a working blob merely to make the tree look clean. First identify its ABI, callers, hardware role, provenance and replacement boundary; then replace it with source-built code or a defensible SDK-derived artifact and hardware-test the replacement.
+30. Prioritize contained replacements before reopening broad ISP reverse: `libgc1054_mipi.so`, `libmipi.so`, then separable kernel modules and generated sensor/profile data. Treat `rtthread_arc.bin` as a separate ARC/RTX firmware project.
+31. The substantial open ISP/AE/AWB/CCM runtime already recovered in source reduces the remaining userspace algorithm work, but it does not by itself replace proprietary kernel media modules or ARC firmware.
+32. Drop the historical FH8626 3 MiB-kernel / `0x450000` rootfs assembly rule when the final measured kernel confirms the standard OpenIPC layout.
 
 ## P1 — Divinus target completion
 

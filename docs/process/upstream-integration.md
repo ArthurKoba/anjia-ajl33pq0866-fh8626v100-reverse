@@ -94,6 +94,8 @@ The preservation commit contains the newest native-HAL/media/ISP/audio/transport
 
 The WIP is a recovery snapshot. It currently includes multiple ownership domains in one commit: kernel patches/config, board-specific support, Divinus patching, proprietary Fullhan modules/libraries, and a large camera/media source/test tree. Do not use its current placement as architectural authority.
 
+The proprietary runtime is tracked as retirement debt rather than an accepted permanent Firmware package. The preserved snapshot contains eight media `.ko` files, `libmipi.so`, `libgc1054_mipi.so`, `rtthread_arc.bin` and GC1054 binary/profile data. See `docs/process/fh8626-blob-retirement.md`.
+
 The historical FH8626-specific 3 MiB kernel / rootfs-at-`0x450000` layout is preservation state only. If the final kernel meets the 2 MiB target, Firmware must converge to the ordinary OpenIPC 8 MiB image boundaries already implemented in U-Boot.
 
 ### Builder
