@@ -34,7 +34,13 @@ Repository: `ArthurKoba/u-boot-fullhan`.
 - relation to repository `main`: five FH8626V100 commits ahead
 - top preservation commit: `WIP: preserve latest FH8626V100 U-Boot state`
 
-The port is already hardware-used and near-production. It is based on modern open-source U-Boot rather than copied vendor U-Boot code. Current work is an OpenIPC/U-Boot feature and contribution-quality audit, not a new port.
+The 2026-09-17 source/architecture audit found the port functionally complete for the currently exercised OpenIPC boot/recovery/update path on AJL33PQ0866. It is already hardware-used, based on modern open-source U-Boot and internally consistent with the current FH8626 Linux/Firmware NOR layout.
+
+No bootloader feature development is currently required. Remaining U-Boot work is contribution curation: make the ANJIA board-specific boundary explicit, preserve the strict `0x2bb00` ROM envelope (the audited build has only 820 bytes of headroom), fold the `ethaddr` WIP into a clean series, document Boot ROM reconstruction provenance, run current U-Boot contribution/style gates, agree OpenIPC repository ownership/artifact naming, then integrate the FH8626-specific image offsets into Firmware assembly.
+
+The current artifact must not be described as a universal FH8626V100 bootloader; persistent compatibility with another FH8626 board requires independent DDR/bootstrap/PHY/GPIO/flash-layout validation.
+
+Detailed findings: `docs/hardware/uboot-port.md`.
 
 ### Linux/kernel
 
@@ -67,6 +73,8 @@ Repository: `ArthurKoba/openipc-firmware`.
 - top commit: `WIP: preserve FH8626V100 platform integration state`
 
 This branch is a preservation snapshot, not an accepted repository layout. The snapshot currently mixes kernel patches, board-specific support, a large Divinus patch, proprietary Fullhan modules/libraries, camera media-owner/ISP source and host tests. Every retained item must be classified by ownership before cleanup or upstream preparation.
+
+The current FH8626 Firmware snapshot confirms the same NOR contract as U-Boot/Linux: kernel at `0x50000`, a 1 MiB `rootfs_data` region at `0x350000`, and rootfs at `0x450000`. Upstream OpenIPC's ordinary 8 MiB image assembly uses different generic offsets, so final integration needs an explicit FH8626 assembly path rather than silently reusing the common layout.
 
 ### Builder
 
@@ -137,7 +145,7 @@ Firmware, dumps and other heavy primary evidence remain external and SHA-address
 
 ## Immediate engineering sequence
 
-1. audit/freeze U-Boot;
+1. curate the audited U-Boot port for OpenIPC handoff without changing hardware-proven behavior;
 2. audit/reconcile kernel and exact upstream PR state;
 3. classify the mixed Firmware preservation snapshot by repository ownership;
 4. build and target-test the latest Divinus candidate until its FH8626 path is complete;
