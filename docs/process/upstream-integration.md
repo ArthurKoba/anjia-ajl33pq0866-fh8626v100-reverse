@@ -12,40 +12,46 @@ Before using any ownership rule or preparing work for OpenIPC, read `openipc-ups
 
 Repository: `ArthurKoba/u-boot-fullhan`.
 
-Hardware-proven recovery/reference branch:
+Current OpenIPC-native working line:
 
 - `fh8626v100-mainline`
-- observed tip: `49fe46e9ddb786e232d1359f9cee68c914a3a8db`
-- repository `main`: `cc8c034e78eba6b2a3845783889b80753bb1af1e`
+- observed tip: `227bcb40f68147864d778f1431973566cca383d8`
+- equivalent native implementation ref: `fh8626v100-openipc-native@227bcb40...`
+- repository upstream base `main`: `cc8c034e78eba6b2a3845783889b80753bb1af1e`
+- current evidence level: source/build accepted, native hardware acceptance pending
 
-Implemented OpenIPC-native candidate:
+Preserved hardware-proven factory-compatible state:
 
-- `fh8626v100-openipc-native`
-- observed tip: `99c477674acc250b3177e3ae6eaaa1680c28c809`
-- five commits ahead of the hardware-proven baseline
-- current evidence level: source/build candidate, not hardware acceptance
+- `fh8626v100-stock-compatible@49fe46e9ddb786e232d1359f9cee68c914a3a8db`
 
-The native branch targets standard OpenIPC 8 MiB NOR geometry rather than the historical Fullhan partition map:
+The old proven state was given a dedicated recovery/evidence branch before `fh8626v100-mainline` was fast-forwarded to the agreed OpenIPC-native implementation. Do not confuse the new current working line with physical acceptance of the relocated flash layout.
+
+The current U-Boot target uses standard OpenIPC 8 MiB NOR geometry:
 
 `256k(boot),64k(env),2048k(kernel),5120k(rootfs),-(rootfs_data)`.
 
-The Fullhan-specific board requirement is contained inside the normal 256 KiB `boot` partition: 64 KiB reconstructed Boot-ROM/DDR data followed by a 192 KiB U-Boot slot. The persistent environment is at `0x40000`, kernel at `0x50000`, rootfs at `0x250000` and rootfs_data at `0x750000`.
+Board-specific Fullhan requirements are contained inside the normal 256 KiB boot partition: 64 KiB reconstructed Boot-ROM/DDR data at `0x00000` and a 192 KiB physical U-Boot slot at `0x10000`. Environment is at `0x40000`, kernel at `0x50000`, rootfs at `0x250000`, and rootfs_data begins at `0x750000`.
 
-The native production target uses OpenIPC environment/update conventions and no longer depends on the factory Fullhan environment. Factory `kload` and vendor GPIO syntax remain opt-in only in the RAM migration target.
+Production uses normal OpenIPC NOR environment naming: `kernaddr/kernsize`, `rootaddr/rootsize`, `mtdpartsnor8m`, `setnor8m`, `cmdnor`, `bootcmdnor`, `updatetool`, `ubnor/ubwrite`, `uknor/ukwrite`, `urnor/urwrite`. Factory `kload` and vendor GPIO syntax are opt-in RAM-recovery compatibility only.
 
-Observed native build result at `99c47767...`:
+U-Boot update uses the board-qualified artifact `u-boot-fh8626v100-anjia-ajl33pq0866-nor.bin`, not a universal FH8626 filename. The artifact is exactly `0x50000` bytes: the 256 KiB boot partition plus an erased 64 KiB environment sector, matching the normal OpenIPC updater boundary at the kernel offset.
 
-- raw production U-Boot: `0x2ed18`;
-- physical U-Boot slot: `0x30000`;
-- free payload budget after four-byte checksum fixup: 4836 bytes;
-- production and RAM targets both compile;
-- native board boot artifact generation succeeds.
+The production Fullhan descriptor is payload-derived rather than stock-fixed. Observed build at `227bcb40...`:
 
-The current repository workflow reports red only because its final post-build commands still check the old stock artifact filenames. The available GitHub App is denied workflow-file mutation permission, so that workflow update must be performed later by an identity with GitHub workflow-write access. Do not work around that permission boundary or preserve obsolete artifacts only to satisfy the stale check.
+- raw U-Boot `0x2ef20`;
+- aligned ROM payload `0x2f000`;
+- JAMCRC `0x0c6d419b`;
+- flash source `0x10000`;
+- load/entry `0xa0800000`;
+- physical slot `0x30000`;
+- boot artifact `0x40000`;
+- NOR updater artifact `0x50000`.
 
-The immediate U-Boot gate is hardware, not additional architecture work: first prove the final FH8626 kernel fits the standard OpenIPC 2 MiB partition, then perform the documented native full-layout migration and cold boot. Keep `fh8626v100-mainline` untouched as recovery authority until that passes.
+`build.sh` ran 8 native artifact tests, compiled production, generated/self-inspected the native NOR artifact, then compiled the RAM recovery target successfully. The GitHub workflow still reports red only after those successful stages because its final stock-era post-check references removed legacy artifact names/descriptor values. The permitted Bridge App lacks `workflows` write permission, so the check definition cannot currently be fixed through the authorized path. Do not fake old artifacts or bypass the permission boundary.
 
-OpenIPC currently uses multiple SoC/family-specific U-Boot repositories. No OpenIPC Fullhan U-Boot repository was identified during the current check. After hardware acceptance, curate/squash the native series, re-run current U-Boot contribution gates, provide provenance/evidence, and ask OpenIPC maintainers which source repository should own the port. Do not move U-Boot source into Firmware or Builder.
+The immediate U-Boot gate is now physical integration, not further stock-layout design. First reconcile/build the final kernel and prove the `uImage` fits the standard 2 MiB partition; then perform the documented native full-layout migration and cold boot with external recovery available.
+
+After native hardware acceptance, rebuild/squash the iterative U-Boot implementation history into a clean contribution series and run current U-Boot style/checkpatch gates. OpenIPC currently uses multiple SoC/family U-Boot repositories and no OpenIPC Fullhan U-Boot repository has been established for this work. Present the proven source/evidence/provenance/artifact scheme to maintainers and let them choose organization-level ownership. Do not move U-Boot source into Firmware or Builder.
 
 Detailed technical state: `docs/hardware/uboot-port.md`.
 
@@ -61,7 +67,7 @@ The operator reports that FH8626V100 kernel support has already been submitted t
 
 As checked on 2026-09-17, the public `OpenIPC/linux` branch table does not yet list FH8626V100, so local branch existence must not be confused with completed upstream integration.
 
-The first kernel reconciliation output must include the exact final `uImage` size because the OpenIPC-native U-Boot target now assumes the standard 2 MiB kernel partition.
+The first kernel reconciliation output must include the exact final `uImage` size because current `fh8626v100-mainline` assumes the standard OpenIPC 2 MiB kernel partition.
 
 ### Divinus
 
@@ -83,7 +89,7 @@ The preservation commit contains the newest native-HAL/media/ISP/audio/transport
 
 The WIP is a recovery snapshot. It currently includes multiple ownership domains in one commit: kernel patches/config, board-specific support, Divinus patching, proprietary Fullhan modules/libraries, and a large camera/media source/test tree. Do not use its current placement as architectural authority.
 
-The historical FH8626-specific 3 MiB kernel / rootfs-at-`0x450000` layout is also preservation state. If the final kernel meets the 2 MiB target, Firmware should converge to ordinary OpenIPC 8 MiB image boundaries.
+The historical FH8626-specific 3 MiB kernel / rootfs-at-`0x450000` layout is preservation state only. If the final kernel meets the 2 MiB target, Firmware must converge to the ordinary OpenIPC 8 MiB image boundaries already implemented in U-Boot.
 
 ### Builder
 
@@ -137,9 +143,9 @@ For each repository:
 
 ## Active order
 
-1. build/measure final FH8626 kernel and hardware-accept the implemented OpenIPC-native U-Boot/layout;
-2. curate/handoff U-Boot after that hardware gate;
-3. complete kernel upstream reconciliation;
+1. reconcile the kernel/upstream PR and build/measure the final FH8626 OpenIPC kernel;
+2. hardware-accept the already implemented OpenIPC-native U-Boot/layout with matching kernel/rootfs images;
+3. curate/handoff U-Boot after that hardware gate;
 4. perform Firmware ownership/placement sanitation;
 5. build + hardware-accept latest Divinus;
 6. transition to Majestic product path;
