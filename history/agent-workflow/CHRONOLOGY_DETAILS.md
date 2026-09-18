@@ -84,6 +84,8 @@ Sensor и MIPI path удалось довести до состояния, со�
 
 `CHAT-008` даёт независимую hardware-localization ветку того же milestone. После восстановления API lifecycle и сравнения с `C4998` обнаружено, что на OpenIPC `ISP+0x08` оставался нулевым, тогда как stock init первой аппаратной записью включает interrupt mask. Запись маски немедленно подняла ISP IRQ. Последующая изоляция отдельных mask bits показала реальный sensor cadence около 25 fps. Это доказало границу: sensor/MIPI → ISP уже живы, а следующий blocker находится в переходе ISP → VPU/PAE.
 
+`CHAT-009` уточняет cold-boot sensor precondition: для GC1054 недостаточно закончить с GPIO5=1. После reboot нужен reset pulse GPIO5 `0 → 1`; без него I2C controller жив, но GC1054 не отвечает. После корректного pulse ID снова читается как `0x10/0x54`, а vendor sensor init возвращается к успешному состоянию. Это делает GPIO5 частью reproducible cold-boot bring-up.
+
 
 ## D6 — Hardware H.264 и граница доказательства
 
