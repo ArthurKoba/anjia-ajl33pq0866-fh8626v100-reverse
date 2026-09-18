@@ -99,7 +99,7 @@ Stock media modules и sensor libraries были смонтированы из �
 Подробнее: [D9](CHRONOLOGY_DETAILS.md#d9--dequeue-grey-frame-и-stock-runtime-evidence).
 
 ### 10. Стабильный experimental substrate: persistent owner, hot reload и автоматический boot
-Источник: `CHAT-003`, 2026-08-26/27.
+Источник: `CHAT-012` → `CHAT-003`, 2026-08-26/27.
 
 После первых рабочих H.264 запусков основным bottleneck стал сам цикл экспериментов: reboot/U-Boot, повторный media bring-up и риск второго ISP owner. Серия v3.8→v4.0.4 привела к стабильному single-owner baseline, reloadable ISP plugin и сохранённым `openipc_boot/stock_boot`, а live MMIO rollback был признан опасным.
 
