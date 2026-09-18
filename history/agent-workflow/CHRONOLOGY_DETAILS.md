@@ -115,7 +115,33 @@ Fullhan media drivers оказались чувствительны к lifetime:
 
 Отрицательный момент: handoff быстро вырос до очень большого размера. Это один из исторических аргументов в пользу нынешней схемы «короткая карта + детализированные приложения», а не одного бесконечного master-документа.
 
-## D9 — Persistent owner, hot reload и автоматизация dev-loop
+## D9 — Dequeue, grey frame и stock runtime evidence
+
+`CHAT-004` начинается с конкретного незакрытого дефекта раннего H.264: userspace повторно видел один stream descriptor.
+
+Reverse `enc.ko` и `media_process.ko` установил:
+- `PAE 0xC0045011` — release текущего encoded stream для encoder channel;
+- `MEDIA 4D05` и `4D06` — query одного stream с разным wait policy, а не query/get pair;
+- read index продвигается через release path.
+
+После перестановки цикла на `query → copy → release` hardware test дал последовательные descriptors, растущие timestamps и разные CRC. Это закрыло queue-consume defect и впервые отделило «поток действительно движется» от «изображение корректно».
+
+Декодированный поток при этом оказался математически постоянным серым YUV. Дополнительные проверки показали:
+- encoder/H.264 framing не является причиной;
+- stock-like VPU upscale 1280×720 → 1920×1080 воспроизводится, но масштабирует тот же серый source;
+- значит проблема находится выше VPU/PAE.
+
+После этого reverse сместился к ISP lifecycle. Были найдены:
+- GC1054 SREG container с `day/night/wlight` profiles;
+- `API_ISP_LoadIspParam`;
+- `API_ISP_Run` и длинная runtime writer-chain;
+- связь scene parameter object с ISP context.
+
+Параллельно stock был загружен как reference runtime. Вместо дальнейших догадок был снят read-only evidence bundle: process/VMM mappings, ISP/MIPI state, ISP parameter data, ioctl trace, clock/interrupt evidence и code artifacts.
+
+Ключевой методический результат этой главы: если проблема остаётся после доказанного transport/encoder path, следующий уровень должен восстанавливаться из stock lifecycle/code/runtime evidence, а не серией несвязанных register pokes.
+
+## D10 — Persistent owner, hot reload и автоматизация dev-loop
 
 `CHAT-003` заполняет переход между ранним H.264 bring-up и более зрелым source-derived runtime.
 
@@ -145,7 +171,7 @@ Fullhan media drivers оказались чувствительны к lifetime:
 
 Standalone `D0238` полосы не исправил. Это вместе с неудачными одиночными writers окончательно сместило стратегию к восстановлению полного stock lifecycle/writer order, которое затем развивается в `CHAT-002`.
 
-## D10 — Source-derived ISP runtime
+## D11 — Source-derived ISP runtime
 
 `CHAT-002` начинается уже после первого рабочего hardware pipeline. Главная инженерная смена — отказ от лечения визуальных дефектов одиночными snapshot-регистрами.
 
@@ -159,7 +185,7 @@ Standalone `D0238` полосы не исправил. Это вместе с н
 
 Зелёный оттенок сохранялся и рассматривался отдельно как незакрытая AE/AWB/Bayer/CCM часть, а не как та же проблема, что горизонтальные полосы.
 
-## D11 — Parallel heavy reverse и authoritative artifacts
+## D12 — Parallel heavy reverse и authoritative artifacts
 
 Во время дальнейшего reverse обнаружилось, что активный binary `apollo.unpacked` неполон для поздних RW/GOT областей. Workspace был нормализован вокруг полного textual ARM dump; старый неполный artifact и лишние extraction copies были исключены из active work.
 
