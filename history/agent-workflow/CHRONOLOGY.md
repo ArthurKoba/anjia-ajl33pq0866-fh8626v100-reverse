@@ -18,7 +18,7 @@
 ### 1. Первичная идентификация и безопасный доступ
 Источник: `CHAT-005` → `CHAT-001`, 2026-08-24/25.
 
-Начальный bootlog дал SoC/flash/RAM/sensor/network ориентиры и dual-lens признаки. Затем до любой записи NOR был снят полный 8 MiB dump, из него восстановлены U-Boot environment/разметка и доступ к bootloader, после чего напрямую проверен TFTP→RAM путь.
+Начальный bootlog дал SoC/flash/RAM/sensor/network ориентиры и dual-lens признаки. Затем до любой записи NOR был снят полный 8 MiB dump, из него восстановлены U-Boot environment/разметка и доступ к bootloader. В `CHAT-006` тот же dump уже стал рабочим BSP-корпусом: из него извлекли `/app`, media modules/sensor libraries и начали восстанавливать ioctl ABI. После этого напрямую проверили TFTP→RAM путь.
 
 **Переход:** вместо немедленного портирования media — доказать безопасный RAM boot.
 
