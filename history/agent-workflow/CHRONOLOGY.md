@@ -160,6 +160,17 @@ Stock zoom trace показал, что wide/tele переключение не 
 
 Подробнее: [D15](CHRONOLOGY_DETAILS.md#d15--cross-fullhan-semantic-oracle-и-systemic-image-quality-gaps).
 
+### 16. Полный AE loop до GC1054 registers и day/night numerical parity
+Источник: `CHAT-016`, 2026-08-27/28.
+
+Persistent Agent 1 продолжил ранний C949C/C9898 reverse как большой `Task 2` и после requirement audit довёл AE/brightness control loop до sensor actuator. Были восстановлены statistics→target/error→history/hysteresis→controller→integration/gain redistribution→deferred commit→GC1054 callbacks и конкретные sensor registers.
+
+Static reverse был дополнен stock sensor-library reverse и targeted runtime captures. Day и night получили независимые numerical replay; night limits `745/2` были подтверждены одновременно live context и SREG profile. `C9898` окончательно отделён как publication/status tail, а `D0630` — как отдельный statistics-driven ISP block, не sensor AE actuator.
+
+**Переход:** AE перестал быть одним из крупных неизвестных current-day runtime; дальнейшая работа сместилась к image-detail modules и точной dual-lens/peripheral orchestration.
+
+Подробнее: [D16](CHRONOLOGY_DETAILS.md#d16--полный-ae-loop-и-daynight-parity).
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.
