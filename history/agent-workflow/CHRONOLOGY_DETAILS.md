@@ -17,7 +17,11 @@
 
 Важно, что cross-device/web hints на этом этапе использовались только как ориентир; authoritative факты затем брались из собственного dump/bootloader.
 
-Практический урок: первый milestone порта — immutable recovery anchor и безопасный путь исполнения из RAM, а не streamer и не запись flash.
+После получения root shell и полного firmware corpus CHAT-006 добавляет ещё один ранний поворот: dump используется не только как recovery image, но и как самостоятельный reverse source.
+
+Из него без дополнительных действий на target были извлечены stock kernel/initramfs, SquashFS /app, Fullhan media modules, ARC firmware и sensor/MIPI libraries. Это дало ранний ABI baseline: vermagic, module dependencies, memory reservation/VMM contract и первые ioctl mappings.
+
+Практический урок: первый milestone порта — immutable recovery anchor и безопасный путь исполнения из RAM, а все bytes, уже полученные в полном dump, должны анализироваться офлайн без лишних target-команд.
 
 ## D2 — OpenIPC RAM boot
 
