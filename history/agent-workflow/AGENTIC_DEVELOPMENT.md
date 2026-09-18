@@ -412,6 +412,24 @@ Intermediate audits remain internal provenance instead of becoming dozens of use
 
 This is an important step toward later repository-native development: the desired unit of continuity is the source line/commit history, not numbered transport archives.
 
+### A4.21 — Interaction failures become executable quality artifacts
+Статус после `CHAT-031`: `OBSERVED`.
+
+User corrections stop being ephemeral chat feedback and are explicitly turned into durable branch artifacts:
+- `CRITICAL_COMMAND_PROTOCOL.md`;
+- repeated-failure history;
+- orchestrator required actions;
+- startup/pre-send/artifact-consistency expectations;
+- positive and negative command examples.
+
+The important shift is from:
+`agent makes mistake → user corrects → agent apologizes`
+
+to:
+`repeated mistake → classify root cause → encode invariant + example + checklist → inject into next agent bootstrap`.
+
+CHAT-031 also shows why documentation alone is insufficient: the rule already existed in prior files, yet the agent still violated it. The next maturity step therefore has to be **pre-send enforcement/linting**, not merely more prose.
+
 ### A5 — Специализированные MCP/агенты
 Статус: `BOOTSTRAP`.
 
@@ -426,7 +444,7 @@ This is an important step toward later repository-native development: the desire
 
 В `CHAT-011` появляется ещё одна граница ручного режима: proven development image начинает расходиться с canonical source из-за временных overlay/init/network mutations. Без внешнего debt ledger пользователь вынужден сам напоминать, что перед final port эти изменения нельзя забыть вернуть или интегрировать чисто.
 
-## Уроки CHAT-001…CHAT-030 для будущей agentic-системы
+## Уроки CHAT-001…CHAT-031 для будущей agentic-системы
 
 1. **Текущее runtime state должно быть внешним фактом, а не памятью диалога.** Потери «stock или OpenIPC?» породили дорогие ошибки.
 2. **Agent handoff — необходим, но не должен становиться гигантской свалкой.** Нужны краткая карта и подробные приложения.
@@ -532,6 +550,11 @@ This is an important step toward later repository-native development: the desire
 102. **Отсутствие прямого workspace access нельзя компенсировать artifact spam.** Лучше один cumulative runner/report, чем десятки numbered stages.
 103. **Простой shell/tar предпочтительнее генератора-обёртки.** Tool complexity должна соответствовать задаче.
 104. **Kernel platform и media/VMM имеют разные risk gates.** Сначала закрывается безопасный SoC baseline, затем high-risk multimedia layer.
+105. **Повторяющийся UX-дефект должен стать executable quality rule.** Одного «я запомнил» недостаточно — нужны примеры, checklist и bootstrap.
+106. **Claimed fix проверяется по working bytes до ответа.** Narrative state не является source of truth.
+107. **Authoritative validation surface должна быть одна.** Если build/test принадлежит WSL владельца, локальный agent status остаётся PENDING.
+108. **Capability API и provider availability — разные вещи.** Frontend можно подготовить заранее, не создавая фиктивный hardware backend.
+109. **Критические interaction invariants нуждаются в pre-send enforcement.** Иначе даже прочитанный runbook не гарантирует соблюдение.
 
 ## Следующие исторические переходы, которые нужно искать
 
