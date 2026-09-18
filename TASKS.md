@@ -111,7 +111,7 @@ This is an independent platform research task and does **not** block Firmware, D
 
 ## P2 — Majestic product path
 
-45. **Majestic build staging advanced:** Firmware `work/fh8626v100-majestic@b0f654a...` inherits the streamer-neutral core, keeps the isolated FH8852V200 control-plane compatibility package, and adds a source-built non-mutating ABI probe. Builder now composes the Majestic target from `work/fh8626v100-anjia@0945bd3...`; the former separate Majestic Builder branch is archived.
+45. **Majestic build staging advanced:** Firmware `work/fh8626v100-majestic@c741f6f...` inherits the streamer-neutral core, keeps the isolated FH8852V200 control-plane compatibility package, and adds a source-built non-mutating ABI probe. Builder now composes the Majestic target from `work/fh8626v100-anjia@0945bd3...`; the former separate Majestic Builder branch is archived.
 46. Owner build gate: build `fh8626v100_lite_anjia-ajl33pq0866_majestic` with `OPENIPC_FW_REPO=https://github.com/ArthurKoba/openipc-firmware.git` and `OPENIPC_FW_REV=work/fh8626v100-majestic`; record resolved config and image sizes. Do not claim the reconstructed branch is validated merely because the historical experiment worked.
 47. First hardware gate remains media-off: boot, Majestic process, port 80, WebUI/haserl, configuration persistence and normal board/network/PTZ/illumination services. In the same run execute `majestic-fh8626-abi-probe` and retain its complete output plus the exact donor Majestic SHA-256; the probe must not be treated as a media initialization test.
 48. Preserve the historical boundary: FH8852V200 Majestic reached HTTP/WebUI successfully, but explicit FH8626 GC1054 SDK startup segfaulted. Do not hide this by enabling video in the default staging config.

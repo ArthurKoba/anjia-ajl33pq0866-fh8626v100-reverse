@@ -36,7 +36,7 @@ Firmware:
 
 - shared streamer-neutral core: `ArthurKoba/openipc-firmware/work/fh8626v100@eabd1ccd4684af6997771269c4655f7e4435bcec`;
 - Divinus direction: `work/fh8626v100-divinus@0b12c87c202b12733b0a1b535b56d66891e4ca93`;
-- Majestic direction: `work/fh8626v100-majestic@b0f654a2179ebc17bea639469819e7f917458f3a`.
+- Majestic direction: `work/fh8626v100-majestic@c741f6f0a8327db1d0b7e9bbd5f7df7639d47878`.
 
 Builder:
 
@@ -114,7 +114,7 @@ The video/ISP path is explicitly unfinished. Do not enable media by default or c
 
 ## Next gates
 
-1. Owner-build Firmware `work/fh8626v100-majestic@b0f654a...` through Builder `work/fh8626v100-anjia` target `fh8626v100_lite_anjia-ajl33pq0866_majestic`; record resolved Buildroot config plus kernel/rootfs sizes.
+1. Owner-build Firmware `work/fh8626v100-majestic@c741f6f...` through Builder `work/fh8626v100-anjia` target `fh8626v100_lite_anjia-ajl33pq0866_majestic`; record resolved Buildroot config plus kernel/rootfs sizes.
 2. Boot it and confirm Majestic process ownership, port 80, WebUI/haserl and board networking/services with media disabled.
 3. Run `majestic-fh8626-abi-probe` and retain complete output. Also record `sha256sum /usr/libexec/majestic-fh8852v200/majestic` so this first reconstructed run is attributable to exact donor bytes.
 4. Pin or otherwise make that donor Majestic binary reproducible; the current `master` S3 artifact is a moving input and no immutable donor object is currently indexed in `evidence/MANIFEST.tsv`.

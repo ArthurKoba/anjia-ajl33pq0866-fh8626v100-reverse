@@ -28,7 +28,7 @@ When an upstream/vendor Majestic build for FH8626V100 becomes available, record 
 
 ## Current compatibility surface
 
-Firmware `work/fh8626v100-majestic@b0f654a...` contains a source-built ABI probe for the retained FH8852V200 userspace baseline. It is deliberately non-mutating: no sensor, ISP, VI or VENC initialization is called. Its purpose is to separate three questions before the next adapter slice:
+Firmware `work/fh8626v100-majestic@c741f6f...` contains a source-built ABI probe for the retained FH8852V200 userspace baseline. It is deliberately non-mutating: no sensor, ISP, VI or VENC initialization is called. Its purpose is to separate three questions before the next adapter slice:
 
 - are the eight donor libraries loadable as one closure under the FH8626 musl image;
 - which expected Fullhan VMM/SYS/VPSS/VENC/MIPI/ISP symbols are actually resolvable;
