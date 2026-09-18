@@ -11,6 +11,12 @@ Recovered dependencies show a narrow interface class:
 - `libgc1054_mipi.so` depends on libc plus `mipi_init` and ordinary wrappers such as `ioctl`, `open/close`, `usleep`, `malloc/free`, `getenv`, `strtol`, `memset/strcmp`, and simple formatting/output;
 - `libmipi.so` uses `mmap/munmap`, `open/close`, `usleep` and simple formatting/error helpers.
 
+The native FH8626 GC1054 `Sensor_Create()` contract is now explicitly sized: it returns a **0x68-byte callback table**. Recovered offsets include name at +0x00, gain at +0x04, VI attributes at +0x08, integration at +0x10, initialization at +0x28, format at +0x34, register write at +0x3c and the common control/query surface at +0x4c.
+
+Static inspection of three independent FH8852V200 sensor plug-ins (`gc4653_mipi`, `jxf32_mipi`, `mn34425_mipi`) shows a different, internally consistent **0x7c-byte callback table**. Representative FH8852 offsets are: GetSensorViAttr +0x04, Sensor_Init +0x14, Sensor_DeInit +0x1c, SetSensorFmt +0x20, Sensor_Kick +0x24, SetSensorReg +0x28, GetSensorReg +0x3c, GetAEDefault/GetAEInfo +0x50/+0x54, SetIntt +0x58, SetGain +0x60 and Sensor_Isconnect +0x78.
+
+Therefore a native FH8626 `libgc1054_mipi.so` callback object is **not ABI-compatible** with the FH8852V200 ISP merely because both expose `Sensor_Create`. Passing the 0x68-byte object directly to an FH8852 consumer crosses a proven structure-layout mismatch.
+
 No recovered GC1054/MIPI boundary required complex libc-private structures such as pthread internals, `stat`, `timespec` or another opaque vendor-owned object.
 
 ## Porting decision

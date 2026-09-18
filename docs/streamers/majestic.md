@@ -28,7 +28,7 @@ When an upstream/vendor Majestic build for FH8626V100 becomes available, record 
 
 ## Current compatibility surface
 
-Firmware `work/fh8626v100-majestic@c741f6f...` contains a source-built ABI probe for the retained FH8852V200 userspace baseline. It is deliberately non-mutating: no sensor, ISP, VI or VENC initialization is called. Its purpose is to separate three questions before the next adapter slice:
+Firmware `work/fh8626v100-majestic@7fd1ee93...` contains a source-built ABI probe for the retained FH8852V200 userspace baseline. It is deliberately non-mutating: no sensor, ISP, VI or VENC initialization is called. Its purpose is to separate three questions before the next adapter slice:
 
 - are the eight donor libraries loadable as one closure under the FH8626 musl image;
 - which expected Fullhan VMM/SYS/VPSS/VENC/MIPI/ISP symbols are actually resolvable;
@@ -41,3 +41,10 @@ The donor Majestic package still fetches a moving `master` S3 artifact. The firs
 ## Upstream production request
 
 The production request to Majestic maintainers is drafted in `docs/process/fh8626-majestic-upstream-issue.md`. It is not to be opened by an agent. The preferred production outcome is a native FH8626V100 platform build; the compatibility direction remains staging until either that exists or the source adapter boundary is fully understood, reproducible and hardware-accepted.
+
+
+## Sensor compatibility adapter
+
+The first media-facing source adapter is now staged. FH8852V200 sensor plug-ins use a 0x7c-byte callback object, while the recovered FH8626 GC1054 object is 0x68 bytes with materially different callback ordering. The old direct-plugin experiment therefore crossed a concrete ABI mismatch.
+
+The new Firmware facade presents the FH8852 callback shape and translates the subset already proven on FH8626. It is reached only through the explicit `majestic-fh8626-media-run` path. The normal service remains media-off until the facade and the following ISP/VI/VENC layers receive fresh target evidence.

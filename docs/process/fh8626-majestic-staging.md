@@ -1,6 +1,6 @@
 # FH8626V100 Majestic staging
 
-Status: `STAGED / HISTORICAL_CONTROL_PLANE_HARDWARE_PASS / ABI_PROBE_READY / NEW_BUILD_PENDING`.
+Status: `STAGED / HISTORICAL_CONTROL_PLANE_HARDWARE_PASS / SENSOR_ABI_ADAPTER_READY / NEW_BUILD_PENDING`.
 
 Checked: 2026-09-18.
 
@@ -69,7 +69,9 @@ The package:
 - installs a media-off `/etc/majestic.yaml`;
 - installs an init script using the hardware-proven HTTP-only invocation;
 - builds and installs `majestic-fh8626-abi-probe`, which performs no SDK/media initialization and makes no device writes;
-- installs **no** FH8852 kernel modules, firmware, load scripts or sensor plug-ins.
+- builds a source `majestic-fh8626/libgc1054_mipi.so` facade plus an explicit `majestic-fh8626-media-run` bring-up runner;
+- keeps the normal init service media-off; the sensor facade is not selected by default;
+- installs **no** FH8852 kernel modules, firmware, load scripts or donor sensor plug-ins.
 
 This is intentionally a compatibility staging package, not a statement that FH8852 userspace blobs are the final FH8626 media architecture.
 
@@ -127,3 +129,28 @@ The video/ISP path is explicitly unfinished. Do not enable media by default or c
 5. Use the probe result and translation table to choose the smallest source adapter slice. Do not re-reverse already recovered FH8626 VMM/VPU/PAE/ISP operations.
 6. First media acceptance remains VI -> VENC -> sustained RTSP. ISP tuning, JPEG, audio and board scene integration follow only after base H.264 is stable.
 7. Do not copy old Firmware kernel patches, FH8626 factory blobs or FH8852 kernel-side payloads into this direction to make capture appear to work.
+
+
+## Sensor ABI mismatch and first source adapter
+
+The retained hardware experiment is now more precisely explained. The FH8852 Majestic build accepted the explicit native GC1054 path and logged `Using fh8626/libgc1054_mipi sensor` before its SDK path crashed, while direct bus-0 reads still returned GC1054 ID `0x10/0x54`. That result proved neither sensor failure nor simple loader failure.
+
+A later static comparison closes the missing ABI question:
+
+- native FH8626 GC1054 `Sensor_Create()` returns a 0x68-byte callback table;
+- FH8852V200 GC4653, JXF32 and MN34425 plug-ins each return a 0x7c-byte table;
+- their callback ordering differs materially, not merely by appended optional fields.
+
+Firmware `work/fh8626v100-majestic@7fd1ee93...` therefore no longer feeds the native 0x68-byte object directly to an FH8852 consumer for the next media experiment. It builds an FH8852-shaped GC1054 facade and maps only recovered semantics onto the native FH8626 callback object. Proven mappings include VI attributes, initialization, format, register access, integration, gain and available AWB callbacks. FH8852-only or not-yet-proven operations are localized as staging stubs and can be forced to `-ENOSYS` with `FH8626_MAJESTIC_STRICT=1`.
+
+This facade is transitional evidence tooling. It still expects the transitional native FH8626 GC1054 plug-in when the explicit media runner is used; it is not the final open sensor backend and it is not enabled by the default media-off service.
+
+## Donor/native ioctl overlap
+
+Static donor inspection also shows that not every FH8852 userspace layer needs replacement merely because the SoC differs. At least these literal operations overlap the recovered FH8626 contract exactly:
+
+- FH8852 `libdsp.so` contains `MEDIA_BIND 0xC0084D00`;
+- FH8852 `libdsp.so` contains `MEDIA_UNBIND_SRC 0xC0044D02`;
+- FH8852 `libispcore.so` contains ISP start request `0x0000690A`.
+
+This is evidence of partial ioctl-family continuity, not proof that the associated structures or complete libraries are binary-compatible. Adapter work should replace a donor layer only after its actual argument/layout contract is shown to differ.
