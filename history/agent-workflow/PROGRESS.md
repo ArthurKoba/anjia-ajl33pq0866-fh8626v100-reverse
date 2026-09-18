@@ -1,26 +1,26 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_006_IN_PROGRESS`
+Статус: `CHAT_006_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **5**
-- Последний источник: `CHAT-005`
+- Обработано исторических файлов: **6**
+- Последний источник: `CHAT-006`
 - Период последнего источника: **2026-08-24 — 2026-08-25**
-- Следующее действие: завершить анализ `CHAT-006`
+- Следующее действие: post-file refresh + обязательная 6-file live-state сверка
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-005 |
+| Направление | Файл | Состояние после CHAT-006 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 5/?? источников обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 21 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 30 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | backfill начальной hardware/recovery/TFTP/RAM-boot фазы |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | A0 и A4 дополнены самым ранним manual-chat/TFTP этапом |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 6/?? источников обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 22 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 31 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | ранний factory BSP/media corpus и ioctl ABI встроены в D1 |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлен A0.5 artifact-assisted analysis |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -60,7 +60,7 @@
 | 3 | `CHAT-003` | 2026-08-26 — 2026-08-27 | `DONE` | Исторический backfill: v3.8→v4.0.4, persistent owner/hot reload, deterministic test lessons, boot automation, AE feedback, отказ от live MMIO rollback; по source numbering пропущенный/смещённый #2 считается закрытым и отдельно не ожидается |
 | 4 | `CHAT-004` | 2026-08-26 — 2026-08-27 | `DONE` | Dequeue/release semantics и движущаяся stream queue; grey-frame локализован выше encoder/upscale; full Apollo + stock runtime bundle; переход к self-service reverse. Поздняя часть частично перекрывает CHAT-003 и использована только как дополнительное evidence |
 | 5 | `CHAT-005` | 2026-08-24 — 2026-08-25 | `DONE` | Самый ранний backfill: hardware/dual-lens identification, immutable full-flash dump, U-Boot access, TFTP→RAM proof и выбор hybrid stock-kernel + OpenIPC initramfs strategy |
-| 6 | `CHAT-006` | 2026-08-24 — 2026-08-25 | `IN_PROGRESS` | Перекрывает ранний CHAT-005, но добавляет stock root-shell inventory, autonomous extraction `/app`, media module baseline и первый ioctl ABI/probe reverse |
+| 6 | `CHAT-006` | 2026-08-24 — 2026-08-25 | `DONE` | Перекрывает CHAT-005, но добавляет root-shell inventory, самостоятельное извлечение `/app` из SPI dump, media module baseline, первые ioctl ABI mappings и переход от ручного target inventory к artifact-assisted analysis |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -217,6 +217,34 @@
 - GitHub authority для собственного FH8626 проекта;
 - MCP/Ghidra shared reverse workspace.
 
+## Что CHAT-006 добавил к картине
+
+### Новый уникальный error-class
+- агент попросил пользователя вручную искать/передавать media modules, хотя полный SPI dump уже был доступен и позволял извлечь их автономно;
+- после замечания пользователя работа была перенесена на уже имеющийся artifact.
+
+### Усиленные существующие классы
+- неподтверждённые process names: сначала предполагался `MainApp`, затем `noodles`, а фактический startup script показал основной binary `apollo`;
+- лишние target-действия должны исчезать, если нужные bytes уже есть в dump/workspace.
+
+### Новые/уточнённые best practices
+- full firmware dump используется не только как recovery image, но и как offline development substrate;
+- из одного dump можно автономно получить kernel/initramfs, `/app`, modules, sensor libraries и начать ABI reverse;
+- перед новой target-командой сначала проверяется уже имеющийся corpus.
+
+### Технический вклад
+Источник добавляет ранний stock BSP baseline:
+- фактические Fullhan media modules и порядок их роли;
+- VMM reserved-memory contract;
+- sensor/MIPI libraries;
+- первые VPSS/VENC/media ioctl mappings;
+- первый read-only standalone probe.
+
+Это не отдельная поздняя глава, а детализация начальной D1-фазы до первого полноценного OpenIPC RAM pass.
+
+### Пересечение с CHAT-005
+Начальная часть `CHAT-006` почти повторяет `CHAT-005` (hardware/U-Boot/TFTP). Повторные эпизоды не продублированы; использована только новая часть после stock root access.
+
 ## Следующее действие
 
-Получить следующий исторический источник. Расширенная live-state сверка будет после шестого обработанного файла либо раньше при противоречии.
+Выполнить обязательный post-file refresh и шестую live-state сверку с `STATE.md`, `TASKS.md` и текущими ветками. После этого ожидать следующий исторический источник.
