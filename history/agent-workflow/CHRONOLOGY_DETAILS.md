@@ -281,6 +281,9 @@ Stock zoom trace показывает lifecycle переключения:
 
 Night mode в этом источнике отделён как следующий слой, а не новый sensor mode: тот же GC1054, но другие scene/style, AE limits, saturation/IR-cut state и night-specific branches writers. Day core должен быть закрыт первым, после чего те же функции проходят по night path.
 
+`CHAT-016` позднее уточняет switch implementation: `zj_switch_lense → service_venc_sensor_switch → D8308`, query/toggle/explicit target semantics, stop/restart VENC, mirror/flip save/restore и отдельные GPIO light/IR-cut controls. Эти детали статически подтверждают D13, но controlled wide→tele→wide runtime capture в этом источнике ещё pending.
+
+
 ## D14 — AWB → CCM coherent runtime и hardware validation
 
 `CHAT-014` — отдельная parallel-agent ветка, которая получает уже доказанные AWB inputs и занимается downstream color path без повторного reverse AE/AWB frontend.
@@ -362,3 +365,47 @@ External same-SoC research также дал useful architecture hints:
 
 Важнейший методический результат: дальнейший reverse неизвестной Apollo-функции должен сначала проверять наличие именованного Fullhan homolog, но вся target-specific arithmetic/state/MMIO всё равно доказывается на FH8626.
 
+## D16 — Полный AE loop и day/night parity
+
+`CHAT-016` — persistent Agent 1 branch. Task 1 закрывает точную структуру `C9740/C949C/C9898`, после чего Task 2 расширяется до полного stock AE/brightness control loop.
+
+Итоговая функциональная цепочка:
+`statistics → C757C → target/error → C6D04 history → C90D4 limits → C7C3C gate → C883C/C8134 → C7058/C6E64/C72A0 → immediate/deferred actuator → C6AC8 → GC1054 callbacks → sensor registers → next frame`.
+
+Ключевые контракты:
+- `C6D04` — 60-frame rolling error history;
+- `C7C3C` — hysteresis/state gate;
+- current GC1054 day выбирает controller branch `C7EB0 → C883C`;
+- `C6AC8` — deferred actuator queue с dirty semantics;
+- `C72A0` идентифицирован как anti-flicker-related sensor control;
+- `C9898` после уточнений считается publication/status tail, а не exposure controller;
+- `D0DF4/D0528/D0630` отделены как самостоятельный adaptive ISP/LTM-like statistics block.
+
+Для sensor boundary был отдельно извлечён и дизассемблирован stock `libgc1054_mipi.so`. Восстановлено:
+- `set_intt` до GC1054 integration registers `0x03/0x04`;
+- `set_gain` через gain ranges и registers `0xB6/0xB1/0xB2`, включая page-4 `0x40`;
+- VTS/frame-length callback;
+- callback table identity на live stock process.
+
+Completion audit был важен: первоначальный Task2 v1 оказался лишь 70–80% исходного scope. Работа продолжилась через v2/v3/v5, пока static material не был исчерпан и оставшиеся gaps не были переведены в конкретные runtime requests.
+
+Day path получил полный numerical replay. Night path потребовал отдельного read-only stock capture:
+- `ctx+0x38 = 745`;
+- `ctx+0x3B = 32`, что даёт effective minimum integration 2;
+- `ctx+0x30 = 95` → target 1520;
+- center-only statistics branch `ctx+0x3D=1`;
+- live measured value 1547 → error +27;
+- controller gate не делает нового actuator write, current intt/gain остаются 31/64.
+
+Sensor callback capture доказал, что второй zoom в этом состоянии использует тот же `libgc1054_mipi.so`. Чтобы не спутать zoom profile с night profile, был использован исходный `sensor_gc1054_mipi.bin`; SREG audit показал `day/night/wlight`, а live stage2 совпал именно с night payload. Так историческая пара `745/2` получила static + runtime provenance.
+
+После AE Task2 тот же specialist перешёл к Task3 по lens/peripheral orchestration. Static reverse уточнил `zj_switch_lense → service_venc_sensor_switch → D8308`:
+- target 1 = wide, target 2 = tele;
+- `-1` query, `0` toggle, `1/2` explicit target;
+- wide GPIO4=1/GPIO14=0, tele GPIO4=0/GPIO14=1;
+- активные VENC channels останавливаются, mirror/flip сохраняются, GPIO target меняется, затем state восстанавливается и VENC запускается снова;
+- sensor create/init/set_fmt при runtime switch не повторяются;
+- day/night/light остаются отдельной state machine;
+- IR LED GPIO25, white LED GPIO23, IR-cut GPIO18/60, mute1 GPIO24.
+
+Эта lens-switch часть в `CHAT-016` остаётся static-complete до controlled hardware capture; её не следует повышать до нового hardware-pass.
