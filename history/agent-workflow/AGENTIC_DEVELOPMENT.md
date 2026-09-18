@@ -192,6 +192,25 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 
 Это ещё не repository-native automation и не MCP, но уже явный **meta-engineering layer**: система начинает проектировать собственный workflow так же, как технический runtime.
 
+### A4.9 — Central orchestrator + persistent specialist lanes
+Статус после `CHAT-015`: `OBSERVED`.
+
+Параллельность становится не просто «второй агент помогает», а явной orchestration model.
+
+Главный агент:
+- держит canonical system map;
+- делит работу по независимым state/dataflow boundaries, а не произвольным адресным диапазонам;
+- формулирует universal prompt + specialist scope;
+- запрещает specialist'ам hardware writes и самостоятельное взаимное merge;
+- принимает finished handoff units, сверяет confidence и только затем интегрирует;
+- сохраняет закрытые области как no-reverse zones для следующих задач.
+
+После первых слишком коротких задач модель усложняется: специалист остаётся в той же вкладке и получает `Task 2`, `Task 3` с более крупной cohesive subsystem областью. Это сохраняет локально набранный контекст и уменьшает onboarding overhead.
+
+Одновременно выявляется инфраструктурный предел эпохи: общий Project context не гарантирует общий файловый sandbox. Поэтому оркестратор ещё вручную прикрепляет authoritative handoff каждому specialist lane.
+
+Это уже близко к настоящей multi-agent engineering system, но пользователь всё ещё остаётся router-ом physical artifacts между чатами.
+
 ### A5 — Специализированные MCP/агенты
 Статус: `BOOTSTRAP`.
 
@@ -206,7 +225,7 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 
 В `CHAT-011` появляется ещё одна граница ручного режима: proven development image начинает расходиться с canonical source из-за временных overlay/init/network mutations. Без внешнего debt ledger пользователь вынужден сам напоминать, что перед final port эти изменения нельзя забыть вернуть или интегрировать чисто.
 
-## Уроки CHAT-001/002/003/004/005/006/007/008/009/010/011/012/013/014 для будущей agentic-системы
+## Уроки CHAT-001/002/003/004/005/006/007/008/009/010/011/012/013/014/015 для будущей agentic-системы
 
 1. **Текущее runtime state должно быть внешним фактом, а не памятью диалога.** Потери «stock или OpenIPC?» породили дорогие ошибки.
 2. **Agent handoff — необходим, но не должен становиться гигантской свалкой.** Нужны краткая карта и подробные приложения.
@@ -255,6 +274,11 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 45. **Operational session state должен жить вне памяти чата.** IP, active owner, compiler, checkpoint, Windows/WSL roots и unsafe workflows нужно хранить в одном current-state artifact.
 46. **Эксперимент лучше моделировать state machine.** Это уменьшает invalid captures и делает baseline/change/readback/rollback воспроизводимыми.
 47. **Quality retrospective — такой же инженерный artifact, как reverse handoff.** Повторяющиеся ошибки нужно собирать, версионировать и превращать в правила/automation, а не исправлять устно заново.
+48. **Parallel-agent scope должен быть достаточно крупным, чтобы окупать onboarding.** Лучше persistent lane с Task N по целому subsystem, чем новая вкладка на каждую функцию.
+49. **Project context и artifact bytes — разные ресурсы.** Specialist не начинает exact reverse, пока не подтвердил доступ к authoritative inputs.
+50. **Главный агент интегрирует, specialists исследуют.** Они возвращают finished units с confidence/unresolved/integration notes, но не сливают друг друга и не меняют hardware runtime самостоятельно.
+51. **Semantic oracle ускоряет reverse, но не заменяет target proof.** Именованный соседний Fullhan сначала даёт смысл/структуру, затем Apollo/FH8626 подтверждает ABI/state/MMIO.
+52. **External research должен иметь provenance и reusable method.** Один living research document полезнее серии забытых веб-находок.
 
 ## Следующие исторические переходы, которые нужно искать
 
