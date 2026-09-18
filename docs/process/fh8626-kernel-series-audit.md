@@ -190,11 +190,11 @@ For every candidate option, classify it as one of:
 - `UNRESOLVED`: dependency/use must be traced before changing it;
 - `REMOVE`: no target/runtime dependency remains and removal is source/build safe.
 
-The next config pass must start from the current FH8626 config and trace each non-obvious symbol to actual code/package/runtime use. It must not mechanically minimize the config and must not copy a "smaller" neighboring config.
+The first production config pass is complete and recorded in `docs/process/fh8626-kernel-config-audit.md`. Firmware `rework/fh8626v100-clean-integration@c437d6eb...` contains the resulting source candidate. Further removals require the owner build's resolved `.config` or new runtime evidence; do not mechanically minimize the config and do not copy a "smaller" neighboring config.
 
 ## Remaining gates
 
-1. Owner-side contribution validation of `rework/fh8626v100-final-series`: repository/kernel checks, exact OpenIPC build and final `uImage` measurement.
+1. Owner-side contribution validation of `rework/fh8626v100-final-series` together with Firmware `rework/fh8626v100-clean-integration@c437d6eb...`: repository/kernel checks, resolved `.config`, exact OpenIPC build and final `uImage` measurement.
 2. Update the Firmware AJL kernel fragment from `CONFIG_FH8626V100_AJL33PQ0866_MMC` to `CONFIG_FH8626V100_SD0_1BIT` only when Firmware is switched away from its preserved old kernel patch set to the curated Linux series.
 3. Remove Firmware-side duplicate kernel patches from the eventual upstream Firmware contribution once the Linux branch is authoritative.
 4. Retest behavior-changing source deltas as applicable, with special attention to AXI-DMA registration, before promoting the reconstruction beyond `SOURCE_CONFIRMED / AUDIT`.

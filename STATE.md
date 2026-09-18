@@ -132,7 +132,8 @@ Preservation snapshot:
 Clean integration candidate:
 
 - branch: `rework/fh8626v100-clean-integration`
-- tip: `f9146dd42a2f606d305ebccd301268848de26880`
+- tip: `c437d6eb62ade81595c20cbb765b8ad10300e3e7`
+- pre-config-audit checkpoint: `f9146dd42a2f606d305ebccd301268848de26880`
 - base: `master@47ccdbee45fa5b8eee69c25c7af656cd5d35a28e`
 - diff: only the FH8626 generic kernel config, generic lite defconfig and CI registration
 
@@ -140,7 +141,7 @@ The clean branch consumes `openipc-linux/rework/fh8626v100-final-series@357c2d13
 
 Firmware now inherits the standard OpenIPC 8 MiB assembly budget: 2 MiB kernel plus 5 MiB SquashFS, while the Linux source supplies `256K boot + 64K env + 2048K kernel + 5120K rootfs + rest rootfs_data` (704 KiB remainder on 8 MiB NOR). The prior 3 MiB-kernel arrangement remains preservation evidence only.
 
-The clean branch is `SOURCE_CONFIRMED / CLEAN_ARCH_CANDIDATE`, not a build or hardware acceptance. The owner still needs to run the authoritative build and record final kernel/rootfs sizes. Binary ownership and exact hashes are recorded in `docs/process/fh8626-firmware-ownership-audit.md`.
+The clean branch is `SOURCE_CONFIRMED / CLEAN_ARCH_CANDIDATE`, not a build or hardware acceptance. A production kernel-config audit removed only traced legacy/debug/dead facilities, made RTC device registration opt-in, and made recovery NFS explicitly v3-only. The exact decisions are in `docs/process/fh8626-kernel-config-audit.md`. The owner still needs to run the authoritative build and record the resolved `.config` plus final kernel/rootfs sizes. Binary ownership and exact hashes are recorded in `docs/process/fh8626-firmware-ownership-audit.md`.
 
 ### Builder
 

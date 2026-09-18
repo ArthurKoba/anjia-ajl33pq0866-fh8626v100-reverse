@@ -64,10 +64,10 @@ Detailed audit and migration contract: `docs/hardware/uboot-port.md`.
 30. Retest behavior-changing areas, especially the newly registered AXI-DMA path, before promoting the reconstruction beyond `SOURCE_CONFIRMED / AUDIT`.
 31. Only after validation, perform the single owner-authorized update of PR-facing history if still required.
 32. Agent work remains browser/API-first; no agent-side clone, Buildroot setup or heavyweight build unless explicitly requested by the owner.
-33. Perform a dedicated FH8626 production kernel-config audit using `docs/process/fh8626-kernel-series-audit.md` methodology. Mature non-Fullhan OpenIPC ports are structural references only; do not copy their symbol choices and do not use FH885x configs as authority.
-34. Classify every non-obvious FH8626 kernel option as `PRODUCTION_REQUIRED`, `BOARD_OPTIONAL`, `BRINGUP_ONLY`, `UNRESOLVED` or `REMOVE`. Trace removals to actual runtime/package/kernel use before editing.
-35. Where practical, separate TFTP/initramfs/NFS/debug support from the production NOR kernel config instead of carrying bring-up facilities permanently.
-36. After config cleanup, owner-side build must compare final `.config`, `uImage` size and boot/runtime behavior against the pre-cleanup candidate before acceptance.
+33. **Production kernel-config source audit complete:** decisions and retained/dead symbols are recorded in `docs/process/fh8626-kernel-config-audit.md`; Firmware clean candidate is now `rework/fh8626v100-clean-integration@c437d6eb...`.
+34. Keep recovery-only NFSv3/IP-autoconfig/initrd and debugfs explicit during the current bring-up phase; do not remove them merely for size. Revisit a separate bring-up fragment only after the main hardware acceptance path is stable.
+35. Owner build gate: resolve the exact final `.config` from `c437d6eb...`, record `uImage`/SquashFS sizes and hashes, and check whether Kconfig re-selected any requested-off symbol.
+36. Hardware regression gate after that build: Ethernet, USB/RTL8188FU, microSD, SADC illumination, pinctrl/PTZ, watchdog, media/audio and normal NOR rootfs behavior.
 
 ## P1 — RTC / TSENSOR investigation (non-blocking)
 
@@ -87,7 +87,7 @@ This is an independent platform research task and does **not** block Firmware, D
 
 24. Keep `openipc-firmware/fh8626v100-platform@f4bf49da...` as a preservation snapshot only.
 25. Ownership inventory is complete in `docs/process/fh8626-firmware-ownership-audit.md`: 16 binary paths, 15 unique payloads, exact SHA-256 values and intended repository/disposition are recorded.
-26. Use `openipc-firmware/rework/fh8626v100-clean-integration@f9146dd4...` as the clean Firmware source/layout candidate. It is rebuilt from current `master`, not cleaned in place.
+26. Use `openipc-firmware/rework/fh8626v100-clean-integration@c437d6eb...` as the clean Firmware source/layout candidate. `f9146dd4...` is the pre-kernel-config-audit checkpoint. The branch is rebuilt from current `master`, not cleaned in place.
 27. The clean branch consumes `openipc-linux/rework/fh8626v100-final-series@357c2d13...` directly and contains no duplicate FH8626 kernel patch directory.
 28. Replace the temporary ArthurKoba Linux tarball pin with the OpenIPC-owned Linux ref after the curated kernel series lands upstream.
 29. AJL-specific policy now has a clean staging home in `openipc-builder/rework/fh8626v100-anjia-clean-profile@1ea41ef2...`, rebuilt from current Builder master. Its kernel fragment selects `CONFIG_FH8626V100_SD0_1BIT=y`; the old `CONFIG_FH8626V100_AJL33PQ0866_MMC` symbol is absent. It is temporarily CI-opted-out as cross-repo staging. Next gate is integration with the Firmware source Builder consumes, removal of that opt-out, then owner build/hardware validation.
