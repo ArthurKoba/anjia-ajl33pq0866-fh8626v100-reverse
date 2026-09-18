@@ -239,6 +239,17 @@ External/device research связывает target не только с Fullhan 
 
 Подробнее: [D22](CHRONOLOGY_DETAILS.md#d22--oemidentity-ajl33pq0866-cf26sm-и-donor-search).
 
+### 23. Cross-platform gap hunting: lifecycle, statistics epoch и RAW architecture leads
+Источник: `CHAT-025`, 2026-08-28/29.
+
+Specialist external-research lane перестаёт делать широкий homolog search и целится в remaining production/reverse gaps. Exact-FH8626 public adapters и соседние Fullhan SDK/runtime материалы дают имена lifecycle/API, toolchain/SDK targets и независимые архитектурные ориентиры.
+
+Критический вывод: sensor/VI работает около 25 fps, тогда как encoder может работать на другой cadence; поэтому encoded dequeue нельзя использовать как автоматический proxy свежего ISP statistics frame. External lifecycle patterns также усиливают необходимость exact reverse teardown/re-init и early RAW/Bayer initialization.
+
+**Переход:** внешний research становится intelligence layer, который выдаёт Agent 1 адресные hypotheses/omissions вместо повторного общего reverse.
+
+Подробнее: [D23](CHRONOLOGY_DETAILS.md#d23--cross-platform-gap-hunter-и-targeted-reverse-leads).
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.
