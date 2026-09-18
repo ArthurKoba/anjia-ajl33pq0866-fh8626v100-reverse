@@ -1,26 +1,26 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_007_IN_PROGRESS`
+Статус: `CHAT_007_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **6**
-- Последний источник: `CHAT-006`
-- Период последнего источника: **2026-08-24 — 2026-08-25**
-- Следующее действие: завершить анализ `CHAT-007`
+- Обработано исторических файлов: **7**
+- Последний источник: `CHAT-007`
+- Период последнего источника: **2026-08-25 — 2026-08-26**
+- Следующее действие: выполнить обязательный post-file refresh
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-006 |
+| Направление | Файл | Состояние после CHAT-007 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 6/?? источников обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 22 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 31 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | ранний factory BSP/media corpus и ioctl ABI встроены в D1 |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлен A0.5 artifact-assisted analysis |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 7/?? уникальных источников обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 26 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 34 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | детализированы clean OpenIPC baseline, media-stack bring-up и missing ISP lifecycle |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A1.5 идея repository-backed workflow; parallel checkpoint усилен |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -61,7 +61,7 @@
 | 4 | `CHAT-004` | 2026-08-26 — 2026-08-27 | `DONE` | Dequeue/release semantics и движущаяся stream queue; grey-frame локализован выше encoder/upscale; full Apollo + stock runtime bundle; переход к self-service reverse. Поздняя часть частично перекрывает CHAT-003 и использована только как дополнительное evidence |
 | 5 | `CHAT-005` | 2026-08-24 — 2026-08-25 | `DONE` | Самый ранний backfill: hardware/dual-lens identification, immutable full-flash dump, U-Boot access, TFTP→RAM proof и выбор hybrid stock-kernel + OpenIPC initramfs strategy |
 | 6 | `CHAT-006` | 2026-08-24 — 2026-08-25 | `DONE` | Перекрывает CHAT-005, но добавляет root-shell inventory, самостоятельное извлечение `/app` из SPI dump, media module baseline, первые ioctl ABI mappings и переход от ручного target inventory к artifact-assisted analysis |
-| 7 | `CHAT-007` | 2026-08-25 — 2026-08-26 | `IN_PROGRESS` | Частично включает CHAT-006 как префикс; новая часть: чистый OpenIPC RAM baseline, stock media stack под OpenIPC, sensor/MIPI/VPU/PAE/ISP reverse, stock tracing, внешний Fullhan reference и параллельный handoff |
+| 7 | `CHAT-007` | 2026-08-25 — 2026-08-26 | `DONE` | Partial-overlap: префикс до clean-room fh_mpi повторяет CHAT-006 и не пересчитан. Новая часть: clean OpenIPC RAM baseline, полный stock media stack под OpenIPC, sensor/MIPI/VPU/PAE/ISP reverse, transport/context ошибки, external Fullhan references, documentation/repository design и parallel-agent checkpoint |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -269,6 +269,41 @@
 - Полученный после `CHAT-006` файл с тем же исходным номером `#6` проверен как точный побайтовый дубль уже обработанного источника. Новый `CHAT-NNN` не назначен, счётчик обработанных уникальных источников остаётся **6**.
 - Дубликаты не создают новые evidence entries, error examples или chronology events.
 
+## Что CHAT-007 добавил к картине
+
+### Новые уникальные error-классы
+- отсутствие progress visibility на длинном reverse;
+- прямое нарушение baseline: длинные shell-цепочки через `&&` / `;`;
+- cwd-dependent команды без обязательного `cd`;
+- предположение наличия desktop-утилит на минимальном BusyBox target.
+
+### Сильные подтверждения существующих ошибок
+- чрезмерный reverse после уже достаточного evidence;
+- ручное редактирование source вместо готового rewrite/build блока;
+- Python там, где достаточно shell/binutils;
+- повторное забывание `scp -O` на OpenIPC;
+- попытка использовать SSH/SCP на stock, где SSH отсутствует;
+- потеря текущего stock/OpenIPC state;
+- слишком широкий grep с огромным выводом.
+
+### Новые/уточнённые improvements
+- искать public/vendor/adjacent-SoC reference implementations до продолжения дорогого blind reverse;
+- использовать cross-SoC material только как semantic map, а не как доказательство FH8626 ABI/MMIO;
+- разделять current reverse docs, failed experiments/history, provenance и upstream deliverable;
+- вести progress tracker по subsystem boundaries;
+- historical precursor будущего artifact-delivery protocol: один готовый source-rewrite/build/transfer блок вместо ручного редактирования.
+
+### Agentic transition
+Впервые явно формулируется желание дать агенту прямой repository access, чтобы он сам работал с деревом, патчами и commits. GitHub обсуждается как возможный канал, а структура рабочего reverse repository уже проектируется. Это **концептуальный переход**, а не ещё фактический GitHub authority.
+
+Параллельно второй агент уже получает специализированный ISP reverse checkpoint с новыми external references, paths, confirmed/gaps и конкретным следующим priority.
+
+### Технический вклад
+`CHAT-007` заполняет середину раннего порта: clean OpenIPC RAM baseline → загрузка stock Fullhan media modules в OpenIPC → musl-compatible MIPI/GC1054 plugins → sensor/MIPI stock-like state → VMM/VPU/PAE/media ABI → локализация blocker в ISP startup/lifecycle. External FH8852 reverse затем превращает широкий поиск в конкретную гипотезу missing sensor-registration/init/kick chain.
+
+### Partial overlap
+Начальный большой префикс `CHAT-007` повторяет уже обработанный `CHAT-006`. Он не использован для повторного увеличения evidence/count; анализ начат с нового продолжения после прежнего clean-room fh_mpi endpoint.
+
 ## Следующее действие
 
-Получить следующий исторический источник. Следующая плановая расширенная live-state сверка — после девятого обработанного файла либо раньше при крупном противоречии.
+Выполнить обязательный post-file refresh. После него ожидать следующий исторический источник. Плановая live-state сверка остаётся после девятого уникального источника.
