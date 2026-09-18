@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `READY_FOR_NEXT_SOURCE`
+Статус: `CHAT_020_IN_PROGRESS`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **19**
 - Последний источник: `CHAT-019`
 - Период последнего источника: **2026-08-27 — 2026-08-28**
-- Следующее действие: перейти к `CHAT-020`
+- Следующее действие: завершить анализ `CHAT-020`
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -74,6 +74,7 @@
 | 17 | `CHAT-017` | 2026-08-27 — 2026-08-28 | `DONE` | Persistent Agent 2: image-detail Task2 corrected after premature completion; live Apollo RW/GOT closes APC/NR3D/LTM/D1DB0 tables; final current-day detail handoff + selftest; quality retrospectives consolidated into proposed full reverse-corpus architecture |
 | 18 | `CHAT-018` | 2026-08-27 — 2026-08-28 | `DONE` | Expanded snapshot overlapping CHAT-016; unique tail validates wide→tele→wide on stock, shared AE context/history and implementation-ready dual-lens contract |nded snapshot of Agent 1 branch: prefix overlaps CHAT-016; unique tail adds controlled wide→tele→wide runtime validation, implementation-ready dual-lens closure and Task3 orchestrator supplement |
 | 19 | `CHAT-019` | 2026-08-28 | `DONE` | Partial export: stock RTSP auth behavior and known HTTP JPEG snapshot endpoint; no new major workflow class |
+| 20 | `CHAT-020` | 2026-08-27 — 2026-08-28 | `IN_PROGRESS` | Central orchestrator: quality rules become automated workspace architecture, clean master-tree, task router/sessions/runbooks/health checks, integration of three specialist lanes and Cross-Fullhan references |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
