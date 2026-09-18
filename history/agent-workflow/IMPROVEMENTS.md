@@ -165,7 +165,7 @@
 Исторически `CHAT-003` показывает сам переход к persistent owner + reloadable `.so`; `CHAT-002` уже использует этот механизм как стандартный test loop.
 
 ### I-018 — Workspace hygiene и один authoritative reverse artifact
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
 В `CHAT-002` выяснилось, что старый `apollo.unpacked` был неполным и не содержал позднюю data/GOT область, тогда как полный textual ARM dump содержал нужный материал.
 
@@ -178,6 +178,8 @@
 - newest source tree не заменяется старым baseline при cleanup.
 
 Это важный переход от «накопить всё» к **curated workspace with explicit authority**.
+
+`CHAT-004` добавляет вторую сторону того же принципа: если агент снова и снова просит вырезать диапазоны из одного бинарника, нужно один раз материализовать полный searchable disassembly/binary bundle, проверить его provenance и дальше искать локально без участия пользователя.
 
 ### I-019 — Параллельный reverse с непересекающимися зонами ответственности
 Статус: `OBSERVED`.
@@ -244,6 +246,58 @@
 - анализ подозрительных warnings.
 
 Это переносит дешёвые ошибки с аппаратного контура обратно в агентный/локальный контур.
+
+### I-024 — Full searchable evidence вместо серии ручных extract-команд
+Статус: `OBSERVED`.
+
+Проблема: reverse одного и того же `apollo.unpacked` шёл серией `objdump/grep` запросов, каждый из которых требовал очередного действия пользователя.
+
+Улучшение в `CHAT-004`:
+- один раз сформирован полный ARM disassembly + strings + ELF metadata + сам unpacked binary;
+- бинарник и disassembly проверены между собой;
+- после этого агент сам ищет xrefs, literal pools и call chains;
+- оператор возвращается только для hardware-only действий.
+
+Это резко уменьшает количество terminal round-trips и является ранним прообразом будущего shared reverse workspace/MCP.
+
+### I-025 — Capture once, analyze offline
+Статус: `OBSERVED`.
+
+Когда stock/OpenIPC target находится в ценном живом состоянии, выгоднее один раз снять достаточный read-only evidence bundle и затем анализировать его локально, чем постоянно возвращаться на камеру за очередным адресом.
+
+В `CHAT-004` эта практика выросла от отдельных MMIO/VMM файлов до:
+- stock ioctl trace;
+- ISP parameter/context;
+- MMIO/MIPI snapshots;
+- VMM/process mappings;
+- interrupts/clock;
+- проверенного Apollo code/data bundle.
+
+Практический эффект:
+- меньше риска сломать stateful media pipeline;
+- меньше reboot;
+- меньше ручных вопросов к пользователю;
+- hypotheses можно проверять офлайн и возвращаться на железо только с осмысленным A/B.
+
+### I-026 — Использовать стандартный специализированный инструмент вместо временного велосипеда
+Статус: `OBSERVED`.
+
+Пользователь явно разрешил устанавливать необходимые dev-tools в WSL и потребовал не заменять нормальный `ffprobe/ffmpeg` самописным parser-ом без причины.
+
+Устойчивый паттерн:
+- если стандартный инструмент предметной области доступен или легко устанавливается, использовать его;
+- свои parser/helper писать только для отсутствующего vendor-specific контракта;
+- сразу сохранять визуально проверяемые результаты в Windows filesystem, когда оператор может валидировать их через VLC/другой GUI.
+
+### I-027 — Явные terminal lanes
+Статус: `OBSERVED`.
+
+В multi-terminal hardware workflow закрепилось удобное разделение:
+- `WSL` — source/build/analysis/scp;
+- `UART camera` — непосредственные target commands;
+- `U-Boot` — boot/recovery environment.
+
+Команды должны приходить уже для нужного lane. Это снимает с пользователя обязанность преобразовывать SSH one-liner в UART-команды и уменьшает ошибки вставки.
 
 ## Исходные этапы, ещё не подтверждённые
 
