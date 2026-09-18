@@ -115,7 +115,7 @@ Detailed audit: `docs/process/fh8626-kernel-series-audit.md`.
 Repository: `ArthurKoba/openipc-divinus`.
 
 - branch: `work/fh8626v100`
-- current candidate: `44c4fb94c5a021695c18123c6c703fdf0c79cb3c`
+- current candidate: `875e0697fa30ee06e4e19970c1680a92a0f94192`
 - evidence class: `SOURCE_CANDIDATE / TARGET_PENDING`
 
 The Divinus agent and Majestic agent now share recovered contracts through reverse
@@ -209,7 +209,7 @@ reproducible source implementations.
 
 Repository: `ArthurKoba/openipc-builder`.
 
-- active branch: `work/fh8626v100-anjia@a6d6fca74d32ba05a9c5dd8169e64ae4280e13a5`
+- active branch: `work/fh8626v100-anjia@dc7ddabf4b1442ad1255f5e2f41f00e40a33efa5`
 - one physical device tree with composed `_divinus`, `_majestic` and
   `_diag` variants
 - no live separate Majestic Builder branch
