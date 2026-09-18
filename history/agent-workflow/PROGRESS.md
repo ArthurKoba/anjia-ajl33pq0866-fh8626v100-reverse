@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_015_POST_REFRESH_PENDING`
+Статус: `READY_FOR_NEXT_SOURCE`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **15**
 - Последний источник: `CHAT-015`
 - Период последнего источника: **2026-08-27 — 2026-08-28**
-- Следующее действие: post-file refresh + 15-file live-state сверка
+- Следующее действие: перейти к загруженному источнику `#16`
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -609,6 +609,30 @@ Same-SoC external research также выделил native encoder timestamp к
 ### Agentic role
 Основной агент явно становится orchestrator/integrator нескольких persistent specialist threads. Но пользователь всё ещё вручную прикрепляет handoff bytes каждому агенту: shared repository/Drive/MCP authority ещё исторически не появилась.
 
+## 15-file live-state refresh после CHAT-015
+
+Выполнено после пятнадцатого уникального источника.
+
+Read-only проверены `main:STATE.md`, `main:TASKS.md`, `main:AGENTS.md` и live branch lists reverse/Firmware/Builder/Linux/Divinus/U-Boot.
+
+Современная authority-модель не изменилась:
+- GitHub — current source/docs/contracts/state/manifests;
+- Google Drive — heavy/unique evidence;
+- Ghidra MCP через Koba MCP Bridge — canonical mutable reverse workspace.
+
+Current technical endpoint по-прежнему существенно дальше исторического `CHAT-015`: native U-Boot source/build готов к hardware acceptance; Linux curated series существует отдельно от hardware-proven PR-facing line; Firmware/Divinus/Majestic directions продолжают развиваться.
+
+При этом coordination drift остаётся:
+- reverse `work/fh8626v100` live tip уже `4a8c59ca...`, тогда как main coordination docs не везде отражают этот locator;
+- Firmware work branches живут на более новых tips, чем ряд SHA в `STATE.md`;
+- Divinus `work/fh8626v100` live tip уже `809561bd...`;
+- Builder live branch list содержит `work/fh8626v100-anjia@dc7ddabf...`, но не содержит `work/fh8626v100-anjia-majestic`;
+- при этом текущий `main:AGENTS.md@3f880878...` снова описывает отдельную Majestic staging branch. Это противоречит live branch topology.
+
+В рамках исторического аудита ничего из этого не исправлялось. Current coordination docs/branch roles должны быть reconciled отдельной рабочей сессией.
+
+Исторический вывод `CHAT-015` не меняется: в конце августа multi-agent orchestration ещё работал через manual project chats/handoff attachments и не имел нынешней GitHub/Drive/Ghidra authority.
+
 ## Следующее действие
 
-Выполнить обязательный post-file refresh и 15-file live-state сверку. После этого перейти к загруженному источнику `#16`.
+Перейти к загруженному источнику `#16`. Следующая плановая расширенная live-state сверка — после восемнадцатого уникального источника либо раньше при крупном инфраструктурном переходе.
