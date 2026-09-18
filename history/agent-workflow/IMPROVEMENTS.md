@@ -308,6 +308,8 @@ CHAT-007 показывает более раннюю форму того же p
 
 `CHAT-016` ещё раз показывает правильный режим: если full ARM TXT уже подготовлен, агент анализирует его напрямую и не заставляет пользователя повторять objdump/архивирование.
 
+`CHAT-017` доводит принцип до двухслойного Apollo corpus: существующий authoritative ARM_FULL отвечает за код/control flow, а отдельно снятый full runtime image — за GOT/RW/heap. Повторный disassembly не нужен.
+
 ### I-025 — Capture once, analyze offline
 Статус: `OBSERVED`.
 
@@ -718,6 +720,8 @@ Quality-retrospective в конце `CHAT-014` впервые явно пред�
 
 `CHAT-016` создаёт quality-improvement pack v3 с новыми правилами этой ветки: stock=TFTP-only, minimal BusyBox, focused workspace, heavy reverse off-target, liveness protocol и Windows publish helper.
 
+`CHAT-017` объединяет несколько независимых agent-retrospective packs в один master quality/reverse-preparation пакет вместо размножения несовместимых правил.
+
 ### I-050 — Persistent specialist lanes с последовательными Task N
 Статус: `CONSOLIDATED`.
 
@@ -733,6 +737,8 @@ Quality-retrospective в конце `CHAT-014` впервые явно пред�
 Важно: цель — не «заставить агента работать N минут», а дать достаточную cohesive depth, чтобы он исчерпал область до meaningful boundary.
 
 `CHAT-016` — direct acceptance persistent lane: тот же Agent 1 после Task 1 получает большой Task 2, сохраняет локальный контекст, проходит несколько evidence/blocker циклов и доводит full AE loop до final v5 без нового onboarding.
+
+`CHAT-017` подтверждает модель на Agent 2: после table-identity Task он получает большой image-detail Task2 и продолжает тот же lane через static blockers, runtime evidence и финальный selftest.
 
 ### I-051 — Artifact-access preflight для каждого specialist lane
 Статус: `CONSOLIDATED`.
@@ -795,7 +801,7 @@ Workflow:
 Так external research отвечает на конкретный blocker и не превращается в бесконечный поиск «похожих камер».
 
 ### I-055 — Focused reverse workspace вместо recursive corpus scan
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
 Для глубокой функции/подсистемы полезно один раз собрать минимальный рабочий corpus:
 - exact disassembly нужных функций;
@@ -813,8 +819,10 @@ Workflow:
 - проще provenance каждого вывода;
 - быстрее повторная проверка конкретного адреса.
 
+`CHAT-017` повторно подтверждает focused-corpus правило: пользователь останавливает broad find/re-disassembly и требует работать по уже известным точным путям/ARM_FULL/runtime dump.
+
 ### I-056 — Размещать вычисление там, где ему место: static heavy work off-target
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
 `CHAT-016` формулирует устойчивое разделение:
 - камера — только runtime/hardware evidence, которое нельзя восстановить офлайн;
@@ -823,6 +831,8 @@ Workflow:
 - тяжёлую обработку не запускать на target и не заставлять оператора делать её вручную.
 
 Если новый binary действительно требует full reverse, агент сначала говорит, **какой именно** artifact нужен и почему, затем один раз готовит его на WSL.
+
+`CHAT-017` окончательно разделяет камеры и workstation: target снимает только live RW/GOT evidence; полный reverse и таблицы анализируются по подготовленному ARM_FULL/runtime corpus на WSL/PC.
 
 ### I-057 — Sparse liveness heartbeat без промежуточного reasoning
 Статус: `OBSERVED`.
@@ -855,6 +865,66 @@ Autonomous milestone reporting и видимость работы не прот�
 - runtime snapshot интерпретировать вместе с action/queue state, а не только по числу.
 
 Это особенно важно для AE/AWB и других deferred control loops.
+
+### I-059 — Двухслойный reverse corpus: static code + live runtime data
+Статус: `OBSERVED`.
+
+`CHAT-017` окончательно разделяет два разных вида authoritative evidence:
+
+- `apollo_unpacked_ARM_full.txt` — executable/RX code, instructions, xrefs, call flow, MMIO access;
+- `apollo_full_runtime.bin` / targeted RW dumps — initialized RW, GOT, runtime pointers, mutable tables, heap/state objects.
+
+Они **дополняют**, а не заменяют друг друга. Повторный objdump runtime heap как ARM-кода не создаёт нового знания и может вводить в заблуждение.
+
+Практический workflow:
+1. static code дизассемблировать один раз;
+2. runtime capture снимать только для missing mutable objects;
+3. адреса/segments связывать через map;
+4. runtime bytes интерпретировать как data, пока ARM consumer не докажет иное;
+5. оба слоя держать рядом в одном corpus manifest.
+
+Этот подход снял последние GOT/table blockers APC, LTM, NR3D и D1DB0 без повторного blind reverse.
+
+### I-060 — Corpus-first architecture: подготовить reverse substrate один раз и запретить бессмысленное повторение
+Статус: `OBSERVED`.
+
+В конце `CHAT-017` пользователь формулирует уже системную архитектуру:
+- firmware binaries извлекаются один раз;
+- для них заранее готовятся disassembly/symbols/relocations/strings/indexes;
+- raw binaries становятся труднее случайно использовать как рабочий путь;
+- агенты по умолчанию работают с prepared TXT/index/extracts;
+- существует machine-readable reverse status matrix: что уже PREPARED/EXACT/PARTIAL/MISSING;
+- хранится история expensive work, чтобы full objdump/reverse не запускался повторно;
+- есть карта, где физически лежит artifact в Windows/WSL/camera/archive.
+
+Это прямой precursor canonical reverse workspace: knowledge становится адресуемым corpus, а не набором вложений конкретного чата.
+
+### I-061 — Specialist role-lock вместе с artifact preflight
+Статус: `OBSERVED`.
+
+Artifact preflight недостаточен: после загрузки общего handoff specialist должен заново подтвердить локальный role scope.
+
+Минимальный preflight:
+- `ROLE = Agent N / Task M`;
+- owned functions/subsystem;
+- excluded functions/other-agent boundaries;
+- current authoritative inputs;
+- expected final artifact;
+- текущий blocker.
+
+Это предотвращает случай `CHAT-017`, когда Agent 2 после загрузки общего handoff временно начал выдавать результат Agent 1.
+
+### I-062 — Consolidated quality pack вместо независимых retrospective-файлов
+Статус: `OBSERVED`.
+
+К `CHAT-017` несколько agents уже создали собственные quality retrospectives. Пользователь требует не складывать их рядом, а:
+1. сравнить;
+2. дедуплицировать;
+3. сохранить unique findings;
+4. собрать один master quality/reverse-preparation document;
+5. дать orchestrator import prompt.
+
+Это превращает feedback разных specialist lanes в общий evolving process contract и предотвращает расхождение правил между агентами.
 
 ## Исходные этапы, ещё не подтверждённые
 
