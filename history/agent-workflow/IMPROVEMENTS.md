@@ -1574,6 +1574,41 @@ The staging separates:
 
 This is the first source-level productization bridge from reverse artifacts to intended OpenIPC repository ownership.
 
+### I-111 — Accumulate offline stages; deliver one cumulative validation package
+Статус: `OBSERVED`.
+
+Agent 5 in `CHAT-030` explicitly changes strategy:
+- stop sending each offline audit/stage as separate `.tar.gz`;
+- keep one sequential source/integration line;
+- exhaust cheap offline work first;
+- at the next hardware/WSL boundary produce one package/runner;
+- runner applies cumulative changes, builds/checks once and emits one report.
+
+This is the artifact analogue of command decision boundaries.
+
+### I-112 — Use the simplest native tool for packaging/file operations
+Статус: `OBSERVED`.
+
+User correction in `CHAT-030` reinforces baseline rule 5:
+- shell/bash for orchestration;
+- `tar` for archives;
+- `bash -n`, `git diff --check`, `checkpatch`, `make` for relevant validation;
+- Python only when actual parsing/computation benefits from it.
+
+The issue is not Python itself, but adding a slow/opaque generation layer where ordinary system tools are clearer and more reproducible.
+
+### I-113 — Kernel bring-up should separate safe platform closure from media/VMM high-risk layer
+Статус: `OBSERVED`.
+
+The historical Agent 5 plan explicitly stages native kernel work:
+1. machine/interrupt/timer/UART/SPI/MTD/GPIO/I2C baseline;
+2. Ethernet/RTC and safe peripheral integration;
+3. native pinctrl and PMU dependencies;
+4. USB/SDIO/SPI1/DMA/AES/audio;
+5. media/VMM and upper-memory policy last.
+
+This keeps high-risk multimedia/VMM work from destabilizing already hardware-proven platform bring-up.
+
 ## Исходные этапы, ещё не подтверждённые
 
 `CHAT-010` является прямым acceptance-тестом этого принципа: новый агент по handoff сразу продолжает с dequeue boundary, не повторяет sensor/ISP/H.264 bring-up и использует указанные checkpoint paths/constraints. Handoff реально переносит инженерное состояние между чатами.
