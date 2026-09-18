@@ -13,6 +13,7 @@ This document records the ownership decision for the mixed FH8626V100 Firmware p
 - Firmware base: `master@47ccdbee45fa5b8eee69c25c7af656cd5d35a28e`.
 - Linux source candidate: `ArthurKoba/openipc-linux/rework/fh8626v100-final-series@357c2d13e7589db0dbe2bbf89c2ec38b1c036e6e`.
 - Builder preservation/device reference: `ArthurKoba/openipc-builder/fh8626v100-anjia-ajl33pq0866@bcf8658e4aa612ee9afda8c28d52d8ad1674e2f1`.
+- Builder clean staging candidate: `ArthurKoba/openipc-builder/rework/fh8626v100-anjia-clean-profile@3c125cbef880c309c432e7b38a30cbd0b4249b0f`.
 - Divinus source candidate: `ArthurKoba/openipc-divinus/fh8626v100-canonical@1e624bd5aca97ba772413d2b00a10314d1db039f`.
 
 ## Clean Firmware decision
@@ -27,11 +28,11 @@ The defconfig consumes the exact curated Linux SHA directly. No FH8626 kernel pa
 
 The clean branch deliberately contains no AJL33PQ0866 board package or kernel fragment, no factory `.ko/.so/.bin`, no local Divinus source path and no FH8626 Divinus patch. Device policy remains a Builder responsibility; Divinus implementation remains a Divinus responsibility.
 
-The generic Firmware config does not enable a retail-camera SD wiring option. The ANJIA Builder kernel fragment must select:
+The generic Firmware config does not enable a retail-camera SD wiring option. The clean ANJIA Builder staging profile now selects:
 
 `CONFIG_FH8626V100_SD0_1BIT=y`
 
-when it is rebuilt on top of the curated Linux source. The historical symbol `CONFIG_FH8626V100_AJL33PQ0866_MMC` is preservation-only and must not return to the clean Firmware contribution.
+from a board-only fragment. The historical symbol `CONFIG_FH8626V100_AJL33PQ0866_MMC` is preservation-only and is absent from the clean staging profile.
 
 Firmware inherits the existing standard 8 MiB image budget: 2048 KiB kernel plus 5120 KiB SquashFS. The curated Linux source carries the matching MTD layout:
 

@@ -146,13 +146,23 @@ The clean branch is `SOURCE_CONFIRMED / CLEAN_ARCH_CANDIDATE`, not a build or ha
 
 Repository: `ArthurKoba/openipc-builder`.
 
-- branch: `fh8626v100-anjia-ajl33pq0866`
-- observed tip: `bcf8658e4aa612ee9afda8c28d52d8ad1674e2f1`
-- stable pre-Majestic checkpoint: `5603a701c8812aebc705c42e933ebae48aed805f`
-- Divinus/device-profile predecessor: `c7577cb3f70b4531e9ec9e686c5275bf5f170c3d`
-- Majestic experiment: the single commit `bcf8658e...` on top of `5603a701...`
+Preservation/device reference:
 
-The pre-Majestic checkpoint is the reference device-integration baseline while Divinus is completed. The later Majestic commit is an isolated experiment and must not silently become the Builder baseline. Builder itself is currently behind/diverged from newer upstream `master`, so later Builder work must begin from the current upstream base.
+- branch: `fh8626v100-anjia-ajl33pq0866`
+- tip: `bcf8658e4aa612ee9afda8c28d52d8ad1674e2f1`
+- stable pre-Majestic checkpoint: `5603a701c8812aebc705c42e933ebae48aed805f`
+- role: historical working/integration reference, not future base
+
+Clean device-profile staging:
+
+- branch: `rework/fh8626v100-anjia-clean-profile`
+- tip: `3c125cbef880c309c432e7b38a30cbd0b4249b0f`
+- base: current Builder `master@e0a643f4942b064a149f470b3c118ebba4daebb5`
+- kernel fragment: `CONFIG_FH8626V100_SD0_1BIT=y`
+
+The staging branch contains only named-device deltas: ANJIA kernel fragment, RTL8188FU selection, microSD/device configuration, illumination helpers and source-built PTZ/lens support. It carries no generic FH8626 kernel config, no kernel patches, no factory `.ko/.so/.bin` and no Divinus source/patch.
+
+This branch is `SOURCE_CONFIRMED / BUILDER_STAGING`, not a build or hardware acceptance. The normal Builder flow still consumes `OpenIPC/firmware`; therefore the profile becomes directly buildable through that path only after the clean FH8626 Firmware integration is available from the Firmware source Builder consumes.
 
 ## Proprietary media/runtime retirement
 
