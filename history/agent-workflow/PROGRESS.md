@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `READY_FOR_NEXT_SOURCE`
+Статус: `CHAT_008_IN_PROGRESS`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **7**
 - Последний источник: `CHAT-007`
 - Период последнего источника: **2026-08-25 — 2026-08-26**
-- Следующее действие: получить следующий исторический файл
+- Следующее действие: завершить анализ `CHAT-008`
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -62,6 +62,7 @@
 | 5 | `CHAT-005` | 2026-08-24 — 2026-08-25 | `DONE` | Самый ранний backfill: hardware/dual-lens identification, immutable full-flash dump, U-Boot access, TFTP→RAM proof и выбор hybrid stock-kernel + OpenIPC initramfs strategy |
 | 6 | `CHAT-006` | 2026-08-24 — 2026-08-25 | `DONE` | Перекрывает CHAT-005, но добавляет root-shell inventory, самостоятельное извлечение `/app` из SPI dump, media module baseline, первые ioctl ABI mappings и переход от ручного target inventory к artifact-assisted analysis |
 | 7 | `CHAT-007` | 2026-08-25 — 2026-08-26 | `DONE` | Partial-overlap: префикс до clean-room fh_mpi повторяет CHAT-006 и не пересчитан. Новая часть: clean OpenIPC RAM baseline, полный stock media stack под OpenIPC, sensor/MIPI/VPU/PAE/ISP reverse, transport/context ошибки, external Fullhan references, documentation/repository design и parallel-agent checkpoint |
+| 8 | `CHAT-008` | 2026-08-25 | `IN_PROGRESS` | Partial-overlap с CHAT-007 до ~L24104; уникальная ветка: Apollo/ISP reverse, восстановление checkpoint pipeline, parallel-agent merge, FH8852 semantic reference, ISP IRQ-mask breakthrough и 25-fps sensor→ISP proof |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
