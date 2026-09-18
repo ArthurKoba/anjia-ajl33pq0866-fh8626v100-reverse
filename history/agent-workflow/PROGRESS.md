@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `READY_FOR_NEXT_SOURCE`
+Статус: `CHAT_018_IN_PROGRESS`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **17**
 - Последний источник: `CHAT-017`
 - Период последнего источника: **2026-08-27 — 2026-08-28**
-- Следующее действие: перейти к `CHAT-018`
+- Следующее действие: завершить уникальный supplemental tail `CHAT-018`
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -72,6 +72,7 @@
 | 15 | `CHAT-015` | 2026-08-27 — 2026-08-28 | `IN_PROGRESS` | Центральная orchestration-ветка: multi-agent decomposition/integration, project-file isolation, long Task N lanes, Cross-Fullhan semantic oracle, APC/total-gain diagnosis и same-SoC external research |
 | 16 | `CHAT-016` | 2026-08-27 — 2026-08-28 | `DONE` | Persistent Agent 1 lane: Task1 C949C/C9898 → large Task2 full AE loop; premature completion corrected by full audit; stock GC1054 library + runtime captures close sensor-register contract and day/night replay; Task3 statically closes much of dual-lens/light/audio orchestration; quality-pack v3 adds focused-work/liveness/tool-placement rules |
 | 17 | `CHAT-017` | 2026-08-27 — 2026-08-28 | `DONE` | Persistent Agent 2: image-detail Task2 corrected after premature completion; live Apollo RW/GOT closes APC/NR3D/LTM/D1DB0 tables; final current-day detail handoff + selftest; quality retrospectives consolidated into proposed full reverse-corpus architecture |
+| 18 | `CHAT-018` | 2026-08-27 — 2026-08-28 | `IN_PROGRESS` | Expanded snapshot of Agent 1 branch: prefix overlaps CHAT-016; unique tail adds controlled wide→tele→wide runtime validation, implementation-ready dual-lens closure and Task3 orchestrator supplement |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
