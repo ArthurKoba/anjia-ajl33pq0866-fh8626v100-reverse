@@ -111,13 +111,13 @@ This is an independent platform research task and does **not** block Firmware, D
 
 ## P2 — Majestic product path
 
-45. **Majestic build staging reconstructed:** Firmware `work/fh8626v100-majestic@7ed2a17...` inherits the streamer-neutral core and adds only the isolated FH8852V200 Majestic control-plane compatibility package; Builder target is `work/fh8626v100-anjia-majestic@85c496ea...`.
+45. **Majestic build staging advanced:** Firmware `work/fh8626v100-majestic@b0f654a...` inherits the streamer-neutral core, keeps the isolated FH8852V200 control-plane compatibility package, and adds a source-built non-mutating ABI probe. Builder now composes the Majestic target from `work/fh8626v100-anjia@0945bd3...`; the former separate Majestic Builder branch is archived.
 46. Owner build gate: build `fh8626v100_lite_anjia-ajl33pq0866_majestic` with `OPENIPC_FW_REPO=https://github.com/ArthurKoba/openipc-firmware.git` and `OPENIPC_FW_REV=work/fh8626v100-majestic`; record resolved config and image sizes. Do not claim the reconstructed branch is validated merely because the historical experiment worked.
-47. First hardware gate is intentionally control-plane-only: boot, Majestic process, port 80, WebUI/haserl, configuration persistence and normal board/network/PTZ/illumination services while media remains disabled.
-48. Preserve the historical boundary: FH8852V200 Majestic reached HTTP/WebUI successfully, but explicit FH8626 GC1054 SDK startup segfaulted. Do not hide this by enabling video in the staging config.
-49. Before product acceptance, pin/reproduce the exact Majestic donor binary instead of relying on a moving `master` artifact.
-50. Later media work: implement/validate the FH8626 compatibility boundary, then prove VI -> VENC -> sustained RTSP before ISP tuning.
-51. After base video is stable, validate ISP/color/exposure/day-night, then audio capture/playback/two-way behavior and integrate PTZ/illumination using accepted board contracts. Reuse Divinus-derived knowledge only where architecture-neutral.
+47. First hardware gate remains media-off: boot, Majestic process, port 80, WebUI/haserl, configuration persistence and normal board/network/PTZ/illumination services. In the same run execute `majestic-fh8626-abi-probe` and retain its complete output plus the exact donor Majestic SHA-256; the probe must not be treated as a media initialization test.
+48. Preserve the historical boundary: FH8852V200 Majestic reached HTTP/WebUI successfully, but explicit FH8626 GC1054 SDK startup segfaulted. Do not hide this by enabling video in the default staging config.
+49. Before product acceptance, pin/reproduce the exact Majestic donor binary instead of relying on a moving `master` artifact. The current evidence manifest does not contain an immutable retained donor object, so no donor SHA may be invented from the historical run.
+50. Use the established translation map rather than restarting platform reverse: FH8852 `libvmm` VMM calls -> FH8626 VMM contract; `FH_SYS/FH_VPSS` -> native media/VPU; `FH_VENC` -> PAE/VENC + stream lease/release/IDR; `API_ISP/FHAdv_Isp` -> native ISP/sensor controls. Resolve function signatures/layouts only where the next adapter slice needs them.
+51. After ABI/load evidence is captured, implement the smallest source compatibility slice that removes a concrete donor dependency or reaches the next media boundary, then prove VI -> VENC -> sustained RTSP before ISP tuning. After base video is stable, validate ISP/color/exposure/day-night, audio capture/playback/two-way behavior, restart, and board PTZ/illumination integration.
 
 ## P3 — firmware product integration
 
@@ -126,13 +126,13 @@ This is an independent platform research task and does **not** block Firmware, D
 
 ## P4 — Builder cleanup and final device profile
 
-54. **Source cleanup complete:** main ANJIA line is `ArthurKoba/openipc-builder/work/fh8626v100-anjia@a39671f56267a403340354aebc82a3c889ac0df6`. Majestic direction is `work/fh8626v100-anjia-majestic@19157b112a9ceeea25b7771bd79c2af8e3313558` and contains the same shared board layer.
+54. **Source cleanup and runtime composition complete:** the active ANJIA line is `ArthurKoba/openipc-builder/work/fh8626v100-anjia@0945bd356683f5f11fe7a1c3b0af2b1301c061a8`. Divinus, Majestic and diagnostic targets are short composed variant fragments over one board layer. The former separate Majestic branch is retired and preserved only as `archive/fh8626v100-anjia-majestic-branch-20260918`.
 55. Keep the pre-cleanup stock-style PTZ controller only as reference at Builder tag `archive/fh8626v100-anjia-stock-ptz-controller-20260918`. Production policy is stateless relative PTZ; do not restore boot calibration, boot movement or persistent inferred coordinates without new product evidence.
 56. Keep only per-device deltas in Builder. Generic FH8626 Linux/platform/media implementation remains in Linux/Firmware/Divinus; Majestic compatibility implementation remains in its Firmware direction.
 57. **Remaining source gate:** run the actual Builder `.github/scripts/ci-matrix.py --self-test` in a full checkout/CI context. API inspection confirms both FH8626 target names remain explicit `NOT_BUILT` entries where their defconfigs exist, but this is not a substitute for executing the self-test.
 58. **Owner build gate:** build `fh8626v100_lite_anjia-ajl33pq0866` against Firmware `work/fh8626v100-divinus` and `fh8626v100_lite_anjia-ajl33pq0866_majestic` against Firmware `work/fh8626v100-majestic`; record resolved configs and kernel/rootfs sizes.
 59. **Board hardware gate:** validate no PTZ boot movement, relative pan/tilt direction and requested delay/speed, cancellation/safe-off, GPIO5 cold-boot dual-sensor bootstrap, WIDE/TELE logical switch integration, IR/white/IR-cut direction/polarity, GPIO23/SADC1 restore, microSD hotplug/shutdown, RTL8188FU and reset-button path.
-60. Keep both FH8626 targets in `NOT_BUILT` until their required Firmware base is available to the normal Builder clone path and the applicable build/hardware gates have passed. Shared ANJIA fixes continue to land on the main line first and merge into Majestic; Majestic-only assembly stays on the direction branch.
+60. Keep all composed FH8626 runtime targets in `NOT_BUILT` until their required Firmware bases are available to the normal Builder clone path and the applicable build/hardware gates have passed. Shared ANJIA fixes land once on the single device line; runtime-specific assembly stays in the corresponding short variant fragment.
 
 ## Standing repository rules
 

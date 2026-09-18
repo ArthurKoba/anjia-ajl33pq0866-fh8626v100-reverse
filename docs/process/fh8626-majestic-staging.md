@@ -1,6 +1,6 @@
 # FH8626V100 Majestic staging
 
-Status: `STAGED / HISTORICAL_CONTROL_PLANE_HARDWARE_PASS / NEW_BRANCH_BUILD_PENDING`.
+Status: `STAGED / HISTORICAL_CONTROL_PLANE_HARDWARE_PASS / ABI_PROBE_READY / NEW_BUILD_PENDING`.
 
 Checked: 2026-09-18.
 
@@ -36,14 +36,15 @@ Firmware:
 
 - shared streamer-neutral core: `ArthurKoba/openipc-firmware/work/fh8626v100@eabd1ccd4684af6997771269c4655f7e4435bcec`;
 - Divinus direction: `work/fh8626v100-divinus@0b12c87c202b12733b0a1b535b56d66891e4ca93`;
-- Majestic direction: `work/fh8626v100-majestic@7ed2a17a67fce0c2ee8d80bc798cafe81cfa6c38`.
+- Majestic direction: `work/fh8626v100-majestic@b0f654a2179ebc17bea639469819e7f917458f3a`.
 
 Builder:
 
-- ANJIA/Divinus development line: `ArthurKoba/openipc-builder/work/fh8626v100-anjia@a39671f56267a403340354aebc82a3c889ac0df6`;
-- ANJIA Majestic staging: `work/fh8626v100-anjia-majestic@19157b112a9ceeea25b7771bd79c2af8e3313558`.
+- single active ANJIA device line: `ArthurKoba/openipc-builder/work/fh8626v100-anjia@0945bd356683f5f11fe7a1c3b0af2b1301c061a8`;
+- Majestic target fragment: `br-ext-chip-fullhan/configs/variants/fh8626v100_lite_anjia-ajl33pq0866_majestic.config`;
+- retired pre-composition Majestic line: archive tag `archive/fh8626v100-anjia-majestic-branch-20260918`.
 
-The shared Builder cleanup has been merged into the Majestic direction. Relative to the main ANJIA line, the Majestic branch now has only its Majestic-specific defconfig plus the corresponding extra `NOT_BUILT` entry. The shared device overlay no longer contains Divinus YAML or Divinus-specific storage shutdown calls.
+Builder now composes one board-only base plus short Divinus/Majestic/diagnostic runtime fragments. The Majestic fragment selects the Firmware-owned compatibility package and contains no copied media implementation. This replaces the previous duplicated Majestic Builder branch.
 
 Core platform/kernel fixes should be made on the shared core and then reconciled into both runtime directions. Majestic-specific compatibility code must stay on the Majestic direction unless it becomes demonstrably shared.
 
@@ -64,9 +65,28 @@ The package:
 - selects Majestic WebUI/haserl;
 - installs a media-off `/etc/majestic.yaml`;
 - installs an init script using the hardware-proven HTTP-only invocation;
+- builds and installs `majestic-fh8626-abi-probe`, which performs no SDK/media initialization and makes no device writes;
 - installs **no** FH8852 kernel modules, firmware, load scripts or sensor plug-ins.
 
 This is intentionally a compatibility staging package, not a statement that FH8852 userspace blobs are the final FH8626 media architecture.
+
+## FH8852 API to FH8626 native translation map
+
+Static inspection of the exact eight donor libraries already present in Firmware, combined with the recovered FH8626 contracts used by Divinus, gives the following implementation map. Symbol presence is donor-library evidence; the FH8626 side comes from the platform reverse/native implementation. It does **not** prove that FH8852 and FH8626 structures have identical layouts.
+
+| FH8852-facing API family | Representative donor symbols | FH8626 native operation |
+|---|---|---|
+| VMM | `FH_SYS_VmmAlloc`, `FH_SYS_VmmFree`, `FH_SYS_Mmap`, `FH_SYS_Munmap` | `/dev/vmm_userdev` and recovered VMM allocation/mapping contract |
+| system/media bind | `FH_SYS_Init`, `FH_SYS_Exit`, `FH_SYS_BindVpu2Enc` | native media ownership, `MEDIA_BIND` / unbind and lifecycle ledger |
+| VI/VPSS/VPU | `FH_VPSS_SysInitMem`, `FH_VPSS_SetViAttr`, `Query*Mem`, `ChnInitMem`, `OpenChn`, `Enable` | recovered VPU system/channel memory, VI attributes, channel open/enable and frame-control ioctls |
+| H.264 VENC | `FH_VENC_SysInitMem`, `CreateChn`, `SetChnAttr`, `StartRecvPic` | recovered PAE system/channel memory, encoder config and start |
+| encoded stream | `FH_VENC_GetStream*`, `FH_VENC_ReleaseStream` | `MEDIA_STREAM_6`, ring-wrap decode and exactly-once `PAE_STREAM_STEP` release |
+| IDR/runtime RC | `FH_VENC_RequestIDR`, `SetRCAttr`, `SetRcChangeParam` | native force-I operation plus the recovered stopped-channel/full RC and bounded realtime RC controls |
+| MIPI/sensor | `mipi_init`, `API_ISP_SensorRegCb`, `SensorInit`, `SetSensorFmt` | GC1054/MIPI callback contract, board GPIO5 bootstrap and native sensor sequencing |
+| ISP | `API_ISP_MemInit`, `Init`, `Run`, `Exit`, AE/AWB/mirror calls | recovered `/dev/isp` initialization/statistics/control path and platform ISP state machine |
+| high-level image controls | `FHAdv_Isp_*` | adapter onto native ISP controls plus board-owned day/night/illumination policy |
+
+The next adapter work should recover signatures/record layouts only for the smallest API slice being implemented. Cross-Fullhan names are semantic guidance; FH8852 structure layouts must never be copied into FH8626 code without evidence.
 
 ## Builder assembly
 
@@ -82,7 +102,7 @@ OPENIPC_FW_REV=work/fh8626v100-majestic
 bash builder.sh fh8626v100_lite_anjia-ajl33pq0866_majestic
 ```
 
-Both FH8626 Builder targets remain CI-opted-out until their required Firmware state is available to the normal upstream clone path.
+The composed FH8626 Builder targets remain CI-opted-out until their required Firmware state is available to the normal upstream clone path.
 
 ## Evidence boundary
 
@@ -94,8 +114,10 @@ The video/ISP path is explicitly unfinished. Do not enable media by default or c
 
 ## Next gates
 
-1. Owner-build the exact Firmware/Builder Majestic branch pair and record resolved Buildroot config plus kernel/rootfs sizes.
+1. Owner-build Firmware `work/fh8626v100-majestic@b0f654a...` through Builder `work/fh8626v100-anjia` target `fh8626v100_lite_anjia-ajl33pq0866_majestic`; record resolved Buildroot config plus kernel/rootfs sizes.
 2. Boot it and confirm Majestic process ownership, port 80, WebUI/haserl and board networking/services with media disabled.
-3. Pin or otherwise make the donor Majestic binary reproducible; the current `master` S3 artifact is a moving input.
-4. Only then resume media compatibility work. First target VI/VENC/sustained RTSP; ISP tuning and audio follow later.
-5. Do not copy old Firmware kernel patches, FH8626 factory blobs or FH8852 kernel-side payloads into this direction to make capture appear to work.
+3. Run `majestic-fh8626-abi-probe` and retain complete output. Also record `sha256sum /usr/libexec/majestic-fh8852v200/majestic` so this first reconstructed run is attributable to exact donor bytes.
+4. Pin or otherwise make that donor Majestic binary reproducible; the current `master` S3 artifact is a moving input and no immutable donor object is currently indexed in `evidence/MANIFEST.tsv`.
+5. Use the probe result and translation table to choose the smallest source adapter slice. Do not re-reverse already recovered FH8626 VMM/VPU/PAE/ISP operations.
+6. First media acceptance remains VI -> VENC -> sustained RTSP. ISP tuning, JPEG, audio and board scene integration follow only after base H.264 is stable.
+7. Do not copy old Firmware kernel patches, FH8626 factory blobs or FH8852 kernel-side payloads into this direction to make capture appear to work.

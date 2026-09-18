@@ -24,3 +24,20 @@ Do not claim a later gate from an earlier one.
 Majestic-specific work should consume camera-level hardware/media contracts from this repository rather than duplicating them as Majestic-only knowledge.
 
 When an upstream/vendor Majestic build for FH8626V100 becomes available, record its exact binary SHA/build provenance and compare behavior against the current FH8852-derived baseline.
+
+
+## Current compatibility surface
+
+Firmware `work/fh8626v100-majestic@b0f654a...` contains a source-built ABI probe for the retained FH8852V200 userspace baseline. It is deliberately non-mutating: no sensor, ISP, VI or VENC initialization is called. Its purpose is to separate three questions before the next adapter slice:
+
+- are the eight donor libraries loadable as one closure under the FH8626 musl image;
+- which expected Fullhan VMM/SYS/VPSS/VENC/MIPI/ISP symbols are actually resolvable;
+- which native FH8626 device nodes are present in the clean image.
+
+The implementation mapping is maintained in `docs/process/fh8626-majestic-staging.md`. The mapping reuses platform contracts from Divinus/reverse, but Majestic must own its own adapter and must not execute Divinus as a runtime dependency.
+
+The donor Majestic package still fetches a moving `master` S3 artifact. The first new target run must therefore retain the runtime SHA-256 of the executable. No immutable donor SHA is currently indexed in the project evidence manifest.
+
+## Upstream production request
+
+The production request to Majestic maintainers is drafted in `docs/process/fh8626-majestic-upstream-issue.md`. It is not to be opened by an agent. The preferred production outcome is a native FH8626V100 platform build; the compatibility direction remains staging until either that exists or the source adapter boundary is fully understood, reproducible and hardware-accepted.
