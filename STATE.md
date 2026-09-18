@@ -115,7 +115,7 @@ Detailed audit: `docs/process/fh8626-kernel-series-audit.md`.
 Repository: `ArthurKoba/openipc-divinus`.
 
 - branch: `work/fh8626v100`
-- current candidate: `6860cb9b58074d80c3f4e86ffe5dba9fa9dbb983`
+- current candidate: `44c4fb94c5a021695c18123c6c703fdf0c79cb3c`
 - evidence class: `SOURCE_CANDIDATE / TARGET_PENDING`
 
 The Divinus agent and Majestic agent now share recovered contracts through reverse
@@ -125,7 +125,9 @@ channel id rather than a boolean, VPU disable is the distinct request, VI/VPU
 ownership is separated from VENC start, and the VENC startup order is
 StartRecvPic -> force-I -> media bind. H.264 RC defaults, fixed-QP/CVBR and
 JPEG/MJPEG wire handling were also tightened against the same recovered
-contracts.
+contracts. Divinus now also carries the native GraphV2 OSD backend. Its
+selector/slot limits were independently rechecked against Ghidra `isp.ko` and
+then applied to the Majestic facade as a shared FH8626 contract.
 
 The implementation is broader than the current Builder acceptance YAML. The
 Builder Divinus profile intentionally keeps audio and JPEG/MJPEG disabled for
@@ -151,7 +153,7 @@ Active directions:
 
 - core: `work/fh8626v100@80169887be80c43471f9f4792dde3e2a5bd18a8c`
 - Divinus: `work/fh8626v100-divinus@255b8c8deea8e7da5ef7429b6f8f2b176a430aec`
-- Majestic: `work/fh8626v100-majestic@527e3d8b8e1ca48cf5a0b64e91176e0ff552f687`
+- Majestic: `work/fh8626v100-majestic@04e093605fbd18706f69c4d3363cb508e08bfcf1`
 
 All three directions consume the exact Linux staging source
 `openipc-linux/work/fh8626v100@357c2d13e7589db0dbe2bbf89c2ec38b1c036e6e`.
@@ -207,7 +209,7 @@ reproducible source implementations.
 
 Repository: `ArthurKoba/openipc-builder`.
 
-- active branch: `work/fh8626v100-anjia@9b9a7f0e470d51d18b3a32c6cdaecb0102fb4376`
+- active branch: `work/fh8626v100-anjia@a02d325eef241ebacf2734ebb77cba039a77df2d`
 - one physical device tree with composed `_divinus`, `_majestic` and
   `_diag` variants
 - no live separate Majestic Builder branch
@@ -293,7 +295,7 @@ native HTTP/WebUI when media was disabled. The old explicit sensor path then
 segfaulted because multiple FH8852/FH8626 ABI boundaries were still wrong.
 
 Current Firmware direction:
-`work/fh8626v100-majestic@527e3d8b...`.
+`work/fh8626v100-majestic@04e09360...`.
 
 The offline compatibility closure is now substantially reconstructed rather
 than a fixed 720p bring-up shim:
@@ -307,7 +309,8 @@ than a fixed 720p bring-up shim:
 - exact encoded FIFO/channel/lease translation;
 - native JPEG/MJPEG public surface;
 - motion YCmean/CPY backend;
-- OSD GraphV2 backend;
+- OSD GraphV2 backend, including Ghidra-confirmed native selector/slot limits
+  (global slots 0..1, channel slots 0..3);
 - source RTX/ACW audio including retail DSP init, AEC/NR/AGC extensions and
   board-neutral AO lifecycle hook;
 - recovered ANJIA day/night GPIO contract in the strict full profile;
@@ -331,9 +334,14 @@ acceptance profile: native VENC enabled, permissive stubs disabled, main+sub
 H.264, JPEG, OSD, motion, audio, RTSP and board day/night enabled together.
 
 The offline selected runtime closure is complete enough to stop speculative
-adapter work. The next blocker is now an **actual composed build**: verify the
-new pinned media package downloads/hashes, require `uImage <= 2048 KiB` and
-`rootfs.squashfs <= 5120 KiB`, then test on the camera.
+adapter work. The Majestic compatibility package now explicitly selects the
+shared pinned FH8626 media runtime, so that dependency cannot disappear through
+a variant/config composition mistake. The next blocker is now an **actual
+composed build**: verify the media package downloads/hashes, require
+`uImage <= 2048 KiB` and `rootfs.squashfs <= 5120 KiB`, record the exact
+downloaded Majestic executable SHA-256, then test on the camera. The FH8852
+Majestic executable remains a moving upstream `lite.master` object and is a
+product-reproducibility boundary even if the controlled first build succeeds.
 
 A successful build is still not product acceptance. Same-boot/reconfigure,
 media devices, RTSP/JPEG/OSD/motion/audio/day-night/PTZ/storage and persistent
