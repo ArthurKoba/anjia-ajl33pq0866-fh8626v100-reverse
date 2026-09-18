@@ -34,7 +34,7 @@
 Подробнее: [D2](CHRONOLOGY_DETAILS.md#d2--openipc-ram-boot).
 
 ### 3. Стабилизация build/rootfs цикла
-Источник: `CHAT-001`.
+Источник: `CHAT-007` → `CHAT-001`.
 
 Bring-up выявил проблемы сборки на Windows-mounted filesystem, загрязнение PATH и наложение stock initramfs. Сборка была перенесена в Linux filesystem WSL, а OpenIPC rootfs очищен от конфликтующих stock init scripts.
 
@@ -43,7 +43,7 @@ Bring-up выявил проблемы сборки на Windows-mounted filesys
 Подробнее: [D3](CHRONOLOGY_DETAILS.md#d3--buildroot-и-чистый-openipc-baseline).
 
 ### 4. Переиспользование stock Fullhan media stack
-Источник: `CHAT-001`.
+Источник: `CHAT-007` → `CHAT-001`.
 
 Stock media modules и sensor libraries были смонтированы из заводского `/app` и проверены внутри OpenIPC. Kernel modules поднялись в штатной зависимости, а MIPI/GC1054 plugins оказались загружаемыми из musl userspace.
 
@@ -52,7 +52,7 @@ Stock media modules и sensor libraries были смонтированы из �
 Подробнее: [D4](CHRONOLOGY_DETAILS.md#d4--stock-media-stack-внутри-openipc).
 
 ### 5. Sensor/MIPI → ISP
-Источник: `CHAT-001`.
+Источник: `CHAT-007` → `CHAT-001`.
 
 После сочетания stock scripts, dynamic probes, static reverse и аппаратных проверок был восстановлен достаточный sensor/MIPI/ISP bring-up. Ключевой перелом — обнаружение пропущенного ISP interrupt-enable state; после его восстановления ISP IRQ стал стабильно идти.
 
@@ -79,9 +79,9 @@ Stock media modules и sensor libraries были смонтированы из �
 Подробнее: [D7](CHRONOLOGY_DETAILS.md#d7--dev-loop-и-stateful-driver-lifetime).
 
 ### 8. Переход к handoff и параллельной агентной работе
-Источник: `CHAT-001`, 2026-08-26.
+Источник: `CHAT-007` → `CHAT-001` → `CHAT-002`, 2026-08-25/27.
 
-Когда контекст чата стал исчерпываться, результаты, артефактные пути, методы reverse и открытые gaps были собраны в handoff. Материал второго агента был сопоставлен с первым и сведён в один master, чтобы следующий агент не начинал reverse заново.
+`CHAT-007` показывает ранний parallel checkpoint: внешние Fullhan references, локальные пути, confirmed/gaps и текущий ISP blocker передаются второму агенту без повторного reverse. Позже, когда контекст одного чата стал исчерпываться, результаты были собраны в master handoff, а в `CHAT-002` parallel roles стали уже явно специализированными.
 
 **Переход:** проект начал отделять долговременное инженерное состояние от памяти одного диалога.
 
