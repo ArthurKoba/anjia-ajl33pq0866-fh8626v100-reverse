@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_028_POST_REFRESH_PENDING`
+Статус: `CHAT_029_IN_PROGRESS`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **28**
 - Последний источник: `CHAT-028`
 - Период последнего источника: **2026-08-28 — 2026-08-30**
-- Следующее действие: выполнить post-file refresh
+- Следующее действие: завершить анализ `CHAT-029` (source #30)
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -83,6 +83,7 @@
 | 26 | `CHAT-026` | 2026-08-29 | `DONE` | Partial export: consolidated Agent4 watchdog/peripheral status; project split into MASTER_CORE + REVERSE_HEAVY with logical heavy IDs; TFTP root reorganized into active/history staging without destructive cleanup |
 | 27 | `CHAT-027` | 2026-08-28 — 2026-08-30 | `DONE` | Agent 1 evolves from static exhaustion into E1–E7 evidence-directed closure; later closes watchdog/human/color/light/dev_ctrl and most HAL, ending with a small optional WDR/GME tail still under correction |
 | 28 | `CHAT-028` | 2026-08-28 — 2026-08-30 | `DONE` | Large orchestrator mega-thread; overlap deduped. Unique tail establishes role pipeline, frontend-independent FH8626 architecture, Divinus-first sidecar strategy, engineering-vs-upstream profiles and firmware/SDK provenance research; exposes reused Agent-N identity collision |
+| 29 | `CHAT-029` | 2026-08-28 — 2026-08-29 | `IN_PROGRESS` | Agent 3 OpenIPC productization: FH8626 media-runtime/sidecar/RTSP staging, engineering-vs-upstream profiles, Divinus external source, Majestic de-risking, packaging reconstruction and lens-switch implementation handoff |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
