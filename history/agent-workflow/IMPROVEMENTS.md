@@ -306,6 +306,8 @@ CHAT-007 показывает более раннюю форму того же p
 
 `CHAT-015` расширяет self-service corpus внешними именованными Fullhan binaries: после локальной подготовки `libispcore/libisp/libadvapi` дальнейший semantic matching идёт по полным disassembly/symbol/relocation artifacts без ручного range extraction.
 
+`CHAT-016` ещё раз показывает правильный режим: если full ARM TXT уже подготовлен, агент анализирует его напрямую и не заставляет пользователя повторять objdump/архивирование.
+
 ### I-025 — Capture once, analyze offline
 Статус: `OBSERVED`.
 
@@ -352,6 +354,8 @@ CHAT-007 усиливает принцип: valuable stock runtime сначал�
 `CHAT-010` ещё раз формализует terminal lanes: после проверки PTY пользователь просит все camera-команды давать именно для serial UART, а WSL держать отдельно.
 
 `CHAT-014` повторно закрепляет удачный UX: capture bundle сразу кладётся в Windows-visible каталог и открывается через `explorer.exe`, чтобы пользователь не искал файлы между WSL и Windows.
+
+`CHAT-016` уточняет transport matrix: stock runtime — TFTP-only, OpenIPC — SCP/SSH; Windows-visible root и `explorer.exe` должны быть частью готового transfer recipe.
 
 ### I-028 — Полный flash dump до любой мутации
 Статус: `OBSERVED`.
@@ -607,6 +611,8 @@ CHAT-007 усиливает принцип: valuable stock runtime сначал�
 
 Источник: `CHAT-013`.
 
+`CHAT-016` показывает зрелую границу автономности: агент сначала исчерпывает ARM/xrefs/source/runtime snapshots, а к пользователю возвращается только с конкретным отсутствующим input (`libgc1054_mipi.so`, затем exact night-state capture).
+
 ### I-044 — Разделять firmware capability и hardware identity
 Статус: `OBSERVED`.
 
@@ -647,7 +653,7 @@ Vendor image часто содержит drivers/configs для нескольк
 Это снижает риск испортить stateful ISP и отделяет correctness вычислений от side effects.
 
 ### I-046 — Completion audit по исходному acceptance checklist
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
 Перед тем как объявить длинную reverse/integration задачу законченной, агент должен вернуться к **исходному заданию**, а не к собственной сокращённой модели задачи.
 
@@ -659,6 +665,8 @@ Vendor image часто содержит drivers/configs для нескольк
 3. указать evidence class;
 4. отдельно перечислить unresolved, которые **не** блокируют исходную цель;
 5. слово `COMPLETE` использовать только если все обязательные пункты закрыты или пользователь явно сузил scope.
+
+`CHAT-016` является вторым прямым доказательством: после первоначального «Task 2 завершён» полный requirement audit нашёл крупные недоделки, после чего работа продолжалась до v5 и полного day/night numerical replay.
 
 ### I-047 — Machine-readable operational session state
 Статус: `OBSERVED`.
@@ -695,7 +703,7 @@ Quality-retrospective в конце `CHAT-014` впервые явно пред�
 - следующий блок команд выдаётся только после реальной decision boundary.
 
 ### I-049 — Ретроспектива качества агента как отдельный проектный артефакт
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
 В конце `CHAT-014` пользователь специально просит создать отдельный материал для агента, который будет улучшать качество работы других агентов. В результате появляется quality-improvement pack с:
 - каталогом повторяющихся ошибок;
@@ -708,8 +716,10 @@ Quality-retrospective в конце `CHAT-014` впервые явно пред�
 
 Это важный agentic-переход: **сам процесс разработки становится объектом версионируемого инженерного анализа**, а не только неформальной корректировки в текущем чате.
 
+`CHAT-016` создаёт quality-improvement pack v3 с новыми правилами этой ветки: stock=TFTP-only, minimal BusyBox, focused workspace, heavy reverse off-target, liveness protocol и Windows publish helper.
+
 ### I-050 — Persistent specialist lanes с последовательными Task N
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
 После первых коротких parallel задач `CHAT-015` меняет orchestration model:
 - specialist остаётся в той же вкладке и сохраняет локально набранный контекст;
@@ -722,8 +732,10 @@ Quality-retrospective в конце `CHAT-014` впервые явно пред�
 
 Важно: цель — не «заставить агента работать N минут», а дать достаточную cohesive depth, чтобы он исчерпал область до meaningful boundary.
 
+`CHAT-016` — direct acceptance persistent lane: тот же Agent 1 после Task 1 получает большой Task 2, сохраняет локальный контекст, проходит несколько evidence/blocker циклов и доводит full AE loop до final v5 без нового onboarding.
+
 ### I-051 — Artifact-access preflight для каждого specialist lane
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
 `CHAT-015` показывает, что доступ к Project conversation context не гарантирует доступ к physical attachments.
 
@@ -736,6 +748,8 @@ Quality-retrospective в конце `CHAT-014` впервые явно пред�
 Если любого обязательного объекта нет, задача не стартует. Оркестратор должен либо прикрепить bundle непосредственно к lane, либо дать durable shared locator.
 
 Это предотвращает reverse по пересказу и является историческим аргументом в пользу будущего Drive/GitHub/MCP shared state.
+
+`CHAT-016` снова подтверждает preflight: exact reverse не начинается, пока handoff archive физически не загружен в specialist chat.
 
 ### I-052 — Cross-Fullhan semantic oracle: сначала homolog, затем target proof
 Статус: `OBSERVED`.
@@ -779,6 +793,68 @@ Workflow:
 5. дальние SoC — только если остаются пробелы.
 
 Так external research отвечает на конкретный blocker и не превращается в бесконечный поиск «похожих камер».
+
+### I-055 — Focused reverse workspace вместо recursive corpus scan
+Статус: `OBSERVED`.
+
+Для глубокой функции/подсистемы полезно один раз собрать минимальный рабочий corpus:
+- exact disassembly нужных функций;
+- relevant full-library TXT;
+- current reverse document;
+- runtime/reference files только этой ветки.
+
+Дальше искать `grep -n` / `sed -n` по конкретным адресам и файлам, а не обходить весь project tree.
+
+В `CHAT-016` пользователь прямо остановил тяжёлые recursive file searches и потребовал точечный режим. После этого был выделен focused workspace для AE/controller files.
+
+Преимущества:
+- меньше I/O и зависаний;
+- меньше false hits;
+- проще provenance каждого вывода;
+- быстрее повторная проверка конкретного адреса.
+
+### I-056 — Размещать вычисление там, где ему место: static heavy work off-target
+Статус: `OBSERVED`.
+
+`CHAT-016` формулирует устойчивое разделение:
+- камера — только runtime/hardware evidence, которое нельзя восстановить офлайн;
+- WSL/PC — disassembly, readelf, strings, diff, parsing, table audit, selftests;
+- уже готовый TXT — анализировать напрямую, не дизассемблировать повторно;
+- тяжёлую обработку не запускать на target и не заставлять оператора делать её вручную.
+
+Если новый binary действительно требует full reverse, агент сначала говорит, **какой именно** artifact нужен и почему, затем один раз готовит его на WSL.
+
+### I-057 — Sparse liveness heartbeat без промежуточного reasoning
+Статус: `OBSERVED`.
+
+Autonomous milestone reporting и видимость работы не противоречат друг другу.
+
+В `CHAT-016` оптимальная модель уточнилась:
+- не публиковать каждую hypothesis/function finding;
+- если локальная операция заметно затянулась — коротко сообщить текущий блок и отсутствие/наличие blocker;
+- при tool failure/оборванном ответе быстро обозначить точку продолжения;
+- после substantial milestone дать нормальный технический summary.
+
+Это устраняет циклы «ты тут? / завис?» без возврата к шумному stream-of-consciousness.
+
+### I-058 — Stale/cache/queue state нужно отличать от active controller state
+Статус: `OBSERVED`.
+
+При runtime capture одно и то же числовое поле может быть:
+- текущим active state;
+- deferred queue value;
+- cached previous value;
+- profile default;
+- dirty=0 stale value.
+
+`CHAT-016` даёт хороший пример: `shared+0x00=894` сначала выглядел как конфликтующий active max-intt, но после проверки `C6AC8` оказался stale deferred queue value при `dirty=0`.
+
+Правило:
+- значение без lifecycle/dirty/owner semantics не повышать до active fact;
+- для stateful controller фиксировать producer, dirty flag, commit point и consumer;
+- runtime snapshot интерпретировать вместе с action/queue state, а не только по числу.
+
+Это особенно важно для AE/AWB и других deferred control loops.
 
 ## Исходные этапы, ещё не подтверждённые
 
