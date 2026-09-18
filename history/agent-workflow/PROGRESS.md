@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `READY_FOR_NEXT_SOURCE`
+Статус: `CHAT_015_IN_PROGRESS`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **14**
 - Последний источник: `CHAT-014`
 - Период последнего источника: **2026-08-27**
-- Следующее действие: перейти к следующему загруженному источнику `#15`
+- Следующее действие: завершить анализ `CHAT-015`
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -69,6 +69,7 @@
 | 12 | `CHAT-012` | 2026-08-26 | `DONE` | Почти полный duplicate CHAT-004: exact common prefix 8392/8556 строк (~98.1% файла), поэтому повторный dequeue/grey/RAW evidence не пересчитывался. Уникальный хвост: stage summary после RAW-DMA breakthrough и решение начать productionization параллельно, сохранив single-owner `fh8626_daemon` boundary перед Majestic |
 | 13 | `CHAT-013` | 2026-08-27 | `DONE` | Day AWB mode1 сильно восстановлен и переведён в diag/shadow; hardware identity очищена от JXF37 false lead; stock runtime подтверждает GC1054 1280×720 + downstream 1080 upscale и dual-GC1054 target1/target2 lens lifecycle; сформулирован milestone-driven autonomous reverse contract |
 | 14 | `CHAT-014` | 2026-08-27 | `DONE` | Parallel Agent 3: exact AWB→CCM reverse, coherent v4.2.1 hardware validation and rollback; session-quality retrospective becomes separate artifact with operational-state/state-machine/automation proposals |
+| 15 | `CHAT-015` | 2026-08-27 — 2026-08-28 | `IN_PROGRESS` | Центральная orchestration-ветка: multi-agent decomposition/integration, project-file isolation, long Task N lanes, Cross-Fullhan semantic oracle, APC/total-gain diagnosis и same-SoC external research |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
