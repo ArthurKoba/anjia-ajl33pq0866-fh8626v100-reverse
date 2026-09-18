@@ -115,7 +115,7 @@ Detailed audit: `docs/process/fh8626-kernel-series-audit.md`.
 Repository: `ArthurKoba/openipc-divinus`.
 
 - branch: `work/fh8626v100`
-- current candidate: `875e0697fa30ee06e4e19970c1680a92a0f94192`
+- current candidate: `809561bd47820e89e34e1d132ec2390a4e209dc0`
 - evidence class: `SOURCE_CANDIDATE / TARGET_PENDING`
 
 The Divinus agent and Majestic agent now share recovered contracts through reverse
@@ -153,7 +153,7 @@ Active directions:
 
 - core: `work/fh8626v100@80169887be80c43471f9f4792dde3e2a5bd18a8c`
 - Divinus: `work/fh8626v100-divinus@255b8c8deea8e7da5ef7429b6f8f2b176a430aec`
-- Majestic: `work/fh8626v100-majestic@cf4c6c4736a3c6fae054f816f9812f508f929d64`
+- Majestic: `work/fh8626v100-majestic@aabf18a66fb0666e24d010b5bd1b632d7ffb8da2`
 
 All three directions consume the exact Linux staging source
 `openipc-linux/work/fh8626v100@357c2d13e7589db0dbe2bbf89c2ec38b1c036e6e`.
@@ -209,7 +209,7 @@ reproducible source implementations.
 
 Repository: `ArthurKoba/openipc-builder`.
 
-- active branch: `work/fh8626v100-anjia@dc7ddabf4b1442ad1255f5e2f41f00e40a33efa5`
+- active branch: `work/fh8626v100-anjia@7db8cc1faca2df389f4f5958386ec6dde338f3ff`
 - one physical device tree with composed `_divinus`, `_majestic` and
   `_diag` variants
 - no live separate Majestic Builder branch
@@ -295,12 +295,13 @@ native HTTP/WebUI when media was disabled. The old explicit sensor path then
 segfaulted because multiple FH8852/FH8626 ABI boundaries were still wrong.
 
 Current Firmware direction:
-`work/fh8626v100-majestic@cf4c6c47...`.
+`work/fh8626v100-majestic@aabf18a6...`.
 
 The offline compatibility closure is now substantially reconstructed rather
 than a fixed 720p bring-up shim:
 
 - source GC1054 and MIPI path;
+- typed 0x7c FH8852 sensor callback table over the stock 0x68 FH8626 GC1054 ABI, with no permissive sensor callbacks remaining;
 - FH8852 sensor-table -> FH8626 callback translation;
 - source VMM facade;
 - source SYS/VPSS/VENC/stream translation;
@@ -324,6 +325,8 @@ fake success.
 The retained donor ISP/ispcore/advapi layer stays isolated as one coherent
 userspace ISP context; replacing isolated pieces with guessed direct ioctls
 would reduce correctness.
+
+The sensor boundary received a dedicated Ghidra cross-check against three FH8852 donor sensors plus stock FH8626 GC1054/libisp/libispcore. Durable details and immutable artifact hashes are recorded in `docs/process/fh8626-majestic-sensor-abi.md`.
 
 Majestic HTTP/WebUI remains untouched. No auxiliary proxy and no JavaScript
 patch are accepted. The historical empty `/metrics` result remains a separate
