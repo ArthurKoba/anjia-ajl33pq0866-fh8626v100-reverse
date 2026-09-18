@@ -828,3 +828,22 @@ The source also contains an important packaging/provenance incident. A repacked 
 
 A later lens-switch package isolates the early Agent 3 implementation from a different Agent 7 branch after the user rejects cross-branch contamination. The retained transaction follows the already known stop-VENC → GPIO switch → settle → restore orientation → restart VENC → 64/64 reset contract, while startup preparation remains separate.
 
+## D28 — Native Linux platform bring-up
+
+`CHAT-030` is a partial export from the Agent 5 kernel lane; the missing earlier prefix is not reconstructed.
+
+Visible current state:
+- hardware-proven: machine, interrupt controller, timer, UART0, SPI0/NOR/MTD, reboot, watchdog, GPIO0/1, I2C0/1/2;
+- Ethernet source corrected for the exercised PHY contract, hardware retest pending;
+- RTC registered but still carrying a real target defect;
+- offline reverse/source work prepared for pinctrl, SADC, EFUSE, UART1/2, PWM0, USB/DWC2, SDIO/MMC, SPI1, DMA/AES, audio, PMU helpers and native defconfig;
+- media/VMM and the upper-memory policy are deliberately deferred as the final high-risk layer.
+
+Two machine-level findings matter for the future source architecture:
+- stock board initialization is not a single unconditional static device array: bootargs influence pinctrl and SD platform-data, then 22 or 23 devices are registered and one SPI board-info is added separately;
+- stock early init executes `fh_pmu_init()` followed by `fh_pinctrl_init(0xFE090080)`. Earlier bring-up could skip native pinctrl temporarily, but final kernel architecture cannot.
+
+The source also records a workflow correction. Because the agent lacked direct write access to the user's WSL Linux tree, it generated many independent numbered archives. This was abandoned in favor of one cumulative offline line and one later WSL runner/build/report boundary.
+
+The user additionally rejects Python as an unnecessary packaging/generation layer for ordinary shell/tar work. The resulting tool discipline prefers native shell tools unless Python adds real analytical value.
+
