@@ -116,4 +116,4 @@ Workspace был очищен от неполного Apollo artifact и пер�
 
 ## Современный anchor
 
-Современная GitHub/Drive/Ghidra/MCP архитектура появилась позже. `CHAT-001` её ещё не доказывает; следующие исторические файлы должны восстановить переход от handoff/checkpoint подхода к текущей системе.
+Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.
