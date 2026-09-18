@@ -1,6 +1,6 @@
 # FH8626V100 Majestic staging
 
-Status: `SOFTWARE_STAGING_COMPLETE / HISTORICAL_CONTROL_PLANE_HARDWARE_PASS / NEW_BUILD_AND_HARDWARE_PENDING`.
+Status: `SOFTWARE_MEDIA_STAGING / HISTORICAL_CONTROL_PLANE_HARDWARE_PASS / NEW_BUILD_AND_HARDWARE_PENDING`.
 
 Checked: 2026-09-18.
 
@@ -74,7 +74,6 @@ The package:
 - translates native FH8626 stream descriptors into the FH8852 public stream representation and preserves exactly-once descriptor release;
 - includes strict, permissive-stub and fixed native-video runners; native-video is constrained to the recovered 1280x720@25 H.264 Baseline/VBR contract;
 - keeps the normal init service media-off;
-- moves Majestic's internal HTTP listener to loopback:18080 and puts a source FH8626 backend proxy on external port 80. Ordinary HTTP/API/WebSocket traffic is tunneled unchanged while `/metrics` is generated from `/proc`; the stock WebUI JavaScript is not modified;
 - installs **no** FH8852 kernel modules, firmware, load scripts or donor sensor plug-ins.
 
 This is intentionally a compatibility staging package, not a statement that FH8852 userspace blobs are the final FH8626 media architecture.
@@ -127,7 +126,7 @@ The video/ISP path is explicitly unfinished. Do not enable media by default or c
 ## Next gates
 
 1. Owner-build Firmware `work/fh8626v100-majestic@4bd2f8bc...` through Builder `work/fh8626v100-anjia` target `fh8626v100_lite_anjia-ajl33pq0866_majestic`; record resolved Buildroot config plus kernel/rootfs sizes.
-2. Boot the default media-off service. Confirm external port 80, stock WebUI/API/WebSocket behavior and live `/metrics` CPU/RAM/uptime/network data through the backend proxy. No frontend patch is part of acceptance.
+2. Boot the default media-off service and confirm Majestic directly owns port 80 with stock WebUI/API/WebSocket behavior. Characterize `/metrics` as served by Majestic itself; do not insert a proxy or frontend patch.
 3. Run `majestic-fh8626-abi-probe` and retain complete output. Also record `sha256sum /usr/libexec/majestic-fh8852v200/majestic` so the run is attributable to exact donor bytes.
 4. Run strict media mode first and preserve the first failing API/callsite. Run permissive-stub only to expose later optional call ordering. Then run native-video mode.
 5. Native-video acceptance is VI -> VENC -> balanced descriptor acquire/release -> sustained RTSP at the fixed 1280x720@25 H.264 Baseline/VBR contract.
@@ -159,3 +158,19 @@ Static donor inspection also shows that not every FH8852 userspace layer needs r
 - FH8852 `libispcore.so` contains ISP start request `0x0000690A`.
 
 This is evidence of partial ioctl-family continuity, not proof that the associated structures or complete libraries are binary-compatible. Adapter work should replace a donor layer only after its actual argument/layout contract is shown to differ.
+
+
+## HTTP/WebUI and metrics boundary
+
+Majestic continues to own its normal HTTP port, API, WebSocket and frontend directly. No JavaScript rewrite and no auxiliary HTTP proxy are part of the accepted staging architecture.
+
+The historical empty `GET /metrics` result is therefore still a real backend/provider blocker. CPU, RAM, uptime and network source data are available from Linux, but any fix must land in the actual Majestic/platform metrics-provider boundary (or official Majestic FH8626 support), not by hiding the route behind a second web server.
+
+
+## RTX audio compatibility facade
+
+Static reverse of FH8852 `libacw_mpi.so` showed that its public MPI is a thin wrapper over the same RTX command family already hardware-proven on FH8626. Matching contracts include reset `0x40000000`, command transport `0x20000000`, init `0x01040004`, config `0x01040005`, AI frame `0x01008000`, AO frame `0x01008002`, and the same simple command IDs for AI/AO enable/disable, volume, mode, clear and playback completion.
+
+The recovered donor shared-memory layout also proves that the AO staging region is the tail of the RTX mapping: `mapped_base + (map_length - tail_length)`, with the corresponding transport offset derived from `map_offset`. Firmware therefore now builds a source `libacw_mpi.so` facade with AI frame/PTS retrieval and AO frame submission over native `/dev/rtxbus`.
+
+Advanced AEC/AGC/NR semantics remain explicit unsupported boundaries until a concrete Majestic call requires their exact records. Physical speaker amplifier policy remains board-owned and is not embedded into the generic compatibility library.

@@ -28,7 +28,7 @@ When an upstream/vendor Majestic build for FH8626V100 becomes available, record 
 
 ## Current compatibility surface
 
-Firmware `work/fh8626v100-majestic@4bd2f8bc...` contains a source-built ABI probe for the retained FH8852V200 userspace baseline. It is deliberately non-mutating: no sensor, ISP, VI or VENC initialization is called. Its purpose is to separate three questions before the next adapter slice:
+Firmware `work/fh8626v100-majestic@e00cae3d...` contains a source-built ABI probe for the retained FH8852V200 userspace baseline. It is deliberately non-mutating: no sensor, ISP, VI or VENC initialization is called. Its purpose is to separate three questions before the next adapter slice:
 
 - are the eight donor libraries loadable as one closure under the FH8626 musl image;
 - which expected Fullhan VMM/SYS/VPSS/VENC/MIPI/ISP symbols are actually resolvable;
@@ -54,6 +54,9 @@ The new Firmware facade presents the FH8852 callback shape and translates the su
 
 The compatibility direction has now reached the offline software boundary. In addition to the sensor facade, Firmware contains source VMM and DSP compatibility layers, a fixed native FH8626 H.264 channel-0 bring-up path, stream-record translation with balanced native descriptor leases, and separate strict/permissive/native-video runners.
 
-The control-plane metrics problem is fixed on the backend side: Majestic listens on loopback port 18080 and a small source proxy owns external port 80. The proxy forwards normal Majestic HTTP/API/WebSocket traffic and serves the existing stock `GET /metrics` contract from Linux `/proc` data. No WebUI JavaScript is patched. Temperature remains absent rather than fabricated.
+The control-plane metrics problem is **not** papered over. Majestic continues to own its stock HTTP/API/WebSocket frontend directly. No JavaScript rewrite and no auxiliary HTTP proxy are accepted. The historical empty `GET /metrics` response remains a backend/provider blocker to fix in the real Majestic/platform integration.
 
 Further offline wrapping is deliberately evidence-gated. The project already has native FH8626 ISP/image, JPEG, RTX audio, PTZ and illumination primitives, but their Majestic-facing APIs must be taken from an actual run or official Majestic platform contract rather than guessed from unrelated FH8852 structures.
+
+
+The staging branch also contains a source RTX audio MPI facade. FH8852 `FH_AC_*` frame/config wrappers were statically matched to the same RTX command records already hardware-proven on FH8626, including AI frame/PTS and AO frame submission. This is source-ready but still requires Majestic runtime evidence for actual microphone, speaker and two-way ownership/policy.
