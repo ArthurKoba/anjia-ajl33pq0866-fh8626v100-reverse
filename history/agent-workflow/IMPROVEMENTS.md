@@ -65,7 +65,7 @@
 Источник: `CHAT-001`.
 
 ### I-010 — Один canonical handoff вместо множества параллельных версий
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
 В конце `CHAT-001` появился большой handoff, затем в него были аккумулированы уникальные замечания второго агента. Позже был выбран один master-файл, а старые версии признаны backup/obsolete.
 
@@ -79,7 +79,7 @@
 Источник: `CHAT-001`.
 
 ### I-011 — Reverse только до уровня, который разблокирует следующий эксперимент
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
 Проблема: был начат детальный разбор каждого callback/format-id sensor library, хотя главной целью оставался запуск video pipeline.
 
@@ -90,7 +90,7 @@
 Источник: `CHAT-001`.
 
 ### I-012 — Один долгоживущий owner для stateful vendor media pipeline
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
 Проблема: повторное open/close и concurrent instrumentation vendor ISP/PAE fd приводили к dirty state, зависаниям и power-cycle.
 
@@ -121,6 +121,76 @@
 Обобщаемое правило: не повышать уровень evidence молча. «Устройство отвечает» ≠ «production contract доказан».
 
 Источник: `CHAT-001`.
+
+### I-015 — Формальный one-archive delivery protocol
+Статус: `OBSERVED`.
+
+В `CHAT-002` пользователь превратил разрозненные привычки передачи файлов в явный контракт:
+
+- один осмысленный test-stage = один уникально versioned archive;
+- для серьёзного owner change архив содержит полный source set, а не diff;
+- после download агент даёт готовый WSL block: unpack → compile → `scp -O`;
+- отдельный camera block: reload/run/test;
+- агент сам выбирает compile/link flags;
+- пользователь не создаёт большие `.c` через heredoc и не угадывает пути/имена;
+- SHA/checksums не добавляются без отдельной необходимости;
+- архив не создаётся/не отправляется просто ради локального изменения документации.
+
+Это первый явно сформулированный **artifact delivery API** между агентом и оператором.
+
+### I-016 — Self-guarding critical actions
+Статус: `OBSERVED`.
+
+После повторного запуска media owner был введён атомарный start lock и process guard.
+
+Обобщаемый принцип:
+- destructive/stateful operations должны быть безопасны при случайном повторе;
+- duplicate paste/retry не должен создавать второй owner или повторно применять опасную операцию;
+- guard должен быть частью готового test workflow, а не инструкцией «не забудь проверить».
+
+Это развитие safety-правила one-owner-per-boot из `CHAT-001`.
+
+### I-017 — Hot-plugin loop вместо reboot для каждого runtime stage
+Статус: `OBSERVED`.
+
+Проблема: замена самого owner требовала clean reboot из-за lifetime Fullhan ISP/media state.
+
+Улучшение: оставить один стабильный owner и проверять новые source-derived ISP writers через reloadable hot-plugin.
+
+Цикл стал:
+`reverse locally → build .so → scp -O → reload through existing owner → read register/log/capture`.
+
+Результат: несколько последовательных CB970 stages были проверены без reboot между каждым изменением. Это существенно ускорило reverse/runtime convergence.
+
+### I-018 — Workspace hygiene и один authoritative reverse artifact
+Статус: `OBSERVED`.
+
+В `CHAT-002` выяснилось, что старый `apollo.unpacked` был неполным и не содержал позднюю data/GOT область, тогда как полный textual ARM dump содержал нужный материал.
+
+После этого workflow изменён:
+- повреждённый/устаревший artifact исключается из active workspace;
+- archive после успешной extraction удаляется;
+- дублирующие extraction directories удаляются;
+- один полный artifact объявляется authoritative;
+- handoff/reverse notes переписываются на него;
+- newest source tree не заменяется старым baseline при cleanup.
+
+Это важный переход от «накопить всё» к **curated workspace with explicit authority**.
+
+### I-019 — Параллельный reverse с непересекающимися зонами ответственности
+Статус: `OBSERVED`.
+
+Вторая половина `CHAT-002` показывает более зрелый multi-agent process:
+- основной агент держит canonical runtime и integration;
+- parallel reverse-agent получает конкретный тяжёлый блок;
+- scope явно исключает функции, которыми занимается основной агент;
+- hardware tests выполняются только в интеграционном контуре;
+- parallel agent передаёт finished reverse unit: contracts, tables, exact pseudo-C/reference C, unresolved points;
+- основной агент интегрирует unit в canonical runtime, а не создаёт ещё одну независимую реализацию.
+
+Так были параллельно восстановлены shared LUT/heavy writers и затем AE/AWB frontend.
+
+Это уже не просто handoff между чатами, а ранняя форма **role-specialized agent pipeline**, хотя пользователь всё ещё вручную маршрутизирует пакеты между агентами.
 
 ## Исходные этапы, ещё не подтверждённые
 
