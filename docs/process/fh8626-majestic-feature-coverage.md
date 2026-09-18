@@ -1,6 +1,6 @@
 # FH8626 Majestic feature coverage
 
-Status: FULL_FEATURE_OFFLINE_CLOSURE / BUILD_AND_HARDWARE_PENDING
+Status: FULL_FEATURE_OFFLINE_CLOSURE / BUILD_GATE_READY / HARDWARE_PENDING
 
 This document measures product-facing Majestic feature coverage, not merely
 loader compatibility.
@@ -22,8 +22,10 @@ validation remain a separate next phase.
 Canonical cross-agent coordination: reverse issue #3.
 
 Current refs:
-- Firmware Majestic: `work/fh8626v100-majestic@a013ac3d`
-- Divinus: `work/fh8626v100@5979e160`
+- Firmware Majestic: `work/fh8626v100-majestic@04e09360`
+- Divinus: `work/fh8626v100@44c4fb94`
+- Builder: `work/fh8626v100-anjia@a02d325e`
+- Linux: `work/fh8626v100@357c2d13`
 
 ## Video
 
@@ -91,7 +93,10 @@ Their required FH8626-facing VPSS dependencies are implemented:
 
 GraphV2 uses the recovered FH8626 folded 0x448-byte request
 `0xC448696D/0xC448696E`, translating the FH8852 public 273-word GraphV2
-object.
+object. A final Divinus cross-check was independently verified against Ghidra
+`isp.ko:vpu_set_logov2`: selector is 0..2, global graph index is 0..1 and
+channel graph index is 0..3. Majestic now rejects out-of-range slots before
+the native ioctl.
 
 BGM/NN SDK exports that are not selected or imported by the current runtime
 remain outside the advertised closure rather than returning fake success.
@@ -141,6 +146,21 @@ The package now verifies at build time:
 At the current refs, selected donor libraries have **zero** dependencies on the
 remaining unsupported compatibility exports.
 
+## Runtime packaging and reproducibility
+
+The compatibility package explicitly selects the shared
+`fullhan-media-fh8626v100` runtime. Its eight FH8626 media modules plus
+`rtthread_arc.bin` are fetched from immutable Firmware archive commit
+`f4bf49da6ef355c9e733e00d774efe403513b1d4` and each file is SHA-256
+verified. No FH8852 kernel/ARC payload is installed.
+
+The FH8852V200 Majestic executable remains a separate supply-chain boundary:
+the package still downloads `majestic.fh8852v200.lite.master.tar.bz2` from
+the moving upstream object. ABI guards catch an unsupported import expansion,
+but the first controlled build must also record the exact installed Majestic
+SHA-256. An immutable donor or official FH8626 build remains required for full
+product reproducibility.
+
 ## Web/control plane
 
 Majestic HTTP, API, WebSocket and WebUI remain untouched. No proxy and no
@@ -180,8 +200,9 @@ sliceUnits or HEVC use, and the selected donor closure has zero dependencies on
 the remaining unsupported exports. A build-time guard now rejects future
 Majestic/vendor updates that cross that boundary.
 
-There is no GitHub Actions workflow available for these branches, so the real
-Buildroot compile is the next external gate.
+There is no usable current CI build for these fork-local staging branches, so
+the exact composed Buildroot compile is the next owner gate. Current hard
+limits remain `uImage <= 2048 KiB` and `rootfs.squashfs <= 5120 KiB`.
 
 Target acceptance must cover:
 - main/sub enable/disable and simultaneous streams;
