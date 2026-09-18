@@ -102,6 +102,9 @@ Sensor и MIPI path удалось довести до состояния, со�
 
 Но `CHAT-001` корректно оставил открытой границу acceptance: capture повторял один descriptor/первый encoded unit. Поэтому нельзя повышать результат до «полностью корректное moving video/image quality». Следующая задача — правильный dequeue/live frame progression, а не повторный базовый bring-up.
 
+`CHAT-009` показывает ранний capture milestone подробно: единый helper поднимает ISP config/VMM, VPU, PAE, bind/start/enable и получает Annex-B H.264 с SPS/PPS/IDR. Сохранён `/tmp/capture.h264` на 50 выборок. Одновременно все выборки указывали на один `virt/len`, а декодирование давало серое/неподвижное содержимое. Поэтому milestone фиксируется как «hardware encoder path работает», но live dequeue/frame progression остаётся отдельным gate.
+
+
 ## D7 — Dev-loop и stateful driver lifetime
 
 Fullhan media drivers оказались чувствительны к lifetime:
@@ -118,6 +121,9 @@ Fullhan media drivers оказались чувствительны к lifetime:
 - повторное соединение стало переиспользуемым.
 
 Эти изменения не являются media port сами по себе, но резко снижают стоимость каждого последующего эксперимента.
+
+`CHAT-009` даёт прямое доказательство broken lifetime vendor driver: unload ISP/media оставил висячую IRQ registration, и последующее чтение `/proc/interrupts` закончилось kernel Oops. Несколько ISP contexts также давали duplicate handlers. После этого persistent single-owner/daemon стал safety requirement, а не просто удобством. Параллельно SSH dev-loop был разложен по слоям: постоянный Dropbear key на mtd4, persistent `seedrng`, статическая сеть без broken `fw_printenv`, корректный `devpts newinstance` и `/dev/ptmx -> pts/ptmx`.
+
 
 ## D8 — Handoff и первые признаки многоагентного workflow
 
@@ -141,6 +147,8 @@ Fullhan media drivers оказались чувствительны к lifetime:
 Ещё до финального master handoff `CHAT-007` показывает отдельную форму knowledge transfer: пользователь просит передать новые находки параллельному ISP reverse-agent. Handoff содержит только новую external-reference ветку, локальные artifact paths, confirmed contracts, unresolved names и конкретный следующий priority, чтобы второй агент не повторял уже закрытое.
 
 `CHAT-008` усиливает этот этап двумя практиками. Во-первых, старые рабочие helper'ы поднимаются из локального checkpoint после потери `/tmp`, а не восстанавливаются по памяти. Во-вторых, parallel ISP checkpoint передаётся с явным требованием сверить с текущими findings и не повторять уже закрытый reverse; результат второго агента затем используется как reference, а не как новая независимая canonical ветка.
+
+`CHAT-009` добавляет context-limit handoff acceptance: при приближении лимита диалога пользователь требует большой handoff, но затем уточняет, что narrative недостаточно. Новый агент должен видеть working files/directories, firmware/memory disassembly, stock captures, checkpoints и exact build/transfer/reverse/run recipes. Это ранняя формулировка handoff как reproducibility manifest.
 
 
 ## D9 — Dequeue, grey frame и stock runtime evidence
