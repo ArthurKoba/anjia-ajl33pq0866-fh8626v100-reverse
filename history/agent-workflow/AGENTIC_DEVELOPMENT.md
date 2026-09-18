@@ -37,7 +37,7 @@
 Позднее этот принцип развивается в full searchable bundles, curated workspace и внешние authority-системы.
 
 ### A1 — Локальный workspace + checkpoint/handoff
-Статус после `CHAT-001` + `CHAT-008`: `CONSOLIDATED`.
+Статус после `CHAT-001` + `CHAT-008` + `CHAT-009`: `CONSOLIDATED`.
 
 По мере роста количества helper binaries, dumps и reverse-наработок появился устойчивый локальный workspace и checkpoint-наборы. Перед reboot начали сохранять состояние, а к концу чата — собирать воспроизводимый handoff.
 
@@ -46,6 +46,8 @@
 Но workspace ещё локален и не является общей authority: новый агент зависит от переданного Markdown и наличия локального дерева.
 
 `CHAT-008` показывает практическую ценность локального checkpoint: после очистки runtime `/tmp` рабочие sensor/ISP/H.264 helper'ы находят в `checkpoints/openipc-20260825` и переиспользуют без повторной реконструкции. Это уже persistent project state, хотя ещё только на машине пользователя.
+
+`CHAT-009` доводит критерий handoff до воспроизводимости: при лимите контекста мало пересказать findings — нужно перечислить canonical files/directories, reverse/disassembly/memory evidence и exact build/transfer/run recipes, чтобы следующий агент продолжил без скрытого знания.
 
 ### A1.5 — Идея repository-backed workflow
 Статус после `CHAT-007`: `OBSERVED`, но ещё не внедрено как authority.
@@ -72,11 +74,13 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 В `CHAT-001` используются upstream Git repositories для сборки/сравнения, но собственное долговременное состояние порта ещё не организовано через Git как authority.
 
 ### A4 — Прямые operational-каналы
-Статус после `CHAT-005` + `CHAT-001`: `CONSOLIDATED`.
+Статус после `CHAT-005` + `CHAT-009` + `CHAT-001`: `CONSOLIDATED`.
 
 Первые прямые operational-каналы появляются уже в `CHAT-005`: U-Boot/TFTP заменяет перенос test payload через браузер. В `CHAT-001` к нему добавляются SSH/SCP для OpenIPC runtime и затем оптимизация SSH startup/connection reuse.
 
 Это уменьшило зависимость от браузерной передачи бинарных артефактов, но потребовало собственного transport contract: один и тот же способ передачи нельзя механически применять к разным runtime states.
+
+`CHAT-009` показывает, что operational channel нужно оптимизировать как инженерную подсистему: network readiness, TCP port, SSH banner, host key, entropy и PTY диагностируются как отдельные boundaries, а не как одно расплывчатое «SSH не работает».
 
 ### A4.1 — Self-service reverse evidence
 Статус после `CHAT-004`: `OBSERVED`.
@@ -150,7 +154,9 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 
 В `CHAT-001` пользователь всё ещё выполняет очень много промежуточных команд. Однако направление уже видно: агент всё больше берёт на себя reverse, подготовку probes, интерпретацию результатов и документирование, а пользователь начинает требовать сокращения ручного диспетчерства.
 
-## Уроки CHAT-001/002/003/004/005/006/007/008 для будущей agentic-системы
+`CHAT-009` особенно хорошо показывает предел ручного режима: сложные UART paste-блоки повреждаются, пользователь вынужден вручную восстанавливать process/kernel state и отдельно просит прекратить микрошаги. Это сильный исторический аргумент в пользу будущего direct agent workspace/operational tooling.
+
+## Уроки CHAT-001/002/003/004/005/006/007/008/009 для будущей agentic-системы
 
 1. **Текущее runtime state должно быть внешним фактом, а не памятью диалога.** Потери «stock или OpenIPC?» породили дорогие ошибки.
 2. **Agent handoff — необходим, но не должен становиться гигантской свалкой.** Нужны краткая карта и подробные приложения.
@@ -181,6 +187,9 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 27. **Granularity определяется decision boundary, а не количеством команд.** Routine без ветвления группируется; неизвестный шаг останавливается только там, где агенту нужен результат для следующего вывода.
 28. **При потере source предпочитать runtime contract capture полному re-reverse.** Interposition/trace может восстановить нужный ioctl ABI быстрее и точнее.
 29. **Unsupported SoC выгодно портировать как reusable backend, а не одноразовую плату.** Тяжёлый reverse должен превращаться в общий слой, чтобы следующие board-порты стали sensor/GPIO/profile задачами.
+30. **Сложный control flow нельзя делать UART-интерфейсом.** Multi-line `if`, regex, quoting и critical MMIO/process logic должны жить в переданном script/helper; serial shell — для короткого запуска и чтения результата.
+31. **Handoff должен проходить reproducibility test.** Новый агент должен суметь найти canonical artifacts и повторить build/transfer/reverse/run без неявной памяти автора.
+32. **Infrastructure failure нужно локализовать по boundaries.** Network up, TCP listen, protocol banner, auth и PTY — разные gates; измерять их отдельно дешевле, чем менять несколько подсистем сразу.
 
 ## Следующие исторические переходы, которые нужно искать
 
