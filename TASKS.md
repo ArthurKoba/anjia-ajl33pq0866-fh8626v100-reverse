@@ -98,9 +98,9 @@ This is an independent platform research task and does **not** block Firmware, D
 
 ## P1 — Divinus target completion
 
-35. Use `openipc-divinus/work/fh8626v100@684d0e1fc074435c4d14256c1d5d62ff87c2ebef` as the exact source-clean candidate. Do not restart from the historical owner/sidecar implementation.
+35. Use `openipc-divinus/work/fh8626v100@168b2ecfeffcb53c2ed2a1d86c4897fdd3423820` as the exact source-clean candidate. Do not restart from the historical owner/sidecar implementation.
 36. Run `tests/fh8626-check.sh` in a normal checkout/CI environment and record the result. The current API-only pass prepared the runner but did not execute it.
-37. Build the matching Firmware direction `openipc-firmware/work/fh8626v100-divinus@3ef425e571f392ea1a2b1cadbeb63cb849ff6bee`; it temporarily pins exactly Divinus `684d0e1...`. Record binary identity plus resolved config and image sizes.
+37. Build the matching Firmware direction `openipc-firmware/work/fh8626v100-divinus@d589e0546384a4fc094cc959f81d6f2864ce997f`; it temporarily pins exactly Divinus `168b2ec...`. Record binary identity plus resolved config and image sizes.
 38. Deploy that exact candidate and prove executable/hash, PID and listener ownership before interpreting media behavior.
 39. Validate GC1054/ISP/media startup, visible image, VENC and sustained 1280x720@25 H.264 streaming.
 40. Validate RTSP/raw H.264/fMP4 reconnect behavior and native force-IDR/random-access behavior.

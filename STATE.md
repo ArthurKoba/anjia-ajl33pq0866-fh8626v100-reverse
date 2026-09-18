@@ -114,7 +114,7 @@ Detailed audit: `docs/process/fh8626-kernel-series-audit.md`.
 Repository: `ArthurKoba/openipc-divinus`.
 
 - branch: `work/fh8626v100`
-- current source-clean candidate: `684d0e1fc074435c4d14256c1d5d62ff87c2ebef`
+- current source-clean candidate: `168b2ecfeffcb53c2ed2a1d86c4897fdd3423820`
 - preserved migration input: `1e624bd5aca97ba772413d2b00a10314d1db039f`
 - generic integration base: `8d400262898e8e82df6171fde7e8911ec7930249`
 
@@ -126,7 +126,7 @@ This is `SOURCE_CLEAN_CANDIDATE / HARDWARE_PENDING`, not a new hardware pass. Th
 
 Focused host checks are grouped in `tests/fh8626-check.sh`. They were not executed in this API-only pass. The next authoritative gate is an ARM1176/musl build plus target validation of the exact candidate.
 
-Firmware test staging is pinned to that exact candidate at `ArthurKoba/openipc-firmware/work/fh8626v100-divinus@3ef425e571f392ea1a2b1cadbeb63cb849ff6bee`. This fork pin is test provenance only and must return to OpenIPC-owned provenance after upstream integration.
+Firmware test staging is pinned to that exact candidate at `ArthurKoba/openipc-firmware/work/fh8626v100-divinus@d589e0546384a4fc094cc959f81d6f2864ce997f`. This fork pin is test provenance only and must return to OpenIPC-owned provenance after upstream integration.
 
 Detailed handoff: `docs/process/fh8626-divinus-cleanup.md`.
 
@@ -154,7 +154,7 @@ Firmware now inherits the standard OpenIPC 8 MiB assembly budget: 2 MiB kernel p
 
 Runtime direction branches are layered on that core:
 
-- Divinus Firmware direction: `work/fh8626v100-divinus@3ef425e571f392ea1a2b1cadbeb63cb849ff6bee`; it selects Divinus and temporarily pins the exact hardware-test candidate `ArthurKoba/openipc-divinus@684d0e1...`. The personal-fork pin is staging-only provenance.
+- Divinus Firmware direction: `work/fh8626v100-divinus@d589e0546384a4fc094cc959f81d6f2864ce997f`; it selects Divinus and temporarily pins the exact hardware-test candidate `ArthurKoba/openipc-divinus@168b2ec...`. The personal-fork pin is staging-only provenance.
 - Majestic Firmware direction: `work/fh8626v100-majestic@7ed2a17a67fce0c2ee8d80bc798cafe81cfa6c38`; it adds the isolated FH8852V200 Majestic compatibility/control-plane package and a media-off configuration. This is staging, not an upstream-ready FH8626 media implementation.
 
 The clean branch is `SOURCE_CONFIRMED / CLEAN_ARCH_CANDIDATE`, not a build or hardware acceptance. A production kernel-config audit removed only traced legacy/debug/dead facilities, made RTC device registration opt-in, and made recovery NFS explicitly v3-only. The exact decisions are in `docs/process/fh8626-kernel-config-audit.md`. The owner still needs to run the authoritative build and record the resolved `.config` plus final kernel/rootfs sizes. Binary ownership and exact hashes are recorded in `docs/process/fh8626-firmware-ownership-audit.md`.
@@ -222,7 +222,7 @@ Static/source/reverse coverage is not equivalent to target runtime acceptance. H
 
 ## Divinus
 
-Divinus remains the open reference path that must be closed before the Majestic product transition. The native FH8626 implementation has now been source-cleaned to `684d0e1...`: obsolete external-owner transport is retired, native ownership/IDR/telemetry/lifecycle boundaries are explicit, and unsafe runtime MP4 mutation is blocked instead of falling through generic HAL code.
+Divinus remains the open reference path that must be closed before the Majestic product transition. The native FH8626 implementation has now been source-cleaned to `168b2ec...`: obsolete external-owner transport is retired, native ownership/IDR/telemetry/lifecycle boundaries are explicit, and unsafe runtime MP4 mutation is blocked instead of falling through generic HAL code.
 
 The candidate still requires the focused host suite, exact ARM1176/musl Firmware build and physical-camera acceptance. Its current transitional sensor plug-in and RTX helper dependencies are explicit blockers, not hidden production assumptions.
 

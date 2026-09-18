@@ -1,6 +1,6 @@
 # Divinus integration
 
-Divinus is the open reference and diagnostic implementation for FH8626V100. The current source-clean candidate is `ArthurKoba/openipc-divinus/work/fh8626v100@684d0e1fc074435c4d14256c1d5d62ff87c2ebef`.
+Divinus is the open reference and diagnostic implementation for FH8626V100. The current source-clean candidate is `ArthurKoba/openipc-divinus/work/fh8626v100@168b2ecfeffcb53c2ed2a1d86c4897fdd3423820`.
 
 ## Current architecture
 
@@ -54,7 +54,7 @@ Preserve these established constraints during target debugging:
 
 ## Exact test staging
 
-Firmware `work/fh8626v100-divinus@3ef425e571f392ea1a2b1cadbeb63cb849ff6bee` temporarily pins Divinus `684d0e1...` so the next image is attributable. That personal-fork pin is staging-only; after upstream acceptance Firmware must return to OpenIPC-owned source provenance.
+Firmware `work/fh8626v100-divinus@d589e0546384a4fc094cc959f81d6f2864ce997f` temporarily pins Divinus `168b2ec...` so the next image is attributable. That personal-fork pin is staging-only; after upstream acceptance Firmware must return to OpenIPC-owned source provenance.
 
 ## Acceptance order
 

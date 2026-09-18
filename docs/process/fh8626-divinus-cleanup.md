@@ -8,14 +8,14 @@ The active Divinus development line is:
 
 - repository: `ArthurKoba/openipc-divinus`
 - branch: `work/fh8626v100`
-- candidate: `684d0e1fc074435c4d14256c1d5d62ff87c2ebef`
+- candidate: `168b2ecfeffcb53c2ed2a1d86c4897fdd3423820`
 - evidence status: `SOURCE_CLEAN_CANDIDATE / HARDWARE_PENDING`
 
 The matching Firmware test direction is:
 
 - repository: `ArthurKoba/openipc-firmware`
 - branch: `work/fh8626v100-divinus`
-- candidate: `3ef425e571f392ea1a2b1cadbeb63cb849ff6bee`
+- candidate: `d589e0546384a4fc094cc959f81d6f2864ce997f`
 - role: temporarily pin the exact Divinus candidate for attributable hardware testing.
 
 ## What was removed as legacy
@@ -112,7 +112,7 @@ The bridge identity cannot write GitHub workflow files, and this API-only pass h
 ## Exact next hardware-test sequence
 
 1. Run the focused host suite.
-2. Build Firmware `work/fh8626v100-divinus@3ef425e...`; confirm it fetched Divinus `684d0e1...` and record resulting binary/image hashes and sizes.
+2. Build Firmware `work/fh8626v100-divinus@d589e05...`; confirm it fetched Divinus `168b2ec...` and record resulting binary/image hashes and sizes.
 3. Boot/deploy and prove candidate executable/PID/listener ownership.
 4. Validate GC1054/ISP startup and sustained 720p25 H.264.
 5. Validate raw H.264, RTSP and fMP4 plus reconnect and force-IDR.
