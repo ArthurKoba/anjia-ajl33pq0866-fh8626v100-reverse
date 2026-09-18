@@ -589,3 +589,8 @@ Ghidra предлагается как локальный WSL analyzer/headless 
 - когда GitHub стал source of truth для текущего состояния;
 - когда agents получили прямой MCP-доступ вместо пользовательского handoff;
 - когда пользователь перестал быть главным маршрутизатором файлов/контекста между агентами.
+
+
+## Подтверждение после CHAT-034
+
+Расширенный orchestrator-thread не требует нового A-этапа: он делает устойчивыми уже описанные A4.14/A4.16/A4.17/A4.18. Parallel workers стартуют от frozen master, evidence-agent закрывает named physical gaps, reverse-agent получает normalized delta, productization работает независимо, а orchestrator единолично делает fan-in. Двухуровневый MASTER_CORE/REVERSE_HEAVY перестаёт быть только storage proposal и становится физической рабочей схемой.

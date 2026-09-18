@@ -5,9 +5,9 @@
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **33**
-- Последний источник: `CHAT-033`
-- Период последнего источника: **2026-08-30**
+- Обработано исторических файлов: **34**
+- Последний источник: `CHAT-034`
+- Период последнего источника: **2026-08-28 — 2026-08-30**
 - Следующее действие: получить следующий уникальный исторический источник
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
@@ -16,7 +16,7 @@
 
 | Направление | Файл | Состояние после CHAT-033 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 33/?? sources обработано |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 34/?? sources обработано |
 | Ошибки/нарушения агентов | `ERRORS.md` | 47 tracked classes/directions |
 | Улучшения и best practices | `IMPROVEMENTS.md` | 123 tracked improvements/directions |
 | История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D30: Agent 7 release-regression и forensic rollback |
@@ -90,6 +90,8 @@
 | 32 | `CHAT-032` | 2026-08-30 | `DONE` | Agent 7 release-ветка: host/ARM gates проходят, но target loop ломает hardware-proven lens/image contracts; software diagnostics ошибочно принимаются за physical truth; R13–R18 карантинизированы, сформирован аварийный negative-evidence handoff |
 
 | 33 | `CHAT-033` | 2026-08-30 | `DONE` | Методологический перелом reverse: flat objdump признан недостаточным для сложного Apollo/ISP; проектируется Ghidra semantic DB с decompile/CFG/XREF/types/unresolved, cross-binary knowledge, WSL-only workspace и snapshot/delta exchange |
+
+| 34 | `CHAT-034` | 2026-08-28 — 2026-08-30 | `DONE` | Expanded orchestrator mega-thread: parallel reverse/evidence/productization waves, premature master bumps corrected, E1–E7 acquisition loop, Agent 4→Agent 1 closure, source-vault/prepared-reverse split and real MASTER_CORE/REVERSE_HEAVY materialization; mostly consolidates existing classes |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -1050,3 +1052,11 @@ Divinus hardening advances independently of owner integration, preserving single
 - `I-121..I-123`: Ghidra semantic reverse DB, cross-binary knowledge и WSL/README/storage discipline.
 - В agentic-history добавлен A4.23: reverse превращается из TXT-чтения в машинно структурированную semantic model, которую могут делить несколько агентов.
 - Ошибочная ссылка на Ghidra release остаётся примером `E-003`, отдельный error-class не создаётся.
+
+
+## Что CHAT-034 добавил
+
+- Новых error/improvement IDs не создавал: источник главным образом консолидирует уже известные `E-014`, `E-031`, `E-041` и `I-091..I-098`, `I-103`.
+- Frozen-base/DELTA fan-in и evidence→reverse closure показаны не как proposal, а как реально работающая orchestration-схема нескольких параллельных веток.
+- MASTER_CORE/REVERSE_HEAVY физически материализуются: source vault отделяется от дорогого prepared reverse, а reproducible intermediates удаляются только после сохранения рецептов.
+- Плановая 33-file live-state сверка выполнена: современный anchor подтверждён как GitHub current authority + Drive heavy evidence + Ghidra MCP mutable reverse; августовскую историю этим не переписываю.

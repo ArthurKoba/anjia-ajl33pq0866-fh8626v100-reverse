@@ -1328,9 +1328,9 @@ Source/code audit в `CHAT-025` обнаруживает системный ри
 Это не target reverse fact само по себе, а reusable production-architecture pattern, возникший из сопоставления reverse, source audit и внешних Fullhan state machines.
 
 ### I-091 — Двухуровневое хранение: MASTER_CORE + REVERSE_HEAVY
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
-`CHAT-026` формализует первый явный разрыв монолитного handoff на два canonical storage-role:
+`CHAT-026` формализует первый явный разрыв монолитного handoff на два canonical storage-role; `CHAT-034` затем физически материализует эту модель на master/core и heavy corpus и подтверждает её как рабочую:
 
 **MASTER_CORE**
 - часто обновляемый;
@@ -1389,7 +1389,7 @@ Index разрешает logical ID в:
 Это безопасный общий паттерн для reverse-проектов, где старый «мусор» может оказаться единственной копией evidence.
 
 ### I-095 — Master хранит conclusions/excerpts, heavy — bulk evidence
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
 `CHAT-026` задаёт явное anti-duplication rule:
 - full disassembly/raw firmware/RAM/RAW/YUV/SQLite — только heavy;
@@ -1410,9 +1410,9 @@ Index разрешает logical ID в:
 Этот принцип позже естественно масштабируется с локальных tar-архивов на отдельные Git/evidence storage systems.
 
 ### I-097 — Evidence-directed reverse closure loop
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
-`CHAT-027` оформляет зрелый цикл закрытия reverse:
+`CHAT-027` оформляет зрелый цикл закрытия reverse; `CHAT-034` показывает реальный второй проход Agent 4 evidence → Agent 1 closure и переводит паттерн в устойчивый:
 
 `static corpus exhaustion → explicit E1–E7 evidence gaps → acquisition Agent 4 → normalized live evidence → Agent 1 targeted second pass → implementation-facing contracts`.
 
@@ -1486,9 +1486,9 @@ E3 в `CHAT-027` проходит несколько уровней:
 Числовой номер можно оставить удобным UI-label, но он не должен быть единственным ключом в chronology, handoff или merge notes.
 
 ### I-103 — Orchestrator routing graph: integration gap → external lead → exact reverse → productization
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
-Центральный поток `CHAT-028` формализует взаимодействие трёх основных lane:
+Центральный поток `CHAT-028` формализует взаимодействие трёх основных lane; `CHAT-034` подтверждает эту маршрутизацию на реальных parallel results:
 - OpenIPC/productization обнаруживает конкретный integration blocker;
 - External Research ищет SDK/source/homolog и формирует lead;
 - Exact Reverse подтверждает FH8626 semantics;
