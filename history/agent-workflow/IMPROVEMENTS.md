@@ -49,7 +49,7 @@
 
 Результат: первый OpenIPC milestone был получен без изменения NOR; это резко снизило цену эксперимента.
 
-Источник: `CHAT-001`.
+Источник: `CHAT-005` формулирует стратегию и доказывает U-Boot/TFTP→RAM transport; `CHAT-001` затем аппаратно подтверждает сам OpenIPC RAM boot.
 
 ### I-009 — Checkpoint перед reboot / destructive experiment
 Статус: `OBSERVED`.
