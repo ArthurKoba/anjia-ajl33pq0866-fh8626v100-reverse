@@ -320,6 +320,22 @@ Multi-agent работа перестаёт быть просто «нескол
 
 Пользователь отдельно замечает, что parallel-agent режим появился только примерно 27 августа; за последующие ~сутки orchestration стала похожа на небольшую embedded/reverse team, а bottleneck сместился от raw analysis к hardware validation и integration quality.
 
+### A4.15 — Cross-platform research intelligence lane
+Статус после `CHAT-025`: `OBSERVED`.
+
+External specialist получает стабильную самостоятельную роль между broad web research и exact target reverse.
+
+Он не обязан сам закрывать FH8626 instruction-level contract. Вместо этого:
+- берёт current UNKNOWN/PARTIAL;
+- ищет exact/close SDK, BSP, OEM firmware, debug sources, kernel drivers и sample apps;
+- сравнивает несколько независимых implementations;
+- ищет архитектурные omissions;
+- формирует compact targeted leads для Agent 1;
+- отдельно готовит acquisition requests для недоступных artifacts;
+- OpenIPC lane получает только research-support material.
+
+Это разгружает exact reverse-agent от поиска vendor vocabulary/source analogues и одновременно не позволяет external reference стать target truth.
+
 ### A5 — Специализированные MCP/агенты
 Статус: `BOOTSTRAP`.
 
@@ -334,7 +350,7 @@ Multi-agent работа перестаёт быть просто «нескол
 
 В `CHAT-011` появляется ещё одна граница ручного режима: proven development image начинает расходиться с canonical source из-за временных overlay/init/network mutations. Без внешнего debt ledger пользователь вынужден сам напоминать, что перед final port эти изменения нельзя забыть вернуть или интегрировать чисто.
 
-## Уроки CHAT-001…CHAT-023 для будущей agentic-системы
+## Уроки CHAT-001…CHAT-025 для будущей agentic-системы
 
 1. **Текущее runtime state должно быть внешним фактом, а не памятью диалога.** Потери «stock или OpenIPC?» породили дорогие ошибки.
 2. **Agent handoff — необходим, но не должен становиться гигантской свалкой.** Нужны краткая карта и подробные приложения.
@@ -415,6 +431,10 @@ Multi-agent работа перестаёт быть просто «нескол
 77. **Fan-in принадлежит оркестратору.** Specialist возвращает delta; canonical state меняется только после единого reconcile pass.
 78. **Evidence acquisition можно вынести впереди reverse.** Один structured capture pass дешевле серии случайных hardware blockers у research-agent.
 79. **100% — допустимый статус для узкого доказанного contract.** Нельзя смешивать его с product/upstream readiness всей подсистемы.
+80. **External research может быть отдельной intelligence-lane.** Ее output — targeted leads/acquisition requests, не второй independent target reverse.
+81. **Искать нужно и архитектурные omissions.** Повторяющийся stage в нескольких vendor implementations — повод для точечной проверки target.
+82. **Найденный URL не равен имеющемуся artifact.** External evidence проходит статусы discovered/acquired/prepared/verified.
+83. **Cross-platform confidence зависит от дистанции.** Same-SoC source сильнее дальнего homolog, но target proof всё равно обязателен.
 
 ## Следующие исторические переходы, которые нужно искать
 
