@@ -131,7 +131,7 @@ The source native GC1054 path now also guarantees:
 
 Firmware Majestic implementation after this audit:
 
-`ArthurKoba/openipc-firmware/work/fh8626v100-majestic@9160ef9e`
+`ArthurKoba/openipc-firmware/work/fh8626v100-majestic@aabf18a6`
 
 Later commits may advance the branch; use the branch head plus build provenance
 for an actual test.
