@@ -128,7 +128,7 @@ This is an independent platform research task and does **not** block Firmware, D
 
 54. Use Builder last as the thin AJL33PQ0866 assembly layer.
 55. Start later Builder work from the then-current upstream `master`, not by blindly extending the preserved diverged branch.
-56. Use `5603a701c8812aebc705c42e933ebae48aed805f` as the preserved pre-Majestic reference checkpoint, not as a future upstream base.
+56. Historical pre-Majestic/WIP Builder SHAs are provenance only. Do not restore their old branch/tag layout; current work lives on the clean ANJIA and Majestic staging lines.
 57. Keep only per-device deltas: package selection, first-boot GPIO/bootstrap policy, sensor/lens defaults, camera-specific audio/PTZ/illumination config, excludes and other device-only packaging.
 58. Do not retain duplicate kernel patches, generic FH8626 runtime code or Divinus/Majestic implementation source in the final Builder profile.
 

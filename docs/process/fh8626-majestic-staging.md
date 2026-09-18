@@ -8,11 +8,13 @@ This document is the coordination authority for the FH8626V100 Majestic directio
 
 ## Historical experiment
 
-The preserved Builder WIP is:
+The historical Builder experiment is identified by immutable Git SHAs only:
 
-- tag: `ArthurKoba/openipc-builder/archive/fh8626v100-anjia-preservation-20260918@bcf8658e4aa612ee9afda8c28d52d8ad1674e2f1`;
+- WIP commit: `bcf8658e4aa612ee9afda8c28d52d8ad1674e2f1`;
 - parent/checkpoint: `5603a701c8812aebc705c42e933ebae48aed805f`;
 - commit message: `WIP: preserve FH8626V100 Majestic builder experiment`.
+
+No live Builder branch or tag is retained for that experiment. Its useful content has been reconstructed on the current clean staging branches.
 
 That one commit mixed useful Majestic work with obsolete platform material. The copied generic FH8626 kernel config and the 2993-line Firmware-side kernel patch are **not** carried forward: the current Firmware/Linux core already owns those concerns cleanly.
 

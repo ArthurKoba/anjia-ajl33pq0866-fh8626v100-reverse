@@ -13,7 +13,7 @@ This document records the ownership decision for the mixed FH8626V100 Firmware p
 - Firmware pre-config-audit checkpoint: `work/fh8626v100@f9146dd42a2f606d305ebccd301268848de26880`.
 - Firmware base: `master@47ccdbee45fa5b8eee69c25c7af656cd5d35a28e`.
 - Linux source candidate: `ArthurKoba/openipc-linux/work/fh8626v100@357c2d13e7589db0dbe2bbf89c2ec38b1c036e6e`.
-- Builder preservation/device tag: `ArthurKoba/openipc-builder/archive/fh8626v100-anjia-preservation-20260918@bcf8658e4aa612ee9afda8c28d52d8ad1674e2f1`.
+- Historical Builder experiment WIP: `bcf8658e4aa612ee9afda8c28d52d8ad1674e2f1` (no live branch/tag retained; provenance only).
 - Builder clean staging candidate: `ArthurKoba/openipc-builder/work/fh8626v100-anjia@dac8d565aaa493c4fd83334df3054138b92ed01a`.
 - Divinus source candidate: `ArthurKoba/openipc-divinus/work/fh8626v100@1e624bd5aca97ba772413d2b00a10314d1db039f`.
 - Firmware Divinus direction: `ArthurKoba/openipc-firmware/work/fh8626v100-divinus@0b12c87c202b12733b0a1b535b56d66891e4ca93`.

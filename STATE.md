@@ -153,12 +153,12 @@ The clean branch is `SOURCE_CONFIRMED / CLEAN_ARCH_CANDIDATE`, not a build or ha
 
 Repository: `ArthurKoba/openipc-builder`.
 
-Preservation/device reference:
+Historical Builder experiment:
 
-- tag: `archive/fh8626v100-anjia-preservation-20260918`
-- tip: `bcf8658e4aa612ee9afda8c28d52d8ad1674e2f1`
-- stable pre-Majestic checkpoint: `5603a701c8812aebc705c42e933ebae48aed805f`
-- role: historical working/integration reference, not future base
+- WIP commit: `bcf8658e4aa612ee9afda8c28d52d8ad1674e2f1`
+- parent/checkpoint: `5603a701c8812aebc705c42e933ebae48aed805f`
+- no live Builder branch or tag is retained for this experiment;
+- role: provenance only; the useful Majestic work has been reconstructed on the current clean Firmware/Builder staging branches.
 
 Clean device-profile staging:
 
