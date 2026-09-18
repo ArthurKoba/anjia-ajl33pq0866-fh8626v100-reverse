@@ -1,26 +1,26 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_031_IN_PROGRESS`
+Статус: `CHAT_031_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **30**
-- Последний источник: `CHAT-030`
+- Обработано исторических файлов: **31**
+- Последний источник: `CHAT-031`
 - Период последнего источника: **2026-08-30**
-- Следующее действие: завершить анализ `CHAT-031` (source #32)
+- Следующее действие: final post-file refresh
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-030 |
+| Направление | Файл | Состояние после CHAT-031 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 30/?? sources обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 44 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 113 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D28: native Linux platform bring-up |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.20: cumulative kernel specialist lane |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 31/?? sources обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 45 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 118 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D29: Divinus V11 hardening |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.21: interaction failures → executable quality artifacts |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -85,7 +85,7 @@
 | 28 | `CHAT-028` | 2026-08-28 — 2026-08-30 | `DONE` | Large orchestrator mega-thread; overlap deduped. Unique tail establishes role pipeline, frontend-independent FH8626 architecture, Divinus-first sidecar strategy, engineering-vs-upstream profiles and firmware/SDK provenance research; exposes reused Agent-N identity collision |
 | 29 | `CHAT-029` | 2026-08-28 — 2026-08-29 | `DONE` | Agent 3 turns reverse contracts into media-runtime/sidecar/RTSP/OpenIPC source staging and Divinus adapter; engineering/upstream profiles split; incomplete repack exposes artifact-verification continuity problem |
 | 30 | `CHAT-030` | 2026-08-30 | `DONE` | Partial Agent5 kernel lane: hardware-proven platform baseline, offline pinctrl/PMU/peripheral closure and cumulative native-kernel plan; stage-archive spam and Python packaging are explicitly rejected |
-| 31 | `CHAT-031` | 2026-08-30 | `IN_PROGRESS` | Agent 6 Divinus continuation: transport/API hardening, WSL-only validation, MJPEG provider planning and repeated command-protocol/Explorer/SHA/artifact-consistency failures converted into explicit critical runbook |
+| 31 | `CHAT-031` | 2026-08-30 | `DONE` | Agent6 Divinus V11/V11r2 hardening stays PENDING_WSL; MJPEG becomes provider-boundary task; repeated SHA/command-block/Explorer/branching violations are converted into critical command protocol and orchestrator countermeasures |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -1015,6 +1015,18 @@ Live FH8626 work tips остаются:
 
 Frozen `BASELINE_PROMPT.md` SHA подтверждён: `1358cffd95f275069bd1eac6ad3a31d700c939aa`.
 
+ runner command violated the established multi-line block contract.
+
+### Новые improvements
+- I-114: critical command protocol with executable positive/negative examples.
+- I-115: pre-send artifact consistency check.
+- I-116: one authoritative WSL validation surface; agent output stays PENDING_WSL until that gate.
+- I-117: runtime API guards must fail closed around hardware-owned capabilities.
+- I-118: feature API can exist before provider availability; MJPEG is a provider boundary, not an impossible feature.
+
+### Technical/agentic transition
+Divinus hardening advances independently of owner integration, preserving single-owner architecture. More importantly, repeated user corrections are turned into durable quality documents and required orchestrator actions, revealing the need for enforcement/checklists rather than memory alone.
+
 ## Следующее действие
 
-Завершить анализ `CHAT-031` (source #32).
+Выполнить final post-file refresh и вернуть аудит в `READY_FOR_NEXT_SOURCE`.
