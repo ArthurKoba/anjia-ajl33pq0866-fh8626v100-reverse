@@ -303,6 +303,19 @@ Agent 5 kernel lane показывает позднюю native-platform стад
 
 Подробнее: [D28](CHRONOLOGY_DETAILS.md#d28--native-linux-platform-bring-up).
 
+### 29. Divinus V11 hardening: external-source boundary и fail-closed API
+Источник: `CHAT-031`, 2026-08-30.
+
+Agent 6 продолжает Divinus независимо от ещё меняющегося hardware owner. V11 candidate исправляет transport/API/WebUI слой: raw H.264 отвязывается от fMP4 enable, source-init failure не должен оставлять ложный running state, sidecar получает более строгие generation/discontinuity/socket semantics, а runtime API закрывается от hardware-owned функций в external-source режиме.
+
+MJPEG переосмысляется как отсутствующий JPEG provider, а не как неподдерживаемая возможность Divinus: HTTP/MJPEG frontend можно подготовить заранее, но capability остаётся unavailable до появления JPEG producer от единственного hardware owner.
+
+Все изменения остаются `PENDING_WSL`: authoritative apply/tests/ARM build/runtime должны выполняться в пользовательском WSL.
+
+**Переход:** Divinus lane отделяет frontend hardening от owner integration и формализует capability/provider границы, позволяя развивать userspace без второго владельца железа.
+
+Подробнее: [D29](CHRONOLOGY_DETAILS.md#d29--divinus-v11-hardening).
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.
