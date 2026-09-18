@@ -353,6 +353,24 @@ MASTER_CORE не копирует bulk; он содержит stable logical IDs
 
 Это ещё не Google Drive/GitHub architecture, но это прямой функциональный предшественник современной разделённой authority model: **оперативное знание и тяжёлое первичное evidence получают разные storage roles**.
 
+### A4.17 — Closure loop между reverse-agent и evidence-agent
+Статус после `CHAT-027`: `OBSERVED`.
+
+Parallel-agent система становится циклической, а не только fan-out/fan-in.
+
+Agent 1 сначала доходит до static boundary и возвращает не абстрактное «нужны логи», а E1–E7 с:
+- named states;
+- exact functions/addresses;
+- required observations;
+- acceptance criteria.
+
+Agent 4 получает именно этот evidence contract, проводит target acquisition и возвращает raw/live DELTA. Agent 1 затем повторно подключается к тому же вопросу, но уже не делает broad reverse: он связывает новые target facts с имеющимся static corpus и выдаёт implementation-facing closure.
+
+Схема:
+`reverse → named evidence gap → acquisition → target evidence → targeted reverse → implementation contract`.
+
+Оркестратор остаётся точкой merge/provenance, а пользователь — аппаратным исполнителем и маршрутизатором архивов. Это уже близко к полноценной research pipeline, но shared durable storage между agents ещё не устраняет ручную передачу файлов.
+
 ### A5 — Специализированные MCP/агенты
 Статус: `BOOTSTRAP`.
 
@@ -367,7 +385,7 @@ MASTER_CORE не копирует bulk; он содержит stable logical IDs
 
 В `CHAT-011` появляется ещё одна граница ручного режима: proven development image начинает расходиться с canonical source из-за временных overlay/init/network mutations. Без внешнего debt ledger пользователь вынужден сам напоминать, что перед final port эти изменения нельзя забыть вернуть или интегрировать чисто.
 
-## Уроки CHAT-001…CHAT-026 для будущей agentic-системы
+## Уроки CHAT-001…CHAT-027 для будущей agentic-системы
 
 1. **Текущее runtime state должно быть внешним фактом, а не памятью диалога.** Потери «stock или OpenIPC?» породили дорогие ошибки.
 2. **Agent handoff — необходим, но не должен становиться гигантской свалкой.** Нужны краткая карта и подробные приложения.
@@ -456,6 +474,11 @@ MASTER_CORE не копирует bulk; он содержит stable logical IDs
 85. **Heavy artifacts адресуются logical IDs.** Physical path/storage может меняться, knowledge references остаются стабильными.
 86. **Transport staging не является архивом.** Active transfer files должны иметь lifecycle и уходить из root после завершения шага.
 87. **Удалять reverse history можно только после canonicalization.** Сначала inventory/move/dedup proof, затем destructive cleanup.
+88. **Static exhaustion должен порождать evidence contract, а не ещё один broad pass.** Named capture + acceptance criteria позволяют другому агенту закрыть физическую границу.
+89. **Evidence-agent и reverse-agent могут образовывать замкнутый цикл.** Первый собирает ровно недостающие target facts, второй возвращается только к затронутым функциям.
+90. **Focused handoff обязан замыкать dependencies.** Heavy artifact можно не дублировать, но он должен быть embedded или иметь verified durable locator.
+91. **Максимальный reverse и release-ready reverse — разные цели.** Optional archaeology нельзя случайно смешивать с критическим портинговым backlog.
+92. **При больших disassembly работать нужно address-window/xref методом.** Это быстрее, устойчивее к слабой среде и меньше засоряет контекст.
 
 ## Следующие исторические переходы, которые нужно искать
 
