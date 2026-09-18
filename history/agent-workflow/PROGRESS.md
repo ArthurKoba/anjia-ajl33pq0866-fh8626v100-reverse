@@ -1,26 +1,26 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_026_IN_PROGRESS`
+Статус: `CHAT_026_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **25**
-- Последний источник: `CHAT-025`
-- Период последнего источника: **2026-08-28**
-- Следующее действие: завершить анализ `CHAT-026`
+- Обработано исторических файлов: **26**
+- Последний источник: `CHAT-026`
+- Период последнего источника: **2026-08-29**
+- Следующее действие: выполнить final post-file refresh этой пачки
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-025 |
+| Направление | Файл | Состояние после CHAT-026 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 25/?? sources обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 39 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 90 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D23: cross-platform gap hunting + targeted reverse leads |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.15: external research intelligence lane |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 26/?? sources обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 40 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 96 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D24: partial Agent4 watchdog/peripheral corpus |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.16: MASTER_CORE + REVERSE_HEAVY two-tier storage |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -80,7 +80,7 @@
 | 23 | `CHAT-023` | 2026-08-28 | `DONE` | Orchestrator formalizes reverse vs implementation vs evidence lanes, retracts premature v20/v21 as official distribution points, introduces frozen-master integration barrier and layered progress ontology |
 | 24 | `CHAT-024` | 2026-08-28 | `DONE` | OEM/device research triangulates AJL33PQ0866/YGT software identity, CF26/SM PCB family and physical 3.6/12 dual-lens configuration; builds ranked donor/reference corpus without promoting any retail SKU to target truth |
 | 25 | `CHAT-025` | 2026-08-28 — 2026-08-29 | `DONE` | Cross-platform gap hunter discovers exact-FH8626 public adapter/SDK targets, exposes stats-epoch/lifecycle/RAW architecture leads, audits current source risks and packages targeted inputs instead of repeating Apollo reverse |
-| 26 | `CHAT-026` | 2026-08-29 | `IN_PROGRESS` | Partial export: two-archive MASTER_CORE/REVERSE_HEAVY architecture, heavy-artifact logical index, archival reconciliation, TFTP active/history cleanup and transport-directory lifecycle |
+| 26 | `CHAT-026` | 2026-08-29 | `DONE` | Partial export: consolidated Agent4 watchdog/peripheral status; project split into MASTER_CORE + REVERSE_HEAVY with logical heavy IDs; TFTP root reorganized into active/history staging without destructive cleanup |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -865,6 +865,24 @@ Live work tips на момент refresh остались:
 - D23: exact-FH8626 adapter/SDK leads plus cadence/statistics/lifecycle/RAW omissions.
 - A4.15: dedicated cross-platform research intelligence lane.
 
+## Что CHAT-026 добавил к картине
+
+Источник экспортирован частично; ранний Agent-4 reverse process отсутствует и не реконструировался.
+
+### Новый error-class
+- E-040: transport/TFTP root не должен превращаться в долговременный artifact warehouse.
+
+### Новые improvements
+- I-091: MASTER_CORE + REVERSE_HEAVY two-tier storage;
+- I-092: stable logical IDs для heavy artifacts;
+- I-093: tftp_active / tftp_history lifecycle;
+- I-094: cleanup через inventory/move, delete только после canonicalization;
+- I-095: master содержит summaries/excerpts, heavy — bulk evidence;
+- I-096: storage role независимо от transport archive.
+
+### Technical/agentic transition
+Доступный хвост сохраняет consolidated watchdog/kernel corpus и peripheral backlog, но главный исторический переход — отделение everyday working knowledge от тяжёлых immutable reverse/evidence artifacts. A4.16 — прямой предшественник современной split authority, но фактический Google Drive/GitHub/MCP transition этим чатом ещё НЕ подтверждён.
+
 ## Следующее действие
 
-Перейти к `CHAT-026`.
+Выполнить final post-file refresh. Затем ожидать следующий уникальный исторический источник; следующая expanded live-state сверка — после `CHAT-027` либо раньше при фактическом переходе к Drive/Git/MCP.
