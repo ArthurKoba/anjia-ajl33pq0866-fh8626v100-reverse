@@ -226,6 +226,8 @@ CHAT-007 показывает более раннюю форму того же p
 
 `CHAT-008` усиливает процесс: параллельный ISP checkpoint прямо требует сверить findings с текущим состоянием и **не реверсить заново уже подтверждённое**; затем результат второго агента используется как semantic guide, но основной агент сохраняет canonical integration.
 
+`CHAT-015` делает ownership зрелым: main agent остаётся единственным интегратором, specialist lanes получают независимые state/dataflow chains, не делают hardware writes и не сливают код друг друга; return contract включает exact reverse, unresolved и integration note.
+
 ### I-020 — Автоматизация boot/recovery development loop
 Статус: `OBSERVED`.
 
@@ -301,6 +303,8 @@ CHAT-007 показывает более раннюю форму того же p
 `CHAT-010` подтверждает self-service модель на `enc.ko`/`media_process.ko`: вместо дальнейшей серии ручных диапазонов пользователь передаёт full disassembly + symbols + sections, после чего агент самостоятельно закрывает `4D05/4D06`, callback mapping и read-index flow.
 
 `CHAT-013` распространяет self-service evidence на sensor variants: JXF37/JXF37P libraries, tuning blobs, readelf/strings/full disassembly собираются одним reverse bundle, после чего agent должен анализировать их локально вместо серии target-side ranges.
+
+`CHAT-015` расширяет self-service corpus внешними именованными Fullhan binaries: после локальной подготовки `libispcore/libisp/libadvapi` дальнейший semantic matching идёт по полным disassembly/symbol/relocation artifacts без ручного range extraction.
 
 ### I-025 — Capture once, analyze offline
 Статус: `OBSERVED`.
@@ -412,6 +416,8 @@ CHAT-007 усиливает принцип: valuable stock runtime сначал�
 Критическое ограничение: cross-SoC reference не является доказательством FH8626 ABI/MMIO.
 
 `CHAT-008` показывает зрелое применение этого правила: FH8852 reference используется для имён `SensorRegCb/SensorInit/SensorKick/KickStart` и ожидаемой архитектуры, а каждый адрес/handler затем подтверждается независимым FH8626 disassembly/runtime evidence.
+
+`CHAT-015` превращает adjacent-SoC reference из разовой подсказки в формальный semantic-oracle workflow: сначала ищется именованный homolog FH8852, затем algorithm fingerprint и структура, после чего вывод возвращается к FH8626 и доказывается target-specific ARM/MMIO evidence.
 
 ### I-033 — Разделять рабочую reverse-документацию, историю экспериментов и upstream deliverable
 Статус: `CONSOLIDATED`.
@@ -701,6 +707,78 @@ Quality-retrospective в конце `CHAT-014` впервые явно пред�
 - инструкцией основному оркестратору внедрить правила в основной workflow.
 
 Это важный agentic-переход: **сам процесс разработки становится объектом версионируемого инженерного анализа**, а не только неформальной корректировки в текущем чате.
+
+### I-050 — Persistent specialist lanes с последовательными Task N
+Статус: `OBSERVED`.
+
+После первых коротких parallel задач `CHAT-015` меняет orchestration model:
+- specialist остаётся в той же вкладке и сохраняет локально набранный контекст;
+- следующая крупная область оформляется как `Task 2`, затем `Task 3`;
+- task охватывает целый control loop/subsystem, а не одну функцию;
+- внутри task есть 5–10 обязательных подзадач, false-hypothesis audit и final acceptance;
+- основной агент интегрирует только итоговый finished unit.
+
+Это уменьшает стоимость повторного onboarding и делает параллельность полезной для глубокого reverse, а не только для мелких lookup-задач.
+
+Важно: цель — не «заставить агента работать N минут», а дать достаточную cohesive depth, чтобы он исчерпал область до meaningful boundary.
+
+### I-051 — Artifact-access preflight для каждого specialist lane
+Статус: `OBSERVED`.
+
+`CHAT-015` показывает, что доступ к Project conversation context не гарантирует доступ к physical attachments.
+
+Перед началом exact reverse parallel-agent должен подтвердить:
+- что видит master/handoff;
+- что видит authoritative full disassembly/binary;
+- что видит required local notes/reference source;
+- что может материализовать/читать их bytes.
+
+Если любого обязательного объекта нет, задача не стартует. Оркестратор должен либо прикрепить bundle непосредственно к lane, либо дать durable shared locator.
+
+Это предотвращает reverse по пересказу и является историческим аргументом в пользу будущего Drive/GitHub/MCP shared state.
+
+### I-052 — Cross-Fullhan semantic oracle: сначала homolog, затем target proof
+Статус: `OBSERVED`.
+
+Внешняя research-ветка `CHAT-015` превращает FH8852V100/V201 в систематический semantic oracle.
+
+Workflow:
+1. зафиксировать факты/unknown на FH8626 Apollo;
+2. найти именованный homolog в близком Fullhan поколении;
+3. сравнить algorithm fingerprint: constants, shifts, loop geometry, call shape, tables;
+4. использовать reconstructed headers/structures только как semantic vocabulary;
+5. вернуться к FH8626 ARM dump и доказать target offsets/state/MMIO;
+6. confidence маркировать `EXACT / VERY_STRONG / STRONG / HYPOTHESIS`.
+
+Критическое правило: соседний SoC **никогда** сам по себе не доказывает FH8626 ABI/register map.
+
+Эта методика резко сократила blind reverse и дала semantic map большого участка `CB970`.
+
+### I-053 — Living external-research document с provenance и reusable method
+Статус: `OBSERVED`.
+
+Вместо серии одноразовых заметок `CHAT-015` создаёт один расширяемый research MD, где вместе хранятся:
+- source URLs/repositories и локальные artifact paths;
+- reproducible WSL reverse preparation;
+- homolog map и confidence;
+- superseded interpretations;
+- selected reference excerpts;
+- method, когда Cross-Fullhan oracle полезен/неполезен;
+- instructions/addendum для следующих specialist agents.
+
+Это отделяет **research method + provenance** от конкретного текущего handoff и позволяет следующим агентам переиспользовать внешний semantic corpus без повторного веб-поиска.
+
+### I-054 — Приоритет внешних references: named adjacent-SoC → same-SoC → дальние аналоги
+Статус: `OBSERVED`.
+
+`CHAT-015` формирует эффективную лестницу внешнего исследования:
+1. близкий Fullhan с именованными функциями — для semantic vocabulary;
+2. vendor libraries близкого поколения — для instruction-level homologs;
+3. другой firmware/rootfs **того же FH8626V100** — для function/binary/table diff;
+4. официальные same-SoC SDK adapters/samples — для ABI/timestamp/orchestration hints;
+5. дальние SoC — только если остаются пробелы.
+
+Так external research отвечает на конкретный blocker и не превращается в бесконечный поиск «похожих камер».
 
 ## Исходные этапы, ещё не подтверждённые
 
