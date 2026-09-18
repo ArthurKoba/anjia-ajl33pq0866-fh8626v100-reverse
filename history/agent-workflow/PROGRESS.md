@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `READY_FOR_NEXT_SOURCE`
+Статус: `CHAT_007_IN_PROGRESS`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **6**
 - Последний источник: `CHAT-006`
 - Период последнего источника: **2026-08-24 — 2026-08-25**
-- Следующее действие: получить следующий исторический файл
+- Следующее действие: завершить анализ `CHAT-007`
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -61,6 +61,7 @@
 | 4 | `CHAT-004` | 2026-08-26 — 2026-08-27 | `DONE` | Dequeue/release semantics и движущаяся stream queue; grey-frame локализован выше encoder/upscale; full Apollo + stock runtime bundle; переход к self-service reverse. Поздняя часть частично перекрывает CHAT-003 и использована только как дополнительное evidence |
 | 5 | `CHAT-005` | 2026-08-24 — 2026-08-25 | `DONE` | Самый ранний backfill: hardware/dual-lens identification, immutable full-flash dump, U-Boot access, TFTP→RAM proof и выбор hybrid stock-kernel + OpenIPC initramfs strategy |
 | 6 | `CHAT-006` | 2026-08-24 — 2026-08-25 | `DONE` | Перекрывает CHAT-005, но добавляет root-shell inventory, самостоятельное извлечение `/app` из SPI dump, media module baseline, первые ioctl ABI mappings и переход от ручного target inventory к artifact-assisted analysis |
+| 7 | `CHAT-007` | 2026-08-25 — 2026-08-26 | `IN_PROGRESS` | Частично включает CHAT-006 как префикс; новая часть: чистый OpenIPC RAM baseline, stock media stack под OpenIPC, sensor/MIPI/VPU/PAE/ISP reverse, stock tracing, внешний Fullhan reference и параллельный handoff |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
