@@ -156,13 +156,13 @@ Preservation/device reference:
 Clean device-profile staging:
 
 - branch: `rework/fh8626v100-anjia-clean-profile`
-- tip: `3c125cbef880c309c432e7b38a30cbd0b4249b0f`
+- tip: `1ea41ef2dc9a38e138907eda6d316bb743631ebe`
 - base: current Builder `master@e0a643f4942b064a149f470b3c118ebba4daebb5`
 - kernel fragment: `CONFIG_FH8626V100_SD0_1BIT=y`
 
 The staging branch contains only named-device deltas: ANJIA kernel fragment, RTL8188FU selection, microSD/device configuration, illumination helpers and source-built PTZ/lens support. It carries no generic FH8626 kernel config, no kernel patches, no factory `.ko/.so/.bin` and no Divinus source/patch.
 
-This branch is `SOURCE_CONFIRMED / BUILDER_STAGING`, not a build or hardware acceptance. The normal Builder flow still consumes `OpenIPC/firmware`; therefore the profile becomes directly buildable through that path only after the clean FH8626 Firmware integration is available from the Firmware source Builder consumes.
+This branch is `SOURCE_CONFIRMED / BUILDER_STAGING`, not a build or hardware acceptance. It is temporarily listed in Builder CI `NOT_BUILT` because the normal Builder flow still consumes `OpenIPC/firmware`; remove that opt-out only after the clean FH8626 Firmware integration is available from the Firmware source Builder consumes.
 
 ## Proprietary media/runtime retirement
 

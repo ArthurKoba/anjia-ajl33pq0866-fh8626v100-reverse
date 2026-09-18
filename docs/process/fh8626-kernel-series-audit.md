@@ -75,7 +75,7 @@ The original kernel option `CONFIG_FH8626V100_AJL33PQ0866_MMC` embeds a retail c
 
 The reconstruction uses the hardware-oriented `CONFIG_FH8626V100_SD0_1BIT` option. It selects the proven one-bit SD0 platform data and `SD0_1BIT_NO_WP` mux. The named device profile remains responsible for enabling it.
 
-The clean Firmware candidate no longer carries an AJL fragment at all. The named ANJIA Builder staging profile `rework/fh8626v100-anjia-clean-profile@3c125cbe...` owns this selection and uses `CONFIG_FH8626V100_SD0_1BIT=y`. The preserved Firmware/Builder snapshots keep the old symbol only as history.
+The clean Firmware candidate no longer carries an AJL fragment at all. The named ANJIA Builder staging profile `rework/fh8626v100-anjia-clean-profile@1ea41ef2...` owns this selection and uses `CONFIG_FH8626V100_SD0_1BIT=y`. The preserved Firmware/Builder snapshots keep the old symbol only as history.
 
 ### Clock phase handling
 

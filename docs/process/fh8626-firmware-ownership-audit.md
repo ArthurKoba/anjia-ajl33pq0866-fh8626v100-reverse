@@ -13,7 +13,7 @@ This document records the ownership decision for the mixed FH8626V100 Firmware p
 - Firmware base: `master@47ccdbee45fa5b8eee69c25c7af656cd5d35a28e`.
 - Linux source candidate: `ArthurKoba/openipc-linux/rework/fh8626v100-final-series@357c2d13e7589db0dbe2bbf89c2ec38b1c036e6e`.
 - Builder preservation/device reference: `ArthurKoba/openipc-builder/fh8626v100-anjia-ajl33pq0866@bcf8658e4aa612ee9afda8c28d52d8ad1674e2f1`.
-- Builder clean staging candidate: `ArthurKoba/openipc-builder/rework/fh8626v100-anjia-clean-profile@3c125cbef880c309c432e7b38a30cbd0b4249b0f`.
+- Builder clean staging candidate: `ArthurKoba/openipc-builder/rework/fh8626v100-anjia-clean-profile@1ea41ef2dc9a38e138907eda6d316bb743631ebe`.
 - Divinus source candidate: `ArthurKoba/openipc-divinus/fh8626v100-canonical@1e624bd5aca97ba772413d2b00a10314d1db039f`.
 
 ## Clean Firmware decision
@@ -76,5 +76,7 @@ The external evidence manifest already retains `sensor_gc1054_mipi.bin` by SHA-2
 - **OpenIPC/builder:** ANJIA AJL33PQ0866 SD/MMC selection, GPIO/PTZ/illumination/device overlay and other one-camera policy.
 - **OpenIPC/divinus:** FH8626 HAL/media/ISP/sensor implementation and Divinus-specific behavior.
 - **Reverse repository / evidence store:** factory binaries, stock captures, hashes, contracts and migration evidence.
+
+Builder CI currently lists the clean ANJIA staging profile in `NOT_BUILT` because its required generic FH8626 Firmware base is not yet present in the upstream Firmware checkout used by normal Builder jobs. That opt-out is an integration guard, not evidence of a build failure.
 
 No classification above is permission to delete the only known working artifact. Blob retirement still follows `docs/process/fh8626-blob-retirement.md`: replace the actual ABI/hardware contract, validate it, then remove the runtime dependency while retaining reference evidence.
