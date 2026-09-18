@@ -1032,6 +1032,8 @@ Clean master-tree в `CHAT-020` вводит явные правила:
 
 Это прямое исправление E-036.
 
+`CHAT-023` уточняет ontology: один и тот же subsystem может иметь `100% contract/hardware fact`, но только `80% production integration`; progress matrix должна показывать эти оси раздельно, а не запрещать слово 100 вообще.
+
 ### I-069 — Resource-budgeted capture: read-only не значит безвредный
 Статус: `OBSERVED`.
 
@@ -1117,6 +1119,8 @@ Capability map должен быть входом command generator, а не п�
 
 Это хороший промежуточный transport pattern между mutable workspace и тяжёлым monolithic handoff.
 
+`CHAT-023` закрепляет fan-in модель: specialist возвращает только DELTA относительно frozen master; orchestrator дедуплицирует и интегрирует его, а не пересылает whole master.
+
 ### I-075 — Source consolidation: canonical tree вместо цепочки diagnostic snapshots
 Статус: `OBSERVED`.
 
@@ -1174,6 +1178,44 @@ Tele-debug в `CHAT-022` последовательно исключил нес�
 Финальный handoff сохраняет их как `REJECTED_HYPOTHESES`, чтобы следующие агенты не повторяли те же эксперименты без нового противоречащего evidence.
 
 Для длинного hardware reverse отрицательный результат должен быть таким же долговечным knowledge artifact, как положительный contract.
+
+### I-080 — Frozen master + integration barrier для параллельных агентов
+Статус: `OBSERVED`.
+
+`CHAT-023` формализует проблему преждевременного version churn. Пока несколько agents работают от одного master:
+- distribution base остаётся frozen;
+- входящие DELTA можно анализировать и готовить к merge, но не объявлять новым canonical master автоматически;
+- orchestrator ждёт согласованную integration window;
+- затем выполняет conflict/dedup/source-consolidation pass;
+- только после fan-in повышается official master version.
+
+Это делает specialist results сопоставимыми и предотвращает ситуацию, когда разные agents уже работают от разных «самых новых» handoff.
+
+### I-081 — Evidence-preparation pass перед глубоким reverse-agent
+Статус: `OBSERVED`.
+
+Оркестратор в `CHAT-023` проверил самодостаточность master и обнаружил: implementation-agent уже можно запускать, а research-agent будет эффективнее после отдельного stock evidence acquisition.
+
+Последовательность стала:
+`stable master + stock camera/dump → acquisition agent → normalized evidence delta → orchestrator merge → deep reverse agent`,
+пока implementation-agent параллельно догоняет уже закрытые contracts.
+
+Принцип: сначала один раз заполнить очевидные file/runtime-evidence gaps, чем заставлять reverse-agent многократно останавливаться ради нового hardware capture.
+
+### I-082 — Contract-level 100% нужно показывать отдельно от product-level readiness
+Статус: `OBSERVED`.
+
+Слишком консервативный progress report `CHAT-023` создавал ложное ощущение, что в проекте вообще нет завершённых областей. После коррекции явно появились 100%-закрытые contracts: TFTP path, lens polarity, GPIO5 bootstrap requirement, physical TELE visibility, manual exposure/gain writes, отдельные IQ hardware contracts и prepared Apollo corpus.
+
+Правило: для каждого блока отдельно показывать:
+- fact/contract closure;
+- source implementation;
+- reproducible build;
+- hardware validation;
+- rollback/regression;
+- product/upstream readiness.
+
+Тогда «100% конкретного контракта» не смешивается с «100% всей подсистемы».
 
 ## Исходные этапы, ещё не подтверждённые
 
