@@ -331,6 +331,8 @@ CHAT-007 показывает более раннюю форму того же p
 
 CHAT-007 усиливает принцип: valuable stock runtime сначала снимается/копируется, после чего Apollo/ioctl/startup анализ переносится в WSL и camera state не дёргается без необходимости.
 
+`CHAT-021` показывает зрелую форму capture-once: четыре canonical steady states и transitions собираются в один normalized stock evidence corpus; дальнейший reverse работает с delta/targeted regions вместо повторных hardware sessions.
+
 ### I-026 — Использовать стандартный специализированный инструмент вместо временного велосипеда
 Статус: `OBSERVED`.
 
@@ -708,6 +710,8 @@ Quality-retrospective в конце `CHAT-014` впервые явно пред�
 
 `CHAT-018` даёт прямое runtime-подтверждение этого подхода на lens switch: capture разделён на baseline → immediate-after → settled → restored-wide. Благодаря этому доказаны общий AE context/history, отсутствие profile reload и возврат wide exposure без смешивания состояний.
 
+`CHAT-021` расширяет state-machine на stock acquisition: transitions фиксируются before/after_early/after_settled, а full cycles — ON→settled→OFF→settled, что позволяет анализировать обе стороны одной операцией.
+
 ### I-049 — Ретроспектива качества агента как отдельный проектный артефакт
 Статус: `CONSOLIDATED`.
 
@@ -905,6 +909,8 @@ Autonomous milestone reporting и видимость работы не прот�
 
 `CHAT-020` реализует corpus-first архитектуру физически: raw/reference/reverse/source/evidence разнесены, Apollo SQLite index и lookup helpers используются как primary path, full objdump отмечается как already-materialized expensive work.
 
+`CHAT-021` распространяет corpus-first policy на stock static artifacts: модули/libs/binaries подготавливаются один раз с metadata/readelf/symbols/relocations/strings/disassembly; Apollo/JXF37 не переразбираются, если authoritative representations уже есть.
+
 ### I-061 — Specialist role-lock вместе с artifact preflight
 Статус: `OBSERVED`.
 
@@ -1006,6 +1012,8 @@ Clean master-tree в `CHAT-020` вводит явные правила:
 
 Итог: handoff перестаёт расти простым накоплением файлов.
 
+`CHAT-021` применяет normalization к evidence: superseded WIDE_DAY и misclassified audio capture остаются в provenance/raw manifest, но исключаются из canonical runtime set.
+
 ### I-068 — Fixed progress ontology через module/status matrix
 Статус: `OBSERVED`.
 
@@ -1019,6 +1027,89 @@ Clean master-tree в `CHAT-020` вводит явные правила:
 Процент можно считать поверх этой модели, но он больше не является primary state representation.
 
 Это прямое исправление E-036.
+
+### I-069 — Resource-budgeted capture: read-only не значит безвредный
+Статус: `OBSERVED`.
+
+После OOM в `CHAT-021` hardware acquisition получает явное правило ресурса:
+- до dump вычислить размер;
+- проверить target RAM/tmpfs/storage;
+- на constrained camera снимать только нужные regions;
+- большие объекты передавать chunk/stream на host;
+- после каждого чанка удалять target copy;
+- full target RAM никогда не держать целиком в RAM-backed `/tmp`.
+
+Это превращает resource footprint в такой же prerequisite эксперимента, как boot mode или owner state.
+
+### I-070 — Provenance-preserving metadata correction
+Статус: `OBSERVED`.
+
+Если capture технически хороший, но label/manifest оказался неверным, переснимать его не обязательно.
+
+Правильный workflow, показанный в `CHAT-021`:
+1. raw archive остаётся неизменным;
+2. correction записывается отдельно с source/reason;
+3. old interpretation помечается superseded;
+4. canonical catalog использует corrected semantics;
+5. downstream analysis знает, что bytes исходные, а metadata было исправлено.
+
+Так были сохранены white-light capture с неверным lens label и audio capture, оказавшийся talkback.
+
+### I-071 — Transition-targeted RAM evidence эффективнее diff независимых full heaps
+Статус: `OBSERVED`.
+
+Independent steady heap snapshots в `CHAT-021` отличаются примерно на половину bytes из-за allocator/live-buffer/temporal noise и плохо подходят для semantic diff.
+
+Гораздо полезнее:
+- `before`;
+- `after_early`;
+- `after_settled`;
+- небольшие заранее доказанные VA regions.
+
+Targeted transitions показали изменения порядка ~1–2%, которые легче связать с AE/lens/day-night objects.
+
+Правило: full heap сохраняется как provenance/baseline, а причинный reverse строится на synchronized targeted transition capture.
+
+### I-072 — Capture state matrix + canonical/superseded evidence catalog
+Статус: `OBSERVED`.
+
+Stock acquisition в `CHAT-021` оформляется как матрица, а не список tar-файлов.
+
+Для каждого state/transition фиксируется наличие:
+- UART/system snapshot;
+- RAM evidence;
+- sensor regs;
+- GPIO/media/audio/network;
+- packet/trace capability;
+- status `DONE/PARTIAL/NOT_AVAILABLE/NOT_APPLICABLE`.
+
+Отдельный evidence catalog хранит artifact ID, state, transition, source, firmware, sensor/lens, SHA/provenance и notes.
+
+Это делает явными пробелы и предотвращает бесконечные «а это мы уже снимали?» hardware cycles.
+
+### I-073 — Capability map target-а нужно использовать как executable contract
+Статус: `OBSERVED`.
+
+В stock preflight уже были известны абсолютные пути доступных tools, но позже агент снова пытался вызвать `tftp` через сломанный PATH и предполагал отсутствующие utilities.
+
+Улучшение:
+- один раз снять capability/tool matrix;
+- recipes используют известные absolute paths на minimal target;
+- отсутствие host-like utility не проверяется заново в каждом experiment;
+- WSL/host выполняет parsing/compression, если target toolset ограничен.
+
+Capability map должен быть входом command generator, а не просто справочной заметкой.
+
+### I-074 — Evidence delta package поверх stable master
+Статус: `OBSERVED`.
+
+Вместо пересборки всего master-handoff после acquisition `CHAT-021` формирует отдельный `stock_evidence_delta`:
+- ссылается на base master version;
+- содержит только новое normalized evidence/static reverse material;
+- не дублирует крупные уже-authoritative objects;
+- имеет orchestrator README, gaps, provenance, state matrix и manifest.
+
+Это хороший промежуточный transport pattern между mutable workspace и тяжёлым monolithic handoff.
 
 ## Исходные этапы, ещё не подтверждённые
 
