@@ -176,3 +176,141 @@ These are not yet correction claims; they are active comparisons:
 - final audio AO/mute/two-way ownership.
 
 Update this ledger only when a mismatch is evidenced by stock Ghidra, runtime evidence, or an authoritative platform contract.
+
+
+## Confirmed current-Divinus source divergences
+
+### Divinus sends the wrong payload to VPU_ENABLE
+
+Status: CONFIRMED CURRENT SOURCE BUG.
+
+Current Divinus `src/hal/full/fh8626_kernel.c::kernel_stream_start()` declares
+`uint32_t channel = 0, enable = 1` and calls:
+
+`call_ioctl(k->isp_fd, FH8626_VPU_ENABLE, &enable)`.
+
+Stock Apollo `FH_VPSS_Enable(channel)` and `isp.ko:vpu_control` prove that
+`0xC004694D` consumes a 32-bit **channel id**. For channel 0 the payload is 0,
+not 1.
+
+Required Divinus correction:
+- pass the actual VPU channel id;
+- do not encode enable/disable state in the payload;
+- use the distinct no-payload `0xC004694E` request for global VPU disable.
+
+### Divinus stream-start ordering differs from stock owner
+
+Status: CONFIRMED SOURCE DIVERGENCE; TARGET IMPACT REQUIRES REGRESSION.
+
+Current Divinus `kernel_stream_start()` performs:
+
+`MEDIA_BIND -> PAE_ENC_START -> VPU_ENABLE`.
+
+Stock Apollo ownership is separated:
+- VI/service startup performs `FH_VPSS_Enable(channel)`;
+- normal VENC startup performs
+  `VPSS SetChnAttr -> OpenChn -> SetFramectrl -> VENC CreateChn ->
+   VENC SetChnAttr -> StartRecvPic -> SYS BindVpu2Enc`.
+
+Required Divinus review:
+- move VPU/VI enable to the VI/VPSS owner stage;
+- do not use stream-start as the owner of every producer transition;
+- verify whether bind-before-start was masking a missing owner transition.
+
+Do not label the ordering difference itself as a hardware failure until target
+regression, but do not call it stock-parity either.
+
+### Divinus frame-control packing is currently consistent
+
+Status: REVIEWED / NO CORRECTION.
+
+Divinus uses `{channel=0, FH8626_FPS_PACKED}` for SET/GET frame control.
+For 25 fps its packed value is low16=25, high16=1, matching the stock Apollo
+`uint16_t[2]` public contract and `isp.ko:vpu_set_frm_ctrl_cfg`.
+
+This item is explicitly recorded to avoid an agent "fixing" working packing
+while addressing the VPU enable bug.
+
+## Additional recovered contracts from Majestic clean-room pass
+
+### Public H.264 SetChnAttr is a combined configuration object
+
+Status: CONFIRMED APOLLO TRANSLATOR / FIELD REVIEW PARTIAL.
+
+A previously unrecognized Apollo function at `0x00211D9C` was recovered as
+the H.264 attribute/RC translator. It:
+1. accepts a large public H.264 combined record;
+2. builds the exact 0x2c PAE channel config;
+3. calls `0xC02C5006`;
+4. on success builds the full 0x54 RC record;
+5. calls `0xC054502F`.
+
+The function supports public encode types 4 (normal H.264) and 8 (smart H.264)
+and RC modes 3/4/5/6/0xB, translating them to native RC mode values.
+
+Correction rule:
+- Divinus and Majestic must not assume public `FH_VENC_SetChnAttr` is itself
+  the 11-word kernel PAE config.
+- keep a dedicated public->native translator.
+- remaining public field names/offsets should be promoted only after the
+  combined record is fully typed in Ghidra.
+
+### ISP initialization is a state machine, not a flat ioctl list
+
+Status: CONFIRMED STOCK APOLLO.
+
+Stock service startup performs materially more work than a flat sequence of
+ioctls. The recovered high-level path includes:
+- ISP memory sizing/allocation and device open through `API_ISP_MemInit`;
+- sensor callback registration;
+- board reset/bootstrap transitions;
+- `API_ISP_SensorInit`;
+- sensor-format selection with VI attribute extraction;
+- application of sensor VI geometry/Bayer fields into shared ISP context;
+- `API_ISP_Init`, which builds the core context and callback triplet;
+- profile loading and runtime-control initialization;
+- frame frontend/statistics/control/AWB dispatch.
+
+Required Divinus review:
+- compare its simplified ISP startup and same-boot teardown against this owner
+  state machine;
+- do not infer that successful ioctl acknowledgements prove the shared ISP
+  userspace context was initialized in the same state as stock.
+
+### ISP image APIs mutate a shared userspace context
+
+Status: CONFIRMED.
+
+Recovered APIs such as contrast, saturation, APC and LTM primarily validate and
+pack public records into the shared ISP userspace context. They are not simple
+one-API/one-ioctl wrappers.
+
+Examples:
+- LTM public record size is 0x50 bytes;
+- Set/Get LTM are inverse mappings over shared-context offsets 0x260..0x2A1;
+- mirror/flip public API packs mirror as bit1 and flip as bit0;
+- `SetMirrorAndflipEx` additionally updates Bayer format;
+- contrast/saturation/APC setters clamp caller-visible input ranges before
+  updating shared context.
+
+Correction rule:
+- do not replace these APIs with guessed direct ioctls;
+- any native Divinus image-control implementation must preserve context
+  ownership and the periodic frame-loop publication semantics.
+
+## Majestic ISP boundary decision
+
+The Majestic clean-room pass does **not** replace donor `libisp.so` merely to
+reduce blob count. Static inspection shows `libadvapi_isp.so` imports a
+specific 19-function `API_ISP_*` control surface, and Ghidra shows that many of
+those functions depend on the complete shared userspace ISP context.
+
+Until the next target run proves a concrete donor ISP incompatibility after the
+sensor/MIPI/VMM/VPSS fixes, keeping donor ISP/ispcore is safer than a partial
+source facade that would fake context state.
+
+This is a deliberate evidence-based boundary, not unfinished reverse:
+- sensor/MIPI, VMM, VPSS/VENC/stream and RTX audio compatibility are source;
+- donor ISP/ispcore remain transitional and isolated;
+- replace them only against a concrete failing API/callsite or after full
+  context/state-machine reimplementation.
