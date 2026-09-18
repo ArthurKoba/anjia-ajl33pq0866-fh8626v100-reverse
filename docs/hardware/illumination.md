@@ -102,6 +102,12 @@ OpenIPC/Majestic should improve this behavior. Before final media-owner release 
 
 The safe IR-cut position is a board/product policy and must not be inferred merely from process exit.
 
+## Builder implementation boundary
+
+`SOURCE_CONFIRMED / HARDWARE REGRESSION PENDING`: Builder cleanup on 2026-09-18 keeps only the physical AJL33PQ0866 helper layer. The shared board overlay no longer owns AUTO/day/night/WLIGHT policy or any streamer state file. The helper handles GPIO25, GPIO23/SADC1 sharing and the GPIO18/GPIO60 actuator; a board init/shutdown service turns IR/white illumination off, restores pad70 to SADC and returns both IR-cut drive lines to rest without forcing a DAY/NIGHT filter move.
+
+The current staged helper preserves its earlier electrical drive convention (`active=1`, `rest=0`) rather than silently changing behavior during source cleanup. The stock configuration fact recorded above (`ircut_polarity/value=0`) is a logical/configuration datum and is not, by itself, sufficient proof that the helper's electrical pulse levels should be inverted. The cleaned implementation therefore requires a physical DAY/NIGHT direction and active/rest regression before that drive convention is promoted to hardware acceptance.
+
 ## Closure
 
 Static reverse is implementation-ready for the supplied stock corpus: wiring/polarity, manual/AUTO control, hysteresis, dwell/forbid logic, PWM conversion/cache/modes, IR/white coordination, IR-cut timing and the shutdown negative contract are closed.

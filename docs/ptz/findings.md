@@ -23,3 +23,31 @@ The retained ioctl helper was narrowly filtered. Its successful capture is exact
 The 2026-08-29 capture set adds a same-session counter comparison around two stock PTZ directions. LEFT: before I2C0=5869, XBUS=15193, PWM=3141; after I2C0=5869, XBUS=16070, PWM=3355, giving deltas I2C0 +0, XBUS +877, PWM +214. UP: before I2C0=5869, XBUS=19930, PWM=3355; after I2C0=5869, XBUS=20272, PWM=3419, giving deltas I2C0 +0, XBUS +342, PWM +64. This independently corroborates PWM-backed motor activity with no I2C0 movement during the observed directional actions; it does not replace the stronger exact `0xC004700C` LEFT/UP ioctl payloads already retained.
 
 Two historical breakpoint traces from the same acquisition family hit Apollo addresses `0x00204978` during a LEFT trace and `0x00207108` during a PTZ-start trace. Treat these as build-specific reverse landmarks only, not stable ABI/function addresses.
+
+
+## OpenIPC production architecture decision
+
+`SOURCE_CONFIRMED / HARDWARE REGRESSION PENDING`: Builder cleanup on 2026-09-18 deliberately stopped treating the stock-like startup calibration/controller as required product behavior.
+
+Current Builder main ANJIA line is `ArthurKoba/openipc-builder/work/fh8626v100-anjia@a39671f56267a403340354aebc82a3c889ac0df6`. Production exposes the existing hardware-proven PWM mapping through the standard relative OpenIPC entry point `gpio-motors PAN_STEPS TILT_STEPS DELAY_MS`.
+
+The production backend keeps:
+
+- `/dev/fh_pwm` and the accepted channel map;
+- Fullhan PWM phase/enable/wait transaction shape;
+- board timing/inversion inputs;
+- a single-owner lock;
+- safe PWM disable and GPIO remux after movement.
+
+It deliberately removes:
+
+- automatic startup calibration;
+- any PTZ movement merely because the camera booted;
+- persistent inferred position state;
+- absolute `goto`/`home` policy.
+
+There is no absolute encoder/position feedback in the accepted hardware contract, so a coordinate persisted across power loss is not authoritative physical position. If a future application needs absolute presets or autotracking calibration, that must be implemented as an explicitly validated higher-level policy rather than silently reintroduced into the motor backend.
+
+The previous stock-style controller remains immutable reference/evidence at Builder tag `archive/fh8626v100-anjia-stock-ptz-controller-20260918@a51eec5b294b03e8d16430e9018c3a0441647e49`.
+
+Host recorder tests for the simplified transaction pass. Physical direction, requested speed/delay, stop behavior and no-movement-at-boot still require target regression before the cleaned backend receives `HARDWARE_PASS`.

@@ -1,76 +1,147 @@
 # FH8626V100 Builder cleanup handoff
 
-Status: `READY FOR BUILDER REFACTOR / BUILD GATE PENDING`.
+Status: `SOURCE CLEANUP COMPLETE / OWNER BUILD + HARDWARE GATES PENDING`.
 
 Checked: 2026-09-18.
 
-The Builder repository can now be worked on independently without reopening the old mixed FH8626 Firmware experiment.
+Builder has been reduced to the named ANJIA AJL33PQ0866 assembly/device layer. Generic FH8626 implementation was not moved back from Linux/Firmware/Divinus, and the obsolete mixed Majestic experiment was not restored.
 
-## Start here
+## Current refs
 
 Repository: `ArthurKoba/openipc-builder`.
 
 Main ANJIA development line:
 
-`work/fh8626v100-anjia@a51eec5b294b03e8d16430e9018c3a0441647e49`
+`work/fh8626v100-anjia@a39671f56267a403340354aebc82a3c889ac0df6`
 
-Majestic-specific direction:
+Majestic direction after merging the shared cleanup:
 
-`work/fh8626v100-anjia-majestic@91314aa183e31070bb521364e81dacea569e08dd`
+`work/fh8626v100-anjia-majestic@19157b112a9ceeea25b7771bd79c2af8e3313558`
 
-The Majestic direction already contains the latest shared ANJIA README/navigation update through an explicit merge from the main ANJIA line.
+Preserved pre-cleanup PTZ reference:
 
-The obsolete historical Majestic experiment commit `bcf8658e4aa612ee9afda8c28d52d8ad1674e2f1` and its pre-Majestic parent `5603a701c8812aebc705c42e933ebae48aed805f` are provenance only. Their old live tags/branches were removed. Do not restore or build from that historical WIP.
+`archive/fh8626v100-anjia-stock-ptz-controller-20260918@a51eec5b294b03e8d16430e9018c3a0441647e49`
 
-## Ownership boundary
+The old mixed Majestic experiment `bcf8658e4aa612ee9afda8c28d52d8ad1674e2f1` and parent `5603a701c8812aebc705c42e933ebae48aed805f` remain provenance only.
 
-Builder is the named-camera assembly layer. It may own:
+## Ownership after cleanup
 
-- ANJIA kernel fragment and board-only selections;
-- RTL8188FU choice;
-- removable-storage/device overlay policy;
-- first-boot/customizer behavior;
-- PTZ/lens/illumination device package and defaults;
-- runtime selection for a named Builder target;
-- device-specific excludes and configuration.
+Builder owns:
 
-Builder must not re-acquire:
+- ANJIA board-only kernel fragment and one-bit SD0 selection;
+- RTL8188FU selection;
+- first-boot/persistent device policy without overwriting per-device identity;
+- physical GPIO map and GPIO23/SADC1 shared-pad policy;
+- low-level illumination/IR-cut helper and safe output handling;
+- low-level WIDE/TELE selector;
+- source-built FH8626 PWM motor backend adapted to the standard OpenIPC relative PTZ interface;
+- removable-storage shutdown policy;
+- named runtime selection and runtime-specific device configuration.
 
-- generic FH8626 kernel config or Linux patches;
-- generic FH8626 platform source;
-- factory FH8626 `.ko/.so/.bin` payloads;
+Builder does not own:
+
+- generic FH8626 kernel config/source/patches;
+- generic platform/media implementation;
+- factory Fullhan `.ko/.so/.bin`;
 - Divinus source/patches;
-- the Majestic FH8852 compatibility package itself.
+- the Majestic FH8852 compatibility package;
+- product audio implementation.
 
-Those are already separated into Linux/Firmware/Divinus or evidence ownership.
+## PTZ decision
 
-## Current useful Builder changes
+The working stock-like controller was not accepted automatically as the product architecture.
 
-The clean ANJIA line contains only current device staging plus one generic Builder feature:
+Production Builder now exposes:
 
-- clean ANJIA device profile;
-- source-built PTZ/lens board-support package;
-- CI opt-out while cross-repository staging is fork-local;
-- `builder.sh` support for `OPENIPC_FW_REPO` together with the existing `OPENIPC_FW_REV`.
+`gpio-motors PAN_STEPS TILT_STEPS DELAY_MS`
 
-The repository override is intentionally generic: without variables, Builder still clones upstream `OpenIPC/firmware`; with them, an FH8626 staging branch can be built without copying generic Firmware code into Builder.
+through a minimal `/dev/fh_pwm` backend. It retains the hardware-proven pan PWM11/10/9/6 and tilt PWM5/4/3/7 mapping, Fullhan PWM transaction/phase shape, pinmux handoff, owner lock and safe disable. A positive standard delay controls the nominal PWM period; delay 0 keeps the board defaults.
 
-## Known cleanup targets
+Removed from production:
 
-These are good Builder tasks; they are not claims that each must be changed.
+- boot calibration;
+- boot movement;
+- persistent inferred pan/tilt coordinates;
+- absolute `goto`/`home`;
+- the assumption that a saved software coordinate remains physically true across power loss/manual movement.
 
-1. **builder.sh lifecycle.** Audit the self-`git pull`, destructive `rm -rf openipc`, error propagation, quoting/path assumptions, environment handling and archive behavior. Historical bring-up exposed a Buildroot failure from a dirty WSL `PATH`; decide whether Builder should sanitize or validate its build environment rather than relying on operator workarounds.
-2. **Cross-repository staging UX.** `OPENIPC_FW_REPO` works locally, but CI/build-one plumbing currently centers on a Firmware ref. Decide whether repository override belongs in workflow inputs or should remain an explicit local/developer feature.
-3. **Configuration duplication.** The named-device defconfig necessarily overlays Firmware, but it repeats toolchain/kernel/platform lines. Determine whether the duplication can be reduced without making Builder profiles opaque or dependent on fragile merge behavior.
-4. **Runtime separation.** The main ANJIA profile is currently the Divinus development profile and includes `/etc/divinus.yaml`; the Majestic direction inherits the shared device tree even though it disables Divinus. Separate genuinely shared board configuration from streamer-specific configuration where doing so makes the assembled image clearer.
-5. **Board-support package shape.** Review whether the current source-built PTZ/lens package and the large illumination shell helper have the right split, tests and init ownership. Preserve hardware contracts; simplify only where behavior stays explicit.
-6. **Storage/automount policy.** Review `S39fh8626-storage`, `automount-hook`, excludes and SD lifecycle for duplication with generic OpenIPC behavior.
-7. **Customizer and persistent config.** Verify that first-boot settings are idempotent and do not encode stale streamer-specific paths or old flash-layout assumptions.
-8. **CI visibility.** Both FH8626 targets remain in `NOT_BUILT` because upstream Firmware does not yet contain the required core. Keep this explicit. Run `.github/scripts/ci-matrix.py --self-test` after Builder cleanup and remove the opt-out only when normal CI can actually resolve the Firmware dependency.
-9. **Branch flow.** Shared ANJIA fixes go to `work/fh8626v100-anjia` and are then merged into `work/fh8626v100-anjia-majestic`. Majestic-only assembly changes stay on the latter. Do not create permanent micro-branches for routine edits.
+The previous implementation remains at the archive tag above for evidence/debug/reference.
 
-## Do not conflate with current build acceptance
+The lens selector is independent. `fh8626-lens` only drives GPIO4/GPIO14 in stock target-first order and waits for the physical selector. The selected streamer/media owner must coordinate VENC, mirror/flip and exposure around a logical lens switch.
 
-No new authoritative build was run after the branch cleanup and Majestic reconstruction.
+GPIO5 is a separate cold-boot dual-sensor prerequisite. Its LOW/HIGH edges must surround the actual media-module/sensor startup and therefore must not be hidden in an unrelated Builder init script.
 
-A Builder refactor agent may perform static cleanup and lightweight source tests through repository/API tooling. The owner build/hardware gate remains required before any claim that the clean ANJIA or reconstructed Majestic target is accepted.
+## Illumination decision
+
+The board helper is runtime-neutral. It owns physical GPIO/pinmux operations only:
+
+- IR LED GPIO25;
+- white LED GPIO23;
+- IR-cut GPIO18/GPIO60;
+- SADC channel 1 on the shared GPIO23/pad70 path.
+
+AUTO hysteresis, DAY/NIGHT/WLIGHT policy and ISP scene transitions are not implemented in Builder.
+
+A board init/shutdown service places outputs in a conservative safe state: white/IR off, pad70 restored to SADC and both IR-cut drive lines returned to rest. It does not move the filter simply because the process starts/stops.
+
+The current helper preserves the pre-cleanup staged IR-cut active/rest drive values. The reverse corpus records a stock polarity/value field of 0; those are not assumed to be the same semantic quantity. Physical DAY/NIGHT direction and electrical active/rest behavior are therefore an explicit hardware regression gate.
+
+## Runtime separation
+
+The shared device overlay no longer contains `/etc/divinus.yaml`.
+
+Divinus selects a small `anjia-ajl33pq0866-divinus-config` package that installs the named-device YAML. The Majestic direction does not select Divinus and, after merge, inherits the same clean board layer without a dead Divinus configuration file.
+
+The Majestic branch differs from main ANJIA only by:
+
+- the Majestic-specific named defconfig;
+- the additional Majestic target in CI `NOT_BUILT`.
+
+Majestic implementation itself remains Firmware-owned.
+
+## Storage/customizer
+
+Generic OpenIPC mdev remains the removable-card hotplug/mount owner. The unused ANJIA automount hook was removed. The remaining storage init script only creates the recording directory for an already-mounted card and performs streamer-neutral sync/unmount at shutdown; it no longer calls a Divinus HTTP endpoint.
+
+`fw_env.config` correctly addresses the native OpenIPC 64 KiB environment partition as `/dev/mtd1`. The first-boot customizer is NOR-SquashFS guarded, keeps serial/cid/uuid/ethaddr intact, sets the board-qualified update URL and selects RTL8188FU only when its module is present.
+
+## Builder mechanics
+
+The work line also fixes generic Builder lifecycle issues discovered during the audit:
+
+- no self-`git pull` during a build;
+- exact checked-out Builder revision is built;
+- ambiguous device-defconfig lookup is rejected;
+- whitespace-contaminated Buildroot `PATH` is rejected early;
+- Firmware clone/copy/build/archive failures propagate;
+- `OPENIPC_FW_REPO` + `OPENIPC_FW_REV` remains available for explicit staging;
+- hi3518 autoupdate generation now happens before archive copy and its device condition is a normal shell test.
+
+The repository override remains a local/staging feature. Normal CI should not be taught to fetch a contributor fork merely to make FH8626 staging appear upstream-ready.
+
+## Source checks
+
+Completed lightweight checks:
+
+- FH8626 PTZ recorder tests: `PASS`;
+- PTZ production source compiles with `-Wall -Wextra -Werror`;
+- lens source compiles with `-Wall -Wextra -Werror`;
+- changed shell files pass shell syntax checks;
+- API compare confirms the Majestic direction is reconciled and contains only its intended two-file delta relative to main ANJIA.
+
+Not completed by the API-only agent:
+
+- literal `.github/scripts/ci-matrix.py --self-test` execution, because the project execution rules prohibit materializing/cloning the complete repository merely to run that tree-wide check;
+- full Builder/Firmware build;
+- target hardware regression.
+
+## Remaining gates
+
+1. Run `.github/scripts/ci-matrix.py --self-test` in a normal full checkout/CI context.
+2. Build the Divinus named target against the matching Firmware direction and record resolved config plus image sizes.
+3. Build the Majestic named target against `work/fh8626v100-majestic` and record the same.
+4. On hardware verify no PTZ movement at boot, relative direction, standard delay/speed effect, cancellation and safe stop.
+5. Verify GPIO5 cold-boot bootstrap and WIDE/TELE end-to-end runtime switching.
+6. Verify IR/white LEDs, IR-cut DAY/NIGHT direction/polarity/rest drive, SADC shared-pad restore and safe shutdown.
+7. Verify SD hotplug/shutdown, RTL8188FU, reset button and persistent environment/update policy.
+8. Keep both FH8626 targets in `NOT_BUILT` until normal Builder CI can resolve their Firmware dependencies and the relevant gates pass.

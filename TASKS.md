@@ -126,13 +126,13 @@ This is an independent platform research task and does **not** block Firmware, D
 
 ## P4 — Builder cleanup and final device profile
 
-54. Builder cleanup may proceed independently now. Use `ArthurKoba/openipc-builder/work/fh8626v100-anjia@a51eec5b294b03e8d16430e9018c3a0441647e49` as the main ANJIA development line. Use `work/fh8626v100-anjia-majestic@91314aa183e31070bb521364e81dacea569e08dd` only when a change is Majestic-direction-specific.
-55. Treat `docs/process/fh8626-builder-cleanup.md` as the Builder handoff boundary. Do not reopen Firmware/Linux ownership or restore the historical Majestic WIP commit.
-56. Historical pre-Majestic/WIP Builder SHAs are provenance only. Do not restore their old branch/tag layout.
-57. Keep only per-device deltas: package/runtime selection, first-boot GPIO/bootstrap policy, sensor/lens defaults, camera-specific audio/PTZ/illumination config, excludes and other device-only packaging.
-58. Audit and simplify Builder mechanics, duplicated configuration and runtime-specific files, but do not move generic FH8626 kernel/media implementation back into Builder.
-59. Keep the ANJIA base and Majestic direction reconciled: shared device fixes land on the main ANJIA line first and are merged into the Majestic direction; Majestic-only changes stay on the direction branch.
-60. Run the Builder CI-matrix self-test and an owner build after cleanup before removing FH8626 from `NOT_BUILT`.
+54. **Source cleanup complete:** main ANJIA line is `ArthurKoba/openipc-builder/work/fh8626v100-anjia@a39671f56267a403340354aebc82a3c889ac0df6`. Majestic direction is `work/fh8626v100-anjia-majestic@19157b112a9ceeea25b7771bd79c2af8e3313558` and contains the same shared board layer.
+55. Keep the pre-cleanup stock-style PTZ controller only as reference at Builder tag `archive/fh8626v100-anjia-stock-ptz-controller-20260918`. Production policy is stateless relative PTZ; do not restore boot calibration, boot movement or persistent inferred coordinates without new product evidence.
+56. Keep only per-device deltas in Builder. Generic FH8626 Linux/platform/media implementation remains in Linux/Firmware/Divinus; Majestic compatibility implementation remains in its Firmware direction.
+57. **Remaining source gate:** run the actual Builder `.github/scripts/ci-matrix.py --self-test` in a full checkout/CI context. API inspection confirms both FH8626 target names remain explicit `NOT_BUILT` entries where their defconfigs exist, but this is not a substitute for executing the self-test.
+58. **Owner build gate:** build `fh8626v100_lite_anjia-ajl33pq0866` against Firmware `work/fh8626v100-divinus` and `fh8626v100_lite_anjia-ajl33pq0866_majestic` against Firmware `work/fh8626v100-majestic`; record resolved configs and kernel/rootfs sizes.
+59. **Board hardware gate:** validate no PTZ boot movement, relative pan/tilt direction and requested delay/speed, cancellation/safe-off, GPIO5 cold-boot dual-sensor bootstrap, WIDE/TELE logical switch integration, IR/white/IR-cut direction/polarity, GPIO23/SADC1 restore, microSD hotplug/shutdown, RTL8188FU and reset-button path.
+60. Keep both FH8626 targets in `NOT_BUILT` until their required Firmware base is available to the normal Builder clone path and the applicable build/hardware gates have passed. Shared ANJIA fixes continue to land on the main line first and merge into Majestic; Majestic-only assembly stays on the direction branch.
 
 ## Standing repository rules
 
