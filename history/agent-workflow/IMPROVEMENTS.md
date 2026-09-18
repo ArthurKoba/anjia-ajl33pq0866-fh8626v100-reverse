@@ -786,6 +786,8 @@ Workflow:
 
 Эта методика резко сократила blind reverse и дала semantic map большого участка `CB970`.
 
+`CHAT-024` расширяет semantic-oracle принцип до OEM donor material: retail clone/dump полезен для symbols/config/layout comparison, но собственный target dump всегда сильнее и donor нельзя автоматически прошивать.
+
 ### I-053 — Living external-research document с provenance и reusable method
 Статус: `OBSERVED`.
 
@@ -799,6 +801,8 @@ Workflow:
 - instructions/addendum для следующих specialist agents.
 
 Это отделяет **research method + provenance** от конкретного текущего handoff и позволяет следующим агентам переиспользовать внешний semantic corpus без повторного веб-поиска.
+
+`CHAT-024` строит reusable external-research handoff: найденные форумы, официальные PDF/FCC, donor dumps и model aliases группируются по provenance и степени сходства, а не остаются списком ссылок.
 
 ### I-054 — Приоритет внешних references: named adjacent-SoC → same-SoC → дальние аналоги
 Статус: `OBSERVED`.
@@ -1216,6 +1220,43 @@ Tele-debug в `CHAT-022` последовательно исключил нес�
 - product/upstream readiness.
 
 Тогда «100% конкретного контракта» не смешивается с «100% всей подсистемы».
+
+### I-083 — Device identity triangulation: software ID + PCB + physical fingerprint
+Статус: `OBSERVED`.
+
+В `CHAT-024` поиск retail-модели становится надёжным только после объединения независимых target-local признаков:
+- internal software model `AJL33PQ0866`;
+- firmware branch `YGT.AJL33PQ0866-...`;
+- PCB family `CF26 / SM ... V1.0`;
+- SoC FH8626V100;
+- фактическая dual-lens optics 3.6 mm + 12 mm;
+- physical 4+4 illumination/PTZ layout.
+
+External listing считается сильным relative только когда совпадает несколько независимых осей. Внешний корпус сам по себе недостаточен.
+
+### I-084 — Разделять hardware similarity и reverse utility donor-а
+Статус: `OBSERVED`.
+
+`CHAT-024` показывает, что «самая похожая камера» и «самый полезный donor» — разные рейтинги.
+
+Например:
+- один retail reference почти идеально совпадает по FH8626V100/dual-sensor/3.6+12/LED;
+- другой device хуже совпадает по корпусу, но имеет downloadable SPI dump;
+- третья линия имеет богатые firmware/root/RTSP discussions.
+
+Donor catalog должен хранить минимум две независимые оценки:
+1. hardware/software proximity к target;
+2. ценность доступных artifacts для reverse.
+
+### I-085 — Поисковый fingerprint строить пересечением внутренних идентификаторов
+Статус: `OBSERVED`.
+
+Вместо бесконечного поиска «dual lens Chinese camera» `CHAT-024` сводит поисковые ключи к пересечению:
+`AJL33PQ0866 + CF26/SM400 + FH8626V100`.
+
+Дальше поиск расширяется по соседним `AJL33*`, `AJ-SM-FH8626V100`, exact PCB aliases и firmware version strings.
+
+Так retail/OEM aliases превращаются в systematic donor-firmware search, а не визуальный browsing.
 
 ## Исходные этапы, ещё не подтверждённые
 
