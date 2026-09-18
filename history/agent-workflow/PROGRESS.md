@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `READY_FOR_NEXT_SOURCE`
+Статус: `CHAT_024_IN_PROGRESS`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **23**
 - Последний источник: `CHAT-023`
 - Период последнего источника: **2026-08-28**
-- Следующее действие: перейти к `CHAT-024`
+- Следующее действие: завершить анализ `CHAT-024`
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -78,6 +78,7 @@
 | 21 | `CHAT-021` | 2026-08-28 | `DONE` | Systematic stock evidence campaign: four canonical imaging states, bidirectional lens/day-night transitions, white-light/audio/JPEG/PTZ, targeted Apollo runtime evidence, static reverse preparation, evidence catalog/state matrix and delta package; OOM/resource and metadata-correction lessons |
 | 22 | `CHAT-022` | 2026-08-28 | `DONE` | Production integration catches code up to reverse; hardware validates WIDE H264, gain/APC/NR3D/LTM/manual AE/AWB→CCM and dual-sensor after GPIO5 bootstrap; lifecycle/control-plane and RAW/Bayer become focused remaining blockers |
 | 23 | `CHAT-023` | 2026-08-28 | `DONE` | Orchestrator formalizes reverse vs implementation vs evidence lanes, retracts premature v20/v21 as official distribution points, introduces frozen-master integration barrier and layered progress ontology |
+| 24 | `CHAT-024` | 2026-08-28 | `IN_PROGRESS` | External OEM/device identification: AJL33PQ0866/YGT/SDK fingerprint, CF26/SM PCB family, Light Vision/CF26 relatives, donor dump hunting and hardware/software identity triangulation |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
