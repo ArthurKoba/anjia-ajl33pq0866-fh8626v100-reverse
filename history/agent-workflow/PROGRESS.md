@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `READY_FOR_CHAT_002`
+Статус: `CHAT_002_IN_PROGRESS`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **1**
 - Последний источник: `CHAT-001`
 - Период последнего источника: примерно **2026-08-24 — 2026-08-26**
-- Следующее действие: получить следующий исторический чат по хронологии
+- Следующее действие: завершить анализ `CHAT-002`
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -56,6 +56,7 @@
 | № | ID | Период | Статус | Основной вклад |
 |---:|---|---|---|---|
 | 1 | `CHAT-001` | 2026-08-24 — 2026-08-26 | `DONE` | Первая FH8626 bring-up фаза: safe RAM boot, OpenIPC userspace, vendor media stack, ISP/PAE/H.264, dev-loop SSH, checkpoints/handoff; выявлен баланс пошаговости, transport/state/context ошибки |
+| 2 | `CHAT-002` | 2026-08-27 | `IN_PROGRESS` | Продолжение runtime/ISP reverse, формализация file-delivery protocol, hot-plugin workflow, parallel reverse и workspace cleanup |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
