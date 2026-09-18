@@ -795,3 +795,36 @@ A related external-research lane searches for FH8626 SDK/BSP traces and download
 
 The chat also clarifies historical dual-sensor attribution: early `Agent 3 / Task 3` reverse and later `Agent 3 OpenIPC` are different agent waves. The actual hardware root cause GPIO5 sequencing was found during a later integration/hardware session.
 
+## D27 — Agent 3 OpenIPC productization
+
+`CHAT-029` is the primary Agent 3 productization branch.
+
+Early research establishes two boundaries:
+- FH8626V100 must not be modeled as a renamed FH8852 target;
+- absence of a public Majestic/FH8626 backend and clean SDK provenance are real upstream constraints, but they do not have to stop engineering bring-up.
+
+Agent 2 findings are consumed as production constraints: statistics epoch is separated from encoder dequeue, lifecycle/unwind is explicit, plugin reload should be candidate-first, and generation invalidation is required.
+
+The implementation work then produces source-level pieces:
+- `fh8626-media-runtime` lifecycle/state model with bounded frame leases and generation invalidation;
+- explicit statistics-driven scheduling contract;
+- fixed byte-level sidecar ABI to avoid native-struct padding/alignment assumptions;
+- Annex-B parser;
+- RTP single-NAL/FU-A;
+- loopback RTSP E2E;
+- read-only `fh8626-abi-probe`;
+- read-only device evidence pipeline;
+- source-only Buildroot/OpenIPC packages and staging metadata;
+- owner-side publisher contract that keeps exactly one VENC lease owner;
+- Divinus external encoded-source adapter/RFC;
+- separate engineering-bringup and upstream-clean profiles.
+
+The intended early architecture is:
+`FH8626 owner → copy encoded frame → sidecar → open frontend/RTSP`.
+
+This intentionally postpones native streamer ownership of ISP/VENC until target lifecycle and ABI are mature enough.
+
+The source also contains an important packaging/provenance incident. A repacked V2 archive contains only four service documents while the README references many missing implementation directories. After the user catches this, a full package is reconstructed. Because the original apply-checked firmware patch cannot be reproduced byte-for-byte, its verification status is correctly downgraded to `RFC/rebase-required`.
+
+A later lens-switch package isolates the early Agent 3 implementation from a different Agent 7 branch after the user rejects cross-branch contamination. The retained transaction follows the already known stop-VENC → GPIO switch → settle → restore orientation → restart VENC → 64/64 reset contract, while startup preparation remains separate.
+
