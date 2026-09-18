@@ -770,7 +770,7 @@ Quality-retrospective в конце `CHAT-014` впервые явно пред�
 `CHAT-016` снова подтверждает preflight: exact reverse не начинается, пока handoff archive физически не загружен в specialist chat.
 
 ### I-052 — Cross-Fullhan semantic oracle: сначала homolog, затем target proof
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
 Внешняя research-ветка `CHAT-015` превращает FH8852V100/V201 в систематический semantic oracle.
 
@@ -789,7 +789,7 @@ Workflow:
 `CHAT-024` расширяет semantic-oracle принцип до OEM donor material: retail clone/dump полезен для symbols/config/layout comparison, но собственный target dump всегда сильнее и donor нельзя автоматически прошивать.
 
 ### I-053 — Living external-research document с provenance и reusable method
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
 Вместо серии одноразовых заметок `CHAT-015` создаёт один расширяемый research MD, где вместе хранятся:
 - source URLs/repositories и локальные artifact paths;
@@ -805,7 +805,7 @@ Workflow:
 `CHAT-024` строит reusable external-research handoff: найденные форумы, официальные PDF/FCC, donor dumps и model aliases группируются по provenance и степени сходства, а не остаются списком ссылок.
 
 ### I-054 — Приоритет внешних references: named adjacent-SoC → same-SoC → дальние аналоги
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
 `CHAT-015` формирует эффективную лестницу внешнего исследования:
 1. близкий Fullhan с именованными функциями — для semantic vocabulary;
@@ -1257,6 +1257,65 @@ Donor catalog должен хранить минимум две независи
 Дальше поиск расширяется по соседним `AJL33*`, `AJ-SM-FH8626V100`, exact PCB aliases и firmware version strings.
 
 Так retail/OEM aliases превращаются в systematic donor-firmware search, а не визуальный browsing.
+
+### I-086 — Negative architecture audit: искать не только аналог, но и отсутствующую стадию
+Статус: `OBSERVED`.
+
+Cross-platform research в `CHAT-025` получает отдельный режим:
+не только «как внешний SDK реализует X?», но и
+«какой обязательный этап повторяется в нескольких vendor implementations и отсутствует в нашей architecture?».
+
+Так сформирован сильный lead:
+`ISP frame/stat-ready → immutable statistics snapshot → algorithms → staged transaction → frame-boundary apply → affected-frame publication`.
+
+Если наш runtime перескакивает одну из повторяющихся стадий, это маркируется как `POSSIBLE_ARCHITECTURAL_OMISSION` и передаётся Agent 1 на exact FH8626 confirmation.
+
+### I-087 — External artifact status должен различать FOUND, ACQUIRED и VERIFIED
+Статус: `OBSERVED`.
+
+В `CHAT-025` exact-FH8626V100 SDK packages найдены по официальным источникам, но bytes не удалось получить в текущем окружении. Агент правильно фиксирует их как `DISCOVERED_NOT_ACQUIRED`, а не как имеющийся SDK/BSP.
+
+Для внешнего corpus полезна state machine:
+`DISCOVERED → ACQUIRED → INVENTORIED → PREPARED → VERIFIED_USEFUL`.
+
+Это не позволяет URL или имя архива случайно превратить в локальный authoritative artifact.
+
+### I-088 — Targeted cross-platform lead должен быть коротким контрактом для reverse-agent
+Статус: `OBSERVED`.
+
+Вместо огромного external dump Agent 2 формирует для Agent 1 lead с полями:
+- FH8626 target function/block;
+- external analogue repository/file/function;
+- что показывает analogue;
+- какой stage предположительно отсутствует;
+- что exact проверить на FH8626;
+- evidence/provenance;
+- confidence.
+
+Так external research сокращает reverse, а не создаёт ещё один corpus, который Agent 1 должен разбирать с нуля.
+
+### I-089 — Independent-source corroboration с учётом «расстояния» SoC
+Статус: `OBSERVED`.
+
+`CHAT-025` формализует confidence external inference:
+- один exact same-SoC official source может быть сильным semantic evidence;
+- для close relatives желательно 2–3 независимых implementations;
+- чем дальше SoC/SDK generation, тем слабее inference;
+- offsets/MMIO/layouts/constants всё равно требуют target proof.
+
+Это делает external research falsifiable и уменьшает риск переноса «красивого» чужого ABI на FH8626.
+
+### I-090 — Typed transactions + generation invalidation как architecture pattern для stateful ISP
+Статус: `OBSERVED`.
+
+Source/code audit в `CHAT-025` обнаруживает системный риск: AE/AWB/CCM/APC/NR/LTM независимо изменяют state/registers, а lens/profile/orientation/geometry меняются без общей invalidation model.
+
+Предложена схема:
+`immutable snapshot → candidate calculations → typed transaction → validate generation → ordered commit → readback/rollback`.
+
+Минимальные generations: sensor, lens, profile, geometry, orientation, stream, statistics, algorithm.
+
+Это не target reverse fact само по себе, а reusable production-architecture pattern, возникший из сопоставления reverse, source audit и внешних Fullhan state machines.
 
 ## Исходные этапы, ещё не подтверждённые
 
