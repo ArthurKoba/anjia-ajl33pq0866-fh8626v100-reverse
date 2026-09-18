@@ -336,6 +336,23 @@ External specialist получает стабильную самостоятел
 
 Это разгружает exact reverse-agent от поиска vendor vocabulary/source analogues и одновременно не позволяет external reference стать target truth.
 
+### A4.16 — Two-tier local storage: working core + heavy reverse vault
+Статус после `CHAT-026`: `OBSERVED`.
+
+Local governed workspace достигает предела удобства: full dumps, disassemblies, RAM/VMM/MMIO, RAW/YUV и исторические captures уже слишком велики для everyday handoff.
+
+Появляется явное разделение:
+- `MASTER_CORE` — часто обновляемая textual/current authority для обычных agents;
+- `REVERSE_HEAVY` — редко обновляемый source/reverse vault с bulk/immutable evidence.
+
+MASTER_CORE не копирует bulk; он содержит stable logical IDs и index, указывающий, какой heavy artifact нужен для конкретного deep reverse.
+
+Одновременно transport storage получает lifecycle:
+`tftp_active → canonical store/tftp_history`,
+а корень TFTP перестаёт быть долговременным архивом.
+
+Это ещё не Google Drive/GitHub architecture, но это прямой функциональный предшественник современной разделённой authority model: **оперативное знание и тяжёлое первичное evidence получают разные storage roles**.
+
 ### A5 — Специализированные MCP/агенты
 Статус: `BOOTSTRAP`.
 
@@ -350,7 +367,7 @@ External specialist получает стабильную самостоятел
 
 В `CHAT-011` появляется ещё одна граница ручного режима: proven development image начинает расходиться с canonical source из-за временных overlay/init/network mutations. Без внешнего debt ledger пользователь вынужден сам напоминать, что перед final port эти изменения нельзя забыть вернуть или интегрировать чисто.
 
-## Уроки CHAT-001…CHAT-025 для будущей agentic-системы
+## Уроки CHAT-001…CHAT-026 для будущей agentic-системы
 
 1. **Текущее runtime state должно быть внешним фактом, а не памятью диалога.** Потери «stock или OpenIPC?» породили дорогие ошибки.
 2. **Agent handoff — необходим, но не должен становиться гигантской свалкой.** Нужны краткая карта и подробные приложения.
@@ -435,6 +452,10 @@ External specialist получает стабильную самостоятел
 81. **Искать нужно и архитектурные omissions.** Повторяющийся stage в нескольких vendor implementations — повод для точечной проверки target.
 82. **Найденный URL не равен имеющемуся artifact.** External evidence проходит статусы discovered/acquired/prepared/verified.
 83. **Cross-platform confidence зависит от дистанции.** Same-SoC source сильнее дальнего homolog, но target proof всё равно обязателен.
+84. **Working core и heavy evidence требуют разных storage roles.** Everyday agent context не должен таскать full dumps/disassemblies.
+85. **Heavy artifacts адресуются logical IDs.** Physical path/storage может меняться, knowledge references остаются стабильными.
+86. **Transport staging не является архивом.** Active transfer files должны иметь lifecycle и уходить из root после завершения шага.
+87. **Удалять reverse history можно только после canonicalization.** Сначала inventory/move/dedup proof, затем destructive cleanup.
 
 ## Следующие исторические переходы, которые нужно искать
 
