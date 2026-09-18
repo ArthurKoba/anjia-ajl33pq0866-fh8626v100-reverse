@@ -1,26 +1,26 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_008_IN_PROGRESS`
+Статус: `CHAT_008_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **7**
-- Последний источник: `CHAT-007`
-- Период последнего источника: **2026-08-25 — 2026-08-26**
-- Следующее действие: завершить анализ `CHAT-008`
+- Обработано исторических файлов: **8**
+- Последний источник: `CHAT-008`
+- Период последнего источника: **2026-08-25**
+- Следующее действие: выполнить обязательный post-file refresh
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-007 |
+| Направление | Файл | Состояние после CHAT-008 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 7/?? уникальных источников обработано |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 8/?? уникальных источников обработано |
 | Ошибки/нарушения агентов | `ERRORS.md` | 26 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 34 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | детализированы clean OpenIPC baseline, media-stack bring-up и missing ISP lifecycle |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A1.5 идея repository-backed workflow; parallel checkpoint усилен |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 37 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена независимая ISP IRQ-mask / 25-fps sensor→ISP ветка |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | A1 и A4.6 консолидированы: checkpoints + role-specialized handoff |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -62,7 +62,7 @@
 | 5 | `CHAT-005` | 2026-08-24 — 2026-08-25 | `DONE` | Самый ранний backfill: hardware/dual-lens identification, immutable full-flash dump, U-Boot access, TFTP→RAM proof и выбор hybrid stock-kernel + OpenIPC initramfs strategy |
 | 6 | `CHAT-006` | 2026-08-24 — 2026-08-25 | `DONE` | Перекрывает CHAT-005, но добавляет root-shell inventory, самостоятельное извлечение `/app` из SPI dump, media module baseline, первые ioctl ABI mappings и переход от ручного target inventory к artifact-assisted analysis |
 | 7 | `CHAT-007` | 2026-08-25 — 2026-08-26 | `DONE` | Partial-overlap: префикс до clean-room fh_mpi повторяет CHAT-006 и не пересчитан. Новая часть: clean OpenIPC RAM baseline, полный stock media stack под OpenIPC, sensor/MIPI/VPU/PAE/ISP reverse, transport/context ошибки, external Fullhan references, documentation/repository design и parallel-agent checkpoint |
-| 8 | `CHAT-008` | 2026-08-25 | `IN_PROGRESS` | Partial-overlap с CHAT-007 до ~L24104; уникальная ветка: Apollo/ISP reverse, восстановление checkpoint pipeline, parallel-agent merge, FH8852 semantic reference, ISP IRQ-mask breakthrough и 25-fps sensor→ISP proof |
+| 8 | `CHAT-008` | 2026-08-25 | `DONE` | Partial-overlap с CHAT-007 до ~L24104. Уникальная ветка: Apollo/ISP reverse, checkpoint recovery, adaptive granularity correction, parallel-agent merge, FH8852 semantic reference, ISP interrupt-mask breakthrough, ~25-fps sensor→ISP proof и SoC-first backend goal |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -305,6 +305,40 @@
 ### Partial overlap
 Начальный большой префикс `CHAT-007` повторяет уже обработанный `CHAT-006`. Он не использован для повторного увеличения evidence/count; анализ начат с нового продолжения после прежнего clean-room fh_mpi endpoint.
 
+## Что CHAT-008 добавил к картине
+
+### Source relation
+`CHAT-008` имеет общий префикс с `CHAT-007` примерно до строки 24104, после чего это отдельная историческая ветка. Общий префикс повторно не учитывался.
+
+### Новых error-ID не потребовалось
+Источник усилил существующие классы:
+- E-001/E-002: пользователь сам сформулировал adaptive granularity — ветвящиеся шаги по результату, знакомый routine цельным блоком;
+- E-005: `scp -O` снова был забыт;
+- E-011: оценка «2–3 узких неизвестных» оказалась чрезмерно уверенной;
+- E-019: путаница WSL/Windows при передаче файлов;
+- E-023: пользователь многократно спрашивал остаток reverse;
+- E-024: условные действия снова склеивались через `&&`.
+
+### Новые/уточнённые improvements
+- I-035: adaptive granularity по engineering decision boundaries;
+- I-036: runtime `LD_PRELOAD`/ioctl interception как более дешёвая альтернатива полному reverse helper'а, если нужен только boundary ABI;
+- I-037: SoC-first reusable backend вместо одноразового board port.
+
+I-019, I-032 и I-034 переведены в `CONSOLIDATED`.
+
+### Техническая роль
+Уникальная ветка независимо локализовала важный ISP gap:
+- восстановлен lifecycle через Apollo + Fullhan reference;
+- в stock hardware init найден interrupt enable/mask `ISP+0x08`;
+- включение маски подняло ISP IRQ;
+- изоляция interrupt bits показала sensor cadence около 25 fps;
+- PAE всё ещё не получал frame path, поэтому blocker был локализован в `ISP → VPU/PAE`, а не sensor/MIPI.
+
+### Agentic role
+Локальный checkpoint уже используется как persistent engineering substrate: после потери runtime `/tmp` рабочие helpers восстанавливаются из checkpoint, а не по памяти. Parallel ISP agent получает узкий technical checkpoint с `confirmed/gaps/next priority` и запретом повторно реверсить закрытые части; основной агент после возврата сверяет и интегрирует findings.
+
+Это всё ещё pre-Git-authority стадия: пользователь вручную маршрутизирует файлы/handoff между агентами.
+
 ## Следующее действие
 
-Получить следующий исторический источник. Плановая live-state сверка остаётся после девятого уникального источника.
+Выполнить обязательный post-file refresh. После него ожидать следующий уникальный исторический источник. Плановая расширенная live-state сверка — после девятого уникального файла.
