@@ -1,26 +1,26 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_015_IN_PROGRESS`
+Статус: `CHAT_015_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **14**
-- Последний источник: `CHAT-014`
-- Период последнего источника: **2026-08-27**
-- Следующее действие: завершить анализ `CHAT-015`
+- Обработано исторических файлов: **15**
+- Последний источник: `CHAT-015`
+- Период последнего источника: **2026-08-27 — 2026-08-28**
+- Следующее действие: post-file refresh + 15-file live-state сверка
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-014 |
+| Направление | Файл | Состояние после CHAT-015 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 14/?? уникальных источников обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 31 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 49 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D14: AWB→CCM coherent hardware validation |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.8 quality engineering of agent workflow |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 15/?? уникальных источников обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 33 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 54 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D15: Cross-Fullhan semantic oracle + APC/total-gain gaps |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.9: central orchestrator + persistent specialist lanes |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -582,6 +582,33 @@ Parallel Agent 3 восстановил и hardware-валидировал coher
 ### Agentic role
 В конце сессии ошибки взаимодействия собраны в отдельный quality-improvement pack, предназначенный уже не для reverse конкретной функции, а для изменения поведения будущих агентов/оркестратора.
 
+## Что CHAT-015 добавил к картине
+
+### Новые error-классы
+- E-032: Project semantic context не гарантирует physical file access у parallel agent;
+- E-033: слишком мелкая specialist task не окупает onboarding/handoff overhead.
+
+### Новые improvements
+- I-050: persistent specialist lanes с последовательными Task N;
+- I-051: artifact-access preflight перед exact reverse;
+- I-052: formal Cross-Fullhan semantic-oracle workflow;
+- I-053: living external-research MD с provenance/method;
+- I-054: приоритет внешних references от именованного adjacent-SoC к same-SoC.
+
+### Усиленные существующие правила
+- не экспортировать handoff/архив и не повышать внешнюю версию после каждой интеграции без запроса;
+- не показывать SHA-256 пользователю без необходимости;
+- центральный агент остаётся интегратором; specialists не делают hardware writes и не merge'ят друг друга;
+- scope делится по state/dataflow chains, а не по случайным адресам.
+
+### Технический вклад
+Cross-Fullhan matching дал semantic map большой части CB970 и позволил target-specific диагностике найти два системных gaps текущего runtime: отсутствующий APC/detail controller `CDD6C` и отсутствующую per-frame публикацию live `total_gain` в `ctx+0x60`. Это напрямую связало оставшееся «мыло» с конкретными missing control paths.
+
+Same-SoC external research также выделил native encoder timestamp как правильный cadence source и поддержал модель GC1054 720p source → downstream 1080p/frame-control path.
+
+### Agentic role
+Основной агент явно становится orchestrator/integrator нескольких persistent specialist threads. Но пользователь всё ещё вручную прикрепляет handoff bytes каждому агенту: shared repository/Drive/MCP authority ещё исторически не появилась.
+
 ## Следующее действие
 
-Перейти к следующему загруженному источнику `#15`.
+Выполнить обязательный post-file refresh и 15-file live-state сверку. После этого перейти к загруженному источнику `#16`.
