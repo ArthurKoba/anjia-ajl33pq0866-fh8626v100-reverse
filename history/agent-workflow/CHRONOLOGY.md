@@ -281,6 +281,17 @@ Agent 1 сначала исчерпывает master v23 статически и
 
 Подробнее: [D26](CHRONOLOGY_DETAILS.md#d26--openipc-product-strategy-и-divinus-first-path).
 
+### 27. Agent 3 productization: media-runtime, sidecar RTSP и OpenIPC staging
+Источник: `CHAT-029`, 2026-08-28/29.
+
+OpenIPC/productization lane превращает reverse contracts в source-level architecture без попытки сразу подменить весь vendor stack. Создаются host-tested media lifecycle/state-machine pieces, fixed wire sidecar ABI, Annex-B H.264/RTP/RTSP path, ABI probe, read-only evidence tooling и source-only Buildroot/OpenIPC staging. Divinus получает external encoded-source boundary; Majestic исключается из критического пути.
+
+Отсутствие официального FH8626 SDK переклассифицируется из «порт невозможен» в upstream/provenance blocker: engineering bring-up может двигаться поверх существующего hardware owner и временных externally supplied dependencies, а upstream-clean profile требует отдельного допустимого source path.
+
+**Переход:** reverse впервые материализуется в переносимые userspace/runtime компоненты и реальные target-repository staging paths, сохраняя single-owner hardware boundary.
+
+Подробнее: [D27](CHRONOLOGY_DETAILS.md#d27--agent-3-openipc-productization).
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.
