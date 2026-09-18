@@ -1,25 +1,25 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_018_IN_PROGRESS`
+Статус: `CHAT_018_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **17**
-- Последний источник: `CHAT-017`
+- Обработано исторических файлов: **18**
+- Последний источник: `CHAT-018`
 - Период последнего источника: **2026-08-27 — 2026-08-28**
-- Следующее действие: завершить уникальный supplemental tail `CHAT-018`
+- Следующее действие: post-file refresh + 18-file live-state сверка
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-017 |
+| Направление | Файл | Состояние после CHAT-018 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 17/?? уникальных источников обработано |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 18/?? уникальных/expanded sources обработано |
 | Ошибки/нарушения агентов | `ERRORS.md` | 35 tracked classes/directions |
 | Улучшения и best practices | `IMPROVEMENTS.md` | 62 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D17: APC/NR3D/LTM detail pipeline + runtime RW/GOT closure |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D18: controlled wide→tele→wide hardware validation |
 | Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.10: reverse corpus architecture / workspace map |
 
 ## Обязательный цикл для каждого следующего файла
@@ -72,7 +72,7 @@
 | 15 | `CHAT-015` | 2026-08-27 — 2026-08-28 | `IN_PROGRESS` | Центральная orchestration-ветка: multi-agent decomposition/integration, project-file isolation, long Task N lanes, Cross-Fullhan semantic oracle, APC/total-gain diagnosis и same-SoC external research |
 | 16 | `CHAT-016` | 2026-08-27 — 2026-08-28 | `DONE` | Persistent Agent 1 lane: Task1 C949C/C9898 → large Task2 full AE loop; premature completion corrected by full audit; stock GC1054 library + runtime captures close sensor-register contract and day/night replay; Task3 statically closes much of dual-lens/light/audio orchestration; quality-pack v3 adds focused-work/liveness/tool-placement rules |
 | 17 | `CHAT-017` | 2026-08-27 — 2026-08-28 | `DONE` | Persistent Agent 2: image-detail Task2 corrected after premature completion; live Apollo RW/GOT closes APC/NR3D/LTM/D1DB0 tables; final current-day detail handoff + selftest; quality retrospectives consolidated into proposed full reverse-corpus architecture |
-| 18 | `CHAT-018` | 2026-08-27 — 2026-08-28 | `IN_PROGRESS` | Expanded snapshot of Agent 1 branch: prefix overlaps CHAT-016; unique tail adds controlled wide→tele→wide runtime validation, implementation-ready dual-lens closure and Task3 orchestrator supplement |
+| 18 | `CHAT-018` | 2026-08-27 — 2026-08-28 | `DONE` | Expanded snapshot overlapping CHAT-016; unique tail validates wide→tele→wide on stock, shared AE context/history and implementation-ready dual-lens contract |nded snapshot of Agent 1 branch: prefix overlaps CHAT-016; unique tail adds controlled wide→tele→wide runtime validation, implementation-ready dual-lens closure and Task3 orchestrator supplement |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -691,6 +691,13 @@ Agent 2 finally closes current-day image-detail reverse: APC/CDD6C, active NR3D/
 ### Agentic role
 The handoff starts evolving from a transport archive into a mapped local workspace/corpus: prepared reverse representations, runtime evidence, environment map, reusable tools, expensive-work history and machine-readable status.
 
+## Что CHAT-018 добавил к картине
+
+- Источник является expanded snapshot: префикс перекрывает CHAT-016 и повторно не учтён.
+- Unique tail переводит dual-lens switch из static-only в controlled runtime validation.
+- I-048 experiment state-machine повышен до CONSOLIDATED: baseline/immediate/settled/restore capture реально помог отделить transient от устойчивого state.
+- Новых уникальных error-классов нет.
+
 ## Следующее действие
 
-Перейти к `CHAT-018`; после него выполнить плановую expanded live-state сверку.
+Выполнить обязательный post-file refresh и expanded live-state сверку после 18 источников. Затем перейти к `CHAT-019`.
