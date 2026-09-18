@@ -44,7 +44,7 @@ The branch is a source/layout candidate, not a hardware-accepted firmware. An ow
 
 ## Binary inventory
 
-All hashes below were calculated from the exact bytes stored in the Firmware preservation branch. No public Fullhan SDK/build chain has yet been established for these files, so their current provenance class is **factory/preservation evidence**, not redistributable upstream package input.
+All hashes below were calculated from the exact bytes stored in the Firmware preservation branch. No public Fullhan SDK/build chain has yet been established for these files, so their current provenance class is **factory/preservation evidence**, not redistributable upstream package input. Every unique opaque payload is also an active reverse/recovery item: its ABI/data/protocol contract must be reconstructed even if later SDK provenance supplies acceptable source.
 
 | Preservation path | Bytes | SHA-256 | Current role | Intended owner / disposition |
 | --- | ---: | --- | --- | --- |
@@ -79,4 +79,4 @@ The external evidence manifest already retains `sensor_gc1054_mipi.bin` by SHA-2
 
 Builder CI currently lists the clean ANJIA staging profile in `NOT_BUILT` because its required generic FH8626 Firmware base is not yet present in the upstream Firmware checkout used by normal Builder jobs. That opt-out is an integration guard, not evidence of a build failure.
 
-No classification above is permission to delete the only known working artifact. Blob retirement still follows `docs/process/fh8626-blob-retirement.md`: replace the actual ABI/hardware contract, validate it, then remove the runtime dependency while retaining reference evidence.
+No classification above is permission to delete the only known working artifact. Nor does locating an identical opaque object in a vendor SDK complete the work. Blob retirement still follows `docs/process/fh8626-blob-retirement.md`: reverse the consumed ABI/data/protocol contract, recover or implement maintainable source, validate it, then remove the runtime dependency while retaining reference evidence.
