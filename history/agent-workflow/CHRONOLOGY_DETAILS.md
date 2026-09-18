@@ -314,3 +314,51 @@ Offline для `512,512,512 → 544,480,544` предсказано:
 
 Попытка hot-replace owner через kill/restart без reboot оказалась небезопасной для vendor sensor/device lifecycle; clean boot остался надёжной границей для смены owner binary.
 
+## D15 — Cross-Fullhan semantic oracle и systemic image-quality gaps
+
+`CHAT-015` — центральная orchestration/research ветка после первых parallel AWB/AE задач.
+
+Внешний FH8852V201 reverse и FH8852V100 vendor libraries дали именованный semantic vocabulary. На instruction/algorithm level были найдены сильные homologs:
+- `D2774 ↔ isqrt/ae_isqrt`;
+- `D27C4 ↔ easylog2`;
+- `D282C ↔ bubbleSorting`;
+- `C9DB0 ↔ Awb_WpConvert/wpConvert`;
+- `C9F30 ↔ Awb_GetDist`;
+- `C9F68 ↔ Awb_GetPos/getCTPos`;
+- `CE670 ↔ ccm_ColorCorrection`;
+- `CE764 ↔ ccm_ctrl_run`.
+
+Дальнейшее сопоставление controller order и enable-bit lineage дало semantic map позднего runtime:
+- `CE430` — BLC;
+- `D0E5C` — NR2D;
+- `CFD70` — GB;
+- `D1DB0` — YC;
+- `CFBC4` — Gamma;
+- `D2074` — YNR;
+- `CEACC` — DPC;
+- `CDD6C` — APC/detail/sharpening;
+- `CE7D8` — CNR;
+- `D0DF4` — LTM;
+- `D1258` — Purple;
+- `D0238` — LC;
+- `CECF0` — FC;
+- `D1724` — RGBA-like branch.
+
+Эти имена сами по себе не считались FH8626 proof. Их роль — сократить поиск. Реальные target gaps затем подтверждались по Apollo/current runtime.
+
+Практически важные target findings:
+1. `CDD6C/APC` в custom runtime отсутствовал, хотя current day profile должен активно менять detail/edge region `ISP+0x528..+0x574`.
+2. `ctx+0x60 >> 12` идентифицирован как live `total_gain`, используемый gain-indexed ISP modules.
+3. `C5AE8` соответствует common gain getter, а producer `ctx+0x60` находится в `C73F8`.
+4. Custom runtime обновлял лишь часть C949C state и не публиковал stock-like total gain every frame; APC/NR2D/YNR/CNR поэтому могли работать на стартовом/stale gain.
+
+Это дало конкретное объяснение «мыльной» картинки: missing APC плюс stale gain-dependent tuning вместо абстрактной нехватки «ещё каких-то регистров».
+
+External same-SoC research также дал useful architecture hints:
+- official FH8626 adapter использует native encoder stream timestamps, что делает их правильным источником cadence measurement;
+- отдельный FH8626V100+GC1054 runtime свидетельствует о sensor 720p25 и downstream 1080p path с frame control, то есть sensor cadence и encoder/output cadence могут различаться.
+
+Последнее является внешним corroborating evidence, а не заменой target hardware proof.
+
+Важнейший методический результат: дальнейший reverse неизвестной Apollo-функции должен сначала проверять наличие именованного Fullhan homolog, но вся target-specific arithmetic/state/MMIO всё равно доказывается на FH8626.
+
