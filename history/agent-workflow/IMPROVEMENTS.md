@@ -28,6 +28,8 @@
 
 Ограничение: checkpoint должен иметь явную структуру и не становиться единственным source of truth.
 
+`CHAT-008` показывает практическую ценность checkpoint как active recovery substrate: после очистки `/tmp` старые sensor/ISP/H.264 helper'ы были найдены в `checkpoints/openipc-20260825` и переиспользованы вместо повторной сборки с нуля.
+
 ### I-007 — Buildroot/OpenIPC собирать в Linux filesystem WSL, не на Windows mount
 Статус: `OBSERVED`.
 
@@ -186,7 +188,7 @@ CHAT-007 даёт прямое подтверждение: после вопро
 `CHAT-004` добавляет вторую сторону того же принципа: если агент снова и снова просит вырезать диапазоны из одного бинарника, нужно один раз материализовать полный searchable disassembly/binary bundle, проверить его provenance и дальше искать локально без участия пользователя.
 
 ### I-019 — Параллельный reverse с непересекающимися зонами ответственности
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
 Вторая половина `CHAT-002` показывает более зрелый multi-agent process:
 - основной агент держит canonical runtime и integration;
@@ -201,6 +203,8 @@ CHAT-007 даёт прямое подтверждение: после вопро
 Это уже не просто handoff между чатами, а ранняя форма **role-specialized agent pipeline**, хотя пользователь всё ещё вручную маршрутизирует пакеты между агентами.
 
 CHAT-007 показывает более раннюю форму того же pipeline: findings из external-reference ветки передаются второму ISP reverse-agent как технический checkpoint с локальными путями, confirmed/gaps и запретом повторно реверсить закрытое.
+
+`CHAT-008` усиливает процесс: параллельный ISP checkpoint прямо требует сверить findings с текущим состоянием и **не реверсить заново уже подтверждённое**; затем результат второго агента используется как semantic guide, но основной агент сохраняет canonical integration.
 
 ### I-020 — Автоматизация boot/recovery development loop
 Статус: `OBSERVED`.
@@ -357,7 +361,7 @@ CHAT-007 усиливает принцип: valuable stock runtime сначал�
 Обобщение: **target нужен для нового evidence, а не для повторного извлечения уже имеющихся bytes**.
 
 ### I-032 — Искать внешние reference implementations до продолжения дорогого blind reverse
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
 В `CHAT-007` после длинного локального ISP reverse пользователь отдельно просит искать существующие наработки. Поиск находит несколько источников, но особенно полезен clean-room reverse соседнего Fullhan FH8852V201.
 
@@ -370,6 +374,8 @@ CHAT-007 усиливает принцип: valuable stock runtime сначал�
 Эффект: вместо абстрактного поиска причины `ISP IRQ=0` появляется конкретная гипотеза missing chain `MemInit → SensorRegCb → SensorInit → SetSensorFmt → Init → Kick`.
 
 Критическое ограничение: cross-SoC reference не является доказательством FH8626 ABI/MMIO.
+
+`CHAT-008` показывает зрелое применение этого правила: FH8852 reference используется для имён `SensorRegCb/SensorInit/SensorKick/KickStart` и ожидаемой архитектуры, а каждый адрес/handler затем подтверждается независимым FH8626 disassembly/runtime evidence.
 
 ### I-033 — Разделять рабочую reverse-документацию, историю экспериментов и upstream deliverable
 Статус: `OBSERVED`.
@@ -384,7 +390,7 @@ CHAT-007 усиливает принцип: valuable stock runtime сначал�
 Это исторический предшественник современной схемы reverse repo: одна текущая authority на факт, история отдельно, тяжёлое evidence отдельно.
 
 ### I-034 — Progress tracking по engineering boundaries
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
 Повторные вопросы пользователя «сколько ещё» в `CHAT-007` показывают необходимость не временной оценки, а карты оставшейся работы.
 
@@ -396,7 +402,46 @@ CHAT-007 усиливает принцип: valuable stock runtime сначал�
 
 Так длинный reverse остаётся управляемым без ложных обещаний по времени.
 
+### I-035 — Adaptive granularity: группировать routine, дробить только decision boundaries
+Статус: `CONSOLIDATED`.
+
+В `CHAT-008` пользователь сформулировал правило почти в готовом виде:
+- если следующий технический вывод зависит от результата команды — агент даёт небольшой шаг, получает вывод и **сам** принимает решение;
+- если путь уже неоднократно проходили и ветвления нет — знакомый bring-up/build/transfer нужно дать одним цельным копируемым блоком.
+
+Это объединяет две прежние жалобы, которые по отдельности выглядят противоречиво: «ПОШАГОВО» и «зачем дробить знакомую процедуру». Они на самом деле задают одну модель — granularity определяется **engineering decision boundary**, а не фиксированным числом команд.
+
+### I-036 — Runtime interception вместо reverse отсутствующего helper source
+Статус: `OBSERVED`.
+
+В `CHAT-008` исходник старого H.264 helper'а не сохранился. Вместо нового глубокого reverse его бинарника агент собрал маленький `LD_PRELOAD`-interposer для `ioctl()`, запустил existing helper и получил реальные request/payload до и после вызовов.
+
+Эффект:
+- быстро восстановлены фактические VPU/PAE structures и порядок вызовов;
+- закрыта ложная гипотеза о неправильных 1280×720 размерах;
+- live contract получен напрямую из исполняемой программы без реконструкции всего её source.
+
+Обобщение: если нужен **runtime ABI одного boundary**, сначала предпочесть trace/interposition/ptrace/strace-like capture полному reverse вызывающей программы, если такой capture безопасен.
+
+### I-037 — SoC-first backend вместо одноразового board port
+Статус: `OBSERVED`.
+
+К концу `CHAT-008` цель расширилась от «получить картинку на одной AJL33PQ0866» до reusable FH8626 compatibility layer:
+- sensor/MIPI;
+- ISP/VPU/ENC;
+- audio;
+- GPIO/PTZ;
+- несколько stream channels;
+- board-specific настройки вынесены наружу.
+
+Причина: тяжёлый clean-room reverse vendor SDK/ABI делается один раз на SoC. После этого следующая камера на FH8626 должна требовать в основном sensor/GPIO/resolution/fps profile, а не повторного reverse `ISP → VPU → PAE`.
+
+Это важный reusable architecture principle для других unsupported camera SoC: разделять **SoC backend** и **board profile** как можно раньше, но не расширять scope раньше, чем доказан основной media path.
+
+
 ## Исходные этапы, ещё не подтверждённые
+
+`CHAT-008` повторно подтверждает необходимость такого tracker: пользователь несколько раз спрашивает остаток работы, а прежняя оценка «2–3 узких неизвестных» оказывается слишком оптимистичной.
 
 ### I-001 — Ручные браузерные вставки → workspace и архивы
 Статус: `BOOTSTRAP`.
