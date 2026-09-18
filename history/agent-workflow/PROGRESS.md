@@ -1,26 +1,26 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_016_IN_PROGRESS`
+Статус: `CHAT_016_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **15**
-- Последний источник: `CHAT-015`
+- Обработано исторических файлов: **16**
+- Последний источник: `CHAT-016`
 - Период последнего источника: **2026-08-27 — 2026-08-28**
-- Следующее действие: завершить анализ `CHAT-016`
+- Следующее действие: выполнить обязательный post-file refresh
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-015 |
+| Направление | Файл | Состояние после CHAT-016 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 15/?? уникальных источников обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 33 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 54 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D15: Cross-Fullhan semantic oracle + APC/total-gain gaps |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.9: central orchestrator + persistent specialist lanes |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 16/?? уникальных источников обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 34 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 58 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D16: full AE loop до GC1054 + day/night parity; D13 уточнена exact lens-switch orchestration |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | A4.8/A4.9 переведены в CONSOLIDATED; persistent specialist Task N доказан practically |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -70,7 +70,7 @@
 | 13 | `CHAT-013` | 2026-08-27 | `DONE` | Day AWB mode1 сильно восстановлен и переведён в diag/shadow; hardware identity очищена от JXF37 false lead; stock runtime подтверждает GC1054 1280×720 + downstream 1080 upscale и dual-GC1054 target1/target2 lens lifecycle; сформулирован milestone-driven autonomous reverse contract |
 | 14 | `CHAT-014` | 2026-08-27 | `DONE` | Parallel Agent 3: exact AWB→CCM reverse, coherent v4.2.1 hardware validation and rollback; session-quality retrospective becomes separate artifact with operational-state/state-machine/automation proposals |
 | 15 | `CHAT-015` | 2026-08-27 — 2026-08-28 | `IN_PROGRESS` | Центральная orchestration-ветка: multi-agent decomposition/integration, project-file isolation, long Task N lanes, Cross-Fullhan semantic oracle, APC/total-gain diagnosis и same-SoC external research |
-| 16 | `CHAT-016` | 2026-08-27 — 2026-08-28 | `IN_PROGRESS` | Persistent Agent 1 lane: C949C/C9898 → full AE Task2, completion-audit correction, GC1054 sensor library/runtime captures, day/night numerical replay, exact sensor actuator contract, then dual-lens/light/audio static Task3 and quality-pack v3 |
+| 16 | `CHAT-016` | 2026-08-27 — 2026-08-28 | `DONE` | Persistent Agent 1 lane: Task1 C949C/C9898 → large Task2 full AE loop; premature completion corrected by full audit; stock GC1054 library + runtime captures close sensor-register contract and day/night replay; Task3 statically closes much of dual-lens/light/audio orchestration; quality-pack v3 adds focused-work/liveness/tool-placement rules |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -634,6 +634,40 @@ Current technical endpoint по-прежнему существенно даль
 
 Исторический вывод `CHAT-015` не меняется: в конце августа multi-agent orchestration ещё работал через manual project chats/handoff attachments и не имел нынешней GitHub/Drive/Ghidra authority.
 
+## Что CHAT-016 добавил к картине
+
+### Новый error-class
+- E-034: длительная локальная работа без краткого liveness-сигнала выглядит как зависание; milestone reporting нужно дополнить редким heartbeat.
+
+### Consolidated errors
+- E-020: broad recursive search;
+- E-026: assumptions about target utilities;
+- E-027: fragile UART paste;
+- E-031: premature task completion;
+- E-032: project context ≠ artifact bytes.
+
+### Новые improvements
+- I-055: focused reverse workspace;
+- I-056: heavy static analysis off-target, camera only for runtime evidence;
+- I-057: sparse liveness heartbeat without intermediate reasoning;
+- I-058: distinguish stale/cache/deferred queue state from active controller state.
+
+I-046/I-049/I-050/I-051 reinforced; persistent specialist lane and quality-engineering stages are now consolidated.
+
+### Технический вклад
+- full stock AE loop восстановлен до GC1054 I²C registers;
+- day/night/wlight profile relationship восстановлена;
+- day и night имеют independent numerical runtime replay;
+- historical night limits 745/2 подтверждены static profile + live context;
+- C9898 окончательно отделён как publication/status tail;
+- D0630 отделён как отдельный adaptive ISP block;
+- lens-switch static contract уточнён до D8308, GPIO4/14, VENC stop/start, mirror/flip, IR/white LED/IR-cut/audio controls; hardware capture этого Task3 в source ещё pending.
+
+### Agentic role
+CHAT-016 является прямым proof persistent specialist model: один Agent 1 последовательно выполняет Task 1, большой Task 2 и начинает Task 3, не проходя повторный onboarding. Completion audit и concrete blocker escalation позволяют довести область существенно глубже, чем первоначальное premature DONE.
+
+Quality pack v3 показывает, что meta-workflow улучшения уже стали итеративной практикой, а не единичной ретроспективой.
+
 ## Следующее действие
 
-Перейти к загруженному источнику `#16`. Следующая плановая расширенная live-state сверка — после восемнадцатого уникального источника либо раньше при крупном инфраструктурном переходе.
+Выполнить обязательный post-file refresh. После этого ожидать следующий уникальный исторический источник. Следующая плановая расширенная live-state сверка — после восемнадцатого уникального файла либо раньше при крупном инфраструктурном переходе.
