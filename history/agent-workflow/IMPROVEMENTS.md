@@ -151,7 +151,7 @@
 Это развитие safety-правила one-owner-per-boot из `CHAT-001`.
 
 ### I-017 — Hot-plugin loop вместо reboot для каждого runtime stage
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
 Проблема: замена самого owner требовала clean reboot из-за lifetime Fullhan ISP/media state.
 
@@ -161,6 +161,8 @@
 `reverse locally → build .so → scp -O → reload through existing owner → read register/log/capture`.
 
 Результат: несколько последовательных CB970 stages были проверены без reboot между каждым изменением. Это существенно ускорило reverse/runtime convergence.
+
+Исторически `CHAT-003` показывает сам переход к persistent owner + reloadable `.so`; `CHAT-002` уже использует этот механизм как стандартный test loop.
 
 ### I-018 — Workspace hygiene и один authoritative reverse artifact
 Статус: `OBSERVED`.
@@ -191,6 +193,57 @@
 Так были параллельно восстановлены shared LUT/heavy writers и затем AE/AWB frontend.
 
 Это уже не просто handoff между чатами, а ранняя форма **role-specialized agent pipeline**, хотя пользователь всё ещё вручную маршрутизирует пакеты между агентами.
+
+### I-020 — Автоматизация boot/recovery development loop
+Статус: `OBSERVED`.
+
+Проблема: каждый Linux reboot требовал снова вручную заходить в U-Boot и набирать длинную TFTP/RAM boot последовательность.
+
+Решение в `CHAT-003`:
+- проверенная последовательность вынесена в сохранённую U-Boot команду `openipc_boot`;
+- штатная загрузка получила симметричную `stock_boot`;
+- после проверки `bootcmd` переведён на OpenIPC/TFTP default;
+- операторский reboot перестал требовать повторного ручного ввода boot sequence.
+
+Результат: hardware recovery/owner replacement стал значительно дешевле по времени и вниманию.
+
+Обобщаемый принцип: если один и тот же recovery/boot ritual повторяется между экспериментами, превратить его в проверенную именованную операцию, сохранив простой rollback path.
+
+### I-021 — Deterministic state capture для физических A/B тестов
+Статус: `OBSERVED`.
+
+Проблема: timed test «открыто → через несколько секунд закрыть → снова открыть» оказался трудно воспроизводимым; marker lines в owner log могли быть затёрты из-за file-offset поведения.
+
+Улучшение:
+- каждое физическое состояние снимается отдельной командой;
+- результат каждого состояния сохраняется в отдельный файл;
+- сравнение выполняется после завершения всех фаз.
+
+Это уменьшает роль памяти/тайминга пользователя и делает аппаратное наблюдение пригодным как evidence.
+
+### I-022 — Known-good baseline + regression isolation
+Статус: `OBSERVED`.
+
+В `CHAT-003` серия v4.0.x регрессий была локализована сравнением с ранее доказанным v3.8, а не продолжением случайных правок. Возврат критического pre-start stage восстановил нормальный H.264 baseline.
+
+Практика:
+- сохранять последнюю hardware-proven baseline;
+- при регрессии сравнивать lifecycle/order и минимальный diff относительно неё;
+- новые hypotheses вводить поверх baseline по одной связной причине;
+- не считать новый version number прогрессом без сохранения доказанных свойств.
+
+Это особенно важно в reverse engineering, где несколько одновременно изменённых неизвестных быстро делают результат неинтерпретируемым.
+
+### I-023 — Preflight перед hardware delivery
+Статус: `OBSERVED`.
+
+После build-time и ABI ошибок стало ясно, что hardware loop должен начинаться только после дешёвых проверок, доступных агенту:
+- compile с реальными flags;
+- проверка archive completeness;
+- self-test/reference vectors для восстановленной математики;
+- анализ подозрительных warnings.
+
+Это переносит дешёвые ошибки с аппаратного контура обратно в агентный/локальный контур.
 
 ## Исходные этапы, ещё не подтверждённые
 
