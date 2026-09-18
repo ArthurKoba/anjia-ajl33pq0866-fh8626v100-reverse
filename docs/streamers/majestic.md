@@ -28,7 +28,7 @@ When an upstream/vendor Majestic build for FH8626V100 becomes available, record 
 
 ## Current compatibility surface
 
-Firmware `work/fh8626v100-majestic@e00cae3d...` contains a source-built ABI probe for the retained FH8852V200 userspace baseline. It is deliberately non-mutating: no sensor, ISP, VI or VENC initialization is called. Its purpose is to separate three questions before the next adapter slice:
+Firmware `work/fh8626v100-majestic@96be29f2...` contains a source-built ABI probe for the retained FH8852V200 userspace baseline. It is deliberately non-mutating: no sensor, ISP, VI or VENC initialization is called. Its purpose is to separate three questions before the next adapter slice:
 
 - are the eight donor libraries loadable as one closure under the FH8626 musl image;
 - which expected Fullhan VMM/SYS/VPSS/VENC/MIPI/ISP symbols are actually resolvable;
@@ -45,9 +45,7 @@ The production request to Majestic maintainers is drafted in `docs/process/fh862
 
 ## Sensor compatibility adapter
 
-The first media-facing source adapter is now staged. FH8852V200 sensor plug-ins use a 0x7c-byte callback object, while the recovered FH8626 GC1054 object is 0x68 bytes with materially different callback ordering. The old direct-plugin experiment therefore crossed a concrete ABI mismatch.
-
-The new Firmware facade presents the FH8852 callback shape and translates the subset already proven on FH8626. It is reached only through the explicit `majestic-fh8626-media-run` path. The normal service remains media-off until the facade and the following ISP/VI/VENC layers receive fresh target evidence.
+The sensor path is now source-first. FH8852V200 sensor plug-ins use a 0x7c-byte callback object, while FH8626 uses a materially different 0x68-byte contract. Firmware presents the FH8852 shape but now backs it with source-native FH8626 GC1054 and source MIPI implementations recovered from the retained platform evidence. Gain, integration, timing, register I/O, format programming and mirror/flip are implemented from the recovered native contract. The normal service remains media-off until the new path receives target evidence.
 
 
 ## Offline compatibility completion

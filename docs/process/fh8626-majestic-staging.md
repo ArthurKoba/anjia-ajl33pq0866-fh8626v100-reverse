@@ -125,12 +125,12 @@ The video/ISP path is explicitly unfinished. Do not enable media by default or c
 
 ## Next gates
 
-1. Owner-build Firmware `work/fh8626v100-majestic@4bd2f8bc...` through Builder `work/fh8626v100-anjia` target `fh8626v100_lite_anjia-ajl33pq0866_majestic`; record resolved Buildroot config plus kernel/rootfs sizes.
+1. Owner-build Firmware `work/fh8626v100-majestic@96be29f2...` through Builder `work/fh8626v100-anjia` target `fh8626v100_lite_anjia-ajl33pq0866_majestic`; record resolved Buildroot config plus kernel/rootfs sizes.
 2. Boot the default media-off service and confirm Majestic directly owns port 80 with stock WebUI/API/WebSocket behavior. Characterize `/metrics` as served by Majestic itself; do not insert a proxy or frontend patch.
 3. Run `majestic-fh8626-abi-probe` and retain complete output. Also record `sha256sum /usr/libexec/majestic-fh8852v200/majestic` so the run is attributable to exact donor bytes.
 4. Run strict media mode first and preserve the first failing API/callsite. Run permissive-stub only to expose later optional call ordering. Then run native-video mode.
 5. Native-video acceptance is VI -> VENC -> balanced descriptor acquire/release -> sustained RTSP at the fixed 1280x720@25 H.264 Baseline/VBR contract.
-6. After base H.264 is stable, wrap only the actually-observed Majestic ISP/image, JPEG and audio APIs using the already-recovered FH8626 primitives; do not invent unused FH8852 layouts.
+6. After base H.264 is stable, validate the staged RTX audio path and characterize JPEG/ISP behavior. The donor JPEG kernel request family and substantial donor ispcore request subset already match FH8626 literally, so preserve compatible donor code unless a concrete public-record/layout mismatch is observed; do not replace layers merely because the SoC name differs.
 7. Regress shutdown/restart, PTZ, lens, illumination and storage.
 8. Pin/reproduce the exact donor binary before product acceptance. Do not copy old Firmware kernel patches, factory blobs or FH8852 kernel-side payloads into the design.
 
@@ -153,9 +153,10 @@ This facade is transitional evidence tooling. It still expects the transitional 
 
 Static donor inspection also shows that not every FH8852 userspace layer needs replacement merely because the SoC differs. At least these literal operations overlap the recovered FH8626 contract exactly:
 
-- FH8852 `libdsp.so` contains `MEDIA_BIND 0xC0084D00`;
-- FH8852 `libdsp.so` contains `MEDIA_UNBIND_SRC 0xC0044D02`;
-- FH8852 `libispcore.so` contains ISP start request `0x0000690A`.
+- FH8852 `libdsp.so` contains `MEDIA_BIND 0xC0084D00` and `MEDIA_UNBIND_SRC 0xC0044D02`;
+- the donor JPEG core uses the same recovered FH8626 requests for memory query/init/uninit, channel config, MJPEG config, start, stop and release: `0xC0104A02`, `0xC0184A00`, `0xC0184A01`, `0xC0104A03`, `0xC0344A05`, `0xC0044A09`, `0xC0044A0A`, `0xC0044A10`;
+- donor `libispcore.so` contains exact FH8626 requests `0x6919`, `0x40016920`, `0x40016921`, `0x690A`, `0x40046924`, `0x40016911`, `0x40046930`, `0x8010690E` and `0x40046908`;
+- donor `libisp.so` and donor `libvmm.so` do not show the same direct-literal overlap for the recovered native request set; VMM is therefore explicitly replaced in the source-first media path.
 
 This is evidence of partial ioctl-family continuity, not proof that the associated structures or complete libraries are binary-compatible. Adapter work should replace a donor layer only after its actual argument/layout contract is shown to differ.
 
