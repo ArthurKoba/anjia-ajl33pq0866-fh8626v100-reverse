@@ -16,18 +16,18 @@
 ## Карта этапов
 
 ### 1. Первичная идентификация и безопасный доступ
-Источник: `CHAT-001`, 2026-08-24/25.
+Источник: `CHAT-005` → `CHAT-001`, 2026-08-24/25.
 
-Из stock boot/runtime были восстановлены базовые характеристики FH8626V100-камеры, dual-lens/sensor architecture, flash layout и U-Boot access. До записи flash сначала получили полный dump и рабочий способ входа/восстановления.
+Начальный bootlog дал SoC/flash/RAM/sensor/network ориентиры и dual-lens признаки. Затем до любой записи NOR был снят полный 8 MiB dump, из него восстановлены U-Boot environment/разметка и доступ к bootloader, после чего напрямую проверен TFTP→RAM путь.
 
 **Переход:** вместо немедленного портирования media — доказать безопасный RAM boot.
 
 Подробнее: [D1](CHRONOLOGY_DETAILS.md#d1--первичная-разведка-и-recovery-baseline).
 
 ### 2. Первый OpenIPC в RAM без замены kernel
-Источник: `CHAT-001`.
+Источник: `CHAT-005` → `CHAT-001`.
 
-Через U-Boot/TFTP был загружен внешний OpenIPC initramfs поверх stock FH8626 Linux. Подтверждены shell, Ethernet, MTD и SSH/userspace без изменения NOR.
+`CHAT-005` формулирует hybrid-RAM стратегию и доказывает U-Boot/TFTP transport; в `CHAT-001` внешний OpenIPC initramfs уже аппаратно загружен поверх stock FH8626 Linux. Подтверждены shell, Ethernet, MTD и SSH/userspace без изменения NOR.
 
 **Milestone:** вопрос «может ли OpenIPC userspace работать на FH8626V100» был закрыт аппаратным запуском.
 
