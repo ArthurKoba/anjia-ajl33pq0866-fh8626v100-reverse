@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_024_POST_REFRESH_PENDING`
+Статус: `READY_FOR_NEXT_SOURCE`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **24**
 - Последний источник: `CHAT-024`
 - Период последнего источника: **2026-08-28**
-- Следующее действие: post-file refresh + 24-file live-state refresh
+- Следующее действие: перейти к `CHAT-025`
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -833,6 +833,24 @@ Reverse contracts впервые массово догоняются кодом 
 - D22: historical establishment of AJL33PQ0866 + CF26/SM OEM-family search and donor corpus.
 - Exact retail SKU remains unresolved by design; own target dump/PCB/software remains authority.
 
+## 24-file live-state refresh после CHAT-024
+
+Read-only проверены current `main:STATE.md`, `main:TASKS.md`, `main:AGENTS.md` и live branches reverse/Firmware/Builder/Linux/Divinus/U-Boot.
+
+Современная authority-модель прежняя: GitHub current source/state/contracts, Google Drive heavy evidence, Ghidra MCP canonical mutable reverse workspace.
+
+Live work tips на момент refresh остались:
+- reverse work `d6e842dd...`;
+- Firmware core `80169887...`, Divinus `bc09d12c...`, Majestic `aabf18a6...`;
+- Builder ANJIA `7db8cc1f...`;
+- Linux work `357c2d13...`, hardware-facing `0dfafa64...`;
+- Divinus work `50e3e300...`;
+- U-Boot `7ac0aa7e...` / `49fe46e9...`.
+
+`STATE.md@a0022eb...` и `TASKS.md@4f57717e...` не изменились с предыдущей сверки; modern coordination drift остаётся отдельной задачей. Frozen audit baseline подтверждён SHA `1358cffd...`.
+
+Исторически `CHAT-024` — external web/OEM research через browser/chat; modern GitHub/Drive/Ghidra roles не backdate'ятся.
+
 ## Следующее действие
 
-Выполнить post-file refresh и expanded live-state refresh после 24 источников. Затем перейти к `CHAT-025`.
+Перейти к `CHAT-025`.
