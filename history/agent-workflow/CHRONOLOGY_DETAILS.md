@@ -641,3 +641,22 @@ External/source audit выявляет архитектурные риски т�
 
 Все external findings остаются semantic leads. Exact offsets/MMIO/layout/ioctl truth должен подтвердить Agent 1 на FH8626.
 
+## D24 — Late Agent-4 watchdog/peripheral corpus
+
+`CHAT-026` — partial export. Earlier Agent-4 messages are explicitly unavailable, so the audit records only the consolidated technical state visible in the surviving tail and does not reconstruct the missing investigation.
+
+Visible consolidated watchdog findings:
+- `/dev/watchdog` is owned by stock Apollo;
+- stock `wdt_stop` closes the watchdog fd and `wdt_start` reopens it;
+- built-in platform driver is identified as `fh_wdt`;
+- watchdog MMIO window and IRQ were localized;
+- kernel symbols include watchdog pause/resume and PMU restart paths;
+- `fh8626v100_restart` reaches the PMU restart path.
+
+Prepared workstation evidence includes the exact stock kernel image/decompressed body/full ARM disassembly, U-Boot/bootstrapping reverse material and watchdog runtime acquisition. These are explicitly classified as heavy reverse artifacts, not ordinary working handoff material.
+
+The same surviving summary preserves two peripheral status decisions:
+- stock human detection uses a local object-detection path with VPSS input and retained model files; OpenIPC adapter/reimplementation remains future work;
+- PTZ software/backend is treated as closed for current acceptance, while physical actuator validation can be deferred and must not return to the current blocker list solely because the actuator is not connected.
+
+Because the original detailed Agent-4 conversation prefix is missing, confidence here applies to the summarized status, not to a reconstructed command-by-command chronology.
