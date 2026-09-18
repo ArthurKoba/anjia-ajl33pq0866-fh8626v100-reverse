@@ -114,3 +114,33 @@ Fullhan media drivers оказались чувствительны к lifetime:
 Положительный момент: неизвестный provenance одного runtime artifact был оставлен как gap, а не заменён выдуманным объяснением.
 
 Отрицательный момент: handoff быстро вырос до очень большого размера. Это один из исторических аргументов в пользу нынешней схемы «короткая карта + детализированные приложения», а не одного бесконечного master-документа.
+
+## D9 — Source-derived ISP runtime
+
+`CHAT-002` начинается уже после первого рабочего hardware pipeline. Главная инженерная смена — отказ от лечения визуальных дефектов одиночными snapshot-регистрами.
+
+Вместо этого:
+- восстанавливается lifecycle `C540C → CB890 → CB970`;
+- writers портируются в stock order;
+- значения вычисляются из runtime context/profile;
+- каждый законченный subset сначала compile-checkится, затем при необходимости проверяется на железе.
+
+Через owner `v4.1.1+` и последовательные runtime stages были подтверждены source-derived writers, H.264 оставался 1280×720@25 и 125 frames / 5 s. Две фиксированные горизонтальные полосы, которые существовали на раннем pipeline, на этом этапе визуально исчезли. Причинность одному конкретному writer не была назначена; отдельно зафиксировано, что standalone `D0238` раньше не помогал.
+
+Зелёный оттенок сохранялся и рассматривался отдельно как незакрытая AE/AWB/Bayer/CCM часть, а не как та же проблема, что горизонтальные полосы.
+
+## D10 — Parallel heavy reverse и authoritative artifacts
+
+Во время дальнейшего reverse обнаружилось, что активный binary `apollo.unpacked` неполон для поздних RW/GOT областей. Workspace был нормализован вокруг полного textual ARM dump; старый неполный artifact и лишние extraction copies были исключены из active work.
+
+После этого heavy reverse был выделен параллельному агенту. Основной агент продолжал canonical runtime/integration, а parallel agent разбирал отдельные функции без hardware tests и без создания второй runtime-ветки.
+
+Ключевые результаты этой фазы:
+- shared signed `int16_t` Q7 sine LUT восстановлен как exact 360-entry table;
+- `CFEB0/D0238` восстановлен exact и прошёл self-test против stock outputs;
+- `D1258` восстановлен exact;
+- `D1724` и `D1DB0` доведены до finished/parameterized reverse units с честно оставленными отсутствующими GOT-backed data objects;
+- затем отдельно восстановлена значимая часть AE/AWB frontend, включая Bayer permutation и gain/state path; final day-mode estimator оставался незакрыт.
+
+Методическая граница: если data-object физически отсутствует в authoritative source, он остаётся unresolved/parameterized; значения не угадываются.
+
