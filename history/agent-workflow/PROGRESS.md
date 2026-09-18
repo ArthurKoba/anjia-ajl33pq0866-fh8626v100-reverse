@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_029_POST_REFRESH_PENDING`
+Статус: `CHAT_030_IN_PROGRESS`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **29**
 - Последний источник: `CHAT-029`
 - Период последнего источника: **2026-08-28 — 2026-08-30**
-- Следующее действие: выполнить post-file refresh
+- Следующее действие: завершить анализ `CHAT-030` (source #31)
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -84,6 +84,7 @@
 | 27 | `CHAT-027` | 2026-08-28 — 2026-08-30 | `DONE` | Agent 1 evolves from static exhaustion into E1–E7 evidence-directed closure; later closes watchdog/human/color/light/dev_ctrl and most HAL, ending with a small optional WDR/GME tail still under correction |
 | 28 | `CHAT-028` | 2026-08-28 — 2026-08-30 | `DONE` | Large orchestrator mega-thread; overlap deduped. Unique tail establishes role pipeline, frontend-independent FH8626 architecture, Divinus-first sidecar strategy, engineering-vs-upstream profiles and firmware/SDK provenance research; exposes reused Agent-N identity collision |
 | 29 | `CHAT-029` | 2026-08-28 — 2026-08-29 | `DONE` | Agent 3 turns reverse contracts into media-runtime/sidecar/RTSP/OpenIPC source staging and Divinus adapter; engineering/upstream profiles split; incomplete repack exposes artifact-verification continuity problem |
+| 30 | `CHAT-030` | 2026-08-30 | `IN_PROGRESS` | Partial Agent 5 kernel/native platform lane: offline audits → cumulative-kernel strategy, pinctrl/PMU/platform completeness, anti-archive-spam correction and shell-over-Python tooling discipline |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
