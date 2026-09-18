@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `READY_FOR_NEXT_SOURCE`
+Статус: `CHAT_013_IN_PROGRESS`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **12**
 - Последний источник: `CHAT-012`
 - Период последнего источника: **2026-08-26**
-- Следующее действие: получить следующий уникальный исторический файл
+- Следующее действие: завершить анализ `CHAT-013`
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -67,6 +67,7 @@
 | 10 | `CHAT-010` | 2026-08-26 | `DONE` | Успешное продолжение из reproducible handoff без повторного bring-up; PTY cold-boot closure; exact `PAE 5011` release + `4D05/4D06` query semantics; full-disassembly self-service; livecapture source ordering fix (hardware retest pending); отдельная SSH regression с отклонённым ControlMaster workaround |
 | 11 | `CHAT-011` | 2026-08-24 — 2026-08-26 | `IN_PROGRESS` | Divergent branch: общий префикс с CHAT-001 примерно до L32775, далее отдельная ветка ISP/VPU/H.264/dev-loop; анализируется только уникальный хвост |
 | 12 | `CHAT-012` | 2026-08-26 | `DONE` | Почти полный duplicate CHAT-004: exact common prefix 8392/8556 строк (~98.1% файла), поэтому повторный dequeue/grey/RAW evidence не пересчитывался. Уникальный хвост: stage summary после RAW-DMA breakthrough и решение начать productionization параллельно, сохранив single-owner `fh8626_daemon` boundary перед Majestic |
+| 13 | `CHAT-013` | 2026-08-27 | `IN_PROGRESS` | Поздний ISP/AWB + dual-lens branch: CA4F4/C949C/C9898 day reverse, AWB stats fix, JXF37 false lead, stock zoom trace, two-GC1054 lens switching, night-mode scope и living workspace/handoff pressure |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
