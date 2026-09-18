@@ -1,22 +1,22 @@
 # Прогресс аудита исторических чатов
 
-Статус: `READY_FOR_NEXT_SOURCE`
+Статус: `CHAT_019_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **18**
-- Последний источник: `CHAT-018`
+- Обработано исторических файлов: **19**
+- Последний источник: `CHAT-019`
 - Период последнего источника: **2026-08-27 — 2026-08-28**
-- Следующее действие: перейти к `CHAT-019`
+- Следующее действие: выполнить post-file refresh
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-018 |
+| Направление | Файл | Состояние после CHAT-019 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 18/?? уникальных/expanded sources обработано |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 19/?? sources обработано |
 | Ошибки/нарушения агентов | `ERRORS.md` | 35 tracked classes/directions |
 | Улучшения и best practices | `IMPROVEMENTS.md` | 62 tracked improvements/directions |
 | История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D18: controlled wide→tele→wide hardware validation |
@@ -73,6 +73,7 @@
 | 16 | `CHAT-016` | 2026-08-27 — 2026-08-28 | `DONE` | Persistent Agent 1 lane: Task1 C949C/C9898 → large Task2 full AE loop; premature completion corrected by full audit; stock GC1054 library + runtime captures close sensor-register contract and day/night replay; Task3 statically closes much of dual-lens/light/audio orchestration; quality-pack v3 adds focused-work/liveness/tool-placement rules |
 | 17 | `CHAT-017` | 2026-08-27 — 2026-08-28 | `DONE` | Persistent Agent 2: image-detail Task2 corrected after premature completion; live Apollo RW/GOT closes APC/NR3D/LTM/D1DB0 tables; final current-day detail handoff + selftest; quality retrospectives consolidated into proposed full reverse-corpus architecture |
 | 18 | `CHAT-018` | 2026-08-27 — 2026-08-28 | `DONE` | Expanded snapshot overlapping CHAT-016; unique tail validates wide→tele→wide on stock, shared AE context/history and implementation-ready dual-lens contract |nded snapshot of Agent 1 branch: prefix overlaps CHAT-016; unique tail adds controlled wide→tele→wide runtime validation, implementation-ready dual-lens closure and Task3 orchestrator supplement |
+| 19 | `CHAT-019` | 2026-08-28 | `DONE` | Partial export: stock RTSP auth behavior and known HTTP JPEG snapshot endpoint; no new major workflow class |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -716,6 +717,17 @@ Current `STATE.md@a0022eb...` не отражает все эти newer work tip
 
 Историческая граница сохранена: эти modern refs не используются как доказательство состояния августа 2026.
 
+## Что CHAT-019 добавил к картине
+
+Источник экспортирован неполностью; недоступный ранний префикс не реконструировался.
+
+Технически подтверждено в доступной части:
+- stock RTSP profile0/profile1 на 8554 требуют auth;
+- изменение /home/dis_onvif_auth не применяется через один rtsp_stop/rtsp_start, потому что auth callback инициализируется раньше в lifecycle Apollo;
+- stock JPEG snapshot доступен по HTTP endpoint :6688/snapshot.jpg.
+
+Workflow: новых классов нет; E-016 получил ещё один небольшой пример лишнего обходного исследования вместо прямого известного действия.
+
 ## Следующее действие
 
-Перейти к `CHAT-019`. Следующая плановая expanded live-state сверка — после `CHAT-021` либо раньше при крупном инфраструктурном переходе.
+Выполнить post-file refresh, затем перейти к `CHAT-020`.
