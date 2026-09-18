@@ -1609,6 +1609,65 @@ The historical Agent 5 plan explicitly stages native kernel work:
 
 This keeps high-risk multimedia/VMM work from destabilizing already hardware-proven platform bring-up.
 
+### I-114 — Critical command protocol должен содержать executable examples и anti-examples
+Статус: `OBSERVED`.
+
+После многократных нарушений в `CHAT-031` пользователь требует отдельный `CRITICAL_COMMAND_PROTOCOL.md`.
+
+В нём фиксируются не абстрактные пожелания, а конкретные patterns:
+- один logical step = один fenced multi-line block;
+- команды внутри отдельными строками;
+- no `&&` chain;
+- no one-block-per-command fragmentation;
+- no backslash continuation;
+- explicit `cd`;
+- Explorer вызывается один раз и делает `/select,"exact-report"`;
+- agent анализирует report и сам выбирает следующую ветку.
+
+Rule с positive/negative examples оказался устойчивее устной коррекции.
+
+### I-115 — Pre-send artifact consistency check: claimed fix должен существовать в bytes
+Статус: `OBSERVED`.
+
+`CHAT-031` показывает, что source/report state надо проверять перед выдачей:
+1. открыть фактический working file;
+2. проверить ожидаемый diff;
+3. собрать/упаковать;
+4. распаковать или перечитать packaged copy;
+5. убедиться, что critical behavior реально изменён;
+6. только потом обновлять README/status.
+
+Это отдельный gate от compile/test: artifact может быть syntactically valid, но содержать старую реализацию.
+
+### I-116 — Authoritative validation surface должен быть явно закреплён
+Статус: `OBSERVED`.
+
+Для Agent 6 пользователь фиксирует:
+- source reading/patch preparation у агента;
+- `git apply --check`, unit/regression, ARM cross-build, ELF/ABI и runtime — только в user WSL;
+- до WSL result статус только `PENDING_WSL`;
+- agent не должен превращать собственный local/static check в target/build PASS.
+
+Это сохраняет один authoritative build environment и устраняет противоречащие результаты разных sandbox/toolchain.
+
+### I-117 — Fail-closed runtime API guards защищают single-owner boundary
+Статус: `OBSERVED`.
+
+Divinus hardening в `CHAT-031` обнаруживает, что startup config запрещал hardware-owned features, но generic HTTP API мог попытаться включить их позднее.
+
+Candidate добавляет fail-closed guards для hardware-owned audio/ISP/JPEG/MJPEG/night controls в FH86 external-source mode, оставляя purely frontend-side muxing доступным.
+
+Принцип: capability restriction должна применяться и на config parse, и на runtime mutation surface.
+
+### I-118 — Provider boundary отделяет feature API от hardware producer
+Статус: `OBSERVED`.
+
+MJPEG в `CHAT-031` переклассифицируется из «невозможно» в «provider отсутствует».
+
+Divinus-side `/image.jpg` / `/mjpeg` можно подготовить независимо, но capability остаётся `unavailable`, пока single hardware owner не предоставляет JPEG frames.
+
+Так feature surface можно развивать заранее без создания второго hardware owner или software decode→reencode workaround.
+
 ## Исходные этапы, ещё не подтверждённые
 
 `CHAT-010` является прямым acceptance-тестом этого принципа: новый агент по handoff сразу продолжает с dequeue boundary, не повторяет sensor/ISP/H.264 bring-up и использует указанные checkpoint paths/constraints. Handoff реально переносит инженерное состояние между чатами.
