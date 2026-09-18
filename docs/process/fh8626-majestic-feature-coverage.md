@@ -22,10 +22,26 @@ validation remain a separate next phase.
 Canonical cross-agent coordination: reverse issue #3.
 
 Current refs:
-- Firmware Majestic: `work/fh8626v100-majestic@cf4c6c47`
-- Divinus: `work/fh8626v100@875e0697`
-- Builder: `work/fh8626v100-anjia@dc7ddabf`
+- Firmware Majestic: `work/fh8626v100-majestic@aabf18a6`
+- Divinus: `work/fh8626v100@809561bd`
+- Builder: `work/fh8626v100-anjia@7db8cc1f`
 - Linux: `work/fh8626v100@357c2d13`
+
+## Sensor callback ABI
+
+The selected GC1054 sensor boundary is offline-closed:
+
+- FH8852 public table is exactly 0x7c bytes; stock FH8626 GC1054 is 0x68;
+- the facade table is typed so recovered function signatures are compile-time checked;
+- all active slots are populated; only reserved +0x48 is NULL;
+- no permissive sensor callback stub remains;
+- GetSensorReg output-pointer semantics, AE base/current frame state, mutable
+  valid-intt/gain callbacks, frame-height control, Bayer map and pre-init
+  Sensor_Isconnect lifetime were rechecked against three FH8852 donor sensors,
+  FH8852 libisp/libispcore and stock FH8626 GC1054;
+- the runtime ABI probe verifies the callback table before full media startup.
+
+Detailed evidence: `docs/process/fh8626-majestic-sensor-abi.md`.
 
 ## Video
 
