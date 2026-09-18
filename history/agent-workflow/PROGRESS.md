@@ -1,26 +1,26 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_022_IN_PROGRESS`
+Статус: `CHAT_022_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **21**
-- Последний источник: `CHAT-021`
+- Обработано исторических файлов: **22**
+- Последний источник: `CHAT-022`
 - Период последнего источника: **2026-08-28**
-- Следующее действие: завершить анализ `CHAT-022`
+- Следующее действие: выполнить post-file refresh
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-021 |
+| Направление | Файл | Состояние после CHAT-022 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 21/?? sources обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 38 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 74 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D20: normalized stock evidence campaign |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.12: matrix-driven hardware evidence acquisition |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 22/?? sources обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 39 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 79 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D21: production catch-up + hardware parity session |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.13: parallel implementation lane |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -76,7 +76,7 @@
 | 19 | `CHAT-019` | 2026-08-28 | `DONE` | Partial export: stock RTSP auth behavior and known HTTP JPEG snapshot endpoint; no new major workflow class |
 | 20 | `CHAT-020` | 2026-08-27 — 2026-08-28 | `IN_PROGRESS` | Central orchestrator: quality rules become automated workspace architecture, clean master-tree, task router/sessions/runbooks/health checks, integration of three specialist lanes and Cross-Fullhan references |
 | 21 | `CHAT-021` | 2026-08-28 | `DONE` | Systematic stock evidence campaign: four canonical imaging states, bidirectional lens/day-night transitions, white-light/audio/JPEG/PTZ, targeted Apollo runtime evidence, static reverse preparation, evidence catalog/state matrix and delta package; OOM/resource and metadata-correction lessons |
-| 22 | `CHAT-022` | 2026-08-28 | `IN_PROGRESS` | Production implementation/hardware parity session: source catch-up, WIDE-default dual sensor, gain/AE/AWB-CCM/APC/NR3D/LTM, GPIO5 TELE root cause, owner lifecycle/control-plane debt, RAW/Bayer next blocker |
+| 22 | `CHAT-022` | 2026-08-28 | `DONE` | Production integration catches code up to reverse; hardware validates WIDE H264, gain/APC/NR3D/LTM/manual AE/AWB→CCM and dual-sensor after GPIO5 bootstrap; lifecycle/control-plane and RAW/Bayer become focused remaining blockers |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -793,6 +793,24 @@ Current `STATE.md@a0022eb...` по-прежнему не отражает все
 
 Исторически `CHAT-021` всё ещё file/handoff/TFTP/WSL-based. Современные GitHub/Drive/Ghidra authority роли не backdate'ятся.
 
+## Что CHAT-022 добавил к картине
+
+### Новый error-class
+- E-039: snapshot-style patching может тихо потерять уже интегрированные features.
+
+### Reinforced
+- E-008/E-014/E-018/E-019/E-025/E-026; E-025 теперь CONSOLIDATED.
+
+### Новые improvements
+- I-075: source consolidation в один canonical tree;
+- I-076: board cold-boot bootstrap как hardware contract;
+- I-077: control plane должен оставаться responsive при video loss;
+- I-078: hardware mechanism PASS отдельно от visual/algorithmic parity;
+- I-079: rejected-hypothesis ledger.
+
+### Technical transition
+Reverse contracts впервые массово догоняются кодом и hardware validation. GPIO5 reset sequence превращает dual sensor в реальный product contract; green cast переводится из CCM tuning в отдельный RAW/Bayer early-color blocker; experimental shutdown показывает возможность healthy restart, но не exact production lifecycle.
+
 ## Следующее действие
 
-Получить следующий уникальный исторический источник. Следующая плановая expanded live-state сверка — после 24-го источника либо раньше при крупном инфраструктурном переходе.
+Выполнить post-file refresh, затем перейти к `CHAT-023`.
