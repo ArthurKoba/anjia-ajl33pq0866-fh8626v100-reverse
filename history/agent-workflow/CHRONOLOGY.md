@@ -147,6 +147,19 @@ Stock zoom trace показал, что wide/tele переключение не 
 
 Подробнее: [D14](CHRONOLOGY_DETAILS.md#d14--awb--ccm-coherent-runtime-и-hardware-validation).
 
+### 15. Cross-Fullhan semantic oracle и системные image-quality gaps
+Источник: `CHAT-015`, 2026-08-27/28.
+
+Центральная research-ветка сравнила FH8626 Apollo с именованными FH8852V100/V201 implementations и построила semantic map значительной части ISP runtime. Homologs использовались только как ориентир; target-specific выводы перепроверялись по FH8626 ARM/dataflow.
+
+Это позволило переосмыслить несколько оставшихся проблем изображения: `CDD6C` идентифицирован как APC/detail/sharpening controller, а `ctx+0x60` — как live total-gain publication, от которой зависят APC/NR2D/YNR/CNR. В custom runtime оба пути были неполны: APC не выполнялся, total gain оставался stale.
+
+Параллельный same-SoC research подтвердил полезность native encoder timestamps и различие sensor/output cadence для 1080p path.
+
+**Переход:** blind reverse сменяется semantic matching + target proof, а оставшиеся image-quality defects формулируются как конкретные missing control/dataflow paths.
+
+Подробнее: [D15](CHRONOLOGY_DETAILS.md#d15--cross-fullhan-semantic-oracle-и-systemic-image-quality-gaps).
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.
