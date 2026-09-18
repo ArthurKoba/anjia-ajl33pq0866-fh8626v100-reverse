@@ -14,11 +14,11 @@ This document records the ownership decision for the mixed FH8626V100 Firmware p
 - Firmware base: `master@47ccdbee45fa5b8eee69c25c7af656cd5d35a28e`.
 - Linux source candidate: `ArthurKoba/openipc-linux/work/fh8626v100@357c2d13e7589db0dbe2bbf89c2ec38b1c036e6e`.
 - Historical Builder experiment WIP: `bcf8658e4aa612ee9afda8c28d52d8ad1674e2f1` (no live branch/tag retained; provenance only).
-- Builder clean staging candidate: `ArthurKoba/openipc-builder/work/fh8626v100-anjia@dac8d565aaa493c4fd83334df3054138b92ed01a`.
+- Builder clean staging candidate: `ArthurKoba/openipc-builder/work/fh8626v100-anjia@a51eec5b294b03e8d16430e9018c3a0441647e49`.
 - Divinus source candidate: `ArthurKoba/openipc-divinus/work/fh8626v100@1e624bd5aca97ba772413d2b00a10314d1db039f`.
 - Firmware Divinus direction: `ArthurKoba/openipc-firmware/work/fh8626v100-divinus@0b12c87c202b12733b0a1b535b56d66891e4ca93`.
 - Firmware Majestic direction: `ArthurKoba/openipc-firmware/work/fh8626v100-majestic@7ed2a17a67fce0c2ee8d80bc798cafe81cfa6c38`.
-- Builder Majestic staging: `ArthurKoba/openipc-builder/work/fh8626v100-anjia-majestic@85c496eab79e662cc2e0e511540265b969ae227a`.
+- Builder Majestic staging: `ArthurKoba/openipc-builder/work/fh8626v100-anjia-majestic@91314aa183e31070bb521364e81dacea569e08dd`.
 
 ## Clean Firmware decision
 

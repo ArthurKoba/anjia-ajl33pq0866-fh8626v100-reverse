@@ -163,13 +163,13 @@ Historical Builder experiment:
 Clean device-profile staging:
 
 - branch: `work/fh8626v100-anjia`
-- tip: `dac8d565aaa493c4fd83334df3054138b92ed01a`
+- tip: `a51eec5b294b03e8d16430e9018c3a0441647e49`
 - base: current Builder `master@e0a643f4942b064a149f470b3c118ebba4daebb5`
 - kernel fragment: `CONFIG_FH8626V100_SD0_1BIT=y`
 
 The staging branch contains only named-device deltas: ANJIA kernel fragment, RTL8188FU selection, microSD/device configuration, illumination helpers and source-built PTZ/lens support. It carries no generic FH8626 kernel config, no kernel patches, no factory `.ko/.so/.bin` and no Divinus source/patch.
 
-Majestic Builder staging is `work/fh8626v100-anjia-majestic@85c496eab79e662cc2e0e511540265b969ae227a`. It adds a separate `fh8626v100_lite_anjia-ajl33pq0866_majestic` target and keeps it CI-opted-out while the required Firmware branch is fork-local. Builder now accepts `OPENIPC_FW_REPO` plus `OPENIPC_FW_REV` so this branch can be assembled without copying the Majestic package back into Builder.
+Majestic Builder staging is `work/fh8626v100-anjia-majestic@91314aa183e31070bb521364e81dacea569e08dd`. It adds a separate `fh8626v100_lite_anjia-ajl33pq0866_majestic` target and keeps it CI-opted-out while the required Firmware branch is fork-local. Builder now accepts `OPENIPC_FW_REPO` plus `OPENIPC_FW_REV` so this branch can be assembled without copying the Majestic package back into Builder.
 
 This branch is `SOURCE_CONFIRMED / BUILDER_STAGING`, not a build or hardware acceptance. It is temporarily listed in Builder CI `NOT_BUILT` because the normal Builder flow still consumes `OpenIPC/firmware`; remove that opt-out only after the clean FH8626 Firmware integration is available from the Firmware source Builder consumes.
 

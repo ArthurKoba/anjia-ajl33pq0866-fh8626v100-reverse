@@ -40,8 +40,8 @@ Firmware:
 
 Builder:
 
-- ANJIA/Divinus development line: `ArthurKoba/openipc-builder/work/fh8626v100-anjia@dac8d565aaa493c4fd83334df3054138b92ed01a`;
-- ANJIA Majestic staging: `work/fh8626v100-anjia-majestic@85c496eab79e662cc2e0e511540265b969ae227a`.
+- ANJIA/Divinus development line: `ArthurKoba/openipc-builder/work/fh8626v100-anjia@a51eec5b294b03e8d16430e9018c3a0441647e49`;
+- ANJIA Majestic staging: `work/fh8626v100-anjia-majestic@91314aa183e31070bb521364e81dacea569e08dd`.
 
 Core platform/kernel fixes should be made on the shared core and then reconciled into both runtime directions. Majestic-specific compatibility code must stay on the Majestic direction unless it becomes demonstrably shared.
 

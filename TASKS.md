@@ -89,7 +89,7 @@ This is an independent platform research task and does **not** block Firmware, D
 26. Use `openipc-firmware/work/fh8626v100@eabd1ccd...` as the streamer-neutral Firmware core candidate. `c437d6eb...` is the post-kernel-config-audit/pre-neutralization checkpoint and `f9146dd4...` is the pre-config-audit checkpoint.
 27. The clean branch consumes `openipc-linux/work/fh8626v100@357c2d13...` directly and contains no duplicate FH8626 kernel patch directory.
 28. Replace the temporary ArthurKoba Linux tarball pin with the OpenIPC-owned Linux ref after the curated kernel series lands upstream.
-29. AJL-specific policy lives in `openipc-builder/work/fh8626v100-anjia@dac8d565...`; its kernel fragment selects `CONFIG_FH8626V100_SD0_1BIT=y`. Builder can now stage a fork/ref through `OPENIPC_FW_REPO` + `OPENIPC_FW_REV`. Majestic has a separate named target on `work/fh8626v100-anjia-majestic@85c496ea...`. Both FH8626 targets remain CI-opted-out until their Firmware bases are available to normal Builder jobs.
+29. AJL-specific policy lives in `openipc-builder/work/fh8626v100-anjia@a51eec5b...`; its kernel fragment selects `CONFIG_FH8626V100_SD0_1BIT=y`. Builder can now stage a fork/ref through `OPENIPC_FW_REPO` + `OPENIPC_FW_REV`. Majestic has a separate named target on `work/fh8626v100-anjia-majestic@91314aa1...`. Both FH8626 targets remain CI-opted-out until their Firmware bases are available to normal Builder jobs.
 30. Keep the shared Firmware core streamer-neutral. Divinus selection belongs on Firmware `work/fh8626v100-divinus@0b12c87c...`; implementation remains in Divinus and must not be copied into Firmware.
 31. Keep factory `.ko/.so/.bin` out of the clean Firmware contribution. All 15 unique opaque payloads are an explicit source-recovery/reverse backlog in `docs/process/fh8626-blob-retirement.md`: first search for complete Fullhan/vendor SDK source or build inputs; if found, integrate reproducible source builds and verify ABI/hardware compatibility; otherwise reverse the factory payload and implement a maintainable source replacement. An identical opaque SDK binary does not close the task, and factory-extracted bytes must not remain in the final runtime.
 32. Before retiring the preservation branch as an evidence source, externalize every still-needed unique proprietary payload that lacks an evidence-store locator.
@@ -124,13 +124,15 @@ This is an independent platform research task and does **not** block Firmware, D
 52. Keep `work/fh8626v100` as the shared streamer-neutral core and periodically merge core fixes into the Divinus/Majestic direction branches. Direction-specific compatibility code must not leak back into core merely because it is convenient.
 53. Do not duplicate camera-specific profiles, kernel patches or streamer implementation source into Firmware.
 
-## P4 — Builder final device profile
+## P4 — Builder cleanup and final device profile
 
-54. Use Builder last as the thin AJL33PQ0866 assembly layer.
-55. Start later Builder work from the then-current upstream `master`, not by blindly extending the preserved diverged branch.
-56. Historical pre-Majestic/WIP Builder SHAs are provenance only. Do not restore their old branch/tag layout; current work lives on the clean ANJIA and Majestic staging lines.
-57. Keep only per-device deltas: package selection, first-boot GPIO/bootstrap policy, sensor/lens defaults, camera-specific audio/PTZ/illumination config, excludes and other device-only packaging.
-58. Do not retain duplicate kernel patches, generic FH8626 runtime code or Divinus/Majestic implementation source in the final Builder profile.
+54. Builder cleanup may proceed independently now. Use `ArthurKoba/openipc-builder/work/fh8626v100-anjia@a51eec5b294b03e8d16430e9018c3a0441647e49` as the main ANJIA development line. Use `work/fh8626v100-anjia-majestic@91314aa183e31070bb521364e81dacea569e08dd` only when a change is Majestic-direction-specific.
+55. Treat `docs/process/fh8626-builder-cleanup.md` as the Builder handoff boundary. Do not reopen Firmware/Linux ownership or restore the historical Majestic WIP commit.
+56. Historical pre-Majestic/WIP Builder SHAs are provenance only. Do not restore their old branch/tag layout.
+57. Keep only per-device deltas: package/runtime selection, first-boot GPIO/bootstrap policy, sensor/lens defaults, camera-specific audio/PTZ/illumination config, excludes and other device-only packaging.
+58. Audit and simplify Builder mechanics, duplicated configuration and runtime-specific files, but do not move generic FH8626 kernel/media implementation back into Builder.
+59. Keep the ANJIA base and Majestic direction reconciled: shared device fixes land on the main ANJIA line first and are merged into the Majestic direction; Majestic-only changes stay on the direction branch.
+60. Run the Builder CI-matrix self-test and an owner build after cleanup before removing FH8626 from `NOT_BUILT`.
 
 ## Standing repository rules
 
