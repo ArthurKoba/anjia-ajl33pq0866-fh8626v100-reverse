@@ -169,6 +169,29 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 
 Ограничение этапа: continuity всё ещё file/handoff-based, а пользователь по-прежнему вручную переносит большие archives и запускает hardware commands. До MCP/repository-native autonomous loop ещё далеко.
 
+### A4.8 — Quality engineering of the agent workflow
+Статус после `CHAT-014`: `OBSERVED`.
+
+Впервые процесс улучшения работы агента сам становится отдельным deliverable проекта. После длинной hardware/reverse-сессии пользователь просит не просто «учесть замечания», а собрать отдельный пакет для агента, который будет улучшать agentic workflow.
+
+В результате появляется quality-improvement pack с отдельными файлами для:
+- retrospective ошибок/удачных паттернов;
+- interaction protocol;
+- command UX;
+- handoff requirements;
+- tooling/automation opportunities;
+- proposed operational state files;
+- инструкции главному оркестратору внедрить изменения в основной процесс.
+
+Особенно важные предложения этого этапа:
+- вынести текущий IP/path/version/compiler/checkpoint из памяти чата в `ENVIRONMENT_CURRENT.md` и machine-readable `CURRENT_SESSION.json`;
+- формализовать hardware experiment как state machine;
+- автоматизировать механический цикл build → stage → capture bundle → Windows-visible folder;
+- минимизировать повторные SCP/password/ручные transfers;
+- считать пользователя hardware-оператором, а не аналитиком.
+
+Это ещё не repository-native automation и не MCP, но уже явный **meta-engineering layer**: система начинает проектировать собственный workflow так же, как технический runtime.
+
 ### A5 — Специализированные MCP/агенты
 Статус: `BOOTSTRAP`.
 
@@ -183,7 +206,7 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 
 В `CHAT-011` появляется ещё одна граница ручного режима: proven development image начинает расходиться с canonical source из-за временных overlay/init/network mutations. Без внешнего debt ledger пользователь вынужден сам напоминать, что перед final port эти изменения нельзя забыть вернуть или интегрировать чисто.
 
-## Уроки CHAT-001/002/003/004/005/006/007/008/009/010/011/012/013 для будущей agentic-системы
+## Уроки CHAT-001/002/003/004/005/006/007/008/009/010/011/012/013/014 для будущей agentic-системы
 
 1. **Текущее runtime state должно быть внешним фактом, а не памятью диалога.** Потери «stock или OpenIPC?» породили дорогие ошибки.
 2. **Agent handoff — необходим, но не должен становиться гигантской свалкой.** Нужны краткая карта и подробные приложения.
@@ -228,6 +251,10 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 41. **Autonomous reverse — это milestone loop, а не поток сообщений.** Агент должен внутренне проверять и отбрасывать гипотезы и репортить только operator blocker или существенный завершённый этап.
 42. **Firmware support не доказывает hardware population.** Driver/blob/format — capability evidence; конкретный BOM подтверждается stock runtime и физическим target evidence.
 43. **Recovered control loop сначала работает в shadow mode.** Для AWB/AE и других динамических алгоритмов безопаснее offline tests → live shadow compute → gated commit, чем сразу писать в hardware state.
+44. **Completion требует отдельного requirement audit.** Главный механизм может быть найден, но задача не должна называться DONE до сверки со всеми исходными deliverables/evidence gates.
+45. **Operational session state должен жить вне памяти чата.** IP, active owner, compiler, checkpoint, Windows/WSL roots и unsafe workflows нужно хранить в одном current-state artifact.
+46. **Эксперимент лучше моделировать state machine.** Это уменьшает invalid captures и делает baseline/change/readback/rollback воспроизводимыми.
+47. **Quality retrospective — такой же инженерный artifact, как reverse handoff.** Повторяющиеся ошибки нужно собирать, версионировать и превращать в правила/automation, а не исправлять устно заново.
 
 ## Следующие исторические переходы, которые нужно искать
 
