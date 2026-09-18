@@ -371,6 +371,21 @@ Agent 4 получает именно этот evidence contract, проводи
 
 Оркестратор остаётся точкой merge/provenance, а пользователь — аппаратным исполнителем и маршрутизатором архивов. Это уже близко к полноценной research pipeline, но shared durable storage между agents ещё не устраняет ручную передачу файлов.
 
+### A4.18 — Role pipeline и orchestrator-owned dependency graph
+Статус после `CHAT-028`: `OBSERVED`.
+
+Центральный orchestrator уже управляет не просто параллельными tasks, а зависимостями между типами работы:
+
+`External Research → Exact FH8626 Reverse → OpenIPC Productization`
+
+и отдельным hardware evidence loop из A4.17.
+
+Productization-agent может открыть integration gap, но не реверсит Apollo сам. Orchestrator маршрутизирует gap во external/reference lane и exact reverse lane, затем возвращает подтверждённый contract обратно implementation/productization.
+
+Это важный сдвиг: специализация определяется не адресом или файлом, а **типом доказательства и ownership результата**.
+
+CHAT-028 одновременно показывает недостаток этой схемы: bare labels `Agent 1/2/3` уже повторяются между orchestration waves. Без stable role/wave IDs provenance начинает путаться даже у центрального агента.
+
 ### A5 — Специализированные MCP/агенты
 Статус: `BOOTSTRAP`.
 
@@ -385,7 +400,7 @@ Agent 4 получает именно этот evidence contract, проводи
 
 В `CHAT-011` появляется ещё одна граница ручного режима: proven development image начинает расходиться с canonical source из-за временных overlay/init/network mutations. Без внешнего debt ledger пользователь вынужден сам напоминать, что перед final port эти изменения нельзя забыть вернуть или интегрировать чисто.
 
-## Уроки CHAT-001…CHAT-027 для будущей agentic-системы
+## Уроки CHAT-001…CHAT-028 для будущей agentic-системы
 
 1. **Текущее runtime state должно быть внешним фактом, а не памятью диалога.** Потери «stock или OpenIPC?» породили дорогие ошибки.
 2. **Agent handoff — необходим, но не должен становиться гигантской свалкой.** Нужны краткая карта и подробные приложения.
@@ -479,6 +494,10 @@ Agent 4 получает именно этот evidence contract, проводи
 90. **Focused handoff обязан замыкать dependencies.** Heavy artifact можно не дублировать, но он должен быть embedded или иметь verified durable locator.
 91. **Максимальный reverse и release-ready reverse — разные цели.** Optional archaeology нельзя случайно смешивать с критическим портинговым backlog.
 92. **При больших disassembly работать нужно address-window/xref методом.** Это быстрее, устойчивее к слабой среде и меньше засоряет контекст.
+93. **Bare Agent N не является durable identity.** Нужны wave/role/task IDs, иначе разные orchestration waves становятся неразличимы.
+94. **Integration gaps должны маршрутизироваться по типу доказательства.** Productization формулирует blocker, external lane даёт semantic lead, exact reverse подтверждает target contract.
+95. **Hardware backend должен переживать смену frontend-а.** Majestic/Divinus — consumers, а camera-level contract остаётся отдельным.
+96. **Engineering bring-up и upstream supply chain — разные gates.** Можно двигать target работу без ложного заявления upstream readiness.
 
 ## Следующие исторические переходы, которые нужно искать
 
