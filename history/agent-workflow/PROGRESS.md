@@ -1,26 +1,26 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_011_IN_PROGRESS`
+Статус: `CHAT_011_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **10**
-- Последний источник: `CHAT-010`
-- Период последнего источника: **2026-08-26**
-- Следующее действие: завершить анализ `CHAT-011`
+- Обработано исторических файлов: **11**
+- Последний источник: `CHAT-011`
+- Период последнего источника: **2026-08-24 — 2026-08-26**
+- Следующее действие: выполнить обязательный post-file refresh
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-010 |
+| Направление | Файл | Состояние после CHAT-011 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 10/?? уникальных источников обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 28 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 40 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | D9 дополнен точной 5011/4D05/4D06 semantics; SSH regression сохранена как pending |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | A1 handoff acceptance и A4.1 self-service reverse подтверждены |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 11/?? уникальных источников обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 29 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 41 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | CHAT-011 добавлен как corroborating divergent branch D5-D8 без дублирования milestones |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | living-master reconciliation и dev-workaround debt добавлены |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -428,6 +428,44 @@ Authority endpoint не изменился:
 
 Пользователь всё ещё остаётся ручным мостом к предыдущему агенту и локальным WSL artifacts; фактического перехода на GitHub/Drive/MCP authority в этом источнике ещё нет.
 
+## Что CHAT-011 добавил к картине
+
+### Source relation
+Файл имеет общий префикс с ранним `CHAT-001` примерно до строки 32775, затем расходится в самостоятельную ветку. Общая часть не пересчитывалась как новое evidence.
+
+### Новый error-class
+- E-029: временный bring-up hack может потерять статус «временный» и незаметно стать частью финальной архитектуры; нужен явный cleanup/upstream debt ledger.
+
+### Усиленные существующие классы
+- E-002: прямой запрет на микрошаги кроме действительно emergency/decision boundaries;
+- E-008/E-022: после power-cycle вместо нового blind reverse надо восстанавливать known-good state; в этой ветке missing delta оказался GPIO5 reset pulse;
+- E-012: intrusive stream-tap снова повесил target;
+- E-019: Windows/WSL execution surface снова пришлось уточнять;
+- E-023: повторные вопросы пользователя о том, сколько осталось до запуска;
+- E-028: SCP regression после SSH/network правок подтверждена независимо.
+
+### Новые/уточнённые improvements
+- I-033 переведён в `CONSOLIDATED`: development reverse docs и final/upstream architecture должны быть разными слоями;
+- I-041: temporary workaround ledger + отдельный final reconciliation gate;
+- living master handoff должен сохранять старое evidence как superseded history, но верхний authoritative state актуализировать;
+- hardware-proven generated image не считается canonical source, пока proven fixes не перенесены в source tree.
+
+### Техническая роль
+Дивергентная ветка независимо проходит уже известные milestones D5-D8:
+- ISP frame path и geometry;
+- integrated one-process/one-ISP-fd bring-up;
+- Annex-B H.264 с SPS/PPS/IDR и активными ISP/PAE IRQ;
+- repeated descriptor остаётся отдельным dequeue gate;
+- persistent owner/daemon как выход из обязательных power-cycle;
+- SSH/RNG/network/PTTY dev-loop optimization.
+
+Новых опорных технических глав не создавалось; источник использован как дополнительное доказательство существующих milestones.
+
+### Agentic role
+К концу ветки master handoff уже обслуживается как living authoritative artifact: параллельный агент работает по старой версии, а вместо нового handoff получает reconciliation prompt на обновление текущего master. Пользователь отдельно требует не потерять список dev-only изменений перед финальным портом.
+
+Фактического перехода на GitHub/Drive/MCP authority в этом источнике ещё нет: координация остаётся через локальный workspace, файлы и ручной handoff между агентами.
+
 ## Следующее действие
 
-Получить следующий уникальный исторический источник. Плановая live-state сверка остаётся после двенадцатого уникального файла.
+Выполнить обязательный post-file refresh. После него ожидать следующий уникальный исторический источник. После `CHAT-012` выполнить плановую live-state сверку.
