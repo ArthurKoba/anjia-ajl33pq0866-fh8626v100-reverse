@@ -64,6 +64,10 @@ Detailed audit and migration contract: `docs/hardware/uboot-port.md`.
 30. Retest behavior-changing areas, especially the newly registered AXI-DMA path, before promoting the reconstruction beyond `SOURCE_CONFIRMED / AUDIT`.
 31. Only after validation, perform the single owner-authorized update of PR-facing history if still required.
 32. Agent work remains browser/API-first; no agent-side clone, Buildroot setup or heavyweight build unless explicitly requested by the owner.
+33. Perform a dedicated FH8626 production kernel-config audit using `docs/process/fh8626-kernel-series-audit.md` methodology. Mature non-Fullhan OpenIPC ports are structural references only; do not copy their symbol choices and do not use FH885x configs as authority.
+34. Classify every non-obvious FH8626 kernel option as `PRODUCTION_REQUIRED`, `BOARD_OPTIONAL`, `BRINGUP_ONLY`, `UNRESOLVED` or `REMOVE`. Trace removals to actual runtime/package/kernel use before editing.
+35. Where practical, separate TFTP/initramfs/NFS/debug support from the production NOR kernel config instead of carrying bring-up facilities permanently.
+36. After config cleanup, owner-side build must compare final `.config`, `uImage` size and boot/runtime behavior against the pre-cleanup candidate before acceptance.
 
 ## P1 — RTC / TSENSOR investigation (non-blocking)
 

@@ -167,6 +167,31 @@ The final-series tree was compared file-by-file against the exploratory clean-se
 
 No SADC cleanup, fork-local metadata or audit documentation is present in Linux.
 
+## Kernel configuration audit method
+
+Do not use another Fullhan port as the configuration authority for FH8626V100. The neighboring Fullhan trees are themselves under active development and may carry historical vendor/debug/bring-up choices that are not appropriate for this target.
+
+Mature OpenIPC ports from established HiSilicon, Goke and Ingenic families may be used only as **architectural references**: they show the intended repository split and the general production pattern, but their individual kernel symbols are not defaults to copy. A spot check on 2026-09-18 confirmed that mature ports themselves disagree on `DEBUG_FS`, `FTRACE`, `CONFIGFS`, keyring and other options, while several retain NFS/initrd support for historical bring-up reasons. Therefore "another port has this disabled" is not sufficient evidence for changing FH8626.
+
+The FH8626 production kernel config must instead be derived from the actual target contract:
+
+1. mandatory SoC/platform facilities required to boot and expose the accepted FH8626 hardware;
+2. generic OpenIPC rootfs/update/network requirements;
+3. runtime interfaces actually consumed by the selected userspace/streamer;
+4. optional board functions selected by Builder fragments rather than the generic SoC config;
+5. explicit bring-up/debug facilities separated from production where practical;
+6. measured image-size effect and target regression testing for any behavior-changing removal.
+
+For every candidate option, classify it as one of:
+
+- `PRODUCTION_REQUIRED`: directly required by boot, rootfs, hardware, userspace ABI or selected package;
+- `BOARD_OPTIONAL`: enabled only by a named Builder/device profile;
+- `BRINGUP_ONLY`: useful for TFTP/initramfs/NFS/debug/recovery but not required in the normal NOR image;
+- `UNRESOLVED`: dependency/use must be traced before changing it;
+- `REMOVE`: no target/runtime dependency remains and removal is source/build safe.
+
+The next config pass must start from the current FH8626 config and trace each non-obvious symbol to actual code/package/runtime use. It must not mechanically minimize the config and must not copy a "smaller" neighboring config.
+
 ## Remaining gates
 
 1. Owner-side contribution validation of `rework/fh8626v100-final-series`: repository/kernel checks, exact OpenIPC build and final `uImage` measurement.
