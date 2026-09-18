@@ -608,3 +608,36 @@ External correlation затем связывает target с широким CF26
 
 Эта линия важна не для переименования проекта в конкретную retail SKU, а для поиска более близких firmware, less-stripped binaries, configs, sensor/ISP data, updater mechanisms и SDK artifacts.
 
+## D23 — Cross-platform gap hunter и targeted reverse leads
+
+`CHAT-025` — persistent Agent 2 branch, теперь явно назначенная External Research / Cross-Platform Gap Hunter.
+
+Первый audit уточняет, что физическая AE математика уже существенно закрыта; remaining problem разделяется на production implementation и live fresh-statistics bridge. Главные P0 research gaps:
+- exact owner lifecycle/re-init/resource ownership;
+- ISP statistics freshness/epoch/cadence;
+- RAW/Bayer/MIPI/early-color contract.
+
+External/source audit выявляет архитектурные риски текущего owner:
+- algo tick связан с encoded descriptor dequeue, а не доказанной stats-ready epoch;
+- HOLD не гарантирует algorithm quiesce;
+- plugin reload разрушает рабочий plugin до полного candidate init;
+- configuration changes не имеют systematic generation invalidation;
+- diagnostic AWB write не равен production AWB→CCM transaction;
+- partial VMM init может оставлять resource tail;
+- full-word MMIO ownership не везде доказан;
+- control/plugin surface слишком широк для production.
+
+Второй targeted pass находит:
+- официальный exact-FH8626V100 adapter/source contract с lifecycle API и ожидаемым Fullhan SDK tree;
+- официальные downloadable FH8626V100 SDK/toolchain package names, честно отмеченные как DISCOVERED_NOT_ACQUIRED;
+- independent FH8626 runtime evidence: sensor/VI около 25 fps, encoder около 16.66 fps — encoded dequeue не является доказанным sensor/statistics epoch;
+- close Fullhan runtime с той же advanced-ISP revision, где day/night transaction включает scene/profile, fps/frame-height, AE bounds, orientation and encoder restart;
+- отсутствие публичной готовой FH8626 OpenIPC target/backend в найденных current sources.
+
+Главный proposed omission:
+`frame/stat-ready → immutable snapshot → algorithms → staged transaction → frame-boundary commit → affected-frame publication`.
+
+Другие targeted leads: distinct pause/quiesce states, rebuild AE limits after timing change, early BLC/CFA checks before CCM, generation invalidation and dependency-ordered VMM free.
+
+Все external findings остаются semantic leads. Exact offsets/MMIO/layout/ioctl truth должен подтвердить Agent 1 на FH8626.
+
