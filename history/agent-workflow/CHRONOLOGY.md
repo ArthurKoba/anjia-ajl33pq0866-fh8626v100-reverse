@@ -270,6 +270,17 @@ Agent 1 сначала исчерпывает master v23 статически и
 
 Подробнее: [D25](CHRONOLOGY_DETAILS.md#d25--evidence-directed-final-reverse-closure).
 
+### 26. OpenIPC product strategy: frontend decoupling и Divinus-first path
+Источник: `CHAT-028`, 2026-08-29/30.
+
+После сведения reverse/evidence/productization веток оркестратор отдельно исследует путь к usable OpenIPC camera. Исторический вывод этой сессии: отсутствие подтверждённого Majestic backend для FH8626 не должно блокировать порт. Hardware/media ownership отделяется от frontend, а Divinus рассматривается как первый открытый consumer готового encoded stream.
+
+Предлагается двухэтапный путь: сначала существующий FH8626 owner/sidecar → Divinus RTSP/Web/API, затем при необходимости native FH8626 HAL. Одновременно engineering bring-up отделяется от upstream-clean supply chain: отсутствие публичного SDK ограничивает чистый upstream, но не обязано блокировать локальную проверку hardware/userspace architecture.
+
+**Переход:** проект начинает проектировать не «одну прошивку вокруг одного streamer-а», а reusable FH8626 backend с заменяемыми frontend-ами и отдельными upstream/provenance gates.
+
+Подробнее: [D26](CHRONOLOGY_DETAILS.md#d26--openipc-product-strategy-и-divinus-first-path).
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.
