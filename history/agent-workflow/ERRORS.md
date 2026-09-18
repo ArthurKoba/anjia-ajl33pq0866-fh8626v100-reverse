@@ -272,7 +272,7 @@ Evidence: `CHAT-003` — пользователь прямо сообщил, ч�
 - проверить наличие всех archive members и соответствие compile command;
 - warnings, которые противоречат ожидаемой архитектуре, анализировать, а не просто отключать `-Werror`.
 
-Evidence: `CHAT-003`. `CHAT-009` — сгенерированный через `sed` source получил лишний `\&ch` и не компилировался; пользователь поймал ошибку на своей сборке, хотя такой syntax/preflight можно было проверить до hardware loop. `CHAT-022` — переданный runtime candidate содержал `Makefile.camera`, в котором отсутствовал `fh8626_stock_ae_state_ref.c`; пользователь поймал linker failures уже на своей WSL-сборке. `CHAT-027` — handoff v3 ссылался из README на документы, которых физически не было в архиве; позже пришлось пересобирать v4. В другой focused Agent 4 pack reverse dependencies были упомянуты, но не включены, из-за чего watchdog heavy corpus пришлось досылать отдельно.
+Evidence: `CHAT-003`. `CHAT-009` — сгенерированный через `sed` source получил лишний `\&ch` и не компилировался; пользователь поймал ошибку на своей сборке, хотя такой syntax/preflight можно было проверить до hardware loop. `CHAT-022` — переданный runtime candidate содержал `Makefile.camera`, в котором отсутствовал `fh8626_stock_ae_state_ref.c`; пользователь поймал linker failures уже на своей WSL-сборке. `CHAT-027` — handoff v3 ссылался из README на документы, которых физически не было в архиве; позже пришлось пересобирать v4. В другой focused Agent 4 pack reverse dependencies были упомянуты, но не включены, из-за чего watchdog heavy corpus пришлось досылать отдельно. `CHAT-029` — Agent 3 «repacked» V2 archive оказался физически неполным: только четыре служебных файла, без runtime/openipc_staging/patches/tools/docs/divinus-analysis, хотя README ссылался на них.
 
 Кандидат: «не передавать пользователю test artifact, пока доступный локальный compile/preflight не прошёл».
 
@@ -585,7 +585,7 @@ Evidence: `CHAT-016`. `CHAT-027` — пользователь многократ
 - общий project handoff не должен иметь приоритет над последней явной specialist assignment;
 - при обнаружении cross-scope полезного факта — записать interface note и вернуться в свой lane, а не захватывать чужую задачу.
 
-Evidence: `CHAT-017`. `CHAT-028` — оркестратор при обсуждении результата Agent 2 смешал в один ответ состояние Agent 1 и Agent 3; пользователь прямо указал, что сейчас речь только о второй external-research ветке.
+Evidence: `CHAT-017`. `CHAT-028` — оркестратор при обсуждении результата Agent 2 смешал в один ответ состояние Agent 1 и Agent 3; пользователь прямо указал, что сейчас речь только о второй external-research ветке. `CHAT-029` — при выдаче lens-switch пакета Agent 3 начал учитывать более позднюю Agent 7 трактовку, хотя пользователь запросил именно его собственную Agent 3 реализацию; после коррекции был выдан чистый пакет без чужой ветки.
 
 Кандидат: обязательный **specialist role-lock / scope preflight** для multi-agent orchestration.
 
@@ -739,6 +739,27 @@ Evidence: `CHAT-027`.
 - при миграции старых материалов сохранять alias map.
 
 Evidence: `CHAT-028`.
+
+### E-043 — Verification status переносится на реконструированный artifact без byte-level continuity
+Статус: `OBSERVED`.
+
+Симптом: исходный artifact когда-то прошёл конкретную проверку, затем его точная версия теряется/пересобирается, но есть риск продолжить называть реконструкцию тем же validated объектом.
+
+В `CHAT-029` после неполного repack полный Agent 3 V2 пришлось восстанавливать заново. Исходный firmware patch, про который раньше утверждался `git apply --check PASS`, побайтно восстановить было невозможно. Правильная поздняя коррекция — понизить реконструированный patch до `RFC/rebase-required`, а не наследовать старый PASS.
+
+Почему мешает:
+- validation относится к конкретным bytes/commit, а не к идее или filename;
+- reconstructed source может отличаться незаметно;
+- handoff получает ложную hardware/build provenance;
+- downstream merge принимает неподтверждённый delta как verified.
+
+Правильный паттерн:
+- verification evidence привязывать к exact artifact identity/commit;
+- реконструкция создаёт новый provenance;
+- старый PASS не переносится автоматически;
+- если exact bytes утеряны, status понижается до нужного gate и проверка повторяется.
+
+Evidence: `CHAT-029`.
 
 ## Пока не подтверждено этим чатом
 
