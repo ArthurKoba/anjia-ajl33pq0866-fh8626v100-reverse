@@ -660,3 +660,101 @@ The same surviving summary preserves two peripheral status decisions:
 - PTZ software/backend is treated as closed for current acceptance, while physical actuator validation can be deferred and must not return to the current blocker list solely because the actuator is not connected.
 
 Because the original detailed Agent-4 conversation prefix is missing, confidence here applies to the summarized status, not to a reconstructed command-by-command chronology.
+
+## D25 — Evidence-directed final reverse closure
+
+`CHAT-027` follows Agent 1 from master-v23 static closure through multiple later evidence/reverse waves.
+
+### Static exhaustion and evidence decomposition
+
+The first broad pass classifies most camera functionality to implementation-ready depth:
+- dual GC1054 startup/runtime switch;
+- physical AE path from prepared statistics to GC1054 registers;
+- early RAW/VI/ISP numeric selectors;
+- main/sub/analytics video roles;
+- audio capture/playback boundaries;
+- illumination/IR-cut;
+- software PTZ boundary;
+- lifecycle architecture.
+
+Instead of continuing generic disassembly, remaining uncertainty is normalized into E1–E7:
+- E1 teardown/re-init/resource release;
+- E2 statistics producer/epoch/ownership;
+- E3 physical RAW/CFA/packing/orientation;
+- E4 DAY/NIGHT/WLIGHT transaction;
+- E5 IQ publication/atomicity;
+- E6 physical PTZ;
+- E7 narrow lifecycle/cadence/history checks.
+
+Agent 2 external leads refine these gaps but are not promoted to target truth.
+
+### Agent 4 feedback and second-pass closure
+
+New target evidence later closes or sharply narrows the boundaries:
+- controlled lifecycle and same-boot reacquisition become target-observed rather than inferred;
+- statistics epoch/double-buffer publication becomes a ~25 Hz live contract;
+- RAW10 1280x720 and physical CFA orientations become measurable target facts;
+- scene failure semantics and staged IQ publication are characterized;
+- software/PTZ ioctl boundary is pinned while physical actuator semantics remain hardware-only.
+
+Agent 1 then revisits the static corpus only at the exact affected functions. Important corrections include:
+- `CED28` is gamma/LUT candidate→active copy/commit, not a generic CCM double-buffer;
+- stock SIGTERM is a fatal path distinct from the normal service deinit chain;
+- userspace stats provider chain is reconstructed around `C6934→C6960→C6C00→C73F8`;
+- WLIGHT is a color/day-style low-light scene, not monochrome NIGHT.
+
+### Watchdog and human detection
+
+A separate heavy kernel/U-Boot corpus allows watchdog closure:
+- DesignWare watchdog register/timeout model;
+- userspace open/feed/close behavior;
+- magic-close nuance;
+- PMU pause/resume and restart;
+- `fh8626v100_restart → fh_pmu_restart` reset chain.
+
+A crucial correction is preserved: stock `wdt_stop` does not simply disable hardware; it stretches timeout, performs magic close and releases the fd.
+
+Human detection is reduced to an implementation-facing contract:
+- VPSS Y8 input around 640x368 / visible 640x360;
+- <=5 fps path;
+- OBJDETECT lifecycle;
+- head/shoulder and person model families;
+- bbox/confidence result layout;
+- event callback routing;
+- later refinement of borrowed frame ownership and `human_interval` special behavior.
+
+Unknown vendor names remain numeric instead of being invented.
+
+### Color/HAL and persistent green cast
+
+After physical CFA evidence, persistent green can no longer be blamed on an unknown Bayer order alone. The strongest implementation-side findings become:
+- incomplete mode1 AWB state chain before full C9F68/CCM publication;
+- unsafe whole-word writes to shared ISP state;
+- missing generation/invalidation discipline across lens/orientation/profile;
+- BLC/GB observed as present but numerically inactive in a captured DAY state;
+- YC `D1DB0` is a later luma/chroma/user-control block rather than an early CFA root cause.
+
+The color path is organized as one contract:
+`GC1054 RAW10 → CFA/RMF → VI/ISP format → BLC → CFA/demosaic → early gains/GB/FC → AWB → C9F68 → CCM → YC → gamma/LUT`.
+
+### Illumination, audio, dev_ctrl and optional ISP
+
+Illumination is closed to implementation-ready depth:
+- IR/white GPIO and IR-cut lines;
+- PWM allocation/on/off/level;
+- modes 0–4;
+- LDR hysteresis and dwell behavior;
+- DAY/NIGHT/WLIGHT integration;
+- stock shutdown does not guarantee a physical safe-off lamp state.
+
+`dev_ctrl` is unpacked offline from its packed executable and classified as a board/service daemon for storage/network/GPIO/MTD/env/shell/reboot, not media/ISP/watchdog ownership.
+
+Late source work moves into optional archaeology: LSC, WDR, GME and remaining writers. The chat ends before the final WDR/GME cleanup is complete; a previously assumed WDR mapping is corrected toward LTM and the true WDR controller is still being localized.
+
+### Methodological outcome
+
+The important historical result is the closure loop itself:
+`static exhaustion → named evidence request → acquisition specialist → target evidence → narrow static revisit → implementation contract`.
+
+This replaces broad reverse as the normal next step.
+
