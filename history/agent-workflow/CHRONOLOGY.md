@@ -171,6 +171,17 @@ Static reverse был дополнен stock sensor-library reverse и targeted 
 
 Подробнее: [D16](CHRONOLOGY_DETAILS.md#d16--полный-ae-loop-и-daynight-parity).
 
+### 17. Image-detail pipeline: APC/NR3D/LTM closure через live RW/GOT evidence
+Источник: `CHAT-017`, 2026-08-27/28.
+
+Persistent Agent 2 довёл image-detail ветку от предварительной классификации до current-day exact contracts. Runtime RW/GOT capture снял blockers, недоступные в RX-only Apollo dump: восстановлены APC/CDD6C codebooks, активный NR3D/D0FEC preset/dispatch, LTM D0630/D0B2C tables и D1DB0 runtime coefficients.
+
+Главный stock-vs-owner gap по softness сформулирован конкретно: сначала отсутствующий APC/detail path, затем активный NR3D, затем динамический LTM. YNR/CNR/NR2D/Purplefri и GB были отделены и перестали ошибочно считаться основными missing sharpness modules.
+
+**Переход:** reverse mutable data objects оформляется как отдельный runtime-evidence layer рядом с уже готовым ARM code corpus; повторный full disassembly перестаёт быть нормальным способом решать GOT/table gaps.
+
+Подробнее: [D17](CHRONOLOGY_DETAILS.md#d17--image-detail-apcnr3dltm-и-runtime-rwgot-closure).
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.
