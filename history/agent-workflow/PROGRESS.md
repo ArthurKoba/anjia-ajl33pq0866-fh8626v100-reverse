@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_021_POST_REFRESH_PENDING`
+Статус: `READY_FOR_NEXT_SOURCE`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **21**
 - Последний источник: `CHAT-021`
 - Период последнего источника: **2026-08-28**
-- Следующее действие: post-file refresh + 21-file live-state сверка
+- Следующее действие: получить следующий уникальный исторический источник
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -771,6 +771,27 @@ Stock становится воспроизводимым ground-truth dataset: 
 ### Agentic role
 Проект переносит governance с reverse corpus на hardware evidence: agent проектирует experiment/state matrix, normalization и evidence catalog; пользователь в основном выполняет физические переключения и stock-команды.
 
+## 21-file live-state refresh после CHAT-021
+
+Read-only проверены current `main:STATE.md`, `main:TASKS.md`, `main:AGENTS.md` и live branches reverse/Firmware/Builder/Linux/Divinus/U-Boot.
+
+Современная authority-модель без изменений:
+- GitHub — current source/state/contracts/manifests;
+- Google Drive — heavy/unique primary evidence;
+- Ghidra MCP — canonical mutable reverse workspace.
+
+Live branch locators на момент refresh:
+- reverse work `d6e842dd...`;
+- Firmware core `80169887...`, Divinus `bc09d12c...`, Majestic `aabf18a6...`;
+- Builder ANJIA `7db8cc1f...`;
+- Linux work `357c2d13...`, hardware-facing `0dfafa64...`;
+- Divinus work `50e3e300...`;
+- U-Boot work/recovery `7ac0aa7e...` / `49fe46e9...`.
+
+Current `STATE.md@a0022eb...` по-прежнему не отражает все newer work tips. Кроме того, `main:AGENTS.md@3f880878...` описывает Builder Majestic staging branch `work/fh8626v100-anjia-majestic`, которой live branch list не содержит. Это current coordination-reconciliation debt; audit branch его не исправляет.
+
+Исторически `CHAT-021` всё ещё file/handoff/TFTP/WSL-based. Современные GitHub/Drive/Ghidra authority роли не backdate'ятся.
+
 ## Следующее действие
 
-Выполнить обязательный post-file refresh и expanded live-state сверку после 21 источника. После этого ожидать следующий уникальный исторический источник.
+Получить следующий уникальный исторический источник. Следующая плановая expanded live-state сверка — после 24-го источника либо раньше при крупном инфраструктурном переходе.
