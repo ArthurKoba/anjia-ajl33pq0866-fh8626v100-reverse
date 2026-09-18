@@ -1,26 +1,26 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_030_IN_PROGRESS`
+Статус: `CHAT_030_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **29**
-- Последний источник: `CHAT-029`
-- Период последнего источника: **2026-08-28 — 2026-08-30**
-- Следующее действие: завершить анализ `CHAT-030` (source #31)
+- Обработано исторических файлов: **30**
+- Последний источник: `CHAT-030`
+- Период последнего источника: **2026-08-30**
+- Следующее действие: post-file refresh + 30-file live-state refresh
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-029 |
+| Направление | Файл | Состояние после CHAT-030 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 29/?? sources обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 43 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 110 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D27: source-level OpenIPC productization lane |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.19: executable productization specialist |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 30/?? sources обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 44 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 113 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D28: native Linux platform bring-up |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.20: cumulative kernel specialist lane |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -84,7 +84,7 @@
 | 27 | `CHAT-027` | 2026-08-28 — 2026-08-30 | `DONE` | Agent 1 evolves from static exhaustion into E1–E7 evidence-directed closure; later closes watchdog/human/color/light/dev_ctrl and most HAL, ending with a small optional WDR/GME tail still under correction |
 | 28 | `CHAT-028` | 2026-08-28 — 2026-08-30 | `DONE` | Large orchestrator mega-thread; overlap deduped. Unique tail establishes role pipeline, frontend-independent FH8626 architecture, Divinus-first sidecar strategy, engineering-vs-upstream profiles and firmware/SDK provenance research; exposes reused Agent-N identity collision |
 | 29 | `CHAT-029` | 2026-08-28 — 2026-08-29 | `DONE` | Agent 3 turns reverse contracts into media-runtime/sidecar/RTSP/OpenIPC source staging and Divinus adapter; engineering/upstream profiles split; incomplete repack exposes artifact-verification continuity problem |
-| 30 | `CHAT-030` | 2026-08-30 | `IN_PROGRESS` | Partial Agent 5 kernel/native platform lane: offline audits → cumulative-kernel strategy, pinctrl/PMU/platform completeness, anti-archive-spam correction and shell-over-Python tooling discipline |
+| 30 | `CHAT-030` | 2026-08-30 | `DONE` | Partial Agent5 kernel lane: hardware-proven platform baseline, offline pinctrl/PMU/peripheral closure and cumulative native-kernel plan; stage-archive spam and Python packaging are explicitly rejected |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -972,6 +972,25 @@ Divinus становится исторически главным открыт�
 ### Technical/agentic transition
 Productization becomes executable source work: media runtime, frame leases/generations, Annex-B/RTP/RTSP, ABI probe, engineering bundle and Divinus external source. Native FH8626 HAL and flashable image remain explicit target gates rather than being simulated by staging.
 
+## Что CHAT-030 добавил к картине
+
+Источник экспортирован частично; ранний Agent 5 bring-up не реконструировался.
+
+### Новый error-class
+- E-044: artifact-per-step fragmentation instead of one cumulative working line.
+
+### Reinforced
+- E-007: Python used as unnecessary packaging/generation layer.
+- E-016: dozens of intermediate stage archives were sent without an operator action boundary.
+
+### Новые improvements
+- I-111: accumulate offline stages, deliver one cumulative validation package.
+- I-112: use simplest native tool for packaging/file operations.
+- I-113: safe native platform closure before media/VMM high-risk layer.
+
+### Technical/agentic transition
+Native kernel work is already past initial boot: machine/INTC/timer/UART/SPI/MTD/watchdog/GPIO/I2C hardware baseline exists; offline source coverage expands toward pinctrl/PMU/USB/SDIO/DMA/audio. The desired continuity unit becomes a cumulative source line rather than numbered transport archives.
+
 ## Следующее действие
 
-Выполнить post-file refresh, затем перейти к `CHAT-030` (source #31). После CHAT-030 выполнить expanded live-state refresh.
+Выполнить post-file refresh и expanded live-state refresh после 30 источников. Затем перейти к `CHAT-031` (source #32).
