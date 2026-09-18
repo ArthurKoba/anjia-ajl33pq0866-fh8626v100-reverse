@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_009_POST_REFRESH_PENDING`
+Статус: `READY_FOR_NEXT_SOURCE`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **9**
 - Последний источник: `CHAT-009`
 - Период последнего источника: **2026-08-26**
-- Следующее действие: post-file refresh + 9-file live-state сверка
+- Следующее действие: получить следующий уникальный исторический файл
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -370,6 +370,31 @@ I-019, I-032 и I-034 переведены в `CONSOLIDATED`.
 
 При этом authority всё ещё локальная: пользователь остаётся маршрутизатором WSL files, UART state и handoff между чатами. Перехода к Drive/GitHub/MCP в этом источнике нет.
 
+## 9-file live-state refresh после CHAT-009
+
+Выполнено после девятого уникального источника.
+
+Проверено:
+- актуальные `STATE.md`, `TASKS.md`, `AGENTS.md` на `main`;
+- branch topology reverse/Firmware/Builder/Linux/Divinus/U-Boot;
+- современная authority-модель GitHub / Google Drive / Ghidra MCP.
+
+Authority endpoint не изменился:
+- GitHub — current source/docs/contracts/state/manifests;
+- Google Drive — heavy/unique primary evidence;
+- Ghidra MCP через Koba MCP Bridge — canonical mutable reverse workspace.
+
+Современный engineering state заметно продвинулся относительно ранних refresh:
+- U-Boot `fh8626v100-mainline` теперь описан как OpenIPC-native source/build accepted, но ещё не hardware-pass;
+- stock-compatible U-Boot сохранён отдельной recovery/evidence веткой;
+- Linux `work/fh8626v100` содержит curated source series, а `fullhan-fh8626v100` остаётся hardware-tested/read-only integration reference;
+- Firmware сохраняет shared core + Divinus/Majestic runtime lines;
+- Divinus work branch и reverse work branch продолжают двигаться параллельно.
+
+Эти refs используются только как **современные locators**. Они не подменяют исторический факт, что `CHAT-009` ещё работал локальными WSL/checkpoint/handoff средствами и не имел GitHub/Drive/Ghidra authority workflow.
+
+Особенно хорошо видно эволюционное расстояние: в `CHAT-009` context limit требовал гигантского ручного handoff; в текущем проекте handoff опирается на repository authority, manifests, branch roles и external reverse workspace.
+
 ## Следующее действие
 
-Выполнить обязательный post-file refresh и плановую 9-file live-state сверку с `STATE.md`, `TASKS.md` и relevant branches. После этого ожидать следующий уникальный исторический источник.
+Получить следующий уникальный исторический источник. Следующая плановая расширенная live-state сверка — после двенадцатого уникального файла либо раньше при крупном противоречии/инфраструктурном переходе.
