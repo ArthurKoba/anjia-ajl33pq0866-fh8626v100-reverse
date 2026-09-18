@@ -85,7 +85,7 @@ Host/source checks never imply target hardware acceptance.
 Changes to related repositories such as `openipc-divinus`, `openipc-builder`, `openipc-firmware`, `openipc-linux` and `u-boot-fullhan` must use the single persistent FH8626V100 work branch for that repository. The no-agent-PR rule applies there as well.
 
 Current FH8626V100 branch roles:
-- reverse repository: production/state `main`; work `work/fh8626v100`;
+- reverse repository: production/state `main`; work `work/fh8626v100`. A legacy Bridge-reserved `production` ref may exist but is inactive and must not be used for project work;
 - Firmware: production `master`; work `work/fh8626v100`;
 - Builder: production `master`; work `work/fh8626v100-anjia`;
 - Linux: hardware-proven/PR-facing production line `fullhan-fh8626v100`; work `work/fh8626v100`;

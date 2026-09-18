@@ -25,6 +25,8 @@ Checked: `2026-09-18`.
 
 These refs are working-state locators, not automatic upstream bases or contribution sets.
 
+Active FH8626 branch model is deliberately limited to one production/integration line plus one work line per component. Historical states are tags/SHAs, not live branches. In this reverse repository, `main` is production/state and `work/fh8626v100` is the only work branch. The old `production@c1e94ad41cf3ff7a9b9f862e0526e5425191df77` ref is Bridge-reserved and cannot be deleted by the current agent; it is inactive and must be ignored.
+
 ### U-Boot
 
 Repository: `ArthurKoba/u-boot-fullhan`.
@@ -32,7 +34,7 @@ Repository: `ArthurKoba/u-boot-fullhan`.
 Current OpenIPC-native working line:
 
 - branch: `fh8626v100-mainline`
-- observed tip: `227bcb40f68147864d778f1431973566cca383d8`
+- observed tip: `7ac0aa7e83fb859b90c8b5e11bf617e367f2bd1d`
 - evidence level: `SOURCE/BUILD ACCEPTED`, not `HARDWARE_PASS`
 
 Preserved hardware-proven stock-compatible reference:

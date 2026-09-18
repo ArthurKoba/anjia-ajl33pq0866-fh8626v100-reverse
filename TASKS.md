@@ -6,8 +6,7 @@ Only actionable current or next-phase work belongs here.
 
 The agreed OpenIPC-native implementation is now the current U-Boot working line:
 
-- `ArthurKoba/u-boot-fullhan/fh8626v100-mainline@227bcb40f68147864d778f1431973566cca383d8`
-- equivalent implementation ref: `fh8626v100-openipc-native@227bcb40...`
+- `ArthurKoba/u-boot-fullhan/fh8626v100-mainline@7ac0aa7e83fb859b90c8b5e11bf617e367f2bd1d`
 - preserved hardware-proven factory-compatible recovery state: `fh8626v100-stock-compatible@49fe46e9ddb786e232d1359f9cee68c914a3a8db`
 
 The source/build implementation pass is complete. Do not reopen stock-layout design work unless target evidence contradicts the recovered contract.
