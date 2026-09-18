@@ -441,6 +441,21 @@ Agent 7 впервые даёт особенно чистый пример то�
 Важное изменение — failed branch больше не пытается сохранить лицо повышением версии. Он обязан явно сказать, какие части мусорны/неподтверждены и что не должно попасть в canonical line. Это защищает multi-agent fan-in от ложной уверенности и превращает неудачную hardware-сессию в reusable negative evidence.
 
 
+### A4.23 — Semantic Ghidra reverse workspace
+Статус после `CHAT-033`: `OBSERVED`.
+
+После накопления ошибок flat-disassembly workflow проект меняет сам интерфейс между binary и агентом. Цель больше не «дать LLM больше ARM TXT», а построить machine-generated semantic substrate:
+- decompiled function bodies;
+- CFG/call graph/XREF;
+- shared types/symbols;
+- unresolved indirect flow;
+- cross-binary links;
+- confidence/provenance;
+- snapshot/delta exchange между чатами.
+
+Ghidra предлагается как локальный WSL analyzer/headless backend, а обычные файлы/knowledge index — как общий язык browser-agents. Это важный шаг к будущему Ghidra MCP: reverse knowledge начинает жить во внешней mutable model, а не в памяти одного чата.
+
+
 ### A5 — Специализированные MCP/агенты
 Статус: `BOOTSTRAP`.
 

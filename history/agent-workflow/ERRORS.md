@@ -823,6 +823,27 @@ Evidence: `CHAT-031`.
 
 Evidence: `CHAT-032` — Agent 7 R13–R18; итоговый emergency handoff сам фиксирует нарушение working Agent 3 contract, ложные successful logs и do-not-merge quarantine.
 
+### E-047 — Flat disassembly считается достаточным доказательством полного reverse
+Статус: `OBSERVED`.
+
+В `CHAT-033` пользователь прямо связывает повторные тяжёлые ошибки reverse с тем, что агенты читают большие objdump/ASM-фрагменты как текст и пропускают переходы, indirect calls, switch/jump tables, error paths, ownership и связи через структуры/globals.
+
+Проблема не в самом ASM — он остаётся окончательным proof layer. Ошибка в том, что flat ASM/TXT используется как единственное representation и агент не обязан перечислять неразрешённые control-flow edges.
+
+Почему мешает:
+- пропущенный `blx reg` может скрывать ключевой callback contract;
+- границы функций/ветвей и loops интерпретируются вручную и нестабильно;
+- один локально правдоподобный pseudo-contract заражает последующие implementation tasks;
+- другой агент не видит, что часть CFG осталась unresolved.
+
+Правильный паттерн:
+- decompiler/CFG/XREF/callers/callees/types должны строиться специализированным tooling;
+- любое indirect call/jump-table uncertainty идёт в explicit `UNRESOLVED`;
+- pseudo-C используется для понимания, ASM — для проверки критических выводов;
+- статус COMPLETE запрещён, пока остаются существенные unresolved control-flow edges.
+
+Evidence: `CHAT-033` — пользователь инициирует смену методологии после серии пропущенных contracts; Ghidra semantic model формулируется как ответ на системную проблему flat objdump workflow.
+
 ## Пока не подтверждено этим чатом
 
 - исходная гипотеза о специальном env-паттерне для значений, которые «съедает» консоль — в `CHAT-001` недостаточно чистого доказательства; оставить на следующие файлы;
