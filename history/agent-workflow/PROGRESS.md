@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `READY_FOR_NEXT_SOURCE`
+Статус: `CHAT_025_IN_PROGRESS`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **24**
 - Последний источник: `CHAT-024`
 - Период последнего источника: **2026-08-28**
-- Следующее действие: перейти к `CHAT-025`
+- Следующее действие: завершить анализ `CHAT-025`
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -79,6 +79,7 @@
 | 22 | `CHAT-022` | 2026-08-28 | `DONE` | Production integration catches code up to reverse; hardware validates WIDE H264, gain/APC/NR3D/LTM/manual AE/AWB→CCM and dual-sensor after GPIO5 bootstrap; lifecycle/control-plane and RAW/Bayer become focused remaining blockers |
 | 23 | `CHAT-023` | 2026-08-28 | `DONE` | Orchestrator formalizes reverse vs implementation vs evidence lanes, retracts premature v20/v21 as official distribution points, introduces frozen-master integration barrier and layered progress ontology |
 | 24 | `CHAT-024` | 2026-08-28 | `DONE` | OEM/device research triangulates AJL33PQ0866/YGT software identity, CF26/SM PCB family and physical 3.6/12 dual-lens configuration; builds ranked donor/reference corpus without promoting any retail SKU to target truth |
+| 25 | `CHAT-025` | 2026-08-28 — 2026-08-29 | `IN_PROGRESS` | Agent 2 Cross-Platform Gap Hunter: external SDK/BSP/OEM source search, lifecycle/stats/RAW architecture audit, exact-FH8626 AWS/Tuya leads and targeted reverse inputs for Agent 1/OpenIPC |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
