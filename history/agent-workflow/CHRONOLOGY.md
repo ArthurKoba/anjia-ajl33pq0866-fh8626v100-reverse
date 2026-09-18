@@ -136,6 +136,17 @@ Stock zoom trace показал, что wide/tele переключение не 
 
 Подробнее: [D13](CHRONOLOGY_DETAILS.md#d13--day-awb-mode1-и-dual-gc1054-lens-architecture).
 
+### 14. AWB → CCM coherent runtime и hardware validation
+Источник: `CHAT-014`, 2026-08-27.
+
+Параллельный Agent 3 восстановил цепь `CB4F0/CAFC0 → C9F68 → CE670/CE764` и доказал, что прямой AWB MMIO step обновляет gains, но не downstream color state. Новый coherent path обновил `A8/AA`, anchor/interpolation state и CCM; hardware execution совпал с offline prediction.
+
+Контролируемый тест `512,512,512 → 544,480,544` дал pair `3→2`, weight `43`, изменение `B0/B1/B2` и единственное изменение CCM word `+4C8`. Отдельно доказано, что AWB restore не восстанавливает CCM автоматически, поэтому rollback должен учитывать оба state layer.
+
+**Переход:** color pipeline перестал быть чисто статическим reverse и стал hardware-validated coherent state transition.
+
+Подробнее: [D14](CHRONOLOGY_DETAILS.md#d14--awb--ccm-coherent-runtime-и-hardware-validation).
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.
