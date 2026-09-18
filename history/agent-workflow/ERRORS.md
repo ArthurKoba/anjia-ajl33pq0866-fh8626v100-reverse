@@ -120,7 +120,7 @@ Evidence: `CHAT-001`; `CHAT-004` — для анализа VPU dump агент �
 
 Правильный паттерн: перед командами, зависящими от режима, держать явный **current-state header**: target environment, boot mode, transport, активные процессы/owners, dirty/clean state.
 
-Evidence: `CHAT-001` — несколько признанных самим агентом потерь контекста. `CHAT-002` добавляет повторный пример: после reboot агент забыл, что `/tmp` очищается и test binaries/profile нужно снова загрузить из WSL. `CHAT-003` подтверждает тот же класс ещё раньше: агент повторно просил уже существующий dump, забывал очистку `/tmp` после RAM-boot reboot и нуждался в напоминании о dual-camera context. `CHAT-004` — агент предложил заново генерировать полный Apollo disassembly, хотя пользователь уже передавал его архивом; после напоминания artifact был найден и повторная работа отменена. CHAT-007: несколько дорогих потерь state — OpenIPC/stock перепутаны, предлагается лишний reboot, забывается локальная stock-копия и выбирается неправильный transport. `CHAT-008` — после потери `/tmp` прежние helper'ы пришлось заново разыскивать в checkpoint; эпизод показывает цену отсутствия явной active-artifact карты. `CHAT-011` — после power-cycle агент заново восстанавливал pipeline и пользователь справедливо напомнил, что он уже раньше запускался; выяснилось, что был пропущен обязательный cold-boot GPIO5 reset pulse. `CHAT-013` — текущий boot default, mount state и уже имеющиеся Apollo/JXF37 artifacts несколько раз приходилось напоминать; особенно чистый пример — повторный запрос Apollo, который уже был authoritative в workspace. `CHAT-014` — агент несколько раз терял active owner/version и текущую точку эксперимента, из-за чего предлагал старый `v4.1.9` и заново искал уже документированный toolchain. `CHAT-017` — агент несколько раз забывал известный TFTP/Windows root и существующий authoritative ARM_FULL, из-за чего предлагал неверный Downloads path и повторную подготовку Apollo.
+Evidence: `CHAT-001` — несколько признанных самим агентом потерь контекста. `CHAT-002` добавляет повторный пример: после reboot агент забыл, что `/tmp` очищается и test binaries/profile нужно снова загрузить из WSL. `CHAT-003` подтверждает тот же класс ещё раньше: агент повторно просил уже существующий dump, забывал очистку `/tmp` после RAM-boot reboot и нуждался в напоминании о dual-camera context. `CHAT-004` — агент предложил заново генерировать полный Apollo disassembly, хотя пользователь уже передавал его архивом; после напоминания artifact был найден и повторная работа отменена. CHAT-007: несколько дорогих потерь state — OpenIPC/stock перепутаны, предлагается лишний reboot, забывается локальная stock-копия и выбирается неправильный transport. `CHAT-008` — после потери `/tmp` прежние helper'ы пришлось заново разыскивать в checkpoint; эпизод показывает цену отсутствия явной active-artifact карты. `CHAT-011` — после power-cycle агент заново восстанавливал pipeline и пользователь справедливо напомнил, что он уже раньше запускался; выяснилось, что был пропущен обязательный cold-boot GPIO5 reset pulse. `CHAT-013` — текущий boot default, mount state и уже имеющиеся Apollo/JXF37 artifacts несколько раз приходилось напоминать; особенно чистый пример — повторный запрос Apollo, который уже был authoritative в workspace. `CHAT-014` — агент несколько раз терял active owner/version и текущую точку эксперимента, из-за чего предлагал старый `v4.1.9` и заново искал уже документированный toolchain. `CHAT-017` — агент несколько раз забывал известный TFTP/Windows root и существующий authoritative ARM_FULL, из-за чего предлагал неверный Downloads path и повторную подготовку Apollo. `CHAT-021` — после reboot использовался старый hardcoded heap range/PID и позже забывался уже известный `/bin/tftp`; состояние target/capability приходилось восстанавливать по предыдущему preflight.
 
 Кандидат: добавить обязательную state-awareness для длинных hardware-сессий.
 
@@ -172,7 +172,7 @@ Evidence: `CHAT-001`. `CHAT-008` — после ответа «осталось 
 - не добавлять concurrent ioctl в живой pipeline без доказанной reentrancy;
 - перед рискованным instrumentation иметь clean recovery/checkpoint.
 
-Evidence: `CHAT-001`; `CHAT-003` — массовый live-MMIO rollback на работающем ISP привёл к зависанию камеры, после чего метод был запрещён и init перенесён в правильную pre-start lifecycle-фазу. `CHAT-009` — предложенный `rmmod isp/media_process` на живом vendor stack оставил висячий IRQ action; чтение `/proc/interrupts` после unload вызвало kernel Oops. Агент прямо признал, что unload делать было нельзя. `CHAT-011` — `LD_PRELOAD` stream tap на живом pipeline полностью повесил камеру; SSH и UART перестали отвечать. Это повторно подтверждает, что diagnostic instrumentation не должна добавлять concurrent/stateful ioctl на vendor fd. `CHAT-014` — попытка hot-replace через `kill -9` старого owner без reboot оставила vendor sensor/device state неконсистентным; новый owner получил массовые sensor-write failures и повторная init не прошла.
+Evidence: `CHAT-001`; `CHAT-003` — массовый live-MMIO rollback на работающем ISP привёл к зависанию камеры, после чего метод был запрещён и init перенесён в правильную pre-start lifecycle-фазу. `CHAT-009` — предложенный `rmmod isp/media_process` на живом vendor stack оставил висячий IRQ action; чтение `/proc/interrupts` после unload вызвало kernel Oops. Агент прямо признал, что unload делать было нельзя. `CHAT-011` — `LD_PRELOAD` stream tap на живом pipeline полностью повесил камеру; SSH и UART перестали отвечать. Это повторно подтверждает, что diagnostic instrumentation не должна добавлять concurrent/stateful ioctl на vendor fd. `CHAT-014` — попытка hot-replace через `kill -9` старого owner без reboot оставила vendor sensor/device state неконсистентным; новый owner получил массовые sensor-write failures и повторная init не прошла. `CHAT-021` — попытка сохранить большой physical-RAM dump в RAM-backed `/tmp` создала memory pressure/OOM и kernel убил Apollo; захват пришлось признать невалидным после этой точки.
 
 ### E-013 — Изменение артефакта без запроса на изменение
 Статус: `CONSOLIDATED`.
@@ -307,7 +307,7 @@ Evidence: `CHAT-008` — агент попросил прикрепить фай
 
 Кандидат: bounded-search rule для grep/find/objdump.
 
-Evidence: `CHAT-016` — широкие/рекурсивные file scans заметно тормозили работу; пользователь потребовал focused workspace и точечный `grep/sed` по конкретным disassembly-файлам. `CHAT-017` — агент предлагал рекурсивный `find` по нескольким большим деревьям даже после того, как точный путь TFTP-файла уже был известен пользователю.
+Evidence: `CHAT-016` — широкие/рекурсивные file scans заметно тормозили работу; пользователь потребовал focused workspace и точечный `grep/sed` по конкретным disassembly-файлам. `CHAT-017` — агент предлагал рекурсивный `find` по нескольким большим деревьям даже после того, как точный путь TFTP-файла уже был известен пользователю. `CHAT-021` — слишком широкий перенос Windows corpus через wildcard начал захватывать лишние деревья; пользователь потребовал копировать только корневые `fh_stock_*`/`fh_static_*` artifacts.
 
 ### E-021 — Перенос команд через обратный слеш вопреки базовому правилу
 Статус: `OBSERVED`.
@@ -375,7 +375,7 @@ Evidence: `CHAT-014` — перед `scp` снова был забыт обяз�
 
 Правильный паттерн: один раз снять capability map конкретного runtime (`busybox --list`, `command -v`), тяжёлый анализ делать в WSL, target использовать для runtime evidence.
 
-Evidence: `CHAT-007`. `CHAT-013` — на минимальном target снова предполагались `file` и другие host-like utilities; команда упала, после чего анализ пришлось переносить в WSL. `CHAT-016` — stock shell не имел `od` и `tr`, BusyBox tar не поддерживал ожидаемый `-z`; несколько команд пришлось переделывать под фактический capability set.
+Evidence: `CHAT-007`. `CHAT-013` — на минимальном target снова предполагались `file` и другие host-like utilities; команда упала, после чего анализ пришлось переносить в WSL. `CHAT-016` — stock shell не имел `od` и `tr`, BusyBox tar не поддерживал ожидаемый `-z`; несколько команд пришлось переделывать под фактический capability set. `CHAT-021` — агент снова предполагал gzip/hexdump/od/TFTP semantics без опоры на уже снятый tool preflight; BusyBox/stock capability различия вызвали лишние итерации.
 
 ### E-027 — Хрупкие interactive paste-блоки на UART
 Статус: `CONSOLIDATED`.
@@ -608,6 +608,49 @@ Evidence: `CHAT-017`.
 Evidence: `CHAT-020`.
 
 Кандидат: **fixed progress ontology + module matrix вместо плавающей общей оценки**.
+
+### E-037 — Diagnostic capture без resource budget на constrained target
+Статус: `OBSERVED`.
+
+Симптом: read-only операция считается «безопасной» только потому, что она ничего не пишет в hardware state, но не учитывается объём RAM/tmpfs/I/O.
+
+В `CHAT-021` попытка сохранить примерно полный physical-RAM image stock FH8626 в `/tmp` создала memory pressure/OOM; kernel убил Apollo. Даже частичного многомегабайтного dump оказалось достаточно, чтобы испортить runtime state.
+
+Почему мешает:
+- read-only capture всё равно может разрушить наблюдаемую систему;
+- после OOM любые последующие данные того boot нельзя считать clean evidence;
+- повтор эксперимента требует reboot и восстановления state.
+
+Правильный паттерн:
+- перед capture считать size и available target memory/storage;
+- для constrained target использовать small targeted ranges;
+- крупные данные stream/chunk-transfer на host с немедленным удалением;
+- иметь per-capture resource budget и abort threshold;
+- после OOM/process death явно маркировать dataset invalid after event.
+
+Evidence: `CHAT-021`.
+
+### E-038 — Capture manifest описывает intended state вместо фактически наблюдаемого
+Статус: `OBSERVED`.
+
+Симптом: experiment archive называется и размечается по ожидаемому действию, но фактический physical/application state отличается.
+
+В `CHAT-021`:
+- white-light coupled capture был записан как TELE, хотя пользователь наблюдал WIDE;
+- archive, названный `MIC_UPLINK`, по UART/dataflow оказался talkback/downlink через AO/speaker path.
+
+Почему мешает:
+- неверный label превращается в ложное evidence;
+- downstream diff/reverse может приписать изменения неправильной подсистеме;
+- переименование без provenance стирает историю ошибки.
+
+Правильный паттерн:
+- manifest должен хранить intended state **и observed/validated state** отдельно;
+- после capture сверять UART/process/sensor evidence с label;
+- исправление хранить как metadata correction, не молча переписывать raw source;
+- superseded/mislabeled capture сохранять в provenance, но исключать из canonical state set.
+
+Evidence: `CHAT-021`.
 
 ## Пока не подтверждено этим чатом
 
