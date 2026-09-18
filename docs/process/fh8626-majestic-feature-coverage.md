@@ -1,162 +1,167 @@
 # FH8626 Majestic feature coverage
 
-Status: FULL_FEATURE_AUDIT_IN_PROGRESS
+Status: FULL_FEATURE_OFFLINE_CLOSURE / BUILD_AND_HARDWARE_PENDING
 
-This document measures product-facing Majestic feature coverage, not merely the
-ability to start the media stack. A feature is COMPLETE only when the Majestic
-public API surface is implemented or deliberately delegated to a compatible
-vendor layer and the required runtime ownership is understood.
+This document measures product-facing Majestic feature coverage, not merely
+loader compatibility.
 
 ## Current estimate
 
-Approximate offline feature coverage: 75-80%.
+Approximate offline coverage for the current FH8852V200 Lite Majestic feature
+surface on FH8626V100: **~97%**.
 
-This is intentionally lower than the earlier "offline port complete" label.
-That earlier label referred to the minimum source compatibility path needed to
-reach a real target run. It did not mean every Majestic setting/API was covered.
+The remaining percentage is not core H.264/JPEG/audio functionality. It is
+mainly unobserved or SDK-only controls such as crop/rotate/slice variants,
+capability advertisement for hardware-unsupported modes, and target-only
+lifecycle validation.
 
-## Video codecs and channels
+Canonical cross-agent coordination: reverse issue #3.
 
-| Area | Status | Notes |
-|---|---|---|
-| H.264 channel 0 create/start/stop | IMPLEMENTED | Native FH8626 PAE path |
-| H.264 profile | IMPLEMENTED | Baseline/Main public values recovered |
-| H.264 visible resolution | IMPLEMENTED | Public SetChnAttr now translated instead of fixed 720p |
-| H.264 GOP/key interval | IMPLEMENTED | Taken from public SetChnAttr |
-| H.264 initial RC modes | IMPLEMENTED/PENDING_REVIEW | Apollo translator recovered for public modes 3/4/5/6/0xB -> native RC modes |
-| H.264 realtime RC change | IMPLEMENTED | Six public words + channel -> native 0x1c realtime RC request |
-| H.264 full SetRCAttr/GetRCAttr | PARTIAL | Native 0x54 requests are known; standalone public union translation still being completed |
-| H.264 IDR | IMPLEMENTED | Native force-I |
-| H.264 entropy/deblock/slice/intra-refresh | NOT_IMPLEMENTED | Exports currently loader stubs |
-| ROI/background QP/lost-frame/de-breath | NOT_IMPLEMENTED | Exports currently loader stubs |
-| rotate | NOT_IMPLEMENTED | VENC/VPSS rotate exports are stubs |
-| second/sub stream | NOT_COMPLETE | Current source path is channel-0-centric; VPU/VENC bind, PAE memory and stream lease ownership need per-channel implementation |
-| H.265/HEVC | NOT_IMPLEMENTED | Apollo contains /dev/hevc userspace backend but current source facade leaves H.265 controls as stubs |
-| JPEG/MJPEG snapshot | NOT_IMPLEMENTED | Native JPEG driver is reversed, but Majestic-facing _JPEG_* facade is still loader stubs |
+Current refs:
+- Firmware Majestic: `work/fh8626v100-majestic@a60789ae`
+- Divinus: `work/fh8626v100@5979e160`
 
-## VPSS / image path
+## Video
 
-Implemented native translations:
-- system/channel memory;
-- VI attributes;
-- channel geometry/open/close;
-- enable/global disable;
-- exact frame-control wire;
-- freeze/unfreeze compatibility surface;
-- media bind for the currently implemented video path.
+Implemented source/native compatibility:
+- H.264 channel create/start/stop for the product main/sub/analytics channel
+  topology;
+- exact VPU->VENC bind mapping `source=vpu+1`, `destination=venc+7`;
+- channel-aware shared H.264 FIFO routing using native descriptor channel
+  `desc[3]`, with query=peek and release=pop ownership;
+- visible width/height, Baseline/Main profile, GOP/key interval;
+- normal and smart H.264 public channel attributes;
+- full VBR/CBR/fixed-QP/AVBR/CVBR public->native RC translation;
+- full RC set/get and channel-attribute readback;
+- realtime RC change through native 0x1c request;
+- IDR/force-I;
+- stop/restart state ownership without toggling global ISP producer state.
 
-Still stubs or incomplete:
+H.265/HEVC is **hardware/driver unsupported**, not an unfinished shim. Stock
+FH8626 `enc.ko` registers only H.264 media stream kind 4 and no HEVC encoder
+engine/module. H.265-specific SDK calls return an explicit unsupported result.
+
+Remaining video controls requiring evidence before implementation:
 - crop;
-- mask;
-- OSD;
-- OSD highlight/invert;
-- RGB pre-processing;
-- graph APIs;
-- scaler coefficients/default scaler size;
-- APC channel controls;
-- YC mean/statistics;
-- low-latency controls;
-- user-picture/frame-buffer APIs;
-- advanced frame extraction/lock APIs.
+- VENC/VPSS rotation beyond paths already handled by retained ISP/image layer;
+- explicit H.264 slice split / entropy / deblock / intra-refresh SDK calls;
+- ROI/background-QP/de-breath SDK extras.
 
-These must be prioritized by actual Majestic imports/call paths, not by the
-size of the vendor SDK export list.
+These remaining exports are not reachable from the current selected runtime
+closure. A moving Majestic direct import of one now fails the build.
 
-## ISP and image controls
+## JPEG / MJPEG
 
-The donor ISP/ispcore layer is intentionally retained while compatible because
-stock Apollo proves that many API_ISP_* functions mutate a large shared
-userspace context rather than map one-to-one to ioctls.
+Implemented Majestic-facing source surface:
+- system init;
+- memory query/create/destroy;
+- snapshot JPEG and continuous MJPEG channel config/readback;
+- stock JPEG hardware quality LUT;
+- MJPEG RC set/get;
+- start/stop;
+- rotate;
+- generic stream query;
+- raw->public stream conversion and balanced release;
+- frame submit / submit-ex;
+- MJPEG drop policy;
+- hardware timing projection.
 
-Recovered/understood public controls include:
-- mirror/flip and Bayer-aware mirror/flip-ex;
-- LTM;
-- contrast;
-- saturation;
-- APC;
-- sensor format / VI attributes;
-- AE/AWB related control families.
+Cross-agent note: Divinus app-facing quality accepts 1..99 percent and converts
+to a 0..9 hardware bucket. FH8852 public `_JPEG_SetChnAttr` already carries
+the 0..9 bucket. These are intentionally different layers over the same native
+quality LUT.
 
-This is not yet equivalent to a complete source ISP replacement. Product
-acceptance requires proving the retained donor ISP path after the sensor/MIPI/
-VMM/VPSS corrections, then replacing only concrete incompatible surfaces.
+## Motion / statistics / OSD
+
+Optional donor feature backends are restored:
+- `libadvapi_md.so`;
+- `libadvapi_osd.so`.
+
+Their required FH8626-facing VPSS dependencies are implemented:
+- GetViAttr;
+- GetChnAttr;
+- YC mean enable/disable/mode;
+- GetYCmean;
+- GetCPYData;
+- channel/global GraphV2 get/set.
+
+GraphV2 uses the recovered FH8626 folded 0x448-byte request
+`0xC448696D/0xC448696E`, translating the FH8852 public 273-word GraphV2
+object.
+
+BGM/NN SDK exports that are not selected or imported by the current runtime
+remain outside the advertised closure rather than returning fake success.
+
+## ISP / image
+
+Donor `libisp.so`, `libispcore.so` and `libadvapi_isp.so` remain
+intentionally isolated as one coherent userspace ISP context implementation.
+This is deliberate: stock Apollo shows that AE/AWB/LTM/contrast/saturation/APC
+and mirror/flip operations mutate a large shared userspace ISP context and are
+not simple one-ioctl calls.
+
+Current direct Majestic requirement `FHAdv_Isp_SetColorMode` is provided by
+that retained coherent layer. Replacing isolated functions with partial source
+shims would reduce correctness until the complete context state machine is
+reimplemented.
 
 ## Audio
 
-Implemented:
-- RTX transport init/reset/mmap;
-- seven-word config transport;
-- AI enable/disable;
-- AO enable/disable;
-- capture frame + PTS;
+The recovered Majestic ACW/RTX surface is source implemented:
+- transport reset/init/mmap/deinit;
+- exact AJL33PQ0866 retail 0x17a DSP init payload applied during `FH_AC_Init`;
+- 7-word config and selector extension;
+- AI/AO enable/disable;
+- capture frame / PTS and raw-frame paths;
 - playback frame;
-- AI/AO volume;
-- buffer clear / playback wait;
-- balanced teardown.
+- analog/digital/channel volume controls;
+- clear/wait/pause/resume/sync;
+- AEC, capture NR, playback NR and AGC config commands;
+- HPF/mic-bias extension controls;
+- variable `Ext2` ioctl;
+- external-codec init surface.
 
-Incomplete:
-- automatic board DSP init payload ownership inside FH_AC_Init;
-- full AEC;
-- AGC;
-- capture NR;
-- playback NR;
-- pause/resume/full-duplex policy;
-- complete two-way-audio product ownership.
+No known FH8852 ACW loader stub remains in the recovered Majestic surface.
 
-## Analytics / statistics / newer Majestic features
+## ABI closure guards
 
-Not yet claimed complete:
-- motion/analytics data paths;
-- BGM integration;
-- NN bind path;
-- YC/statistics APIs;
-- auxiliary Y/YUV frame requests;
-- hardware average-time/status APIs;
-- any newer Majestic telemetry that depends on platform-specific provider
-  callbacks;
-- the historical /metrics backend/provider surface.
+The package now verifies at build time:
+1. every direct Fullhan import of the moving Majestic binary has a selected
+   provider;
+2. a direct import may not resolve only to a known unsupported compatibility
+   stub;
+3. selected donor feature libraries are also checked transitively, so
+   motion/OSD/ISP library updates cannot silently begin depending on an
+   unsupported FH8626 API.
 
-Majestic HTTP/WebUI itself remains untouched. Missing platform telemetry must be
-implemented at the real provider/API boundary, not hidden by a proxy or
-frontend patch.
+At the current refs, selected donor libraries have **zero** dependencies on the
+remaining unsupported compatibility exports.
 
-## Configuration surface that must work before product-complete
+## Web/control plane
 
-At minimum, the final implementation must support and regress:
-- main and sub stream enable/disable;
-- supported codec selection;
-- per-stream width/height;
-- fps/frame-control;
-- bitrate;
-- RC mode;
-- GOP;
-- profile;
-- runtime bitrate change;
-- IDR;
-- JPEG quality/fps/snapshot;
-- image mirror/flip/rotation where advertised;
-- day/night/image controls;
-- microphone and speaker/two-way audio;
-- OSD where Majestic advertises it;
-- motion/analytics/statistics where Majestic advertises them;
+Majestic HTTP, API, WebSocket and WebUI remain untouched. No proxy and no
+frontend patch is part of this port.
+
+The historical `/metrics` symptom is a separate Majestic/platform-provider
+question and must not be hidden by auxiliary HTTP code.
+
+## Remaining offline queue
+
+Before declaring every advertised setting complete:
+1. determine whether the current Fullhan Majestic build actually invokes
+   crop/rotate/slice SDK controls (including dynamic lookup paths);
+2. ensure hardware-unsupported H.265/high-profile options are not falsely
+   advertised by the target capability schema;
+3. keep the Divinus and Majestic RC/JPEG/audio wire definitions synchronized
+   through reverse issue #3;
+4. then stop offline work and move to build/flash/target validation.
+
+Target acceptance must cover:
+- main/sub enable/disable and simultaneous streams;
+- bitrate/RC/GOP/profile/readback and live bitrate changes;
+- JPEG snapshot and MJPEG;
+- OSD/privacy graph;
+- motion/statistics;
+- image/day-night controls;
+- microphone, speaker and audio VQE;
 - repeated stop/start/reconfigure without reboot.
-
-## Rule for completion
-
-Do not mark FULL_FEATURE_COMPLETE because all dynamic symbols resolve. Loader
-stubs only prove loadability.
-
-A feature is complete only when one of these is true:
-1. source implementation is recovered and wired;
-2. retained donor implementation is shown ABI-compatible with FH8626;
-3. Majestic does not use/expose the function for this platform and the omission
-   is explicitly documented.
-
-The current priority order is:
-1. full H.264 RC + channel-attribute round-trip;
-2. multi-stream ownership;
-3. JPEG;
-4. H.265 if the current Majestic build exposes it on this platform;
-5. image/OSD/ROI/crop controls actually used by Majestic;
-6. analytics/statistics provider surface;
-7. full audio DSP policy.

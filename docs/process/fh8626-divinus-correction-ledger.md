@@ -1,5 +1,37 @@
 # FH8626 Divinus correction ledger
 
+
+## Cross-agent synchronization status — 2026-09-18
+
+Canonical coordination issue: reverse issue #3,
+`FH8626 Majestic/Divinus shared contract coordination`.
+
+Current implementation refs at this checkpoint:
+- Majestic/Firmware: `work/fh8626v100-majestic@a60789ae`
+- Divinus: `work/fh8626v100@5979e160`
+
+Cross-reuse already completed:
+- Divinus adopted the corrected VPSS enable/disable/close ownership and
+  StartRecvPic-before-bind lifecycle recovered during the Majestic audit.
+- Majestic adopted Divinus's exact AJL33PQ0866 retail RTX DSP init payload and
+  now applies it during public `FH_AC_Init` (`5aebfad8`).
+- Divinus's exact MJPEG 0x34 config / 0x24 drop-control structures were used to
+  audit Majestic JPEG. The implementations intentionally differ at the public
+  API boundary: Divinus accepts quality percent and converts it to a 0..9
+  hardware bucket; the FH8852 public JPEG ABI already passes the 0..9 bucket.
+- Majestic motion VPSS and GraphV2 contracts are available for Divinus to reuse
+  if those features are exposed there.
+- Majestic build guard `a60789ae` verifies both direct Majestic imports and
+  the transitive selected donor-library Fullhan closure against unsupported
+  SDK boundaries.
+
+Remaining shared review items:
+- native/public crop and rotation ownership where Majestic actually exposes it;
+- H.264 slice-control path if the current Fullhan Majestic build calls it;
+- full same-boot opaque ISP teardown/restart parity;
+- target validation of dynamic reconfigure, OSD/motion and audio VQE.
+
+
 Purpose: record concrete FH8626 contract mistakes or unsafe assumptions found while independently rebuilding the Majestic compatibility path. This is a correction queue for the Divinus agent, not a Majestic design document.
 
 Evidence priority:
@@ -182,7 +214,11 @@ Update this ledger only when a mismatch is evidenced by stock Ghidra, runtime ev
 
 ### Divinus sends the wrong payload to VPU_ENABLE
 
-Status: CONFIRMED CURRENT SOURCE BUG.
+Status: FIXED in current Divinus `work/fh8626v100@5979e160`.
+
+Historical bug was confirmed and is kept below for provenance. Current
+`kernel_video_create()` now passes channel 0 to `0xC004694D` and treats
+`0xC004694E` as the distinct no-payload disable request.
 
 Current Divinus `src/hal/full/fh8626_kernel.c::kernel_stream_start()` declares
 `uint32_t channel = 0, enable = 1` and calls:
@@ -200,7 +236,12 @@ Required Divinus correction:
 
 ### Divinus stream-start ordering differs from stock owner
 
-Status: CONFIRMED SOURCE DIVERGENCE; TARGET IMPACT REQUIRES REGRESSION.
+Status: FIXED in current Divinus `work/fh8626v100@5979e160`; target regression still required.
+
+Current `kernel_stream_start()` performs `PAE_ENC_START -> force-I ->
+MEDIA_BIND`, while VPU enable is owned by `kernel_video_create()`, matching
+the recovered stock ownership split. The historical divergence is retained
+below for provenance.
 
 Current Divinus `kernel_stream_start()` performs:
 
