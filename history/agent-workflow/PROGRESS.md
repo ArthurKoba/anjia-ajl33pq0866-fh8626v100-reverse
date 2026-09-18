@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `READY_FOR_NEXT_SOURCE`
+Статус: `CHAT_027_IN_PROGRESS`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **26**
 - Последний источник: `CHAT-026`
 - Период последнего источника: **2026-08-29**
-- Следующее действие: получить следующий уникальный исторический источник
+- Следующее действие: завершить анализ `CHAT-027` (source #27)
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -81,6 +81,7 @@
 | 24 | `CHAT-024` | 2026-08-28 | `DONE` | OEM/device research triangulates AJL33PQ0866/YGT software identity, CF26/SM PCB family and physical 3.6/12 dual-lens configuration; builds ranked donor/reference corpus without promoting any retail SKU to target truth |
 | 25 | `CHAT-025` | 2026-08-28 — 2026-08-29 | `DONE` | Cross-platform gap hunter discovers exact-FH8626 public adapter/SDK targets, exposes stats-epoch/lifecycle/RAW architecture leads, audits current source risks and packages targeted inputs instead of repeating Apollo reverse |
 | 26 | `CHAT-026` | 2026-08-29 | `DONE` | Partial export: consolidated Agent4 watchdog/peripheral status; project split into MASTER_CORE + REVERSE_HEAVY with logical heavy IDs; TFTP root reorganized into active/history staging without destructive cleanup |
+| 27 | `CHAT-027` | 2026-08-28 — 2026-08-30 | `IN_PROGRESS` | Agent 1 final reverse closure: static exhaustion → Agent4 E1–E7 live evidence → watchdog/human/color/light/audio/optional ISP closure; context-loss and repeated completion-audit episodes |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
