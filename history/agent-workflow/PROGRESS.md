@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_017_POST_REFRESH_PENDING`
+Статус: `READY_FOR_NEXT_SOURCE`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **17**
 - Последний источник: `CHAT-017`
 - Период последнего источника: **2026-08-27 — 2026-08-28**
-- Следующее действие: выполнить обязательный post-file refresh
+- Следующее действие: перейти к `CHAT-018`
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -692,4 +692,4 @@ The handoff starts evolving from a transport archive into a mapped local workspa
 
 ## Следующее действие
 
-Выполнить обязательный post-file refresh. Затем перейти к `CHAT-018`; после него выполнить плановую expanded live-state сверку.
+Перейти к `CHAT-018`; после него выполнить плановую expanded live-state сверку.
