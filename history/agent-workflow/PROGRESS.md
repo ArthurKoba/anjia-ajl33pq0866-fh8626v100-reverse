@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_030_POST_REFRESH_PENDING`
+Статус: `CHAT_031_IN_PROGRESS`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **30**
 - Последний источник: `CHAT-030`
 - Период последнего источника: **2026-08-30**
-- Следующее действие: post-file refresh + 30-file live-state refresh
+- Следующее действие: завершить анализ `CHAT-031` (source #32)
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -85,6 +85,7 @@
 | 28 | `CHAT-028` | 2026-08-28 — 2026-08-30 | `DONE` | Large orchestrator mega-thread; overlap deduped. Unique tail establishes role pipeline, frontend-independent FH8626 architecture, Divinus-first sidecar strategy, engineering-vs-upstream profiles and firmware/SDK provenance research; exposes reused Agent-N identity collision |
 | 29 | `CHAT-029` | 2026-08-28 — 2026-08-29 | `DONE` | Agent 3 turns reverse contracts into media-runtime/sidecar/RTSP/OpenIPC source staging and Divinus adapter; engineering/upstream profiles split; incomplete repack exposes artifact-verification continuity problem |
 | 30 | `CHAT-030` | 2026-08-30 | `DONE` | Partial Agent5 kernel lane: hardware-proven platform baseline, offline pinctrl/PMU/peripheral closure and cumulative native-kernel plan; stage-archive spam and Python packaging are explicitly rejected |
+| 31 | `CHAT-031` | 2026-08-30 | `IN_PROGRESS` | Agent 6 Divinus continuation: transport/API hardening, WSL-only validation, MJPEG provider planning and repeated command-protocol/Explorer/SHA/artifact-consistency failures converted into explicit critical runbook |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -991,6 +992,29 @@ Productization becomes executable source work: media runtime, frame leases/gener
 ### Technical/agentic transition
 Native kernel work is already past initial boot: machine/INTC/timer/UART/SPI/MTD/watchdog/GPIO/I2C hardware baseline exists; offline source coverage expands toward pinctrl/PMU/USB/SDIO/DMA/audio. The desired continuity unit becomes a cumulative source line rather than numbered transport archives.
 
+## 30-file live-state refresh после CHAT-030
+
+Read-only проверены current `main:STATE.md`, `main:TASKS.md`, `main:AGENTS.md` и live branches reverse/Firmware/Builder/Linux/Divinus/U-Boot.
+
+Современный authority endpoint без изменений: GitHub current source/docs/contracts, Google Drive heavy evidence, Ghidra MCP mutable reverse workspace.
+
+Current coordination docs:
+- `STATE.md@a0022eb...`;
+- `TASKS.md@4f57717e...`;
+- `AGENTS.md@3f880878...`.
+
+Live FH8626 work tips остаются:
+- reverse `d6e842dd...`;
+- Firmware core `80169887...`, Divinus `bc09d12c...`, Majestic `aabf18a6...`;
+- Builder ANJIA `7db8cc1f...`;
+- Linux `357c2d13...` work / `0dfafa64...` hardware-facing;
+- Divinus `50e3e300...`;
+- U-Boot `7ac0aa7e...` / `49fe46e9...`.
+
+Исторический CHAT-030 остаётся archive/WSL handoff-era kernel lane; modern repository authority не backdate'ится.
+
+Frozen `BASELINE_PROMPT.md` SHA подтверждён: `1358cffd95f275069bd1eac6ad3a31d700c939aa`.
+
 ## Следующее действие
 
-Выполнить post-file refresh и expanded live-state refresh после 30 источников. Затем перейти к `CHAT-031` (source #32).
+Завершить анализ `CHAT-031` (source #32).
