@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `READY_FOR_NEXT_SOURCE`
+Статус: `CHAT_022_IN_PROGRESS`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **21**
 - Последний источник: `CHAT-021`
 - Период последнего источника: **2026-08-28**
-- Следующее действие: получить следующий уникальный исторический источник
+- Следующее действие: завершить анализ `CHAT-022`
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -76,6 +76,7 @@
 | 19 | `CHAT-019` | 2026-08-28 | `DONE` | Partial export: stock RTSP auth behavior and known HTTP JPEG snapshot endpoint; no new major workflow class |
 | 20 | `CHAT-020` | 2026-08-27 — 2026-08-28 | `IN_PROGRESS` | Central orchestrator: quality rules become automated workspace architecture, clean master-tree, task router/sessions/runbooks/health checks, integration of three specialist lanes and Cross-Fullhan references |
 | 21 | `CHAT-021` | 2026-08-28 | `DONE` | Systematic stock evidence campaign: four canonical imaging states, bidirectional lens/day-night transitions, white-light/audio/JPEG/PTZ, targeted Apollo runtime evidence, static reverse preparation, evidence catalog/state matrix and delta package; OOM/resource and metadata-correction lessons |
+| 22 | `CHAT-022` | 2026-08-28 | `IN_PROGRESS` | Production implementation/hardware parity session: source catch-up, WIDE-default dual sensor, gain/AE/AWB-CCM/APC/NR3D/LTM, GPIO5 TELE root cause, owner lifecycle/control-plane debt, RAW/Bayer next blocker |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
