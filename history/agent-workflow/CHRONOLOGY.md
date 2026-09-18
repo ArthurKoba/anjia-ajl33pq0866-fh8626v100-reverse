@@ -292,6 +292,17 @@ OpenIPC/productization lane превращает reverse contracts в source-lev
 
 Подробнее: [D27](CHRONOLOGY_DETAILS.md#d27--agent-3-openipc-productization).
 
+### 28. Native Linux platform bring-up: от базового boot к cumulative SoC integration
+Источник: `CHAT-030`, partial export, 2026-08-30.
+
+Agent 5 kernel lane показывает позднюю native-platform стадию. Hardware PASS уже есть для machine/INTC/timer/UART0, SPI0/NOR/MTD, reboot/watchdog, GPIO0/1 и I²C0/1/2. Ethernet исправлен до exact PHY contract и ждёт отдельной hardware приёмки; RTC зарегистрирован, но требует диагностики.
+
+Офлайн подготовлены native pinctrl, SADC/EFUSE, UART1/2, PWM0, USB/DWC2, SDIO/MMC, SPI1, DMA/AES, audio, PMU gap map и defconfig. Stock machine reverse дополнительно показывает условную регистрацию 22/23 platform devices и раннюю последовательность `fh_pmu_init() → fh_pinctrl_init(0xFE090080)`. Media/VMM и расширение memory policy сознательно оставлены последним высокорисковым слоем.
+
+**Переход:** kernel work перестаёт быть набором probes и превращается в cumulative native SoC source candidate с отдельным hardware acceptance gate.
+
+Подробнее: [D28](CHRONOLOGY_DETAILS.md#d28--native-linux-platform-bring-up).
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.
