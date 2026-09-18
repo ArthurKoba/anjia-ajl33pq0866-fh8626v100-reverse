@@ -259,6 +259,17 @@ Specialist external-research lane перестаёт делать широкий
 
 Подробнее: [D24](CHRONOLOGY_DETAILS.md#d24--late-agent-4-watchdogperipheral-corpus).
 
+### 25. Evidence-directed final reverse closure: E1–E7 → watchdog/human/HAL
+Источник: `CHAT-027`, 2026-08-28—30.
+
+Agent 1 сначала исчерпывает master v23 статически и превращает остаток в семь конкретных evidence packages E1–E7. После Agent 4 live captures тот же reverse возвращается уже адресно: lifecycle/re-init, 25 Hz statistics epoch/double buffering, physical RAW10/CFA, scene/IQ publication semantics и software PTZ граница существенно закрываются.
+
+Дальше reverse расширяется за release-minimum: watchdog доведён до driver/PMU/U-Boot reset contract; human detection — до Y8/OBJDETECT/model/result ABI; color/HAL — до physical CFA, BLC/GB/AWB→CCM/YC/generation ownership; illumination — до PWM modes/LDR/IR-cut; `dev_ctrl` распакован и классифицирован как board/service daemon. Источник заканчивается на последних optional ISP ветках WDR/GME, где ещё идёт коррекция прежней WDR↔LTM типизации.
+
+**Переход:** broad reverse перестаёт быть основным методом. Оставшаяся работа строится как closure matrix: static proof, named target evidence, implementation contract или bounded archaeology.
+
+Подробнее: [D25](CHRONOLOGY_DETAILS.md#d25--evidence-directed-final-reverse-closure).
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.
