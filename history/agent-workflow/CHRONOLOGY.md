@@ -228,6 +228,17 @@ Production integration-agent перенёс накопленный reverse в е
 
 Подробнее: [D21](CHRONOLOGY_DETAILS.md#d21--production-catch-up-и-hardware-parity-session).
 
+### 22. OEM/platform identity: AJL33PQ0866 + CF26/SM family и donor corpus
+Источник: `CHAT-024`, 2026-08-28.
+
+External/device research связывает target не только с Fullhan SoC, но и с конкретной OEM-линейкой. На самой камере фиксируются internal model `AJL33PQ0866`, firmware branch `YGT.AJL33PQ0866...`, PCB family `CF26/SM`, dual 3.6/12 mm optics и 4+4 illumination. Это резко сужает поиск родственных firmware/dumps.
+
+Сильные references включают CF26/SM400/AJ-SM relatives, близкий documented retail clone на FH8626V100/dual 1054/3.6+12 и несколько публичных FH8626 donor dumps. Exact retail SKU при этом не объявляется установленной.
+
+**Переход:** external research перестаёт искать «похожие FH8626 камеры» и начинает строить donor corpus вокруг пересечения target-specific software/PCB/SoC identifiers.
+
+Подробнее: [D22](CHRONOLOGY_DETAILS.md#d22--oemidentity-ajl33pq0866-cf26sm-и-donor-search).
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.
