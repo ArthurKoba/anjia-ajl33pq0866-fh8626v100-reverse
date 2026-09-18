@@ -409,3 +409,31 @@ Sensor callback capture доказал, что второй zoom в этом с�
 - IR LED GPIO25, white LED GPIO23, IR-cut GPIO18/60, mute1 GPIO24.
 
 Эта lens-switch часть в `CHAT-016` остаётся static-complete до controlled hardware capture; её не следует повышать до нового hardware-pass.
+
+## D17 — Image-detail APC/NR3D/LTM и runtime RW/GOT closure
+
+`CHAT-017` — persistent Agent 2 lane. Ранний scope был `CDD6C/D0B2C/GOT table identity`, затем в той же specialist thread задача расширилась до полного image-detail/sharpness/NR/demosaic Task 2.
+
+Первоначальный результат был объявлен завершённым слишком рано. Requirement audit показал только ~55–65% большого Task 2. После продолжения были доказаны semantic chains:
+- `imgset_sharpness → DF084 → APC config → ctx+0x314/+0x320 → CDD6C → ISP+0x528..+0x574`;
+- `D0E5C = NR2D`;
+- `D0FEC = NR3D`;
+- `D2074 = YNR`;
+- `CE7D8 = CNR`;
+- `D1258 = Purplefri / anti-purple-fringe`;
+- `D0DF4/D0630/D0B2C = LTM/local tone mapping`;
+- `CFD70/GB` отделён от demosaic.
+
+Статический RX-only Apollo не содержал initialized RW segment/GOT, поэтому exact identity APC/LTM/NR3D/D1DB0 tables была физически недоказуема из одного ARM dump. Вместо повторного blind reverse был снят read-only runtime RW region, а затем sparse `apollo_full_runtime.bin`, сохраняющий реальные mapped VA и unmapped holes.
+
+В связке `apollo_unpacked_ARM_full.txt + apollo_full_runtime.bin` закрыты:
+- APC/CDD6C current day: live ctx, four GOT pointers, current selectors/row1 tables, 13-halfword consumer correction и mapping ISP registers;
+- LTM/D0B2C: GOT `+BE4` и `+948`, current rows 23/0;
+- NR3D/D0FEC: GOT `+98C`, preset rows и live dispatch condition (`ctx+0x11AC=1`);
+- D1DB0: GOT `+D14` и runtime coefficient vector;
+- user sharpness baseline arrays, совпадающие с live ctx;
+- corrected D0630 polynomial including quadratic term.
+
+Final Agent 2 Task2 для current GC1054 day был завершён с reference/selftest и owner-parity audit. Integration priority: APC/CDD6C → active NR3D/D0FEC → dynamic LTM D0630/D0B2C.
+
+Отдельный методический результат: static executable disassembly и runtime mutable state — разные evidence layers. Runtime heap не следует массово дизассемблировать как ARM code; mutable pointers/tables нужно связывать с доказанными ARM consumers.
