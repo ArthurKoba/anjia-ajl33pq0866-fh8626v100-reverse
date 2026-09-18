@@ -1,26 +1,26 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_029_IN_PROGRESS`
+Статус: `CHAT_029_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **28**
-- Последний источник: `CHAT-028`
+- Обработано исторических файлов: **29**
+- Последний источник: `CHAT-029`
 - Период последнего источника: **2026-08-28 — 2026-08-30**
-- Следующее действие: завершить анализ `CHAT-029` (source #30)
+- Следующее действие: выполнить post-file refresh
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-028 |
+| Направление | Файл | Состояние после CHAT-029 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 28/?? sources обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 42 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 106 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D26: OpenIPC frontend decoupling / Divinus-first strategy |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.18: role pipeline + orchestrator dependency graph |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 29/?? sources обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 43 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 110 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D27: source-level OpenIPC productization lane |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.19: executable productization specialist |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -83,7 +83,7 @@
 | 26 | `CHAT-026` | 2026-08-29 | `DONE` | Partial export: consolidated Agent4 watchdog/peripheral status; project split into MASTER_CORE + REVERSE_HEAVY with logical heavy IDs; TFTP root reorganized into active/history staging without destructive cleanup |
 | 27 | `CHAT-027` | 2026-08-28 — 2026-08-30 | `DONE` | Agent 1 evolves from static exhaustion into E1–E7 evidence-directed closure; later closes watchdog/human/color/light/dev_ctrl and most HAL, ending with a small optional WDR/GME tail still under correction |
 | 28 | `CHAT-028` | 2026-08-28 — 2026-08-30 | `DONE` | Large orchestrator mega-thread; overlap deduped. Unique tail establishes role pipeline, frontend-independent FH8626 architecture, Divinus-first sidecar strategy, engineering-vs-upstream profiles and firmware/SDK provenance research; exposes reused Agent-N identity collision |
-| 29 | `CHAT-029` | 2026-08-28 — 2026-08-29 | `IN_PROGRESS` | Agent 3 OpenIPC productization: FH8626 media-runtime/sidecar/RTSP staging, engineering-vs-upstream profiles, Divinus external source, Majestic de-risking, packaging reconstruction and lens-switch implementation handoff |
+| 29 | `CHAT-029` | 2026-08-28 — 2026-08-29 | `DONE` | Agent 3 turns reverse contracts into media-runtime/sidecar/RTSP/OpenIPC source staging and Divinus adapter; engineering/upstream profiles split; incomplete repack exposes artifact-verification continuity problem |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -953,6 +953,24 @@ Frozen `BASELINE_PROMPT.md` SHA остаётся `1358cffd95f275069bd1eac6ad3a31
 ### Technical/agentic transition
 Divinus становится исторически главным открытым frontend-кандидатом через sidecar-first path; Majestic остаётся optional closed frontend. Orchestrator начинает управлять dependency graph между evidence, external research, exact reverse и productization, а не только принимать независимые архивы.
 
+## Что CHAT-029 добавил к картине
+
+### Новый error-class
+- E-043: reconstructed/repacked artifact cannot inherit verification from a lost exact predecessor.
+
+### Reinforced
+- E-018: Agent 3 repacked archive contained only four service files while README referenced the missing implementation tree.
+- E-035: lens-switch response briefly mixed later Agent 7 reasoning into a request for Agent 3’s own implementation.
+
+### Новые improvements
+- I-107: verification belongs to exact bytes/commit.
+- I-108: fixed byte-level sidecar ABI across architectures.
+- I-109: sidecar-first productization preserves known-good owner.
+- I-110: source-only OpenIPC/Buildroot staging with correct repository boundaries.
+
+### Technical/agentic transition
+Productization becomes executable source work: media runtime, frame leases/generations, Annex-B/RTP/RTSP, ABI probe, engineering bundle and Divinus external source. Native FH8626 HAL and flashable image remain explicit target gates rather than being simulated by staging.
+
 ## Следующее действие
 
-Выполнить post-file refresh, затем перейти к `CHAT-029` (source #30).
+Выполнить post-file refresh, затем перейти к `CHAT-030` (source #31). После CHAT-030 выполнить expanded live-state refresh.
