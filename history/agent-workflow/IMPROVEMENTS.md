@@ -542,6 +542,27 @@ CHAT-007 усиливает принцип: valuable stock runtime сначал�
 
 Источник: `CHAT-011`.
 
+### I-042 — Параллельная productionization только за стабильной subsystem boundary
+Статус: `OBSERVED`.
+
+В уникальном хвосте `CHAT-012` пользователь спрашивает, не пора ли уже переходить от probe-ов к firmware/Majestic, хотя RAW/Bayer path ещё не закрыт.
+
+Полезное решение оказалось не бинарным «сначала весь reverse» / «сразу Majestic», а разделением слоёв:
+- уже доказанные boot/rootfs/vendor-module/GC1054/VPU/PAE/dequeue части можно начинать productionize;
+- unresolved RAW/ISP path продолжает жить в минимальном диагностическом owner;
+- один долгоживущий `fh8626_daemon` остаётся владельцем stateful Fullhan fd и ISP runtime;
+- Majestic подключается **после** этой границы как consumer stream interface, а не открывает `/dev/isp` параллельно;
+- новые hardware эксперименты не должны требовать изменения streamer/RTSP слоя.
+
+Практический критерий начала productionization:
+1. subsystem boundary уже доказана и имеет стабильный contract;
+2. оставшийся blocker локализован по другую сторону этой boundary;
+3. integration не усложняет диагностику unresolved hardware path.
+
+Это позволяет параллельно готовить rootfs/startup/packages/configuration, не превращая Majestic в дополнительную переменную низкоуровневого reverse.
+
+Источник: уникальный хвост `CHAT-012` после общего префикса с `CHAT-004`.
+
 ## Исходные этапы, ещё не подтверждённые
 
 `CHAT-010` является прямым acceptance-тестом этого принципа: новый агент по handoff сразу продолжает с dequeue boundary, не повторяет sensor/ISP/H.264 bring-up и использует указанные checkpoint paths/constraints. Handoff реально переносит инженерное состояние между чатами.
