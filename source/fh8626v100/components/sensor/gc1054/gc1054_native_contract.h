@@ -1,6 +1,7 @@
 #ifndef FH8626_GC1054_NATIVE_CONTRACT_H
 #define FH8626_GC1054_NATIVE_CONTRACT_H
 
+#include <stddef.h>
 #include <stdint.h>
 
 /*
@@ -11,8 +12,13 @@
  * implementation.
  */
 
-#define FH8626_GC1054_FORMAT_720P25       0x801061a8u
-#define FH8626_GC1054_FORMAT_720P25_ALIAS 3u
+#define FH8626_GC1054_FORMAT_720P20        0x80104e20u
+#define FH8626_GC1054_FORMAT_720P166666    0x8010411au
+#define FH8626_GC1054_FORMAT_720P15        0x80103a98u
+#define FH8626_GC1054_FORMAT_720P30        0x80107530u
+#define FH8626_GC1054_FORMAT_720P30_ALIAS  4u
+#define FH8626_GC1054_FORMAT_720P25        0x801061a8u
+#define FH8626_GC1054_FORMAT_720P25_ALIAS  3u
 
 #define FH8626_GC1054_I2C_DEVICE          "/dev/i2c-0"
 #define FH8626_GC1054_I2C_MSG_ADDR        0x21u
@@ -36,10 +42,9 @@ static const uint32_t fh8626_gc1054_mipi_init_words[6] = {
 };
 
 /*
- * Raw 24-byte get_vi_attr result for format 0x801061a8 before orientation
- * state is applied. Keep the layout raw until every field name is proven by
- * the FH8626 ISP consumer. The last word becomes 2 when the plugin's current
- * orientation state is non-zero.
+ * Raw 24-byte get_vi_attr result. Keep the layout raw until every field name
+ * is proven by the FH8626 ISP consumer. All five formats share the same
+ * 1280x720 geometry and line length; word16[0] is the base frame length.
  */
 struct fh8626_gc1054_vi_attr_raw {
     uint16_t word16[8];
@@ -47,12 +52,58 @@ struct fh8626_gc1054_vi_attr_raw {
     uint32_t orientation_word14;
 };
 
-static const struct fh8626_gc1054_vi_attr_raw
-fh8626_gc1054_vi_attr_720p25 = {
-    {899u, 0x06beu, 720u, 1280u, 0u, 0u, 720u, 1280u},
-    0u,
-    0u
+struct fh8626_gc1054_format_contract {
+    uint32_t format;
+    uint32_t numeric_alias;
+    uint16_t frame_length;
+    uint16_t vblank;
+    double nominal_fps;
 };
+
+static const struct fh8626_gc1054_format_contract
+fh8626_gc1054_formats[] = {
+    {FH8626_GC1054_FORMAT_720P20,     0u,                              1125u, 0x0185u, 20.0},
+    {FH8626_GC1054_FORMAT_720P166666, 0u,                              1352u, 0x0268u, 16.6666},
+    {FH8626_GC1054_FORMAT_720P15,     0u,                              1500u, 0x02fcu, 15.0},
+    {FH8626_GC1054_FORMAT_720P30,     FH8626_GC1054_FORMAT_720P30_ALIAS, 749u, 0x000du, 30.0},
+    {FH8626_GC1054_FORMAT_720P25,     FH8626_GC1054_FORMAT_720P25_ALIAS, 899u, 0x00a3u, 25.0},
+};
+
+#define FH8626_GC1054_FORMAT_COUNT \
+    (sizeof(fh8626_gc1054_formats) / sizeof(fh8626_gc1054_formats[0]))
+
+static inline const struct fh8626_gc1054_format_contract *
+fh8626_gc1054_find_format(uint32_t format)
+{
+    size_t i;
+    for (i = 0; i < FH8626_GC1054_FORMAT_COUNT; ++i) {
+        const struct fh8626_gc1054_format_contract *f =
+            &fh8626_gc1054_formats[i];
+        if (format == f->format ||
+            (f->numeric_alias && format == f->numeric_alias))
+            return f;
+    }
+    return NULL;
+}
+
+static inline struct fh8626_gc1054_vi_attr_raw
+fh8626_gc1054_build_vi_attr(const struct fh8626_gc1054_format_contract *f,
+                            int orientation_nonzero)
+{
+    struct fh8626_gc1054_vi_attr_raw a = {
+        {0u, 0x06beu, 720u, 1280u, 0u, 0u, 720u, 1280u},
+        0u,
+        0u
+    };
+    if (f)
+        a.word16[0] = f->frame_length;
+    if (orientation_nonzero)
+        a.orientation_word14 = 2u;
+    return a;
+}
+
+static const uint32_t fh8626_gc1054_bayer_map_normal[4] = {0u, 3u, 1u, 2u};
+static const uint32_t fh8626_gc1054_bayer_map_oriented[4] = {2u, 1u, 3u, 0u};
 
 struct fh8626_gc1054_reg_write {
     uint16_t reg;
@@ -60,16 +111,25 @@ struct fh8626_gc1054_reg_write {
 };
 
 /*
- * Exact active 1280x720@25 sequence.
+ * Exact 145-write 1280x720@25 format array.
  *
- * Gc1054SetFormat writes 0xf2=0 before walking the table selected by
- * 0x801061a8 (or legacy alias 3). The vendor table occupies
- * 0x13d5c..0x13fa0 as uint16 register/value pairs. Its final 0/0 pair is only
- * a sentinel and is not executed. The array below intentionally includes the
- * separate leading 0xf2=0 write and excludes that trailing sentinel.
+ * Full-library reverse corrected an earlier boundary mistake: there is no
+ * trailing sentinel. Each stock format is a contiguous 0x244-byte array of
+ * 145 {uint16 register,uint16 value} pairs. GCC hoisted the first {0xf2,0}
+ * element into local registers and started the loop pointer at pair 1.
  *
- * The generic vendor walker treats reg==0xffff as usleep(value), although the
- * active 720p25 table contains no delay entry.
+ * Physical arrays:
+ *   20 fps      0x13448..0x1368b
+ *   16.6666 fps 0x1368c..0x138cf
+ *   15 fps      0x138d0..0x13b13
+ *   30 fps      0x13b14..0x13d57
+ *   25 fps      0x13d58..0x13f9b
+ * Bayer mapping data begins at 0x13f9c.
+ *
+ * Machine comparison in Ghidra proved that the five arrays differ only at
+ * pair 13 (register 0x07) and pair 14 (register 0x08). This template is the
+ * exact 25-fps array; fh8626_gc1054_format_pair() substitutes those two
+ * proven per-format values.
  */
 static const struct fh8626_gc1054_reg_write
 fh8626_gc1054_720p25_init[] = {
@@ -223,6 +283,21 @@ fh8626_gc1054_720p25_init[] = {
 #define FH8626_GC1054_720P25_INIT_COUNT \
     (sizeof(fh8626_gc1054_720p25_init) / sizeof(fh8626_gc1054_720p25_init[0]))
 
+static inline struct fh8626_gc1054_reg_write
+fh8626_gc1054_format_pair(const struct fh8626_gc1054_format_contract *f,
+                          size_t index)
+{
+    struct fh8626_gc1054_reg_write p = {0u, 0u};
+    if (!f || index >= FH8626_GC1054_720P25_INIT_COUNT)
+        return p;
+    p = fh8626_gc1054_720p25_init[index];
+    if (index == 13u)
+        p.value = (uint16_t)(f->vblank >> 8);
+    else if (index == 14u)
+        p.value = (uint16_t)(f->vblank & 0xffu);
+    return p;
+}
+
 struct fh8626_gc1054_gain_program {
     uint8_t write_triplet;
     uint8_t b6;
@@ -326,9 +401,15 @@ static inline void fh8626_gc1054_integration_regs(uint32_t integration,
         *reg04 = (uint8_t)(integration & 0xffu);
 }
 
-/* Base frame length for 0x801061a8 is 899 lines; active height is 720 and
- * the stock helper subtracts a fixed 16-line margin before programming the
- * vertical blanking pair 0x07/0x08. */
+/* Active height is 720 and stock subtracts an additional 16-line margin
+ * before programming page-0 vertical blanking registers 0x07/0x08. */
+static inline uint32_t
+fh8626_gc1054_format_frame_length_from_multiplier(
+    const struct fh8626_gc1054_format_contract *f, uint32_t multiplier)
+{
+    return f ? multiplier * (uint32_t)f->frame_length : 0u;
+}
+
 static inline uint32_t fh8626_gc1054_frame_length_from_multiplier(uint32_t multiplier)
 {
     return multiplier * 899u;
@@ -336,7 +417,7 @@ static inline uint32_t fh8626_gc1054_frame_length_from_multiplier(uint32_t multi
 
 static inline uint16_t fh8626_gc1054_vblank_from_frame_length(uint32_t frame_length)
 {
-    return frame_length > 736u ? (uint16_t)(frame_length - 736u) : 0u;
+    return (uint16_t)(frame_length - 736u);
 }
 
 #endif

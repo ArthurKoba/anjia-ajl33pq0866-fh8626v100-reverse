@@ -58,28 +58,33 @@ followed by a one-byte read message. Keep the per-message address `0x21`
 distinct from the separate `0x706` argument `0x1a`; the stock object uses
 both and their roles must not be collapsed by assumption.
 
-### Active sensor format
+### Complete sensor-format surface
 
-Format `0x801061a8` and legacy numeric alias `3` select the same active
-1280x720@25 register script.
+Full-library reverse found five unique 145-write arrays. The first element of
+every array is `{0xf2,0}`; there is **no sentinel**. GCC hoisted that first
+element into local registers, which is why the decompiler initially made the
+array pointer appear four bytes late.
 
-`Gc1054SetFormat` first writes register `0xf2=0`, then walks the exact
-uint16 register/value table at stock address `0x13d5c..0x13fa0`. The final
-`0/0` pair is a sentinel and is not executed. The promoted source array
-contains 145 executed writes: the separate leading `0xf2=0` plus 144 table
-entries.
+| format | numeric alias | nominal fps | base frame length | VBLANK 0x07/0x08 | stock array |
+|---|---:|---:|---:|---:|---|
+| `0x80104e20` | — | 20.0 | 1125 | `0x0185` | `0x13448..0x1368b` |
+| `0x8010411a` | — | 16.6666 | 1352 | `0x0268` | `0x1368c..0x138cf` |
+| `0x80103a98` | — | 15.0 | 1500 | `0x02fc` | `0x138d0..0x13b13` |
+| `0x80107530` | `4` | 30.0 | 749 | `0x000d` | `0x13b14..0x13d57` |
+| `0x801061a8` | `3` | 25.0 | 899 | `0x00a3` | `0x13d58..0x13f9b` |
 
-The corresponding raw 24-byte VI attribute result is:
+An inline Ghidra byte comparison proved that these arrays are identical except
+pair 13/register `0x07` and pair 14/register `0x08`; 30 fps differs from
+25 fps only at pair 14 because both high bytes are zero.
 
-- eight 16-bit words:
-  `899, 0x06be, 720, 1280, 0, 0, 720, 1280`;
-- 32-bit word at +0x10: `0`;
-- 32-bit word at +0x14: `0` normally, `2` when the plugin orientation
-  state is non-zero.
+All five formats return the same 24-byte VI geometry except word16[0], the
+base frame length. The remaining words are
+`0x06be,720,1280,0,0,720,1280`; dword +0x10 is zero and dword +0x14 is zero
+normally or `2` when orientation mode is non-zero.
 
-Field naming remains tied to the ISP consumer contract; the raw values above
-are exact and should be preserved even where semantic names remain under
-analysis.
+Immediately after the final format array at `0x13f9c` begins the normal
+Bayer-map `[0,3,1,2]`. Non-zero orientation mode uses
+`[2,1,3,0]`.
 
 ### MIPI MMIO boundary
 
