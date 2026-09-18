@@ -1,26 +1,26 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_025_IN_PROGRESS`
+Статус: `CHAT_025_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **24**
-- Последний источник: `CHAT-024`
+- Обработано исторических файлов: **25**
+- Последний источник: `CHAT-025`
 - Период последнего источника: **2026-08-28**
-- Следующее действие: завершить анализ `CHAT-025`
+- Следующее действие: выполнить post-file refresh
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-024 |
+| Направление | Файл | Состояние после CHAT-025 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 24/?? sources обработано |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 25/?? sources обработано |
 | Ошибки/нарушения агентов | `ERRORS.md` | 39 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 85 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D22: AJL33PQ0866 / CF26-SM OEM identity and donor corpus |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.14: frozen-base fan-out / DELTA fan-in |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 90 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D23: cross-platform gap hunting + targeted reverse leads |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.15: external research intelligence lane |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -79,7 +79,7 @@
 | 22 | `CHAT-022` | 2026-08-28 | `DONE` | Production integration catches code up to reverse; hardware validates WIDE H264, gain/APC/NR3D/LTM/manual AE/AWB→CCM and dual-sensor after GPIO5 bootstrap; lifecycle/control-plane and RAW/Bayer become focused remaining blockers |
 | 23 | `CHAT-023` | 2026-08-28 | `DONE` | Orchestrator formalizes reverse vs implementation vs evidence lanes, retracts premature v20/v21 as official distribution points, introduces frozen-master integration barrier and layered progress ontology |
 | 24 | `CHAT-024` | 2026-08-28 | `DONE` | OEM/device research triangulates AJL33PQ0866/YGT software identity, CF26/SM PCB family and physical 3.6/12 dual-lens configuration; builds ranked donor/reference corpus without promoting any retail SKU to target truth |
-| 25 | `CHAT-025` | 2026-08-28 — 2026-08-29 | `IN_PROGRESS` | Agent 2 Cross-Platform Gap Hunter: external SDK/BSP/OEM source search, lifecycle/stats/RAW architecture audit, exact-FH8626 AWS/Tuya leads and targeted reverse inputs for Agent 1/OpenIPC |
+| 25 | `CHAT-025` | 2026-08-28 — 2026-08-29 | `DONE` | Cross-platform gap hunter discovers exact-FH8626 public adapter/SDK targets, exposes stats-epoch/lifecycle/RAW architecture leads, audits current source risks and packages targeted inputs instead of repeating Apollo reverse |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -852,6 +852,18 @@ Live work tips на момент refresh остались:
 
 Исторически `CHAT-024` — external web/OEM research через browser/chat; modern GitHub/Drive/Ghidra roles не backdate'ятся.
 
+## Что CHAT-025 добавил к картине
+
+- I-052/I-053/I-054 promoted to CONSOLIDATED: Cross-Fullhan/external-research methodology is now a repeated specialist workflow.
+- I-086: negative architecture audit.
+- I-087: discovered vs acquired vs prepared external artifact status.
+- I-088: compact targeted cross-platform lead format for Agent 1.
+- I-089: independent-source corroboration weighted by SoC distance.
+- I-090: typed transactions + generation invalidation as reusable stateful-ISP architecture.
+- E-009/E-014 reinforced by unnecessary SHA/user-facing hash packaging.
+- D23: exact-FH8626 adapter/SDK leads plus cadence/statistics/lifecycle/RAW omissions.
+- A4.15: dedicated cross-platform research intelligence lane.
+
 ## Следующее действие
 
-Перейти к `CHAT-025`.
+Выполнить post-file refresh, затем перейти к `CHAT-026`.
