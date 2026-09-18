@@ -386,6 +386,20 @@ Productization-agent может открыть integration gap, но не рев
 
 CHAT-028 одновременно показывает недостаток этой схемы: bare labels `Agent 1/2/3` уже повторяются между orchestration waves. Без stable role/wave IDs provenance начинает путаться даже у центрального агента.
 
+### A4.19 — Productization specialist becomes executable source lane
+Статус после `CHAT-029`: `OBSERVED`.
+
+Agent 3 no longer returns only architecture/research notes. The lane produces source-level reusable units, tests, Buildroot staging and upstream RFC material while preserving explicit hardware-evidence boundaries.
+
+Its ownership rule is narrow:
+- it may build userspace/runtime abstractions around confirmed contracts;
+- it must not invent missing FH8626 HAL structures;
+- it does not change canonical reverse truth;
+- unverified target work remains source/host-tested, not hardware PASS;
+- missing SDK/Majestic support becomes a blocker ledger, not a reason to stop all productization.
+
+This is the first historical lane that looks like a conventional software-development workstream fed by reverse contracts.
+
 ### A5 — Специализированные MCP/агенты
 Статус: `BOOTSTRAP`.
 
@@ -400,7 +414,7 @@ CHAT-028 одновременно показывает недостаток эт
 
 В `CHAT-011` появляется ещё одна граница ручного режима: proven development image начинает расходиться с canonical source из-за временных overlay/init/network mutations. Без внешнего debt ledger пользователь вынужден сам напоминать, что перед final port эти изменения нельзя забыть вернуть или интегрировать чисто.
 
-## Уроки CHAT-001…CHAT-028 для будущей agentic-системы
+## Уроки CHAT-001…CHAT-029 для будущей agentic-системы
 
 1. **Текущее runtime state должно быть внешним фактом, а не памятью диалога.** Потери «stock или OpenIPC?» породили дорогие ошибки.
 2. **Agent handoff — необходим, но не должен становиться гигантской свалкой.** Нужны краткая карта и подробные приложения.
@@ -498,6 +512,10 @@ CHAT-028 одновременно показывает недостаток эт
 94. **Integration gaps должны маршрутизироваться по типу доказательства.** Productization формулирует blocker, external lane даёт semantic lead, exact reverse подтверждает target contract.
 95. **Hardware backend должен переживать смену frontend-а.** Majestic/Divinus — consumers, а camera-level contract остаётся отдельным.
 96. **Engineering bring-up и upstream supply chain — разные gates.** Можно двигать target работу без ложного заявления upstream readiness.
+97. **Verification принадлежит exact artifact identity.** Repacked/reconstructed patch не наследует PASS старой версии без byte/commit continuity.
+98. **Productization specialist может работать до native HAL.** Sidecar/runtime/source packages дают реальный progress поверх подтверждённого owner contract.
+99. **Cross-architecture sidecar должен иметь explicit wire ABI.** Native C layouts не являются protocol.
+100. **Source-only staging лучше фиктивной firmware integration.** Не добавлять generated binaries или opaque stock payload, чтобы создать видимость готового OpenIPC target.
 
 ## Следующие исторические переходы, которые нужно искать
 
