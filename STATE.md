@@ -123,14 +123,24 @@ The tip contains the newest native-HAL/media/ISP/audio/transport migration work.
 
 Repository: `ArthurKoba/openipc-firmware`.
 
+Preservation snapshot:
+
 - branch: `fh8626v100-platform`
-- observed tip: `f4bf49da6ef355c9e733e00d774efe403513b1d4`
-- relation to its preserved base: one WIP commit
-- top commit: `WIP: preserve FH8626V100 platform integration state`
+- tip: `f4bf49da6ef355c9e733e00d774efe403513b1d4`
+- role: historical mixed WIP/evidence only
 
-This branch is a preservation snapshot, not an accepted repository layout. The snapshot currently mixes kernel patches, board-specific support, a large Divinus patch, proprietary Fullhan modules/libraries, camera media-owner/ISP source and host tests. Every retained item must be classified by ownership before cleanup or upstream preparation.
+Clean integration candidate:
 
-Its historical `3 MiB kernel / 1 MiB rootfs_data / rootfs at 0x450000` arrangement is preservation evidence only. If the final curated FH8626 kernel fits the standard 2 MiB OpenIPC partition, Firmware must use the normal OpenIPC 8 MiB assembly boundaries instead of carrying that old special layout.
+- branch: `rework/fh8626v100-clean-integration`
+- tip: `f9146dd42a2f606d305ebccd301268848de26880`
+- base: `master@47ccdbee45fa5b8eee69c25c7af656cd5d35a28e`
+- diff: only the FH8626 generic kernel config, generic lite defconfig and CI registration
+
+The clean branch consumes `openipc-linux/rework/fh8626v100-final-series@357c2d13...` directly and carries no FH8626 kernel patch directory. It also carries no AJL board package/fragment, no factory `.ko/.so/.bin`, and no local/patch copy of Divinus. The temporary exact Linux tarball points at the ArthurKoba fork only until the curated series lands in `OpenIPC/linux`; that pin is not upstream-ready provenance.
+
+Firmware now inherits the standard OpenIPC 8 MiB assembly budget: 2 MiB kernel plus 5 MiB SquashFS, while the Linux source supplies `256K boot + 64K env + 2048K kernel + 5120K rootfs + rest rootfs_data` (704 KiB remainder on 8 MiB NOR). The prior 3 MiB-kernel arrangement remains preservation evidence only.
+
+The clean branch is `SOURCE_CONFIRMED / CLEAN_ARCH_CANDIDATE`, not a build or hardware acceptance. The owner still needs to run the authoritative build and record final kernel/rootfs sizes. Binary ownership and exact hashes are recorded in `docs/process/fh8626-firmware-ownership-audit.md`.
 
 ### Builder
 

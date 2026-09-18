@@ -81,15 +81,17 @@ This is an independent platform research task and does **not** block Firmware, D
 
 ## P0 — firmware ownership sanitation
 
-24. Treat `openipc-firmware/fh8626v100-platform` as a preservation snapshot, not a final structure.
-25. Inventory every FH8626 item in that snapshot and assign one owning repository before moving or deleting it.
-26. Remove kernel patches from the future Firmware contribution set once the corresponding `openipc-linux` source is authoritative.
-27. Move/curate one-camera behavior toward Builder and Divinus implementation toward Divinus; retain in Firmware only genuinely shared SoC/runtime integration that satisfies Firmware rules and provenance requirements.
-28. Track proprietary media/runtime artifacts through `docs/process/fh8626-blob-retirement.md`. The preservation branch currently contains 16 binary artifacts: eight `.ko`, two `.so` and six `.bin` files. They are migration dependencies/evidence, not the desired final upstream architecture.
-29. Do not delete a working blob merely to make the tree look clean. First identify its ABI, callers, hardware role, provenance and replacement boundary; then replace it with source-built code or a defensible SDK-derived artifact and hardware-test the replacement.
-30. Prioritize contained replacements before reopening broad ISP reverse: `libgc1054_mipi.so`, `libmipi.so`, then separable kernel modules and generated sensor/profile data. Treat `rtthread_arc.bin` as a separate ARC/RTX firmware project.
-31. The substantial open ISP/AE/AWB/CCM runtime already recovered in source reduces the remaining userspace algorithm work, but it does not by itself replace proprietary kernel media modules or ARC firmware.
-32. Drop the historical FH8626 3 MiB-kernel / `0x450000` rootfs assembly rule when the final measured kernel confirms the standard OpenIPC layout.
+24. Keep `openipc-firmware/fh8626v100-platform@f4bf49da...` as a preservation snapshot only.
+25. Ownership inventory is complete in `docs/process/fh8626-firmware-ownership-audit.md`: 16 binary paths, 15 unique payloads, exact SHA-256 values and intended repository/disposition are recorded.
+26. Use `openipc-firmware/rework/fh8626v100-clean-integration@f9146dd4...` as the clean Firmware source/layout candidate. It is rebuilt from current `master`, not cleaned in place.
+27. The clean branch consumes `openipc-linux/rework/fh8626v100-final-series@357c2d13...` directly and contains no duplicate FH8626 kernel patch directory.
+28. Replace the temporary ArthurKoba Linux tarball pin with the OpenIPC-owned Linux ref after the curated kernel series lands upstream.
+29. Keep AJL-specific policy out of Firmware. Rebuild the ANJIA Builder profile on current Builder master and make its kernel fragment select `CONFIG_FH8626V100_SD0_1BIT=y`; never restore `CONFIG_FH8626V100_AJL33PQ0866_MMC`.
+30. Keep Divinus implementation in Divinus. Firmware may select the ordinary Divinus package but must not carry the historical giant FH8626 Divinus patch or a local source path.
+31. Keep factory `.ko/.so/.bin` out of the clean Firmware contribution. They remain migration dependencies/evidence until replaced or tied to defensible SDK provenance; follow `docs/process/fh8626-blob-retirement.md`.
+32. Before retiring the preservation branch as an evidence source, externalize every still-needed unique proprietary payload that lacks an evidence-store locator.
+33. Owner gate: build the exact clean Firmware candidate, record `uImage` and SquashFS sizes, and confirm it stays within the standard 2048 KiB / 5120 KiB limits. No agent-side heavyweight build substitutes for this.
+34. Hardware gate after the build: validate boot/MTD/rootfs_data and the runtime path actually selected for media. The clean architecture is not a claim that blob-free media is already hardware-accepted.
 
 ## P1 — Divinus target completion
 
