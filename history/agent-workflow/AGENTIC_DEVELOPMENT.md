@@ -400,6 +400,18 @@ Its ownership rule is narrow:
 
 This is the first historical lane that looks like a conventional software-development workstream fed by reverse contracts.
 
+### A4.20 — Cumulative kernel specialist lane
+Статус после `CHAT-030`: `OBSERVED`.
+
+Kernel work becomes another persistent specialist lane, but this chat exposes a coordination anti-pattern: lack of direct access to the user's WSL source tree caused the agent to serialize every intermediate stage into a separate archive.
+
+The corrected model is:
+`offline analysis/source preparation → one cumulative working line → one operator WSL validation runner → report → next delta`.
+
+Intermediate audits remain internal provenance instead of becoming dozens of user-facing handoffs.
+
+This is an important step toward later repository-native development: the desired unit of continuity is the source line/commit history, not numbered transport archives.
+
 ### A5 — Специализированные MCP/агенты
 Статус: `BOOTSTRAP`.
 
@@ -414,7 +426,7 @@ This is the first historical lane that looks like a conventional software-develo
 
 В `CHAT-011` появляется ещё одна граница ручного режима: proven development image начинает расходиться с canonical source из-за временных overlay/init/network mutations. Без внешнего debt ledger пользователь вынужден сам напоминать, что перед final port эти изменения нельзя забыть вернуть или интегрировать чисто.
 
-## Уроки CHAT-001…CHAT-029 для будущей agentic-системы
+## Уроки CHAT-001…CHAT-030 для будущей agentic-системы
 
 1. **Текущее runtime state должно быть внешним фактом, а не памятью диалога.** Потери «stock или OpenIPC?» породили дорогие ошибки.
 2. **Agent handoff — необходим, но не должен становиться гигантской свалкой.** Нужны краткая карта и подробные приложения.
@@ -516,6 +528,10 @@ This is the first historical lane that looks like a conventional software-develo
 98. **Productization specialist может работать до native HAL.** Sidecar/runtime/source packages дают реальный progress поверх подтверждённого owner contract.
 99. **Cross-architecture sidecar должен иметь explicit wire ABI.** Native C layouts не являются protocol.
 100. **Source-only staging лучше фиктивной firmware integration.** Не добавлять generated binaries или opaque stock payload, чтобы создать видимость готового OpenIPC target.
+101. **Transport archive не должен быть unit of development.** Offline work накапливается в одной source line и выдаётся на validation boundary.
+102. **Отсутствие прямого workspace access нельзя компенсировать artifact spam.** Лучше один cumulative runner/report, чем десятки numbered stages.
+103. **Простой shell/tar предпочтительнее генератора-обёртки.** Tool complexity должна соответствовать задаче.
+104. **Kernel platform и media/VMM имеют разные risk gates.** Сначала закрывается безопасный SoC baseline, затем high-risk multimedia layer.
 
 ## Следующие исторические переходы, которые нужно искать
 
