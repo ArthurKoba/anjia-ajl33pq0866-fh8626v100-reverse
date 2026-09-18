@@ -238,6 +238,8 @@ Evidence: `CHAT-002` — пользователь несколько раз тр
 
 Кандидат: execution-first / concise-progress rule для reverse и портирования.
 
+Evidence: CHAT-019 (partial export) добавляет небольшой operational пример: после неуспешной RTSP-auth проверки агент снова ушёл в дополнительный restart-path investigation; пользователь остановил лишние круги. Технически полезный HTTP snapshot path уже был известен и позже был выдан напрямую.
+
 ### E-017 — Недетерминированный операторский тест
 Статус: `OBSERVED`.
 
