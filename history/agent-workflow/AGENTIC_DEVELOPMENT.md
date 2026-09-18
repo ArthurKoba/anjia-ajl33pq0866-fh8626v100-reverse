@@ -258,6 +258,29 @@ Central orchestrator теперь интегрирует specialist results в n
 
 Ограничение этапа сохраняется: workspace всё ещё переносится handoff-архивами и physical attachments; общий GitHub/Drive/Ghidra MCP authority исторически ещё впереди.
 
+### A4.12 — Matrix-driven hardware evidence acquisition
+Статус после `CHAT-021`: `OBSERVED`.
+
+После того как local master workspace получил task routing и governance, тот же принцип переносится на stock hardware evidence.
+
+Операторская сессия больше не строится как «сними ещё один dump». Появляются:
+- canonical state matrix;
+- transition matrix;
+- capture manifests;
+- evidence catalog;
+- corrected/superseded metadata;
+- targeted before/early/settled regions;
+- explicit tool/capability limitations;
+- static reverse-preparation status;
+- remaining acquisition gaps;
+- delta package относительно stable master.
+
+Оператор по-прежнему вручную выполняет hardware-only actions, но всё больше может делать это без анализа: agent заранее выбирает state, recipe, expected file sizes и stop condition, затем сам интерпретирует результат.
+
+Это важный промежуточный уровень автономности: **agent owns experimental design and evidence normalization; human owns physical actuation/command execution**.
+
+При этом выявляется новый safety dimension — resource budget. Read-only capture может разрушить stock runtime через OOM, поэтому размер/tmpfs/RAM становятся частью experiment prerequisites.
+
 ### A5 — Специализированные MCP/агенты
 Статус: `BOOTSTRAP`.
 
@@ -272,7 +295,7 @@ Central orchestrator теперь интегрирует specialist results в n
 
 В `CHAT-011` появляется ещё одна граница ручного режима: proven development image начинает расходиться с canonical source из-за временных overlay/init/network mutations. Без внешнего debt ledger пользователь вынужден сам напоминать, что перед final port эти изменения нельзя забыть вернуть или интегрировать чисто.
 
-## Уроки CHAT-001/002/003/004/005/006/007/008/009/010/011/012/013/014/015/016/017/018/019/020 для будущей agentic-системы
+## Уроки CHAT-001/002/003/004/005/006/007/008/009/010/011/012/013/014/015/016/017/018/019/020/021 для будущей agentic-системы
 
 1. **Текущее runtime state должно быть внешним фактом, а не памятью диалога.** Потери «stock или OpenIPC?» породили дорогие ошибки.
 2. **Agent handoff — необходим, но не должен становиться гигантской свалкой.** Нужны краткая карта и подробные приложения.
@@ -340,6 +363,11 @@ Central orchestrator теперь интегрирует specialist results в n
 64. **Continuity долгой задачи живёт в session ledger.** Checkpoint, blocker, expensive work и next action должны переживать chat/context loss.
 65. **Normalized knowledge и provenance — разные слои.** Raw agent result сохраняется для проверки, но active source of truth остаётся один.
 66. **Progress должен иметь ontology.** Module/status matrix надёжнее одной плавающей цифры процентов.
+67. **Read-only capture тоже имеет resource budget.** Размер tmpfs/RAM/I/O должен проверяться до hardware acquisition.
+68. **Manifest должен различать intended и observed state.** Metadata correction сохраняется отдельно, raw evidence не переписывается молча.
+69. **Transition evidence обычно ценнее независимых full-state heap diffs.** Synchronized targeted captures уменьшают temporal noise.
+70. **Hardware acquisition тоже нуждается в coverage matrix.** Canonical/superseded/unavailable states должны быть видимы до следующего эксперимента.
+71. **Evidence лучше передавать delta-пакетом поверх stable master.** Новые captures/static material не требуют пересборки всего корпуса знаний.
 
 ## Следующие исторические переходы, которые нужно искать
 
