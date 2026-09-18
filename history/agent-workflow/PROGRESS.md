@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_031_POST_REFRESH_PENDING`
+Статус: `READY_FOR_NEXT_SOURCE`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **31**
 - Последний источник: `CHAT-031`
 - Период последнего источника: **2026-08-30**
-- Следующее действие: final post-file refresh
+- Следующее действие: получить следующий уникальный исторический источник
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -1029,4 +1029,4 @@ Divinus hardening advances independently of owner integration, preserving single
 
 ## Следующее действие
 
-Выполнить final post-file refresh и вернуть аудит в `READY_FOR_NEXT_SOURCE`.
+Получить следующий уникальный исторический источник. Следующая плановая expanded live-state сверка — после `CHAT-033` либо раньше при крупном историческом переходе к Drive/Git/MCP.
