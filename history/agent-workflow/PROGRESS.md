@@ -1,26 +1,26 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_021_IN_PROGRESS`
+Статус: `CHAT_021_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **20**
-- Последний источник: `CHAT-020`
-- Период последнего источника: **2026-08-27 — 2026-08-28**
-- Следующее действие: завершить анализ `CHAT-021`
+- Обработано исторических файлов: **21**
+- Последний источник: `CHAT-021`
+- Период последнего источника: **2026-08-28**
+- Следующее действие: post-file refresh + 21-file live-state сверка
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-020 |
+| Направление | Файл | Состояние после CHAT-021 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 20/?? sources обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 36 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 68 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D19: current-day reverse convergence → runtime integration plan |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.11: governed local master workspace |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 21/?? sources обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 38 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 74 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D20: normalized stock evidence campaign |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.12: matrix-driven hardware evidence acquisition |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -75,7 +75,7 @@
 | 18 | `CHAT-018` | 2026-08-27 — 2026-08-28 | `DONE` | Expanded snapshot overlapping CHAT-016; unique tail validates wide→tele→wide on stock, shared AE context/history and implementation-ready dual-lens contract |nded snapshot of Agent 1 branch: prefix overlaps CHAT-016; unique tail adds controlled wide→tele→wide runtime validation, implementation-ready dual-lens closure and Task3 orchestrator supplement |
 | 19 | `CHAT-019` | 2026-08-28 | `DONE` | Partial export: stock RTSP auth behavior and known HTTP JPEG snapshot endpoint; no new major workflow class |
 | 20 | `CHAT-020` | 2026-08-27 — 2026-08-28 | `IN_PROGRESS` | Central orchestrator: quality rules become automated workspace architecture, clean master-tree, task router/sessions/runbooks/health checks, integration of three specialist lanes and Cross-Fullhan references |
-| 21 | `CHAT-021` | 2026-08-28 | `IN_PROGRESS` | Stock evidence acquisition campaign: four imaging states, transitions, light/audio/JPEG/PTZ, targeted runtime memory, static module extraction/reverse-prep, canonical evidence matrix and delta package |
+| 21 | `CHAT-021` | 2026-08-28 | `DONE` | Systematic stock evidence campaign: four canonical imaging states, bidirectional lens/day-night transitions, white-light/audio/JPEG/PTZ, targeted Apollo runtime evidence, static reverse preparation, evidence catalog/state matrix and delta package; OOM/resource and metadata-correction lessons |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -751,6 +751,26 @@ I-047 and I-060 promoted to CONSOLIDATED because operational state and corpus-fi
 ### Technical/agentic transition
 Three specialist lanes converge into one normalized current-day model. Broad reverse is no longer the default; the main path becomes feature-gated runtime integration and hardware validation. The local handoff becomes a governed workspace with executable quality checks.
 
+## Что CHAT-021 добавил к картине
+
+### Новые error-классы
+- E-037: read-only diagnostic capture без resource budget может разрушить constrained target; full RAM dump в /tmp вызвал OOM и убил Apollo.
+- E-038: capture manifest может описывать intended, а не observed state; metadata correction должна сохранять provenance.
+
+### Новые improvements
+- I-069: resource-budgeted capture;
+- I-070: provenance-preserving metadata correction;
+- I-071: synchronized targeted transition RAM evidence вместо noisy independent full-heap diff;
+- I-072: capture state matrix + canonical/superseded evidence catalog;
+- I-073: target capability map как executable command contract;
+- I-074: evidence delta package поверх stable master.
+
+### Технический вклад
+Stock становится воспроизводимым ground-truth dataset: WIDE/TELE × DAY/NIGHT, lens/day-night/light/audio/PTZ transitions, JPEG path, boot/audio state, sensor registers, targeted Apollo RAM и prepared static module/library reverse material. Independent full heaps признаны слишком шумными для causality; targeted synchronized regions становятся preferred evidence.
+
+### Agentic role
+Проект переносит governance с reverse corpus на hardware evidence: agent проектирует experiment/state matrix, normalization и evidence catalog; пользователь в основном выполняет физические переключения и stock-команды.
+
 ## Следующее действие
 
-Перейти к `CHAT-021`; после него выполнить expanded live-state сверку.
+Выполнить обязательный post-file refresh и expanded live-state сверку после 21 источника. После этого ожидать следующий уникальный исторический источник.
