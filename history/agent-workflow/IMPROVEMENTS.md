@@ -186,6 +186,8 @@ CHAT-007 даёт прямое подтверждение: после вопро
 
 Исторически `CHAT-003` показывает сам переход к persistent owner + reloadable `.so`; `CHAT-002` уже использует этот механизм как стандартный test loop.
 
+`CHAT-022` возвращает hot-plugin идею уже как production-candidate: long-lived media owner + reloadable `libfhisp_algo.so`, runtime gates и rollback позволяют менять AE/AWB/IQ без reboot при здоровом media state.
+
 ### I-018 — Workspace hygiene и один authoritative reverse artifact
 Статус: `CONSOLIDATED`.
 
@@ -712,6 +714,8 @@ Quality-retrospective в конце `CHAT-014` впервые явно пред�
 
 `CHAT-021` расширяет state-machine на stock acquisition: transitions фиксируются before/after_early/after_settled, а full cycles — ON→settled→OFF→settled, что позволяет анализировать обе стороны одной операцией.
 
+`CHAT-022` показывает staged hardware parity loop на production candidate: baseline → одна gated feature → capture/readback → off/rollback → следующая feature. Gain publication, APC, NR3D, LTM и manual AE проверяются именно по одному.
+
 ### I-049 — Ретроспектива качества агента как отдельный проектный артефакт
 Статус: `CONSOLIDATED`.
 
@@ -1100,6 +1104,8 @@ Stock acquisition в `CHAT-021` оформляется как матрица, а
 
 Capability map должен быть входом command generator, а не просто справочной заметкой.
 
+`CHAT-022` усиливает требование: current operational recipe должен использовать capability map и runbook — `.204`, `scp -O`, UART-first, mount `/dev/mtdblock6`, volatile `/tmp` и stock module order нельзя восстанавливать по памяти.
+
 ### I-074 — Evidence delta package поверх stable master
 Статус: `OBSERVED`.
 
@@ -1110,6 +1116,64 @@ Capability map должен быть входом command generator, а не п�
 - имеет orchestrator README, gaps, provenance, state matrix и manifest.
 
 Это хороший промежуточный transport pattern между mutable workspace и тяжёлым monolithic handoff.
+
+### I-075 — Source consolidation: canonical tree вместо цепочки diagnostic snapshots
+Статус: `OBSERVED`.
+
+`CHAT-022` показывает, что после быстрого experimental development source lineage `v4.2.0 → v5 → v7 → v8` стала опасной: в одном snapshot смешиваются productionizable code, diagnostics, temporary lifecycle patches и hardware-debug logging.
+
+Правильный следующий этап:
+- выбрать один canonical implementation tree;
+- разнести board/platform, sensor, media lifecycle, ISP runtime, AE, AWB/CCM, IQ, control plane, diagnostics;
+- validated deltas переносить маленькими patch/commit;
+- versioned/candidate snapshots уводить в provenance;
+- feature registry связывать с hardware evidence;
+- не принимать последний diagnostic snapshot целиком как production source.
+
+### I-076 — Board bootstrap — отдельный hardware contract, а не shell ritual
+Статус: `OBSERVED`.
+
+Главный dual-sensor root cause `CHAT-022` оказался не в runtime lens-switch logic, а в cold-boot board sequence:
+
+`mount stockapp RO → product environment → GPIO5 LOW → load media modules → GPIO5 HIGH → owner`.
+
+После этого stock `sensor_probe` видит оба GC1054 и WIDE↔TELE реально даёт изображение.
+
+Вывод: boot-time GPIO/reset/module ordering должен жить в board/platform initialization и иметь отдельный acceptance status. Нельзя оставлять его ручной последовательностью UART-команд.
+
+### I-077 — Control plane должен переживать потерю видеопотока
+Статус: `OBSERVED`.
+
+В diagnostic owner frame retrieval и FIFO control оказались связаны одним execution flow. При зависшем/blocking media call процесс может оставаться владельцем hardware, но перестать отвечать на `status`, `shutdown` и rollback.
+
+Production architecture должна разделять:
+- media retrieval;
+- command/control plane;
+- watchdog/health;
+- shutdown/recovery.
+
+Hardware owner обязан оставаться управляемым даже при полном video loss.
+
+### I-078 — Hardware-proven mechanism отдельно от image-quality correctness
+Статус: `OBSERVED`.
+
+`CHAT-022` аппаратно доказал выполнение и rollback нескольких paths — live gain, APC, NR3D, LTM, manual AE, AWB→CCM. Но это не означает визуальную parity stock.
+
+Особенно AWB→CCM существенно изменял gains/registers, а persistent green cast почти не менялся. Поэтому status должен различать:
+- механизм выполняется;
+- register contract совпадает;
+- visual/algorithmic parity подтверждена.
+
+Это предотвращает ложное повышение механического PASS до полного subsystem PASS.
+
+### I-079 — Rejected-hypothesis ledger экономит hardware cycles
+Статус: `OBSERVED`.
+
+Tele-debug в `CHAT-022` последовательно исключил несколько правдоподобных причин: GPIO polarity, pinmux, hidden wrapper magic, один ioctl, отсутствие второго SetSensorFmt и другие.
+
+Финальный handoff сохраняет их как `REJECTED_HYPOTHESES`, чтобы следующие агенты не повторяли те же эксперименты без нового противоречащего evidence.
+
+Для длинного hardware reverse отрицательный результат должен быть таким же долговечным knowledge artifact, как положительный contract.
 
 ## Исходные этапы, ещё не подтверждённые
 
