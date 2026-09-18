@@ -530,3 +530,46 @@ Final evidence organization distinguishes:
 
 The stock evidence is packaged as a delta over stable master rather than duplicating the complete handoff.
 
+## D21 — Production catch-up и hardware parity session
+
+`CHAT-022` — production implementation branch, стартующая от master v19 с целью сократить разрыв `reverse knowledge → working implementation`.
+
+Source catch-up реализовал или восстановил:
+- live total-gain publication;
+- physical GC1054 integration/gain commits и rollback;
+- C883C/C7EB0 AE state-machine pieces включая поздний D26D0/action6 tail;
+- AWB→C9F68→CCM;
+- APC;
+- NR3D;
+- dynamic LTM;
+- YC/detail pieces;
+- wide-default dual sensor + runtime switching;
+- reloadable `libfhisp_algo.so`;
+- per-feature gates, status, rollback and capture tooling.
+
+Hardware testing по одному delta подтвердил:
+- WIDE native H.264 capture;
+- live gain publication;
+- APC runtime execution/rollback;
+- NR3D runtime execution/rollback;
+- LTM runtime execution/rollback;
+- manual sensor integration commit + rollback;
+- manual sensor gain commit + rollback;
+- AWB→CCM register/gain change + restore.
+
+Automatic AE не повышен до PASS: runtime `API_ISP_GetAeStat=0`/provider unavailable оставил свежую statistics path неподтверждённой.
+
+Dual-sensor integration сначала систематически ломалась на TELE: GPIO selection проходил, но SensorFmt давал sensor-register write failures. Несколько гипотез были hardware-отброшены. Надёжный discriminator — stock `sensor_probe` — показал, что TELE физически не виден до release общего sensor reset.
+
+Root cause:
+`GPIO5 LOW → media modules load → GPIO5 HIGH`.
+
+После включения этого stock-like cold-boot sequence оба GC1054 становятся видимыми, WIDE/TELE переключение реально даёт изображение, WIDE остаётся product default. Это board bootstrap contract, а не runtime workaround.
+
+Owner lifecycle продвинулся только частично. Experimental `shutdown` доказал возможность завершить здоровый owner и заново запустить процесс без полного reboot, но exact stock teardown не восстановлен. При broken/blocking media state control FIFO может зависнуть вместе с stream retrieval. Поэтому hot replacement остаётся production debt.
+
+Цветовой эксперимент дал важный отрицательный результат: AWB/CCM registers и gains меняются сильно, но постоянный green cast визуально почти остаётся. Следующая focused задача формализована как:
+`RAW format/bit depth → Bayer order/permutation → VI/ISP input → RAW packing → black level → demosaic/early color → затем CCM`.
+
+В конце сессии source snapshot явно классифицирован как integration/diagnostic lineage, не готовое production tree; orchestrator должен провести source consolidation и сохранить hardware findings отдельно от временных diagnostics.
+
