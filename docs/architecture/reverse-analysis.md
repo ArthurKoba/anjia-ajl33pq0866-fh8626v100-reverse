@@ -8,6 +8,58 @@ The canonical mutable reverse-analysis environment for this camera is the Ghidra
 
 That project is the working index for functions, symbols, types, xrefs, strings, data, instructions, decompiler output and annotations used during focused reverse-engineering work.
 
+## Opening the canonical headless projects
+
+The Ghidra MCP backend may be healthy while no project is currently open. In
+headless mode, an empty `list_projects()` call is not sufficient evidence that
+the camera projects are unavailable: project discovery must search the mounted
+project root explicitly.
+
+Use this sequence through Koba MCP Bridge:
+
+1. Call Ghidra `list_projects` with `searchDir=/projects`.
+2. Select the concrete `.gpr` path for the subsystem being investigated.
+3. Call `open_project` with that absolute project path.
+4. Confirm `get_project_info` reports `has_project=true` and the expected
+   `project_name`.
+5. Discover program paths inside a headless project with
+   `load_program_from_project(path="/does-not-exist", dry_run=true)` when
+   necessary; its diagnostics list the available program paths. Do not treat
+   `list_project_files` failure as missing data: that endpoint requires GUI
+   mode in the current headless deployment.
+6. Load the required program with `load_program_from_project` using its
+   project-relative path, for example `/libgc1054_mipi.so`.
+7. When more than one program is open, always pass the explicit `program`
+   name to analysis tools.
+
+Current mounted project root:
+
+`/projects/anjia-ajl33pq0866-fh8626v100`
+
+### GC1054 / MIPI sensor project
+
+For FH8626 GC1054/MIPI reverse work use:
+
+`/projects/anjia-ajl33pq0866-fh8626v100/supplement_20260905/anjia_ajl33pq0866_fh8626v100_sensor_libs.gpr`
+
+Project name:
+
+`anjia_ajl33pq0866_fh8626v100_sensor_libs`
+
+Programs currently present:
+
+- `/libgc1054_mipi.so`
+- `/libmipi.so`
+
+This project contains the exact retained FH8626V100 sensor/MIPI userspace
+objects used by the stock camera. Reverse conclusions from these binaries are
+FH8626 target evidence, subject to the normal distinction between static
+reverse evidence and hardware acceptance.
+
+Do not recreate or rename these Ghidra projects from Git. The mounted Ghidra
+workspace is the mutable analysis authority; Git records only the access
+procedure and durable conclusions.
+
 ## Git boundary
 
 Promote durable results from Ghidra into Git when they are useful outside the analysis session:
