@@ -23,8 +23,8 @@ Canonical cross-agent coordination: reverse issue #3.
 
 Current refs:
 - Firmware Majestic: `work/fh8626v100-majestic@cf4c6c47`
-- Divinus: `work/fh8626v100@44c4fb94`
-- Builder: `work/fh8626v100-anjia@a6d6fca7`
+- Divinus: `work/fh8626v100@875e0697`
+- Builder: `work/fh8626v100-anjia@dc7ddabf`
 - Linux: `work/fh8626v100@357c2d13`
 
 ## Video
