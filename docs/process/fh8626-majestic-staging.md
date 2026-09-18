@@ -1,6 +1,6 @@
 # FH8626V100 Majestic staging
 
-Status: `STAGED / HISTORICAL_CONTROL_PLANE_HARDWARE_PASS / SENSOR_ABI_ADAPTER_READY / NEW_BUILD_PENDING`.
+Status: `SOFTWARE_STAGING_COMPLETE / HISTORICAL_CONTROL_PLANE_HARDWARE_PASS / NEW_BUILD_AND_HARDWARE_PENDING`.
 
 Checked: 2026-09-18.
 
@@ -69,8 +69,12 @@ The package:
 - installs a media-off `/etc/majestic.yaml`;
 - installs an init script using the hardware-proven HTTP-only invocation;
 - builds and installs `majestic-fh8626-abi-probe`, which performs no SDK/media initialization and makes no device writes;
-- builds a source `majestic-fh8626/libgc1054_mipi.so` facade plus an explicit `majestic-fh8626-media-run` bring-up runner;
-- keeps the normal init service media-off; the sensor facade is not selected by default;
+- builds a source `majestic-fh8626/libgc1054_mipi.so` facade for the proven FH8852 0x7c -> FH8626 0x68 sensor mismatch;
+- builds source `libvmm.so` and `libdsp.so` facades for the recovered FH8626 VMM/SYS/VPSS/VENC boundary;
+- translates native FH8626 stream descriptors into the FH8852 public stream representation and preserves exactly-once descriptor release;
+- includes strict, permissive-stub and fixed native-video runners; native-video is constrained to the recovered 1280x720@25 H.264 Baseline/VBR contract;
+- keeps the normal init service media-off;
+- moves Majestic's internal HTTP listener to loopback:18080 and puts a source FH8626 backend proxy on external port 80. Ordinary HTTP/API/WebSocket traffic is tunneled unchanged while `/metrics` is generated from `/proc`; the stock WebUI JavaScript is not modified;
 - installs **no** FH8852 kernel modules, firmware, load scripts or donor sensor plug-ins.
 
 This is intentionally a compatibility staging package, not a statement that FH8852 userspace blobs are the final FH8626 media architecture.
@@ -122,13 +126,14 @@ The video/ISP path is explicitly unfinished. Do not enable media by default or c
 
 ## Next gates
 
-1. Owner-build Firmware `work/fh8626v100-majestic@c741f6f...` through Builder `work/fh8626v100-anjia` target `fh8626v100_lite_anjia-ajl33pq0866_majestic`; record resolved Buildroot config plus kernel/rootfs sizes.
-2. Boot it and confirm Majestic process ownership, port 80, WebUI/haserl and board networking/services with media disabled.
-3. Run `majestic-fh8626-abi-probe` and retain complete output. Also record `sha256sum /usr/libexec/majestic-fh8852v200/majestic` so this first reconstructed run is attributable to exact donor bytes.
-4. Pin or otherwise make that donor Majestic binary reproducible; the current `master` S3 artifact is a moving input and no immutable donor object is currently indexed in `evidence/MANIFEST.tsv`.
-5. Use the probe result and translation table to choose the smallest source adapter slice. Do not re-reverse already recovered FH8626 VMM/VPU/PAE/ISP operations.
-6. First media acceptance remains VI -> VENC -> sustained RTSP. ISP tuning, JPEG, audio and board scene integration follow only after base H.264 is stable.
-7. Do not copy old Firmware kernel patches, FH8626 factory blobs or FH8852 kernel-side payloads into this direction to make capture appear to work.
+1. Owner-build Firmware `work/fh8626v100-majestic@4bd2f8bc...` through Builder `work/fh8626v100-anjia` target `fh8626v100_lite_anjia-ajl33pq0866_majestic`; record resolved Buildroot config plus kernel/rootfs sizes.
+2. Boot the default media-off service. Confirm external port 80, stock WebUI/API/WebSocket behavior and live `/metrics` CPU/RAM/uptime/network data through the backend proxy. No frontend patch is part of acceptance.
+3. Run `majestic-fh8626-abi-probe` and retain complete output. Also record `sha256sum /usr/libexec/majestic-fh8852v200/majestic` so the run is attributable to exact donor bytes.
+4. Run strict media mode first and preserve the first failing API/callsite. Run permissive-stub only to expose later optional call ordering. Then run native-video mode.
+5. Native-video acceptance is VI -> VENC -> balanced descriptor acquire/release -> sustained RTSP at the fixed 1280x720@25 H.264 Baseline/VBR contract.
+6. After base H.264 is stable, wrap only the actually-observed Majestic ISP/image, JPEG and audio APIs using the already-recovered FH8626 primitives; do not invent unused FH8852 layouts.
+7. Regress shutdown/restart, PTZ, lens, illumination and storage.
+8. Pin/reproduce the exact donor binary before product acceptance. Do not copy old Firmware kernel patches, factory blobs or FH8852 kernel-side payloads into the design.
 
 
 ## Sensor ABI mismatch and first source adapter
