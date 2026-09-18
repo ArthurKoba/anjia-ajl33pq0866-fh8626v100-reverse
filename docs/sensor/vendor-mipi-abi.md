@@ -21,10 +21,12 @@ No recovered GC1054/MIPI boundary required complex libc-private structures such 
 
 ## Exact open-replacement contracts recovered 2026-09-18
 
-Focused reverse in the canonical sensor project
-`anjia_ajl33pq0866_fh8626v100_sensor_libs` confirmed enough of the active
-GC1054 path to implement the normal 1280x720@25 sensor/MIPI bring-up without
-guessing libc-private state.
+Focused reverse of `/sensor/libgc1054_mipi.so` and
+`/sensor/libmipi.so` in the canonical Apollo project
+`anjia_ajl33pq0866_fh8626v100_apollo` recovered the complete functional
+sensor/MIPI userspace surface. The earlier standalone `sensor_libs.gpr`
+analysis container was retired after its analysis state was migrated into
+Apollo.
 
 The reusable source representation is
 `source/fh8626v100/components/sensor/gc1054/gc1054_native_contract.h`.

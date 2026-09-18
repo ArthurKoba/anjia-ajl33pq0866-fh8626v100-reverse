@@ -28,7 +28,7 @@ Use this sequence through Koba MCP Bridge:
    `list_project_files` failure as missing data: that endpoint requires GUI
    mode in the current headless deployment.
 6. Load the required program with `load_program_from_project` using its
-   project-relative path, for example `/libgc1054_mipi.so`.
+   project-relative path, for example `/sensor/libgc1054_mipi.so`.
 7. When more than one program is open, always pass the explicit `program`
    name to analysis tools.
 
@@ -36,29 +36,35 @@ Current mounted project root:
 
 `/projects/anjia-ajl33pq0866-fh8626v100`
 
-### GC1054 / MIPI sensor project
+### GC1054 / MIPI userspace reverse
 
-For FH8626 GC1054/MIPI reverse work use:
+GC1054/MIPI userspace analysis belongs in the existing Apollo project:
 
-`/projects/anjia-ajl33pq0866-fh8626v100/supplement_20260905/anjia_ajl33pq0866_fh8626v100_sensor_libs.gpr`
+`/projects/anjia-ajl33pq0866-fh8626v100/anjia_ajl33pq0866_fh8626v100_apollo.gpr`
 
 Project name:
 
-`anjia_ajl33pq0866_fh8626v100_sensor_libs`
+`anjia_ajl33pq0866_fh8626v100_apollo`
 
-Programs currently present:
+Programs currently present for this subsystem:
 
-- `/libgc1054_mipi.so`
-- `/libmipi.so`
+- `/sensor/libgc1054_mipi.so`
+- `/sensor/libmipi.so`
 
-This project contains the exact retained FH8626V100 sensor/MIPI userspace
-objects used by the stock camera. Reverse conclusions from these binaries are
-FH8626 target evidence, subject to the normal distinction between static
-reverse evidence and hardware acceptance.
+The programs retain their full Ghidra analysis state, including function names
+and comments, alongside `/apollo.unpacked`. The former standalone
+`supplement_20260905/anjia_ajl33pq0866_fh8626v100_sensor_libs.gpr` was a
+temporary duplicate analysis container and was deleted after its two programs
+were migrated into the Apollo project. Do not recreate that standalone sensor
+project.
 
-Do not recreate or rename these Ghidra projects from Git. The mounted Ghidra
-workspace is the mutable analysis authority; Git records only the access
-procedure and durable conclusions.
+These objects are exact retained FH8626V100 stock sensor/MIPI userspace
+evidence. Reverse conclusions from them are FH8626 target evidence, subject to
+the normal distinction between static reverse evidence and hardware
+acceptance.
+
+The mounted Ghidra workspace is the mutable analysis authority; Git records
+the access procedure and durable conclusions.
 
 ## Git boundary
 

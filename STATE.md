@@ -9,7 +9,7 @@ Checked: `2026-09-18`.
 - GitHub owns current camera-level source, documentation, contracts, state and evidence manifests.
 - Google Drive owns heavy or unique primary evidence referenced by SHA-256 from `evidence/MANIFEST.tsv`.
 - Ghidra MCP through Koba MCP Bridge is the canonical mutable reverse-analysis workspace.
-- The mounted GC1054/MIPI reverse project is `anjia_ajl33pq0866_fh8626v100_sensor_libs` at `/projects/anjia-ajl33pq0866-fh8626v100/supplement_20260905/anjia_ajl33pq0866_fh8626v100_sensor_libs.gpr`; it contains `/libgc1054_mipi.so` and `/libmipi.so`. Headless project discovery must search `/projects` explicitly.
+- GC1054/MIPI userspace reverse is consolidated into the existing Apollo Ghidra project `anjia_ajl33pq0866_fh8626v100_apollo` at `/projects/anjia-ajl33pq0866-fh8626v100/anjia_ajl33pq0866_fh8626v100_apollo.gpr`; the programs are `/sensor/libgc1054_mipi.so` and `/sensor/libmipi.so`. The former standalone `sensor_libs.gpr` duplicate was deleted after migration. Headless project discovery must search `/projects` explicitly.
 
 ## Target hardware
 
