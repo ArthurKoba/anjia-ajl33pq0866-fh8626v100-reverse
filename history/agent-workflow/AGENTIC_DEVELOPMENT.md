@@ -215,6 +215,25 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 
 Это уже близко к настоящей multi-agent engineering system, но пользователь всё ещё остаётся router-ом physical artifacts между чатами.
 
+### A4.10 — Reverse corpus architecture: handoff превращается в workspace map
+Статус после `CHAT-017`: `OBSERVED`.
+
+`CHAT-017` делает следующий шаг после quality packs и persistent specialist lanes: пользователь требует перестать воспринимать reverse inputs как набор случайных вложений.
+
+Целевая file-based архитектура уже включает:
+- заранее извлечённую stock firmware/filesystem и основные binaries/modules/libs;
+- prepared disassembly, symbols, relocations, strings и task-specific extracts;
+- отдельный runtime-memory layer: maps, initialized RW/GOT/heap, VMM/MMIO snapshots;
+- `CORPUS_MANIFEST` и `REVERSE_STATUS_MATRIX`, чтобы было видно `PREPARED / PARTIAL / MISSING / EXACT`;
+- карту Windows ↔ WSL ↔ camera ↔ archive;
+- toolkit повторяемых операций;
+- историю expensive work, запрещающую повторный full disassembly без доказанного gap;
+- отдельные role/orchestrator instructions.
+
+В той же сессии несколько agent-specific quality retrospectives дедуплицируются в один master quality/reverse-preparation pack.
+
+Это ещё локальный file/handoff workspace: пользователь всё ещё вручную переносит artifacts. Но по структуре это уже прямой предшественник repository/MCP-native проекта — знания становятся адресуемой картой, а не памятью конкретного чата.
+
 ### A5 — Специализированные MCP/агенты
 Статус: `BOOTSTRAP`.
 
@@ -229,7 +248,7 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 
 В `CHAT-011` появляется ещё одна граница ручного режима: proven development image начинает расходиться с canonical source из-за временных overlay/init/network mutations. Без внешнего debt ledger пользователь вынужден сам напоминать, что перед final port эти изменения нельзя забыть вернуть или интегрировать чисто.
 
-## Уроки CHAT-001/002/003/004/005/006/007/008/009/010/011/012/013/014/015/016 для будущей agentic-системы
+## Уроки CHAT-001/002/003/004/005/006/007/008/009/010/011/012/013/014/015/016/017 для будущей agentic-системы
 
 1. **Текущее runtime state должно быть внешним фактом, а не памятью диалога.** Потери «stock или OpenIPC?» породили дорогие ошибки.
 2. **Agent handoff — необходим, но не должен становиться гигантской свалкой.** Нужны краткая карта и подробные приложения.
@@ -288,6 +307,10 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 55. **Focused corpus лучше recursive project scan.** Для subsystem reverse собрать минимальный набор файлов и искать адресно, а не обходить всё дерево.
 56. **Runtime number без lifecycle semantics не является current state.** Dirty/cache/deferred queue нужно отличать от активного controller state.
 57. **Persistent specialist lane доказан как рабочая единица orchestration.** Один thread может последовательно закрывать Task 1/2/3, сохраняя локальный контекст и возвращая интегрируемые units.
+58. **Static code и live mutable data — два разных слоя evidence.** ARM_FULL отвечает за code/xrefs, runtime image — за GOT/RW/heap/tables; не надо повторно дизассемблировать mutable data.
+59. **Specialist role нужно фиксировать так же жёстко, как artifact access.** Общий handoff не должен стирать ownership конкретного Agent/Task.
+60. **Reverse corpus должен быть подготовлен до следующего агента.** Manifest/status map/toolkit уменьшают просьбы к оператору и повтор expensive work.
+61. **Retrospectives нескольких агентов нужно консолидировать.** Общий process contract полезнее набора несовместимых quality packs.
 
 ## Следующие исторические переходы, которые нужно искать
 
