@@ -8,17 +8,21 @@ loader compatibility.
 ## Current estimate
 
 Approximate offline coverage for the current FH8852V200 Lite Majestic feature
-surface on FH8626V100: **~98%**.
+surface on FH8626V100: **100% of the currently demonstrated FH8852V200 Lite runtime closure, offline**.
 
-The remaining percentage is not core H.264/JPEG/audio functionality. It is
-mainly unobserved or SDK-only controls such as crop/rotate/slice variants,
-capability advertisement for hardware-unsupported modes, and target-only
-lifecycle validation.
+The offline implementation percentage is now closed for the **currently
+demonstrated and selected FH8852V200 Lite runtime closure**. SDK-only exports
+that are not imported or reachable from the selected runtime are not counted
+as missing product functionality; they remain explicit unsupported boundaries
+and are protected by build-time direct + transitive ABI guards.
+
+This does **not** mean target acceptance is complete. Build, flash and hardware
+validation remain a separate next phase.
 
 Canonical cross-agent coordination: reverse issue #3.
 
 Current refs:
-- Firmware Majestic: `work/fh8626v100-majestic@8694de42`
+- Firmware Majestic: `work/fh8626v100-majestic@a013ac3d`
 - Divinus: `work/fh8626v100@5979e160`
 
 ## Video
@@ -188,3 +192,30 @@ Target acceptance must cover:
 - image/day-night controls;
 - microphone, speaker and audio VQE;
 - repeated stop/start/reconfigure without reboot.
+
+
+## Offline closure reached
+
+The offline closure is now considered complete for the current target/runtime:
+
+- selected direct + transitive Fullhan ABI has no reachable unsupported export;
+- strict full-feature runner covers main/sub H.264, JPEG, OSD, motion, audio,
+  RTSP and board day/night wiring without permissive stubs;
+- ANJIA speaker-amplifier mute is integrated via a board-owned AO lifecycle
+  hook, not embedded GPIO policy;
+- ANJIA day/night full profile carries the recovered GPIO18/GPIO60 IR-cut pair,
+  GPIO25 IR illumination and the hardware-proven 190 ms pulse;
+- source replacements no longer ship donor libdsp/libmipi/libvmm fallbacks;
+- OSD font assets are selected explicitly;
+- Divinus and Majestic contract differences are tracked through issue #3 and
+  current Divinus already includes the major VPSS lifecycle corrections.
+
+From this point, new code should be driven by either:
+1. a build failure;
+2. a target/runtime failure;
+3. a moving Majestic/vendor update rejected by the ABI guard;
+4. new Ghidra evidence proving a currently unsupported advertised feature is
+   actually part of this target's runtime contract.
+
+Until one of those occurs, further SDK emulation would be speculative rather
+than completion work.
