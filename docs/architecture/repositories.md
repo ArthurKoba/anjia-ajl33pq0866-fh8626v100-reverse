@@ -18,6 +18,8 @@ Current FH8626 engineering/checkpoint refs are recorded in `docs/process/upstrea
 
 Do not fork camera-level knowledge into implementation repositories. When implementation or hardware validation establishes a camera contract, document it here and reference it from the component change.
 
+Cross-repository synchronization is part of implementation completion: when a component repository changes its active SHA, branch topology, ownership split, named runtime targets, composition model or validation gates, update the current coordination documents in this repository in the same work session.
+
 Ghidra MCP working state is not an implementation repository. Durable reverse conclusions return to this camera project; Ghidra service/deployment changes belong to `ghidra-mcp`.
 
 ## Ownership rules
@@ -37,15 +39,17 @@ A preservation branch may contain code in the wrong repository. Treat that as hi
 
 The working sequence is foundation-first:
 
-`U-Boot -> Linux/kernel -> Firmware ownership audit -> Divinus target closure -> Majestic product transition -> Firmware product integration -> Builder final profile`.
+`U-Boot -> Linux/kernel -> Firmware ownership audit -> Divinus target closure -> Majestic product transition -> Firmware product integration -> Builder validation/promotion`.
 
-U-Boot and kernel are already near-production/hardware-proven and should normally receive audit/reconciliation rather than broad new development. Builder is deliberately last so it consumes stable lower layers instead of becoming a second kernel/firmware/streamer tree.
+U-Boot and kernel are already near-production/hardware-proven and should normally receive audit/reconciliation rather than broad new development. Builder source architecture is already thin and composed; its remaining role is to consume the stable lower layers and later pass build/hardware promotion gates rather than becoming a second kernel/firmware/streamer tree.
 
 ## Builder boundary
 
-The final Builder device profile should contain only per-device deltas: device defconfig/package selection, first-boot/customizer behavior, board GPIO/bootstrap/default configuration, camera-specific PTZ/audio/illumination settings and size/exclude policy.
+The final Builder device profile should contain only per-device deltas. For AJL33PQ0866 the current model is one shared device tree with a board-only base plus short composed Divinus/Majestic/diagnostic target fragments. Generic FH8626 defconfig/platform/kernel/filesystem selections are inherited from the selected Firmware direction rather than copied into Builder.
 
-Do not leave duplicated kernel patches, generic FH8626 runtime packages or streamer implementation source in Builder after the owning repositories are prepared.
+ANJIA-only Buildroot packages are device-local. PTZ is an optional device capability, not a mandatory boot-calibration policy. Streamer implementation remains outside Builder.
+
+Do not leave duplicated kernel patches, copied generic FH8626 defconfigs/runtime packages or streamer implementation source in Builder after the owning repositories are prepared.
 
 ## Firmware boundary
 

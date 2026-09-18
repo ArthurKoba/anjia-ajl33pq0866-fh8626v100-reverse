@@ -65,6 +65,7 @@ Do not silently promote static/source/reverse coverage into hardware acceptance.
 ## Documentation
 
 - Keep one current authority for each fact or contract.
+- Cross-repository coordination must be synchronized in the same work session as material implementation changes. If a related repository changes an active SHA, branch topology, ownership boundary, named runtime target, build composition model or hardware-validation gate, update `STATE.md`, `TASKS.md` and the applicable `docs/process/` / subsystem document here before considering the handoff complete. Do not leave later agents to discover a newer component state than the coordination authority describes.
 - Current subsystem facts belong under `docs/`.
 - Historical chronology, provenance and durable lessons belong under `history/`.
 - Camera-level sensor, ISP, media, audio, PTZ and boot knowledge must remain independent of a particular streamer.
@@ -89,14 +90,14 @@ Changes to related repositories such as `openipc-divinus`, `openipc-builder`, `o
 Current FH8626V100 branch roles:
 - reverse repository: production/state `main`; work `work/fh8626v100`. A legacy Bridge-reserved `production` ref may exist but is inactive and must not be used for project work;
 - Firmware: production `master`; shared FH8626 core `work/fh8626v100`; runtime directions `work/fh8626v100-divinus` and `work/fh8626v100-majestic`;
-- Builder: production `master`; ANJIA Divinus/device development `work/fh8626v100-anjia`; Majestic staging `work/fh8626v100-anjia-majestic`; shared ANJIA fixes should land on the main ANJIA line first and then be merged into the Majestic direction;
+- Builder: production `master`; single ANJIA development line `work/fh8626v100-anjia`. Divinus, Majestic and diagnostic directions are composed targets inside that one device tree, not separate active Builder branches. The former separate Majestic line is historical/archive state only; shared board fixes and runtime-fragment changes all land on the single ANJIA line;
 - Linux: hardware-proven/PR-facing production line `fullhan-fh8626v100`; work `work/fh8626v100`;
 - Divinus: production `master`; work `work/fh8626v100`;
 - U-Boot: hardware-proven production/recovery `fh8626v100-stock-compatible`; work `fh8626v100-mainline`.
 
 These are the current active lines, not a permanent prohibition on other branches. If a substantial task needs its own branch, create it, finish it, merge it back into the current development line after verification, and remove it when it no longer carries independent work.
 
-This repository is the coordination authority for cross-repository work. Keep audit notes, contribution workflow, branch roles, current SHAs, evidence status and handoff state here. Do **not** add fork-local `AGENTS.md`, audit reports or other coordination metadata to an OpenIPC component repository merely to guide later agents. Component repositories should contain only implementation and repository-owned documentation that belongs in their eventual contribution.
+This repository is the coordination authority for cross-repository work. Keep audit notes, contribution workflow, branch roles, current SHAs, evidence status and handoff state here, and synchronize those records immediately when the corresponding component state changes. Do **not** add fork-local `AGENTS.md`, audit reports or other coordination metadata to an OpenIPC component repository merely to guide later agents. Component repositories should contain only implementation and repository-owned documentation that belongs in their eventual contribution.
 
 Before mutating any related-repository branch, determine whether the production/integration branch is the head of an open upstream pull request or otherwise acts as a submission branch. Treat it as read-only during investigation and intermediate development. Use the current development branch for ordinary work; create a topic branch only when the task is large/risky enough to benefit from isolation, then fold it back promptly after verification.
 

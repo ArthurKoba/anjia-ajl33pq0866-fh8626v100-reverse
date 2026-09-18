@@ -105,15 +105,24 @@ The historical FH8626-specific 3 MiB kernel / rootfs-at-`0x450000` layout is pre
 ### Builder
 
 - repository: `ArthurKoba/openipc-builder`
-- branch: `fh8626v100-anjia-ajl33pq0866`
-- observed tip: `bcf8658e4aa612ee9afda8c28d52d8ad1674e2f1`
-- stable pre-Majestic checkpoint: `5603a701c8812aebc705c42e933ebae48aed805f`
-- preceding Divinus/device integration commit: `c7577cb3f70b4531e9ec9e686c5275bf5f170c3d`
-- current upstream `master` has advanced beyond the preserved branch; the branch is diverged
+- production/base: `master@e0a643f4942b064a149f470b3c118ebba4daebb5`
+- single active ANJIA work line: `work/fh8626v100-anjia@9c507b85481df2787bb214e535f17003bdebb6e6`
+- separate live Majestic Builder branch: none
+- preserved old Majestic branch state: `archive/fh8626v100-anjia-majestic-branch-20260918`
+- preserved stock-style PTZ reference: `archive/fh8626v100-anjia-stock-ptz-controller-20260918@a51eec5b294b03e8d16430e9018c3a0441647e49`
 
-`5603a701...` is the deliberate rollback/reference point before the Majestic experiment. The next commit, `bcf8658e...`, adds the preserved Majestic experiment. Do not combine these states when reasoning about the Divinus baseline.
+Builder now exposes one AJL33PQ0866 device tree with composed targets:
 
-Future Builder work must start from then-current upstream `master`. Preserved SHAs are evidence/reference points, not future contribution bases.
+- `fh8626v100_lite_anjia-ajl33pq0866_divinus`;
+- `fh8626v100_lite_anjia-ajl33pq0866_majestic`;
+- `fh8626v100_lite_anjia-ajl33pq0866_diag`.
+
+The target composition is Firmware generic FH8626 lite defconfig + ANJIA board-only base + short runtime fragment. Device-specific packages are scoped under the ANJIA device tree. Runtime fragments carry only streamer/diagnostic choices and exact target/update identity. The matching `.firmware` metadata chooses the intended staging Firmware direction by default.
+
+This is the active future Builder model. The historical `5603a701...` / `bcf8658e...` states are provenance only and must not be restored as contribution bases.
+
+Current `9c507b85481df2787bb214e535f17003bdebb6e6` is source architecture/documentation state only. No new CI, composed target build or hardware acceptance was run in the latest Builder pass. All three composed targets remain `NOT_BUILT` while their Firmware dependencies are fork-local.
+
 
 ## Ownership routing
 

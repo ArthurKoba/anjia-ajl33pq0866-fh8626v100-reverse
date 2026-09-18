@@ -35,18 +35,21 @@ The old image was constrained by the historical 3776 KiB rootfs partition and ha
 Firmware:
 
 - shared streamer-neutral core: `ArthurKoba/openipc-firmware/work/fh8626v100@eabd1ccd4684af6997771269c4655f7e4435bcec`;
-- Divinus direction: `work/fh8626v100-divinus@0b12c87c202b12733b0a1b535b56d66891e4ca93`;
-- Majestic direction: `work/fh8626v100-majestic@c741f6f0a8327db1d0b7e9bbd5f7df7639d47878`.
+- Divinus direction: current dedicated `work/fh8626v100-divinus` line;
+- Majestic direction: current dedicated `work/fh8626v100-majestic` line (latest ref is tracked in `STATE.md`).
 
 Builder:
 
-- single active ANJIA device line: `ArthurKoba/openipc-builder/work/fh8626v100-anjia@0945bd356683f5f11fe7a1c3b0af2b1301c061a8`;
-- Majestic target fragment: `br-ext-chip-fullhan/configs/variants/fh8626v100_lite_anjia-ajl33pq0866_majestic.config`;
-- retired pre-composition Majestic line: archive tag `archive/fh8626v100-anjia-majestic-branch-20260918`.
+- single active ANJIA device line: `ArthurKoba/openipc-builder/work/fh8626v100-anjia@9c507b85481df2787bb214e535f17003bdebb6e6`;
+- composed Majestic target: `fh8626v100_lite_anjia-ajl33pq0866_majestic`;
+- Majestic fragment: `br-ext-chip-fullhan/configs/variants/fh8626v100_lite_anjia-ajl33pq0866_majestic.config`;
+- matching Firmware metadata: `br-ext-chip-fullhan/configs/variants/fh8626v100_lite_anjia-ajl33pq0866_majestic.firmware`;
+- retired separate Builder Majestic branch is preserved only as `archive/fh8626v100-anjia-majestic-branch-20260918`.
 
-Builder now composes one board-only base plus short Divinus/Majestic/diagnostic runtime fragments. The Majestic fragment selects the Firmware-owned compatibility package and contains no copied media implementation. This replaces the previous duplicated Majestic Builder branch.
+Builder no longer carries a copied Majestic device profile. It composes the Firmware generic FH8626 lite defconfig, one shared ANJIA board delta and the short Majestic runtime fragment. The fragment selects only the Firmware-owned Majestic compatibility package; GPIO, Wi-Fi, microSD, illumination, lens, persistent board policy and optional PTZ come from the same ANJIA base/package used by the other variants.
 
-Core platform/kernel fixes should be made on the shared core and then reconciled into both runtime directions. Majestic-specific compatibility code must stay on the Majestic direction unless it becomes demonstrably shared.
+Core platform/kernel fixes belong in shared Firmware/Linux. Majestic compatibility implementation remains in the Majestic Firmware direction unless/until ownership changes upstream.
+
 
 ## Reconstructed Majestic Firmware integration
 
@@ -94,15 +97,18 @@ The Majestic device target is:
 
 `fh8626v100_lite_anjia-ajl33pq0866_majestic`
 
-Builder can consume the fork-local Firmware branch without copying its package back into Builder:
+Its Builder-local `.firmware` metadata binds it by default to the fork-local Firmware Majestic direction, so normal staging invocation is now simply:
 
 ```sh
-OPENIPC_FW_REPO=https://github.com/ArthurKoba/openipc-firmware.git
-OPENIPC_FW_REV=work/fh8626v100-majestic
 bash builder.sh fh8626v100_lite_anjia-ajl33pq0866_majestic
 ```
 
-The composed FH8626 Builder targets remain CI-opted-out until their required Firmware state is available to the normal upstream clone path.
+Explicit `OPENIPC_FW_REPO` / `OPENIPC_FW_REV` values may still override that metadata for controlled bisect/debug work.
+
+There is no separate active Majestic Builder branch and no copied Majestic board overlay. The composed FH8626 Builder targets remain CI-opted-out while their required Firmware state is fork-local.
+
+No new Builder CI/build/hardware validation was run for the current `9c507b85481df2787bb214e535f17003bdebb6e6` Builder tip during the latest source-architecture/documentation pass.
+
 
 ## Evidence boundary
 

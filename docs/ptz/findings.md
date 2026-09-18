@@ -29,7 +29,7 @@ Two historical breakpoint traces from the same acquisition family hit Apollo add
 
 `SOURCE_CONFIRMED / HARDWARE REGRESSION PENDING`: Builder cleanup on 2026-09-18 deliberately stopped treating the stock-like startup calibration/controller as required product behavior.
 
-Current Builder main ANJIA line is `ArthurKoba/openipc-builder/work/fh8626v100-anjia@a39671f56267a403340354aebc82a3c889ac0df6`. Production exposes the existing hardware-proven PWM mapping through the standard relative OpenIPC entry point `gpio-motors PAN_STEPS TILT_STEPS DELAY_MS`.
+Current Builder main ANJIA line is `ArthurKoba/openipc-builder/work/fh8626v100-anjia@9c507b85481df2787bb214e535f17003bdebb6e6`. Production exposes the existing hardware-proven PWM mapping through the standard relative OpenIPC entry point `gpio-motors PAN_STEPS TILT_STEPS DELAY_MS`. The motor backend is now an explicit optional Builder capability selected by `BR2_PACKAGE_ANJIA_AJL33PQ0866_PTZ=y`, so a future runtime variant can omit motors without duplicating or forking the rest of the ANJIA board layer.
 
 The production backend keeps:
 
@@ -50,4 +50,4 @@ There is no absolute encoder/position feedback in the accepted hardware contract
 
 The previous stock-style controller remains immutable reference/evidence at Builder tag `archive/fh8626v100-anjia-stock-ptz-controller-20260918@a51eec5b294b03e8d16430e9018c3a0441647e49`.
 
-Host recorder tests for the simplified transaction pass. Physical direction, requested speed/delay, stop behavior and no-movement-at-boot still require target regression before the cleaned backend receives `HARDWARE_PASS`.
+Earlier host recorder tests passed for the simplified motor transaction before the later device-local package/composed-variant/optional-capability refactors. No new tests or builds were run for the current Builder tip in the latest documentation pass. Physical direction, requested speed/delay, stop behavior and no-movement-at-boot still require target regression before the current packaged capability receives `HARDWARE_PASS`.
