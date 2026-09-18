@@ -182,6 +182,17 @@ Persistent Agent 2 довёл image-detail ветку от предварите�
 
 Подробнее: [D17](CHRONOLOGY_DETAILS.md#d17--image-detail-apcnr3dltm-и-runtime-rwgot-closure).
 
+### 18. Dual-lens switch получает controlled hardware validation
+Источник: `CHAT-018`, supplemental snapshot той же Agent 1 ветки, 2026-08-28.
+
+Уникальный хвост расширенного экспорта подтвердил на stock runtime статически восстановленный `D8308` lens-switch contract: target `1→2→2→1`, общий AE context/history, отсутствие day/night profile switch от одного lens change и возврат wide exposure после tele.
+
+Tele в том же профиле требует существенно больше exposure/gain; краткий reset `64/64` остаётся static-exact, но вручную capture его не успевает поймать.
+
+**Переход:** dual-GC1054 switching из static implementation contract становится implementation-ready runtime contract.
+
+Подробнее: [D18](CHRONOLOGY_DETAILS.md#d18--controlled-wide--tele--wide-runtime-validation).
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.
