@@ -65,6 +65,20 @@ Detailed audit and migration contract: `docs/hardware/uboot-port.md`.
 31. Only after validation, perform the single owner-authorized update of PR-facing history if still required.
 32. Agent work remains browser/API-first; no agent-side clone, Buildroot setup or heavyweight build unless explicitly requested by the owner.
 
+## P1 — RTC / TSENSOR investigation (non-blocking)
+
+This is an independent platform research task and does **not** block Firmware, Divinus or Majestic integration.
+
+33. Determine whether AJL33PQ0866's FH8626V100 RTC/TSENSOR path is genuinely unavailable in hardware/board wiring or whether the required RTC/analog-domain initialization has not yet been reconstructed.
+34. Preserve the current negative evidence boundary: both native and untouched stock Linux 4.9.129 time out through the same RTC command-core handshake, and the stock product configuration uses `hw_rtc=no`.
+35. Do not interpret that parity as proof that the FH8626 RTC/TSENSOR IP itself is defective or absent.
+36. Reconstruct the minimum stock initialization chain before attempting new writes: PMU/clock/reset/power-domain sequencing, RTC wrapper/core state, analog/TSENSOR configuration, efuse/calibration inputs and any stock userspace/kernel prerequisites.
+37. Compare stock runtime register/state transitions with the current open driver and identify the first point where the expected RTC core idle/command handshake diverges.
+38. Test TSENSOR only through evidence-preserving reads first. A valid result requires changing, physically plausible raw samples across temperature change; a static/default value is not acceptance.
+39. Do not expose `rtc0`, thermal or hwmon temperature on AJL33PQ0866 until the corresponding path is demonstrated on hardware.
+40. Do not perform speculative PMU/RTC writes merely to force the block alive. Any write experiment must be tied to a reconstructed stock sequence or an identified hardware contract.
+41. If the block can be recovered, move the required generic SoC initialization into Linux and keep camera-specific enablement in the appropriate board/Firmware layer. If it cannot, retain RTC/TSENSOR disabled for AJL33PQ0866 and document the hardware-level reason.
+
 ## P0 — firmware ownership sanitation
 
 24. Treat `openipc-firmware/fh8626v100-platform` as a preservation snapshot, not a final structure.
