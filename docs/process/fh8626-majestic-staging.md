@@ -15,9 +15,9 @@ Majestic officially supports FH8626V100.
 ## Current repository checkpoint
 
 - Firmware core: `ArthurKoba/openipc-firmware/work/fh8626v100@80169887`
-- Firmware Majestic: `ArthurKoba/openipc-firmware/work/fh8626v100-majestic@04e09360`
+- Firmware Majestic: `ArthurKoba/openipc-firmware/work/fh8626v100-majestic@cf4c6c47`
 - Firmware Divinus composition: `ArthurKoba/openipc-firmware/work/fh8626v100-divinus@255b8c8d`
-- Builder: `ArthurKoba/openipc-builder/work/fh8626v100-anjia@ee0687c0`
+- Builder: `ArthurKoba/openipc-builder/work/fh8626v100-anjia@f91c1ff1`
 - Linux staging: `ArthurKoba/openipc-linux/work/fh8626v100@357c2d13`
 - Divinus peer implementation: `ArthurKoba/openipc-divinus/work/fh8626v100@44c4fb94`
 - U-Boot native direction: `ArthurKoba/u-boot-fullhan/fh8626v100-mainline@7ac0aa7e`
@@ -233,9 +233,9 @@ verified independently in Ghidra against `isp.ko:vpu_set_logov2`:
 
 - selector/logov2-number: 0..2;
 - global selector 0 graph index: 0..1;
-- channel selectors 1/2 graph index: 0..3.
+- channel selectors 1/2 SET graph index: 0..3; channel GET graph index: 0..4.
 
-Firmware Majestic `04e09360` now enforces those limits before issuing the
+Firmware Majestic `cf4c6c47` now enforces those limits before issuing the
 native ioctl. This is a shared native contract, not a Divinus-specific policy.
 
 ## Audio
