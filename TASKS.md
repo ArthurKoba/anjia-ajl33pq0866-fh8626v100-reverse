@@ -16,7 +16,7 @@ The source/build implementation pass is complete. Do not reopen stock-layout des
 3. Keep the implemented standard 8 MiB target layout: `256k(boot),64k(env),2048k(kernel),5120k(rootfs),-(rootfs_data)`.
 4. Keep the board-specific internal boot split: reconstructed Fullhan Boot-ROM/DDR data at `0x00000` (64 KiB), U-Boot physical slot at `0x10000` (192 KiB), OpenIPC environment at `0x40000`.
 5. Keep production on the implemented OpenIPC NOR environment contract: `kernaddr/kernsize`, `rootaddr/rootsize`, `mtdpartsnor8m`, `setnor8m`, `cmdnor`, `bootcmdnor`, `updatetool`, `ubnor/ubwrite`, `uknor/ukwrite`, `urnor/urwrite`. Factory compatibility stays RAM-recovery-only.
-6. Use the board-qualified U-Boot updater `u-boot-archive/fh8626v100-anjia-preservation-20260918-nor.bin`. It must be exactly `0x50000` bytes: 256 KiB boot plus an erased 64 KiB environment sector.
+6. Use the board-qualified U-Boot updater `u-boot-fh8626v100-anjia-ajl33pq0866-nor.bin`. It must be exactly `0x50000` bytes: 256 KiB boot plus an erased 64 KiB environment sector.
 7. Preserve the payload-derived native ROM descriptor implementation: actual raw U-Boot size, `0x100`-aligned ROM payload, calculated JAMCRC, flash offset `0x10000`, load/entry `0xa0800000`. Do not restore the factory fixed size/JAMCRC in the production path.
 8. Perform the documented one-time migration only with a verified full-flash backup, serial console and external SPI programmer available.
 9. Cold-boot the native layout and verify: ROM -> U-Boot from `0x10000`, compiled/default environment at `0x40000`, OpenIPC MTD map, kernel from `0x50000`, rootfs from `/dev/mtdblock3`, network/MAC propagation and normal userspace startup.
@@ -63,9 +63,9 @@ Detailed audit and migration contract: `docs/hardware/uboot-port.md`.
 30. Retest behavior-changing areas, especially the newly registered AXI-DMA path, before promoting the reconstruction beyond `SOURCE_CONFIRMED / AUDIT`.
 31. Only after validation, perform the single owner-authorized update of PR-facing history if still required.
 32. Agent work remains browser/API-first; no agent-side clone, Buildroot setup or heavyweight build unless explicitly requested by the owner.
-33. **Production kernel-config source audit complete:** decisions and retained/dead symbols are recorded in `docs/process/fh8626-kernel-config-audit.md`; Firmware clean candidate is now `work/fh8626v100@c437d6eb...`.
+33. **Production kernel-config source audit complete:** decisions and retained/dead symbols are recorded in `docs/process/fh8626-kernel-config-audit.md`; Firmware core candidate is now `work/fh8626v100@eabd1ccd...`; `c437d6eb...` remains the post-kernel-config-audit checkpoint before streamer neutralization.
 34. Keep recovery-only NFSv3/IP-autoconfig/initrd and debugfs explicit during the current bring-up phase; do not remove them merely for size. Revisit a separate bring-up fragment only after the main hardware acceptance path is stable.
-35. Owner build gate: resolve the exact final `.config` from `c437d6eb...`, record `uImage`/SquashFS sizes and hashes, and check whether Kconfig re-selected any requested-off symbol.
+35. Owner build gate: resolve the exact final `.config` from core `eabd1ccd...`, record `uImage`/SquashFS sizes and hashes, and check whether Kconfig re-selected any requested-off symbol.
 36. Hardware regression gate after that build: Ethernet, USB/RTL8188FU, microSD, SADC illumination, pinctrl/PTZ, watchdog, media/audio and normal NOR rootfs behavior.
 
 ## P1 — RTC / TSENSOR investigation (non-blocking)
@@ -86,11 +86,11 @@ This is an independent platform research task and does **not** block Firmware, D
 
 24. Keep `openipc-firmware/archive/fh8626v100-platform-20260918@f4bf49da...` as a preservation snapshot only.
 25. Ownership inventory is complete in `docs/process/fh8626-firmware-ownership-audit.md`: 16 binary paths, 15 unique payloads, exact SHA-256 values and intended repository/disposition are recorded.
-26. Use `openipc-firmware/work/fh8626v100@c437d6eb...` as the clean Firmware source/layout candidate. `f9146dd4...` is the pre-kernel-config-audit checkpoint. The branch is rebuilt from current `master`, not cleaned in place.
+26. Use `openipc-firmware/work/fh8626v100@eabd1ccd...` as the streamer-neutral Firmware core candidate. `c437d6eb...` is the post-kernel-config-audit/pre-neutralization checkpoint and `f9146dd4...` is the pre-config-audit checkpoint.
 27. The clean branch consumes `openipc-linux/work/fh8626v100@357c2d13...` directly and contains no duplicate FH8626 kernel patch directory.
 28. Replace the temporary ArthurKoba Linux tarball pin with the OpenIPC-owned Linux ref after the curated kernel series lands upstream.
-29. AJL-specific policy now has a clean staging home in `openipc-builder/work/fh8626v100-anjia@1ea41ef2...`, rebuilt from current Builder master. Its kernel fragment selects `CONFIG_FH8626V100_SD0_1BIT=y`; the old `CONFIG_FH8626V100_AJL33PQ0866_MMC` symbol is absent. It is temporarily CI-opted-out as cross-repo staging. Next gate is integration with the Firmware source Builder consumes, removal of that opt-out, then owner build/hardware validation.
-30. Keep Divinus implementation in Divinus. Firmware may select the ordinary Divinus package but must not carry the historical giant FH8626 Divinus patch or a local source path.
+29. AJL-specific policy lives in `openipc-builder/work/fh8626v100-anjia@dac8d565...`; its kernel fragment selects `CONFIG_FH8626V100_SD0_1BIT=y`. Builder can now stage a fork/ref through `OPENIPC_FW_REPO` + `OPENIPC_FW_REV`. Majestic has a separate named target on `work/fh8626v100-anjia-majestic@85c496ea...`. Both FH8626 targets remain CI-opted-out until their Firmware bases are available to normal Builder jobs.
+30. Keep the shared Firmware core streamer-neutral. Divinus selection belongs on Firmware `work/fh8626v100-divinus@0b12c87c...`; implementation remains in Divinus and must not be copied into Firmware.
 31. Keep factory `.ko/.so/.bin` out of the clean Firmware contribution. All 15 unique opaque payloads are an explicit source-recovery/reverse backlog in `docs/process/fh8626-blob-retirement.md`: first search for complete Fullhan/vendor SDK source or build inputs; if found, integrate reproducible source builds and verify ABI/hardware compatibility; otherwise reverse the factory payload and implement a maintainable source replacement. An identical opaque SDK binary does not close the task, and factory-extracted bytes must not remain in the final runtime.
 32. Before retiring the preservation branch as an evidence source, externalize every still-needed unique proprietary payload that lacks an evidence-store locator.
 33. Owner gate: build the exact clean Firmware candidate, record `uImage` and SquashFS sizes, and confirm it stays within the standard 2048 KiB / 5120 KiB limits. No agent-side heavyweight build substitutes for this.
@@ -111,17 +111,17 @@ This is an independent platform research task and does **not** block Firmware, D
 
 ## P2 — Majestic product path
 
-45. Keep the Builder Majestic experiment isolated until the Divinus reference path is closed.
-46. Pin an exact Majestic candidate/build, libraries and canonical config.
-47. Validate VI -> VENC -> sustained RTSP before ISP work.
-48. Validate ISP/color/exposure/day-night after the base media path is stable.
-49. Validate audio capture/playback/two-way behavior.
-50. Integrate PTZ and illumination/IR-cut using the accepted camera contracts rather than rediscovering their low-level backends.
-51. Reuse Divinus-derived knowledge only where it is architecture-neutral; do not assume source-level portability between streamers.
+45. **Majestic build staging reconstructed:** Firmware `work/fh8626v100-majestic@7ed2a17...` inherits the streamer-neutral core and adds only the isolated FH8852V200 Majestic control-plane compatibility package; Builder target is `work/fh8626v100-anjia-majestic@85c496ea...`.
+46. Owner build gate: build `fh8626v100_lite_anjia-ajl33pq0866_majestic` with `OPENIPC_FW_REPO=https://github.com/ArthurKoba/openipc-firmware.git` and `OPENIPC_FW_REV=work/fh8626v100-majestic`; record resolved config and image sizes. Do not claim the reconstructed branch is validated merely because the historical experiment worked.
+47. First hardware gate is intentionally control-plane-only: boot, Majestic process, port 80, WebUI/haserl, configuration persistence and normal board/network/PTZ/illumination services while media remains disabled.
+48. Preserve the historical boundary: FH8852V200 Majestic reached HTTP/WebUI successfully, but explicit FH8626 GC1054 SDK startup segfaulted. Do not hide this by enabling video in the staging config.
+49. Before product acceptance, pin/reproduce the exact Majestic donor binary instead of relying on a moving `master` artifact.
+50. Later media work: implement/validate the FH8626 compatibility boundary, then prove VI -> VENC -> sustained RTSP before ISP tuning.
+51. After base video is stable, validate ISP/color/exposure/day-night, then audio capture/playback/two-way behavior and integrate PTZ/illumination using accepted board contracts. Reuse Divinus-derived knowledge only where architecture-neutral.
 
 ## P3 — firmware product integration
 
-52. Once streamer ownership is settled, retain shared FH8626 SoC/runtime packages and load policy in Firmware where they genuinely belong.
+52. Keep `work/fh8626v100` as the shared streamer-neutral core and periodically merge core fixes into the Divinus/Majestic direction branches. Direction-specific compatibility code must not leak back into core merely because it is convenient.
 53. Do not duplicate camera-specific profiles, kernel patches or streamer implementation source into Firmware.
 
 ## P4 — Builder final device profile

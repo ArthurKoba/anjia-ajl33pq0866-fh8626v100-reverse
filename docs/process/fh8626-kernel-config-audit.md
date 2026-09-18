@@ -10,8 +10,8 @@ This audit covers the OpenIPC Firmware kernel configuration for FH8626V100 after
 
 - Linux source: `ArthurKoba/openipc-linux/work/fh8626v100@357c2d13e7589db0dbe2bbf89c2ec38b1c036e6e`.
 - Firmware candidate before this pass: `work/fh8626v100@f9146dd42a2f606d305ebccd301268848de26880`.
-- Firmware candidate after this pass: `work/fh8626v100@c437d6eb62ade81595c20cbb765b8ad10300e3e7`.
-- Working/audit branch: `rework/fh8626v100-production-kconfig@c437d6eb62ade81595c20cbb765b8ad10300e3e7`.
+- Firmware post-config-audit checkpoint: `work/fh8626v100@c437d6eb62ade81595c20cbb765b8ad10300e3e7`.
+- Current streamer-neutral Firmware core: `work/fh8626v100@eabd1ccd4684af6997771269c4655f7e4435bcec`.
 - ANJIA Builder profile: `ArthurKoba/openipc-builder/work/fh8626v100-anjia@1ea41ef2dc9a38e138907eda6d316bb743631ebe`.
 - Divinus reference: `ArthurKoba/openipc-divinus/work/fh8626v100@1e624bd5aca97ba772413d2b00a10314d1db039f`.
 
@@ -107,7 +107,7 @@ This list prevents later agents from treating retained options as accidental jus
 
 No authoritative kernel/Buildroot build was run in this pass.
 
-The next owner build must use exact Firmware `work/fh8626v100@c437d6eb62ade81595c20cbb765b8ad10300e3e7` and Linux `357c2d13...`, then record:
+The next owner build must use exact Firmware core `work/fh8626v100@eabd1ccd4684af6997771269c4655f7e4435bcec` and Linux `357c2d13...`, then record:
 
 1. final resolved kernel `.config`;
 2. `uImage` size and SHA-256;

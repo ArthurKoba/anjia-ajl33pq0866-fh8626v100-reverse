@@ -25,7 +25,7 @@ Checked: `2026-09-18`.
 
 These refs are working-state locators, not automatic upstream bases or contribution sets.
 
-Active FH8626 branch model is deliberately limited to one production/integration line plus one work line per component. Historical states are tags/SHAs, not live branches. In this reverse repository, `main` is production/state and `work/fh8626v100` is the only work branch. The old `production@c1e94ad41cf3ff7a9b9f862e0526e5425191df77` ref is Bridge-reserved and cannot be deleted by the current agent; it is inactive and must be ignored.
+FH8626 branch state is kept intentionally readable: one shared core/development line carries platform work, while substantial runtime directions may have their own long-lived branches and are periodically reconciled with that core. Short-lived topic branches should be folded back and removed after verification. Historical states are tags/SHAs, not active branches. In this reverse repository, `main` is production/state and `work/fh8626v100` is the current development line. The old `production@c1e94ad41cf3ff7a9b9f862e0526e5425191df77` ref is Bridge-reserved, inactive and must be ignored.
 
 ### U-Boot
 
@@ -133,14 +133,19 @@ Preservation snapshot:
 Clean integration candidate:
 
 - branch: `work/fh8626v100`
-- tip: `c437d6eb62ade81595c20cbb765b8ad10300e3e7`
+- tip: `eabd1ccd4684af6997771269c4655f7e4435bcec`
 - pre-config-audit checkpoint: `f9146dd42a2f606d305ebccd301268848de26880`
 - base: `master@47ccdbee45fa5b8eee69c25c7af656cd5d35a28e`
 - diff: only the FH8626 generic kernel config, generic lite defconfig and CI registration
 
-The clean branch consumes `openipc-linux/work/fh8626v100@357c2d13...` directly and carries no FH8626 kernel patch directory. It also carries no AJL board package/fragment, no factory `.ko/.so/.bin`, and no local/patch copy of Divinus. The temporary exact Linux tarball points at the ArthurKoba fork only until the curated series lands in `OpenIPC/linux`; that pin is not upstream-ready provenance.
+The clean/core branch consumes `openipc-linux/work/fh8626v100@357c2d13...` directly, carries no FH8626 kernel patch directory, and is now streamer-neutral: it deliberately selects neither Divinus nor Majestic. It also carries no AJL board package/fragment, no factory `.ko/.so/.bin`, and no local/patch copy of Divinus. The temporary exact Linux tarball points at the ArthurKoba fork only until the curated series lands in `OpenIPC/linux`; that pin is not upstream-ready provenance.
 
 Firmware now inherits the standard OpenIPC 8 MiB assembly budget: 2 MiB kernel plus 5 MiB SquashFS, while the Linux source supplies `256K boot + 64K env + 2048K kernel + 5120K rootfs + rest rootfs_data` (704 KiB remainder on 8 MiB NOR). The prior 3 MiB-kernel arrangement remains preservation evidence only.
+
+Runtime direction branches are layered on that core:
+
+- Divinus Firmware direction: `work/fh8626v100-divinus@0b12c87c202b12733b0a1b535b56d66891e4ca93`; its only delta from core is the Divinus package selection.
+- Majestic Firmware direction: `work/fh8626v100-majestic@7ed2a17a67fce0c2ee8d80bc798cafe81cfa6c38`; it adds the isolated FH8852V200 Majestic compatibility/control-plane package and a media-off configuration. This is staging, not an upstream-ready FH8626 media implementation.
 
 The clean branch is `SOURCE_CONFIRMED / CLEAN_ARCH_CANDIDATE`, not a build or hardware acceptance. A production kernel-config audit removed only traced legacy/debug/dead facilities, made RTC device registration opt-in, and made recovery NFS explicitly v3-only. The exact decisions are in `docs/process/fh8626-kernel-config-audit.md`. The owner still needs to run the authoritative build and record the resolved `.config` plus final kernel/rootfs sizes. Binary ownership and exact hashes are recorded in `docs/process/fh8626-firmware-ownership-audit.md`.
 
@@ -158,11 +163,13 @@ Preservation/device reference:
 Clean device-profile staging:
 
 - branch: `work/fh8626v100-anjia`
-- tip: `1ea41ef2dc9a38e138907eda6d316bb743631ebe`
+- tip: `dac8d565aaa493c4fd83334df3054138b92ed01a`
 - base: current Builder `master@e0a643f4942b064a149f470b3c118ebba4daebb5`
 - kernel fragment: `CONFIG_FH8626V100_SD0_1BIT=y`
 
 The staging branch contains only named-device deltas: ANJIA kernel fragment, RTL8188FU selection, microSD/device configuration, illumination helpers and source-built PTZ/lens support. It carries no generic FH8626 kernel config, no kernel patches, no factory `.ko/.so/.bin` and no Divinus source/patch.
+
+Majestic Builder staging is `work/fh8626v100-anjia-majestic@85c496eab79e662cc2e0e511540265b969ae227a`. It adds a separate `fh8626v100_lite_anjia-ajl33pq0866_majestic` target and keeps it CI-opted-out while the required Firmware branch is fork-local. Builder now accepts `OPENIPC_FW_REPO` plus `OPENIPC_FW_REV` so this branch can be assembled without copying the Majestic package back into Builder.
 
 This branch is `SOURCE_CONFIRMED / BUILDER_STAGING`, not a build or hardware acceptance. It is temporarily listed in Builder CI `NOT_BUILT` because the normal Builder flow still consumes `OpenIPC/firmware`; remove that opt-out only after the clean FH8626 Firmware integration is available from the Firmware source Builder consumes.
 
@@ -200,9 +207,11 @@ Divinus is the open reference path that must be closed before the Majestic produ
 
 ## Majestic
 
-Majestic remains the intended product path after the Divinus reference implementation is closed.
+Majestic has a preserved hardware-proven **control-plane** result and a newly reconstructed staging path. The historical FH8852V200 binary successfully loaded on FH8626, served HTTP/WebUI on port 80, and remained stable when media consumers were disabled. Explicit GC1054 media initialization reached the SDK path and then crashed; direct I2C reads still returned GC1054 chip ID 0x10/0x54, so that experiment did not prove a dead sensor path.
 
-An FH8852-family Majestic experiment exists in the preserved Builder branch and process startup has been observed historically, but that is not a current product baseline. Majestic acceptance still requires a pinned reproducible candidate followed by VI -> VENC -> sustained RTSP -> ISP -> audio/control validation.
+Current staging is split correctly: Firmware `work/fh8626v100-majestic@7ed2a17...` owns the generic compatibility package; Builder `work/fh8626v100-anjia-majestic@85c496e...` owns the named-device selection. No FH8852 kernel modules or firmware are installed. See `docs/process/fh8626-majestic-staging.md`.
+
+This is not completed Majestic media support. VI/VENC/RTSP/ISP/audio remain later compatibility work, and the moving donor `master` binary must be pinned/reproducible before any product acceptance.
 
 ## Audio
 

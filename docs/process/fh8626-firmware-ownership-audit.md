@@ -9,13 +9,16 @@ This document records the ownership decision for the mixed FH8626V100 Firmware p
 ## Repositories and refs
 
 - Firmware preservation evidence tag: `ArthurKoba/openipc-firmware/archive/fh8626v100-platform-20260918@f4bf49da6ef355c9e733e00d774efe403513b1d4`.
-- Firmware clean candidate: `ArthurKoba/openipc-firmware/work/fh8626v100@c437d6eb62ade81595c20cbb765b8ad10300e3e7`.
+- Firmware clean candidate: `ArthurKoba/openipc-firmware/work/fh8626v100@eabd1ccd4684af6997771269c4655f7e4435bcec`.
 - Firmware pre-config-audit checkpoint: `work/fh8626v100@f9146dd42a2f606d305ebccd301268848de26880`.
 - Firmware base: `master@47ccdbee45fa5b8eee69c25c7af656cd5d35a28e`.
 - Linux source candidate: `ArthurKoba/openipc-linux/work/fh8626v100@357c2d13e7589db0dbe2bbf89c2ec38b1c036e6e`.
 - Builder preservation/device tag: `ArthurKoba/openipc-builder/archive/fh8626v100-anjia-preservation-20260918@bcf8658e4aa612ee9afda8c28d52d8ad1674e2f1`.
-- Builder clean staging candidate: `ArthurKoba/openipc-builder/work/fh8626v100-anjia@1ea41ef2dc9a38e138907eda6d316bb743631ebe`.
+- Builder clean staging candidate: `ArthurKoba/openipc-builder/work/fh8626v100-anjia@dac8d565aaa493c4fd83334df3054138b92ed01a`.
 - Divinus source candidate: `ArthurKoba/openipc-divinus/work/fh8626v100@1e624bd5aca97ba772413d2b00a10314d1db039f`.
+- Firmware Divinus direction: `ArthurKoba/openipc-firmware/work/fh8626v100-divinus@0b12c87c202b12733b0a1b535b56d66891e4ca93`.
+- Firmware Majestic direction: `ArthurKoba/openipc-firmware/work/fh8626v100-majestic@7ed2a17a67fce0c2ee8d80bc798cafe81cfa6c38`.
+- Builder Majestic staging: `ArthurKoba/openipc-builder/work/fh8626v100-anjia-majestic@85c496eab79e662cc2e0e511540265b969ae227a`.
 
 ## Clean Firmware decision
 
@@ -27,7 +30,7 @@ The clean Firmware branch is rebuilt from current Firmware `master`, not by dele
 
 The defconfig consumes the exact curated Linux SHA directly. No FH8626 kernel patch directory is present. The pin currently uses the ArthurKoba Linux fork because the curated series has not yet landed in `OpenIPC/linux`; this is an engineering dependency and must be replaced by the OpenIPC-owned Linux ref before an upstream-ready Firmware contribution.
 
-The clean branch deliberately contains no AJL33PQ0866 board package or kernel fragment, no factory `.ko/.so/.bin`, no local Divinus source path and no FH8626 Divinus patch. Device policy remains a Builder responsibility; Divinus implementation remains a Divinus responsibility.
+The clean/core branch deliberately contains no AJL33PQ0866 board package or kernel fragment, no factory `.ko/.so/.bin`, no local Divinus source path, no FH8626 Divinus patch and no selected streamer. Device policy remains a Builder responsibility; Divinus implementation remains a Divinus responsibility.
 
 The generic Firmware config does not enable a retail-camera SD wiring option. The clean ANJIA Builder staging profile now selects:
 
@@ -42,6 +45,8 @@ Firmware inherits the existing standard 8 MiB image budget: 2048 KiB kernel plus
 On an 8 MiB NOR this leaves 704 KiB for `rootfs_data`.
 
 The branch is a source/layout candidate, not a hardware-accepted firmware. An owner-side build must still record final `uImage` and SquashFS sizes, followed by the applicable target boot/media checks. CI registration currently marks the FH8626 family unbuilt because the kernel source is still a temporary fork pin and the defconfig builds its own GCC/musl toolchain.
+
+Runtime branches are deliberately outside the clean-core ownership claim. The Divinus direction only selects the normal Divinus package. The Majestic direction is an explicit compatibility experiment: it reuses the existing FH8852V200 Majestic binary and eight existing FH8852V200 userspace libraries in an isolated directory, installs no FH8852 kernel modules/firmware, and defaults to media-off HTTP/WebUI operation. It is not an upstream-ready source replacement and does not relax the FH8626 factory-blob retirement rules.
 
 ## Binary inventory
 

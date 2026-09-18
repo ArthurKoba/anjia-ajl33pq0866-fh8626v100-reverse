@@ -88,8 +88,8 @@ Changes to related repositories such as `openipc-divinus`, `openipc-builder`, `o
 
 Current FH8626V100 branch roles:
 - reverse repository: production/state `main`; work `work/fh8626v100`. A legacy Bridge-reserved `production` ref may exist but is inactive and must not be used for project work;
-- Firmware: production `master`; work `work/fh8626v100`;
-- Builder: production `master`; work `work/fh8626v100-anjia`;
+- Firmware: production `master`; shared FH8626 core `work/fh8626v100`; runtime directions `work/fh8626v100-divinus` and `work/fh8626v100-majestic`;
+- Builder: production `master`; ANJIA Divinus/device development `work/fh8626v100-anjia`; Majestic staging `work/fh8626v100-anjia-majestic`;
 - Linux: hardware-proven/PR-facing production line `fullhan-fh8626v100`; work `work/fh8626v100`;
 - Divinus: production `master`; work `work/fh8626v100`;
 - U-Boot: hardware-proven production/recovery `fh8626v100-stock-compatible`; work `fh8626v100-mainline`.
