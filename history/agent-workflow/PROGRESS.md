@@ -1,26 +1,26 @@
 # Прогресс аудита исторических чатов
 
-Статус: `READY_FOR_NEXT_SOURCE`
+Статус: `CHAT_014_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **13**
-- Последний источник: `CHAT-013`
+- Обработано исторических файлов: **14**
+- Последний источник: `CHAT-014`
 - Период последнего источника: **2026-08-27**
-- Следующее действие: получить следующий уникальный исторический файл
+- Следующее действие: выполнить обязательный post-file refresh
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-013 |
+| Направление | Файл | Состояние после CHAT-014 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 13/?? уникальных источников обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 30 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 45 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D13: exact-ish day AWB mode1, JXF37 superseded branch, dual-GC1054 lens lifecycle |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.7 milestone-driven autonomous reverse loop |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 14/?? уникальных источников обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 31 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 49 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D14: AWB→CCM coherent hardware validation |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.8 quality engineering of agent workflow |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -68,6 +68,7 @@
 | 11 | `CHAT-011` | 2026-08-24 — 2026-08-26 | `IN_PROGRESS` | Divergent branch: общий префикс с CHAT-001 примерно до L32775, далее отдельная ветка ISP/VPU/H.264/dev-loop; анализируется только уникальный хвост |
 | 12 | `CHAT-012` | 2026-08-26 | `DONE` | Почти полный duplicate CHAT-004: exact common prefix 8392/8556 строк (~98.1% файла), поэтому повторный dequeue/grey/RAW evidence не пересчитывался. Уникальный хвост: stage summary после RAW-DMA breakthrough и решение начать productionization параллельно, сохранив single-owner `fh8626_daemon` boundary перед Majestic |
 | 13 | `CHAT-013` | 2026-08-27 | `DONE` | Day AWB mode1 сильно восстановлен и переведён в diag/shadow; hardware identity очищена от JXF37 false lead; stock runtime подтверждает GC1054 1280×720 + downstream 1080 upscale и dual-GC1054 target1/target2 lens lifecycle; сформулирован milestone-driven autonomous reverse contract |
+| 14 | `CHAT-014` | 2026-08-27 | `DONE` | Parallel Agent 3: exact AWB→CCM reverse, coherent v4.2.1 hardware validation and rollback; session-quality retrospective becomes separate artifact with operational-state/state-machine/automation proposals |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -563,6 +564,23 @@ Authority endpoint не изменился:
 ### Agentic role
 Впервые пользователь формулирует почти готовый autonomous-reverse contract: глубокий анализ и hypothesis checking выполняются внутри агента, user-facing сообщения — только по крупным завершённым этапам или реальным hardware blockers. Это ещё file/handoff-era, но уже явный предшественник будущего agentic workflow.
 
+## Что CHAT-014 добавил к картине
+
+### Новый error-class
+- E-031: нельзя объявлять длинную задачу полностью закрытой без отдельного аудита исходных acceptance criteria.
+
+### Новые improvements
+- I-046: completion audit по original checklist;
+- I-047: machine-readable operational session state;
+- I-048: hardware experiment state machine;
+- I-049: quality retrospective агента как отдельный project artifact.
+
+### Технический вклад
+Parallel Agent 3 восстановил и hardware-валидировал coherent AWB→CCM path: direct AWB MMIO step оказался неполным, а полный logical-state transition через A8/AA→C9F68→B0/B1/B2→CE764 дал именно предсказанный CCM diff. Rollback показал, что AWB и CCM требуют раздельного restore-set.
+
+### Agentic role
+В конце сессии ошибки взаимодействия собраны в отдельный quality-improvement pack, предназначенный уже не для reverse конкретной функции, а для изменения поведения будущих агентов/оркестратора.
+
 ## Следующее действие
 
-Получить следующий уникальный исторический источник. Плановая расширенная live-state сверка остаётся после пятнадцатого уникального файла.
+Выполнить обязательный post-file refresh. После него перейти к следующему загруженному источнику `#15`.
