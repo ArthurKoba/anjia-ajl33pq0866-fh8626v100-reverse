@@ -44,11 +44,11 @@ The branch is a source/layout candidate, not a hardware-accepted firmware. An ow
 
 ## Binary inventory
 
-All hashes below were calculated from the exact bytes stored in the Firmware preservation branch. No public Fullhan SDK/build chain has yet been established for these files, so their current provenance class is **factory/preservation evidence**, not redistributable upstream package input. Every unique opaque payload is also an active reverse/recovery item: its ABI/data/protocol contract must be reconstructed even if later SDK provenance supplies acceptable source.
+All hashes below were calculated from the exact bytes stored in the Firmware preservation branch. No public Fullhan SDK/build chain has yet been established for these files, so their current provenance class is **factory/preservation evidence**, not redistributable upstream package input. Every unique opaque payload is an active source-recovery/reverse item: prefer a complete reproducible vendor SDK source implementation when one can be found; otherwise reconstruct the needed ABI/data/protocol/hardware contract from the binary and implement a source replacement.
 
 | Preservation path | Bytes | SHA-256 | Current role | Intended owner / disposition |
 | --- | ---: | --- | --- | --- |
-| `files/kmod/bgm.ko` | 57,812 | `715b099afb54145e11073238ecc034b3cf1c45a6e6e4253c59d887ed600bb17a` | BGM kernel media module | Linux/source replacement; otherwise evidence until defensible SDK provenance exists |
+| `files/kmod/bgm.ko` | 57,812 | `715b099afb54145e11073238ecc034b3cf1c45a6e6e4253c59d887ed600bb17a` | BGM kernel media module | Source-build from recovered/vendor source; otherwise reverse/reimplement; factory blob evidence only |
 | `files/kmod/enc.ko` | 151,652 | `bdf5ce5f71bdec3dc9c7aeab4d78cfe1bb85de36f32b1104d196aaac8e911207` | encoder kernel module | Linux/source replacement; otherwise evidence |
 | `files/kmod/gpio_wave.ko` | 24,704 | `58fdd10dc91a476a910758868d039b269c71986631e6c35ec9185baf45930afb` | GPIO waveform kernel module | Linux/source replacement; otherwise evidence |
 | `files/kmod/isp.ko` | 144,932 | `2c77f9c294f007ef0f90d0e1855191cb24a5dea223e03d8b97c1fa5e4fd738ac` | ISP kernel module | Linux/source replacement; otherwise evidence |
@@ -58,7 +58,7 @@ All hashes below were calculated from the exact bytes stored in the Firmware pre
 | `files/kmod/xbus_rpc.ko` | 23,504 | `8ffe386b7c73ca83e12582f7c306cb0e3633f9bbca39142041fc39cee2639267` | kernel RPC transport | Linux/source replacement; otherwise evidence |
 | `files/lib/libmipi.so` | 5,432 | `f9260105958dd428588b0295f1db33e4fceab13e173649a8c327cd9747895b45` | userspace MIPI plug-in | Divinus/native source boundary or documented shared SDK source; not a factory blob in Firmware |
 | `files/sensor/libgc1054_mipi.so` | 21,896 | `093c48710c9034dbde82681db014fd000a22f20487e74b6dbd147ebe4fff1eb9` | GC1054 userspace plug-in | Divinus GC1054 source replacement; evidence until replaced |
-| `files/firmware/rtthread_arc.bin` | 232,076 | `3cfd2a04b158e624fb4c95123d0f282d261351e27337889c3d9418b552528361` | ARC/RTX firmware | Isolated firmware dependency; Firmware only if official redistributable SDK provenance is established, otherwise external evidence |
+| `files/firmware/rtthread_arc.bin` | 232,076 | `3cfd2a04b158e624fb4c95123d0f282d261351e27337889c3d9418b552528361` | ARC/RTX firmware | Recover reproducible SDK source/build inputs or reverse/reimplement the ARC service; factory image remains evidence only |
 | `files/sensor/gc1054_day.bin` | 2,648 | `6d16b13a193ad44e4235550acd8b44dc7e1502bfd953b41d4e2c630495b3c337` | GC1054 day profile | Reviewed source/generated sensor data, preferably beside Divinus GC1054 implementation |
 | `files/sensor/sensor_gc1054_mipi.bin` | 8,648 | `92a0289bb7e5774af1210458588815358192aae3c29f59e15787249724c5428d` | stock GC1054 sensor object | Divinus/source replacement; retained externally as stock evidence |
 | `src/sensor/gc1054/profiles/gc1054_day.bin` | 2,648 | `6d16b13a193ad44e4235550acd8b44dc7e1502bfd953b41d4e2c630495b3c337` | duplicate day profile | Same payload as packaged day profile; one evidence object only |
@@ -79,4 +79,4 @@ The external evidence manifest already retains `sensor_gc1054_mipi.bin` by SHA-2
 
 Builder CI currently lists the clean ANJIA staging profile in `NOT_BUILT` because its required generic FH8626 Firmware base is not yet present in the upstream Firmware checkout used by normal Builder jobs. That opt-out is an integration guard, not evidence of a build failure.
 
-No classification above is permission to delete the only known working artifact. Nor does locating an identical opaque object in a vendor SDK complete the work. Blob retirement still follows `docs/process/fh8626-blob-retirement.md`: reverse the consumed ABI/data/protocol contract, recover or implement maintainable source, validate it, then remove the runtime dependency while retaining reference evidence.
+No classification above is permission to delete the only known working artifact. The preferred path is to locate complete vendor SDK source/build inputs; when those exist, reproduce the component from source and verify compatibility. Where source is absent or incomplete, reverse the consumed ABI/data/protocol/hardware contract and implement the replacement. In either path, factory-extracted opaque bytes are reference evidence only and must disappear from the final production dependency set.

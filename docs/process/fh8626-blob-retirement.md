@@ -48,9 +48,18 @@ The clean Firmware candidate `rework/fh8626v100-clean-integration@f9146dd42a2f60
 
 ## Mandatory reverse/recovery backlog
 
-Every opaque payload in the preservation inventory is an active reverse/recovery task until its runtime contract is understood and the production dependency is replaced by maintainable source or by reproducible vendor source. Finding the same opaque binary in an SDK is useful provenance, but by itself does **not** close the reverse task.
+Every opaque payload in the preservation inventory is an active **source-recovery or reverse/reimplementation** task until production no longer depends on factory-extracted bytes.
 
-The minimum reverse result for each class is:
+For each payload use this order:
+
+1. search Fullhan SDK releases, source drops, vendor mirrors and related SoC SDKs for the exact or compatible source implementation;
+2. if buildable source is found, establish version/ABI compatibility, integrate a reproducible source build and validate it on the target; detailed binary reverse is then optional except where needed to prove compatibility or fill missing source;
+3. if suitable source is not found or is incomplete, reverse the factory binary far enough to recover its ABI/data/protocol/hardware contract and implement the missing functionality from maintainable source;
+4. keep the original extracted bytes only as evidence/reference. They are not an acceptable final production dependency.
+
+A runtime `.ko`, `.so` or `.bin` may still exist as a **build output generated from retained source**. What must disappear is the checked-in or externally copied opaque factory payload.
+
+When reverse/reimplementation is required, the minimum result for each class is:
 
 - kernel module: recover module dependencies, exported/imported symbols, init/exit flow, device nodes, ioctl/proc/sysfs ABI, shared-memory/RPC contracts, relevant MMIO/IRQ/DMA behavior and caller ordering; then implement or recover a source-built replacement;
 - userspace plug-in: recover exports, callsites, data structures, initialization/teardown, sensor/MIPI register or ioctl transactions and error semantics; then replace the opaque plug-in with source-owned implementation;
@@ -71,7 +80,7 @@ Per-payload required work:
 | `xbus_rpc.ko` | Recover RPC transport framing, endpoints, shared-memory/mailbox behavior and users; replace with source-built transport. |
 | `libmipi.so` | Recover complete MIPI init/config/start/stop ABI and hardware transaction sequence; move it into source-owned FH8626 HAL code. |
 | `libgc1054_mipi.so` | Recover GC1054 mode/register/exposure/gain ABI and exact call contract; move it into the source GC1054 implementation. |
-| `rtthread_arc.bin` | Recover loader plus host/ARC RPC and audio-service protocol; reproduce functionality from source or verified vendor source rather than shipping an unexplained factory image. |
+| `rtthread_arc.bin` | First search for Fullhan ARC/RT-Thread source/build inputs. If complete source exists, build the firmware reproducibly from it; otherwise recover loader plus host/ARC RPC and audio-service protocol and implement the missing firmware/service from source. The factory-extracted image remains evidence only. |
 | `sensor_gc1054_mipi.bin` | Identify executable/data format, decode all fields/records and recover the sensor contract into source; regenerate only if runtime serialization remains required. |
 | `gc1054_day.bin` | Decode profile format and semantics into reviewed source data; regenerate deterministically if still required. |
 | `gc1054_night.bin` | Decode profile format and semantics into reviewed source data; regenerate deterministically if still required. |
@@ -116,12 +125,12 @@ This ordering is provisional. Reverse the dependency graph first; if a small-loo
 
 ### P3 — ARC/RTX firmware
 
-Treat rtthread_arc.bin separately. Preferred outcomes are reproducible Fullhan SDK source or an open replacement. Regardless of implementation source, first recover and document the host/ARC loader, RPC/mailbox and audio-service contracts. A redistributable opaque SDK firmware image may be retained only as a temporary dependency/evidence object; provenance alone does not complete retirement. A full clean-room ARC firmware rewrite is required only if no acceptable source can be recovered, but the protocol reverse is mandatory.
+Treat rtthread_arc.bin separately. First search for reproducible Fullhan SDK source/build inputs. If they exist and reproduce the required firmware/API, use that source and document the host/ARC interface needed for integration; a full binary reverse is unnecessary. If source is absent or incomplete, recover the loader/RPC/mailbox/audio contracts and implement the missing pieces. The factory-extracted ARC image, or an identical opaque SDK copy, may remain only as comparison evidence and must not be the final production artifact.
 
 Do not block smaller .so or kernel-module cleanup on a complete ARC firmware rewrite.
 
 ## Definition of done
 
-A blob is retired only when production no longer selects the opaque artifact; its replacement is source-built or has explicitly accepted SDK provenance; the consumed ABI/device behavior is documented; applicable source checks pass; relevant target behavior is hardware-tested; rollback/reference evidence remains retained externally; and the replacement lives in the correct owning repository.
+A blob is retired only when production no longer selects factory-extracted opaque bytes; its replacement is reproducibly built from retained vendor/open source or from a source implementation reconstructed from reverse engineering; the required ABI/device behavior is documented; applicable source checks pass; relevant target behavior is hardware-tested; rollback/reference evidence remains retained externally; and the replacement lives in the correct owning repository.
 
 Deleting a file without replacing its runtime contract is not retirement.
