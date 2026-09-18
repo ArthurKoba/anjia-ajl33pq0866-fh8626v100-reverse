@@ -17,9 +17,9 @@ Majestic officially supports FH8626V100.
 - Firmware core: `ArthurKoba/openipc-firmware/work/fh8626v100@80169887`
 - Firmware Majestic: `ArthurKoba/openipc-firmware/work/fh8626v100-majestic@cf4c6c47`
 - Firmware Divinus composition: `ArthurKoba/openipc-firmware/work/fh8626v100-divinus@255b8c8d`
-- Builder: `ArthurKoba/openipc-builder/work/fh8626v100-anjia@a6d6fca7`
+- Builder: `ArthurKoba/openipc-builder/work/fh8626v100-anjia@dc7ddabf`
 - Linux staging: `ArthurKoba/openipc-linux/work/fh8626v100@357c2d13`
-- Divinus peer implementation: `ArthurKoba/openipc-divinus/work/fh8626v100@44c4fb94`
+- Divinus peer implementation: `ArthurKoba/openipc-divinus/work/fh8626v100@875e0697`
 - U-Boot native direction: `ArthurKoba/u-boot-fullhan/fh8626v100-mainline@7ac0aa7e`
 - Cross-agent coordination: reverse issue #3.
 
