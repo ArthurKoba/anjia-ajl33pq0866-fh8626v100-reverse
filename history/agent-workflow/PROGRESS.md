@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `READY_FOR_NEXT_SOURCE`
+Статус: `CHAT_004_IN_PROGRESS`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **3**
 - Последний источник: `CHAT-003`
 - Период последнего источника: **2026-08-26 — 2026-08-27**
-- Следующее действие: получить следующий исторический файл
+- Следующее действие: завершить анализ `CHAT-004`
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -58,6 +58,7 @@
 | 1 | `CHAT-001` | 2026-08-24 — 2026-08-26 | `DONE` | Первая FH8626 bring-up фаза: safe RAM boot, OpenIPC userspace, vendor media stack, ISP/PAE/H.264, dev-loop SSH, checkpoints/handoff; выявлен баланс пошаговости, transport/state/context ошибки |
 | 2 | `CHAT-002` | 2026-08-27 | `DONE` | Source-derived ISP runtime, формальный one-archive delivery protocol, self-guarded owner launch, hot-plugin loop, workspace authority cleanup, role-specialized parallel reverse |
 | 3 | `CHAT-003` | 2026-08-26 — 2026-08-27 | `DONE` | Исторический backfill: v3.8→v4.0.4, persistent owner/hot reload, deterministic test lessons, boot automation, AE feedback, отказ от live MMIO rollback; по source numbering пропущенный/смещённый #2 считается закрытым и отдельно не ожидается |
+| 4 | `CHAT-004` | 2026-08-26 — 2026-08-27 | `IN_PROGRESS` | Переход от dequeue reverse к доказанному live H.264, grey-frame localization, stock runtime evidence bundle и более зрелому full-artifact reverse workflow |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
