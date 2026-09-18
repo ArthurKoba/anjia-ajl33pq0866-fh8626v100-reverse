@@ -78,6 +78,7 @@ Repository: `ArthurKoba/anjia-ajl33pq0866-fh8626v100-reverse`
 - обновить agentic-хронологию, если изменился способ работы;
 - завершить строку файла в `PROGRESS.md`;
 - коротко записать, какие выводы подтвердились/изменились;
+- **перечитать обновлённые README/HANDOFF/PROGRESS/ERRORS/IMPROVEMENTS/CHRONOLOGY/CHRONOLOGY_DETAILS/AGENTIC_DEVELOPMENT после каждого файла**;
 - оставить репозиторий в полностью handoff-ready состоянии.
 
 ## Освежение контекста
