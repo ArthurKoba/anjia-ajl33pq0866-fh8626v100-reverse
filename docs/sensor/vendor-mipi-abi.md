@@ -109,6 +109,43 @@ includes:
 These are exact active-path writes. Names for individual MIPI register fields
 must remain conservative until independently identified.
 
+### Exact gain/integration/frame-length programming
+
+The active AE-facing callbacks are now source-reconstructable without the
+vendor object.
+
+Integration is direct: the requested value is cached and written on page 0 as
+register `0x03 = integration >> 8` and `0x04 = integration & 0xff`.
+
+Gain uses page 1 registers `0xb6/0xb1/0xb2` with exact thresholds recovered
+from `Gc1054SetGain@0x118d4`, followed by page 4 register `0x40`:
+
+- `0x40..0x5a` -> B6=0;
+- `0x5b..0x7e` -> B6=1;
+- `0x7f..0xb5` -> B6=2;
+- `0xb6..0x100` -> B6=3;
+- `0x101..0x170` -> B6=4;
+- `0x171..0x202` -> B6=5;
+- `0x203..0x2e0` -> B6=6;
+- `0x2e1..0x406` -> B6=7;
+- `0x407..0x5d2` -> B6=8;
+- `0x5d3..0x823` -> B6=9;
+- `>=0x824` -> B6=10 with both B1 and B2 scaled.
+
+The exact integer arithmetic, including the compiler-equivalent high-word
+multiplication constants, is preserved in
+`fh8626_gc1054_gain_program()`. This avoids replacing target-proven rounding
+with an approximate floating-point gain model.
+
+After the page-1 triplet, page 4 register `0x40` is programmed from the
+requested gain: 0 below `0x300`, 3 for `0x300..0x31f`, 4 for
+`0x320..0x33f`, and 8 at `>=0x340`.
+
+Frame-length programming is also closed for the active mode. Base frame length
+is 899 lines. The `+0x14` callback multiplies that base by its integer input;
+the helper then writes page-0 `0x07/0x08` with
+`frame_length - 720 - 16`. The reusable contract exposes both calculations.
+
 ### Runtime sensor controls
 
 The callback table now has source-level semantics for the active path:

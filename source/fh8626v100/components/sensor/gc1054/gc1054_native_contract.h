@@ -223,4 +223,120 @@ fh8626_gc1054_720p25_init[] = {
 #define FH8626_GC1054_720P25_INIT_COUNT \
     (sizeof(fh8626_gc1054_720p25_init) / sizeof(fh8626_gc1054_720p25_init[0]))
 
+struct fh8626_gc1054_gain_program {
+    uint8_t write_triplet;
+    uint8_t b6;
+    uint8_t b1;
+    uint8_t b2;
+    uint8_t page4_40;
+};
+
+static inline uint32_t fh8626_gc1054_mul_hi_u32(uint32_t a, uint32_t b)
+{
+    return (uint32_t)(((uint64_t)a * b) >> 32);
+}
+
+/*
+ * Exact Gc1054SetGain arithmetic reconstructed from ARM instructions at
+ * 0x118d4.  The caller writes page 1 before the optional B6/B1/B2 triplet,
+ * then page 4 register 0x40, then returns to page 0.
+ */
+static inline struct fh8626_gc1054_gain_program
+fh8626_gc1054_gain_program(uint32_t gain)
+{
+    struct fh8626_gc1054_gain_program p = {0u, 0u, 0u, 0u, 0u};
+    uint32_t x, hi, y;
+
+    if (gain >= 0x40u) {
+        p.write_triplet = 1u;
+        p.b1 = 1u;
+
+        if (gain <= 0x5au) {
+            p.b6 = 0u;
+            p.b2 = (uint8_t)((gain << 2) & 0xfcu);
+        } else if (gain <= 0x7eu) {
+            p.b6 = 1u;
+            x = gain << 6;
+            hi = fh8626_gc1054_mul_hi_u32(0x68168169u, x);
+            y = hi + ((x - hi) >> 1);
+            p.b2 = (uint8_t)((y >> 4) & 0xfcu);
+        } else if (gain <= 0xb5u) {
+            p.b6 = 2u;
+            x = gain << 6;
+            hi = fh8626_gc1054_mul_hi_u32(0x02040811u, x);
+            y = hi + ((x - hi) >> 1);
+            p.b2 = (uint8_t)((y >> 4) & 0xfcu);
+        } else if (gain <= 0x100u) {
+            p.b6 = 3u;
+            x = gain << 5;
+            hi = fh8626_gc1054_mul_hi_u32(0xb40b40b5u, x);
+            p.b2 = (uint8_t)((hi >> 4) & 0xfcu);
+        } else if (gain <= 0x170u) {
+            p.b6 = 4u;
+            hi = fh8626_gc1054_mul_hi_u32(0xff00ff01u, gain << 6);
+            p.b2 = (uint8_t)((hi >> 6) & 0xfcu);
+        } else if (gain <= 0x202u) {
+            p.b6 = 5u;
+            hi = fh8626_gc1054_mul_hi_u32(0xb19ab5c5u, gain << 6);
+            p.b2 = (uint8_t)((hi >> 6) & 0xfcu);
+        } else if (gain <= 0x2e0u) {
+            p.b6 = 6u;
+            hi = fh8626_gc1054_mul_hi_u32(0x7f411e53u, gain << 6);
+            p.b2 = (uint8_t)((hi >> 6) & 0xfcu);
+        } else if (gain <= 0x406u) {
+            p.b6 = 7u;
+            x = gain << 6;
+            hi = fh8626_gc1054_mul_hi_u32(0x63b0cda3u, x);
+            y = hi + ((x - hi) >> 1);
+            p.b2 = (uint8_t)((y >> 7) & 0xfcu);
+        } else if (gain <= 0x5d2u) {
+            p.b6 = 8u;
+            hi = fh8626_gc1054_mul_hi_u32(0x7f218557u, gain << 6);
+            p.b2 = (uint8_t)((hi >> 7) & 0xfcu);
+        } else if (gain <= 0x823u) {
+            p.b6 = 9u;
+            hi = fh8626_gc1054_mul_hi_u32(0x15fa298du, gain << 6);
+            p.b2 = (uint8_t)((hi >> 5) & 0xfcu);
+        } else {
+            p.b6 = 10u;
+            hi = fh8626_gc1054_mul_hi_u32(0xfb93e673u, gain << 6);
+            p.b1 = (uint8_t)(hi >> 17);
+            p.b2 = (uint8_t)(((hi >> 11) << 2) & 0xfcu);
+        }
+    }
+
+    if (gain < 0x300u)
+        p.page4_40 = 0u;
+    else if (gain < 0x320u)
+        p.page4_40 = 3u;
+    else if (gain < 0x340u)
+        p.page4_40 = 4u;
+    else
+        p.page4_40 = 8u;
+
+    return p;
+}
+
+static inline void fh8626_gc1054_integration_regs(uint32_t integration,
+    uint8_t *reg03, uint8_t *reg04)
+{
+    if (reg03)
+        *reg03 = (uint8_t)((integration >> 8) & 0xffu);
+    if (reg04)
+        *reg04 = (uint8_t)(integration & 0xffu);
+}
+
+/* Base frame length for 0x801061a8 is 899 lines; active height is 720 and
+ * the stock helper subtracts a fixed 16-line margin before programming the
+ * vertical blanking pair 0x07/0x08. */
+static inline uint32_t fh8626_gc1054_frame_length_from_multiplier(uint32_t multiplier)
+{
+    return multiplier * 899u;
+}
+
+static inline uint16_t fh8626_gc1054_vblank_from_frame_length(uint32_t frame_length)
+{
+    return frame_length > 736u ? (uint16_t)(frame_length - 736u) : 0u;
+}
+
 #endif
