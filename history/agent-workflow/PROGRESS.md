@@ -1,26 +1,26 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_009_IN_PROGRESS`
+Статус: `CHAT_009_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **8**
-- Последний источник: `CHAT-008`
-- Период последнего источника: **2026-08-25**
-- Следующее действие: завершить анализ `CHAT-009`
+- Обработано исторических файлов: **9**
+- Последний источник: `CHAT-009`
+- Период последнего источника: **2026-08-26**
+- Следующее действие: post-file refresh + 9-file live-state сверка
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-008 |
+| Направление | Файл | Состояние после CHAT-009 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 8/?? уникальных источников обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 26 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 37 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена независимая ISP IRQ-mask / 25-fps sensor→ISP ветка |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | A1 и A4.6 консолидированы: checkpoints + role-specialized handoff |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 9/?? уникальных источников обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 27 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 38 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | D5-D8 дополнены GPIO5 reset, H.264 capture, stateful lifetime и reproducible handoff |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | manual local workflow limits зафиксированы; reproducibility/serial-script rules добавлены |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -63,7 +63,7 @@
 | 6 | `CHAT-006` | 2026-08-24 — 2026-08-25 | `DONE` | Перекрывает CHAT-005, но добавляет root-shell inventory, самостоятельное извлечение `/app` из SPI dump, media module baseline, первые ioctl ABI mappings и переход от ручного target inventory к artifact-assisted analysis |
 | 7 | `CHAT-007` | 2026-08-25 — 2026-08-26 | `DONE` | Partial-overlap: префикс до clean-room fh_mpi повторяет CHAT-006 и не пересчитан. Новая часть: clean OpenIPC RAM baseline, полный stock media stack под OpenIPC, sensor/MIPI/VPU/PAE/ISP reverse, transport/context ошибки, external Fullhan references, documentation/repository design и parallel-agent checkpoint |
 | 8 | `CHAT-008` | 2026-08-25 | `DONE` | Partial-overlap с CHAT-007 до ~L24104. Уникальная ветка: Apollo/ISP reverse, checkpoint recovery, adaptive granularity correction, parallel-agent merge, FH8852 semantic reference, ISP interrupt-mask breakthrough, ~25-fps sensor→ISP proof и SoC-first backend goal |
-| 9 | `CHAT-009` | 2026-08-26 | `IN_PROGRESS` | Новый уникальный source (~13% exact-line overlap с CHAT-008 в переиспользованных code/helper fragments): hardware H.264 capture, repeated-descriptor/live dequeue, ISP lifetime/Oops, persistent-owner direction, SSH/CRNG/PTTY optimization и context-limit handoff |
+| 9 | `CHAT-009` | 2026-08-26 | `DONE` | Новый уникальный source (~13% exact-line overlap с CHAT-008 только в reused code/helper fragments): hardware H.264 capture + repeated descriptor, broken ISP unload/multi-owner lifetime, persistent daemon direction, SSH key/CRNG/PTTY dev-loop optimization, UART paste fragility и context-limit reproducibility handoff |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -340,6 +340,36 @@ I-019, I-032 и I-034 переведены в `CONSOLIDATED`.
 
 Это всё ещё pre-Git-authority стадия: пользователь вручную маршрутизирует файлы/handoff между агентами.
 
+## Что CHAT-009 добавил к картине
+
+### Новый error-class
+- E-027: сложные interactive paste-блоки на UART сами становятся источником ошибок; control flow/regex/quotes/critical MMIO нужно переносить в script/helper.
+
+### Усиленные существующие ошибки
+- E-002: пользователь прямо запретил микрошаги для routine и оставил пошаговость только для экстренных/ветвящихся мест;
+- E-011: SSH root cause объявлялся закрытым преждевременно до локализации CRNG;
+- E-012/E-015: `rmmod isp` и multi-owner показали реальную аппаратную цену dirty lifetime — dangling IRQ и kernel Oops;
+- E-018: сгенерированный source с лишним `\&ch` не прошёл compile; preflight должен быть до передачи пользователю;
+- E-019/E-024: WSL/UART/PlatformIO и сложные shell blocks продолжали смешиваться.
+
+### Новые/уточнённые improvements
+- I-006, I-013, I-014 и I-027 переведены в `CONSOLIDATED`;
+- I-038: handoff должен быть reproducibility manifest со всеми canonical artifacts, paths и build/transfer/reverse/run recipes;
+- persistent owner/daemon получает прямое safety-обоснование из broken ISP unload lifecycle;
+- SSH dev-loop диагностируется по boundaries: network → TCP/22 → banner/entropy → auth → PTY.
+
+### Технический вклад
+- cold boot требует реального GPIO5 reset pulse, а не только финального уровня;
+- единый ISP/VPU/PAE helper получил Annex-B H.264 с SPS/PPS/IDR и сохранил capture;
+- одинаковый descriptor/серое содержимое оставили moving dequeue отдельным gate;
+- unload vendor ISP module доказан небезопасным; single lifetime owner становится обязательным;
+- persistent Dropbear key, persistent entropy seed и devpts/PTMX fixes переводят SSH из многоминутного bottleneck в управляемую часть dev-loop.
+
+### Agentic role
+Контекст одного диалога уже явно недостаточен. Создаётся большой handoff, а пользователь вводит более строгий acceptance: следующий агент должен воспроизводить работу по файлам/директориям/evidence/командам без скрытого знания предыдущего агента.
+
+При этом authority всё ещё локальная: пользователь остаётся маршрутизатором WSL files, UART state и handoff между чатами. Перехода к Drive/GitHub/MCP в этом источнике нет.
+
 ## Следующее действие
 
-Получить следующий уникальный исторический источник. Плановая расширенная live-state сверка — после девятого уникального файла.
+Выполнить обязательный post-file refresh и плановую 9-file live-state сверку с `STATE.md`, `TASKS.md` и relevant branches. После этого ожидать следующий уникальный исторический источник.
