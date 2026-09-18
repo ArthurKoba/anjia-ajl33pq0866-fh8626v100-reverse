@@ -692,7 +692,7 @@ Quality-retrospective в конце `CHAT-014` впервые явно пред�
 Это прямой предшественник современной project-authority модели: не заставлять нового агента восстанавливать operational state по переписке.
 
 ### I-048 — Hardware experiment как явная state machine
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
 В quality-pack `CHAT-014` эксперимент формализуется как последовательность состояний, а не произвольный список команд:
 
@@ -703,6 +703,8 @@ Quality-retrospective в конце `CHAT-014` впервые явно пред�
 - before/after dumps имеют однозначную семантику;
 - rollback является частью теста, а не необязательным хвостом;
 - следующий блок команд выдаётся только после реальной decision boundary.
+
+`CHAT-018` даёт прямое runtime-подтверждение этого подхода на lens switch: capture разделён на baseline → immediate-after → settled → restored-wide. Благодаря этому доказаны общий AE context/history, отсутствие profile reload и возврат wide exposure без смешивания состояний.
 
 ### I-049 — Ретроспектива качества агента как отдельный проектный артефакт
 Статус: `CONSOLIDATED`.
