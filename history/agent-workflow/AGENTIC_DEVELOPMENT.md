@@ -103,7 +103,7 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 `CHAT-010` повторяет модель уже для `enc.ko` и `media_process.ko`: пользователь один раз генерирует full disassembly/symbols/sections, после чего агент самостоятельно закрывает ioctl mapping и queue semantics без новых ручных диапазонов.
 
 ### A4.2 — Persistent experiment substrate
-Статус после `CHAT-003`: `OBSERVED`.
+Статус после `CHAT-012` → `CHAT-003`: `CONSOLIDATED`.
 
 До этого пользователь всё ещё тратил много внимания на повторный boot, повторный media bring-up и смену тестовых бинарников.
 
@@ -115,6 +115,8 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 - hardware test всё больше сводится к «доставить один artifact → reload/run/capture → вернуть результат».
 
 Это не только техническая оптимизация. Она уменьшает роль человека как диспетчера инфраструктуры и делает цикл пригоднее для автономной агентной разработки.
+
+`CHAT-012` показывает предшествующее архитектурное решение: когда dequeue и stream boundary уже доказаны, productionization можно начинать до идеального ISP, если unresolved RAW path остаётся внутри одного диагностического/persistent owner. В этой схеме Majestic — downstream consumer stream interface, а не новый владелец stateful vendor fd.
 
 Главный недостаток этого этапа: test protocol ещё часто был ручным и неоднозначным, а compile/preflight не всегда выполнялся до передачи artifact.
 
@@ -166,7 +168,7 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 
 В `CHAT-011` появляется ещё одна граница ручного режима: proven development image начинает расходиться с canonical source из-за временных overlay/init/network mutations. Без внешнего debt ledger пользователь вынужден сам напоминать, что перед final port эти изменения нельзя забыть вернуть или интегрировать чисто.
 
-## Уроки CHAT-001/002/003/004/005/006/007/008/009/010/011 для будущей agentic-системы
+## Уроки CHAT-001/002/003/004/005/006/007/008/009/010/011/012 для будущей agentic-системы
 
 1. **Текущее runtime state должно быть внешним фактом, а не памятью диалога.** Потери «stock или OpenIPC?» породили дорогие ошибки.
 2. **Agent handoff — необходим, но не должен становиться гигантской свалкой.** Нужны краткая карта и подробные приложения.
@@ -206,6 +208,8 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 36. **Development workaround должен иметь явный exit plan.** Временная правка обязана сразу получить метку dev-only, место в source/image и действие перед final/upstream: revert, board-scope или clean integration.
 37. **Hardware-proven image и canonical source — разные состояния.** Если generated rootfs/cpio содержит ручные proven fixes, это нужно считать reconciliation debt, а не молча объявлять source tree актуальным.
 38. **Living handoff обновляется reconciliation-ом, а не размножением master-файлов.** Authoritative верх меняется под fresh facts, historical evidence остаётся с superseded-метками.
+39. **Productionization можно начинать до полного закрытия reverse, но только за доказанной boundary.** Стабильные boot/module/stream слои можно оформлять параллельно; unresolved RAW/ISP должен оставаться изолированным за одним owner и не смешиваться со streamer/RTSP.
+40. **Streamer не должен владеть stateful hardware только потому, что он конечный продукт.** Если lifecycle требует одного долгоживущего owner, media daemon должен держать vendor fd, а Majestic/другой streamer получать уже готовый stream contract.
 
 ## Следующие исторические переходы, которые нужно искать
 
