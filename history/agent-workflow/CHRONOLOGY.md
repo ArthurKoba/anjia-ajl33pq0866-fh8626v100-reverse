@@ -204,6 +204,17 @@ Tele в том же профиле требует существенно бол�
 
 Подробнее: [D19](CHRONOLOGY_DETAILS.md#d19--current-day-reverse-convergence-и-runtime-integration-plan).
 
+### 20. Stock evidence campaign: state/transition corpus вместо разовых логов
+Источник: `CHAT-021`, 2026-08-28.
+
+После convergence reverse проект систематически снимает stock ground truth: четыре steady imaging state, bidirectional lens/day-night transitions, white-light coupling, talkback, siren, JPEG snapshot, PTZ, boot UART, selected sensor registers и targeted Apollo runtime regions. Одновременно готовится static reverse material для ранее не подготовленных modules/libs.
+
+Full independent heap diffs признаны слишком шумными; причинный анализ переводится на synchronized before/early/settled captures малых доказанных областей. Evidence оформляется state matrix/catalog с canonical, superseded и unavailable статусами.
+
+**Переход:** stock firmware становится воспроизводимым evidence dataset для будущей интеграции, а не только системой, к которой приходится возвращаться за каждым новым вопросом.
+
+Подробнее: [D20](CHRONOLOGY_DETAILS.md#d20--stock-evidence-campaign-и-normalized-runtime-dataset).
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.
