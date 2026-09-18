@@ -77,12 +77,16 @@ Detailed audit: `docs/process/fh8626-kernel-series-audit.md`.
 ### Divinus
 
 - repository: `ArthurKoba/openipc-divinus`
-- branch: `fh8626v100-canonical`
-- observed tip: `1e624bd5aca97ba772413d2b00a10314d1db039f`
-- generic FH8626 integration commit: `8d400262898e8e82df6171fde7e8911ec7930249`
-- preservation commit: `1e624bd5aca97ba772413d2b00a10314d1db039f` (`WIP: preserve FH8626V100 native HAL migration state`)
+- work branch: `work/fh8626v100`
+- source-clean candidate: `684d0e1fc074435c4d14256c1d5d62ff87c2ebef`
+- preserved migration input: `1e624bd5aca97ba772413d2b00a10314d1db039f`
+- generic integration commit: `8d400262898e8e82df6171fde7e8911ec7930249`
 
-The preservation commit contains the newest native-HAL/media/ISP/audio/transport work. It is not yet hardware acceptance. Build and target-test this exact latest source before deciding what to keep or change.
+The current candidate removes the obsolete external FH86 owner/source protocol and keeps generic FH8626 ownership in Divinus native HAL code. Board hooks/policy are excluded. Native force-IDR, best-effort lifecycle cleanup and platform/media telemetry are wired. FH8626 temperature is explicitly unsupported.
+
+The candidate is source-cleaned but not hardware-accepted. Current blockers are the vendor GC1054/MIPI plug-in dependency, external RTX audio-helper dependency, full runtime video-reconfiguration, same-boot teardown/restart acceptance and exact-candidate target acceptance. Focused host tests are grouped by `tests/fh8626-check.sh` and remain an owner/CI execution gate.
+
+The matching Firmware hardware-test direction is `work/fh8626v100-divinus@3ef425e571f392ea1a2b1cadbeb63cb849ff6bee`. It temporarily pins exactly `ArthurKoba/openipc-divinus@684d0e1...` rather than moving upstream `HEAD`. This is staging provenance only; upstream-ready Firmware must consume OpenIPC-owned Divinus source.
 
 ### Firmware
 

@@ -8,9 +8,9 @@ Never collapse source existence, host tests, successful ARM build, target execut
 | Ethernet / watchdog / core GPIO/I2C | HARDWARE PASS for recorded bring-up | retained Linux/platform validation | only regressions caused by later changes |
 | GC1054 bootstrap / owner path | HARDWARE PASS for exercised owner/reference path | target validation + retained owner/source contracts | Majestic-specific VI compatibility |
 | Exact owner v4.3 | SOURCE/BUILD ORACLE with hardware-proven lineage | retained owner v4.3 source | do not convert every owner feature into one monolithic PASS |
-| Divinus external-owner transport baseline | TARGET STREAM PASS for the exercised historical candidate/run | retained target observations | reference path only; renewed implementation requires fresh acceptance |
-| Divinus native FH8626 HAL migration | INCOMPLETE / REFERENCE | retained source + current Divinus documentation | parity repair only if reference work resumes |
-| Divinus native source parity | CONFIRMED MISMATCHES at source level | owner/current/prior-working source comparison | repair/justify before renewed target acceptance |
+| Divinus external-owner transport baseline | HISTORICAL TARGET STREAM PASS / RETIRED ARCHITECTURE | retained target observations | evidence/reference only; the sidecar/source protocol is no longer the product path |
+| Divinus native FH8626 HAL candidate | SOURCE-CLEAN CANDIDATE / HARDWARE PENDING | `openipc-divinus/work/fh8626v100@684d0e1...` + retained FH8626 contracts | run focused host suite, build exact ARM1176/musl candidate, then validate media/ISP/transport/audio/teardown on target |
+| Divinus transitional native dependencies | EXPLICIT BLOCKERS | current provider capability/blocker state | replace vendor GC1054/MIPI plug-in and external RTX helper when their clean owning implementation is ready; do not hide them as production-ready |
 | Board PTZ motor backend (`fh8626-ptz`) | HARDWARE PASS | retained hardware acceptance | release regression only |
 | PTZ motor mapping | HARDWARE PASS after connector correction | retained PTZ evidence | preserve mapping and single-owner policy unless deliberately revalidated |
 | Divinus HTTP/ONVIF PTZ adapter | TARGET CURL PASS for movement/restore/presets | retained ONVIF/PTZ integration evidence | Frigate calibration/live person autotracking |

@@ -98,16 +98,16 @@ This is an independent platform research task and does **not** block Firmware, D
 
 ## P1 — Divinus target completion
 
-35. Use `openipc-divinus/work/fh8626v100` as the latest source candidate, with the top WIP treated as source-only until retested.
-36. Build the exact latest candidate reproducibly and record its identity.
-37. Deploy it to the physical camera and prove candidate PID/executable/listener ownership before interpreting stream results.
-38. Validate sensor/media startup, visible image, VENC and sustained RTSP.
-39. Validate restart/reconnect and random-access/timestamp behavior.
-40. Validate WIDE/TELE switching and board sensor bootstrap behavior.
-41. Validate ISP/exposure/color/day-night behavior to the level actually exercised.
-42. Validate microphone and speaker/two-way audio where supported by the candidate.
-43. Repair only failures reproduced on that latest target candidate.
-44. After hardware acceptance, curate a clean upstream-ready FH8626V100 Divinus series. The agent does not create the final pull request.
+35. Use `openipc-divinus/work/fh8626v100@684d0e1fc074435c4d14256c1d5d62ff87c2ebef` as the exact source-clean candidate. Do not restart from the historical owner/sidecar implementation.
+36. Run `tests/fh8626-check.sh` in a normal checkout/CI environment and record the result. The current API-only pass prepared the runner but did not execute it.
+37. Build the matching Firmware direction `openipc-firmware/work/fh8626v100-divinus@3ef425e571f392ea1a2b1cadbeb63cb849ff6bee`; it temporarily pins exactly Divinus `684d0e1...`. Record binary identity plus resolved config and image sizes.
+38. Deploy that exact candidate and prove executable/hash, PID and listener ownership before interpreting media behavior.
+39. Validate GC1054/ISP/media startup, visible image, VENC and sustained 1280x720@25 H.264 streaming.
+40. Validate RTSP/raw H.264/fMP4 reconnect behavior and native force-IDR/random-access behavior.
+41. Validate ISP exposure/color behavior and the corrected runtime statistics-bank/barrier path.
+42. Validate JPEG/MJPEG only if enabled in the candidate. Validate RTX audio only when the source-built helper dependency is deliberately present; do not treat the proven RTX transport as proof that the current Divinus packaging is complete.
+43. Validate graceful stop and same-boot restart. Keep live `/api/mp4` mutation disabled until this lifecycle is accepted. Validate WIDE/TELE/bootstrap/PTZ/illumination through their owning board layer, not through new Divinus board hooks.
+44. Repair only failures reproduced on this exact candidate. After hardware acceptance, remove/replace the transitional vendor sensor plug-in and audio-helper dependencies as appropriate, restore OpenIPC-owned Divinus source provenance in Firmware, and curate the upstream-ready Divinus series. The agent does not create the final pull request.
 
 ## P2 — Majestic product path
 

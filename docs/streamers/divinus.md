@@ -1,52 +1,75 @@
 # Divinus integration
 
-Divinus is the open reference and diagnostic implementation for FH8626V100. It is not the preferred product baseline; Majestic is the current product direction.
+Divinus is the open reference and diagnostic implementation for FH8626V100. The current source-clean candidate is `ArthurKoba/openipc-divinus/work/fh8626v100@684d0e1fc074435c4d14256c1d5d62ff87c2ebef`.
 
-## Current role
+## Current architecture
 
-Use Divinus to:
+The old external `source: fh86` media-owner/socket/FIFO path is retired. Divinus owns the generic FH8626 media pipeline through its native HAL:
 
-- compare an open implementation against the camera contracts preserved here;
-- reproduce or isolate media/ISP/transport behavior when that helps current integration;
-- carry selected FH8626 work into a clean implementation branch when the related-repository phase begins.
+`GC1054/MIPI -> ISP -> VPU -> PAE/VENC -> hal_vidstream -> Divinus transports`
 
-The implementation repository is `ArthurKoba/openipc-divinus`. This camera repository owns the hardware/media contracts, not the Divinus source tree.
+Camera-specific board policy does not live in Divinus. GPIO5 cold bootstrap, GPIO4/GPIO14 WIDE/TELE selection, PTZ and illumination remain in the board/device integration that owns them.
 
-## Known source-level parity gaps
+## Source cleanup completed
 
-`SOURCE_CONFIRMED` issues retained from the current source comparison:
+The current work line:
 
-- ISP runtime-bank/statistics-root handling differs from the retained owner behavior;
-- frontend barrier/state fields were accessed through a different address domain;
-- frame-wait behavior was introduced without an established owner-equivalent contract;
-- RTSP fd/parser ownership regressed relative to the preserved working transport path.
+- removed the external encoded-owner source protocol and its transport/wire tests;
+- removed the weak board-preparation hook;
+- retained and corrected the native ISP/runtime ownership path;
+- uses best-effort teardown rather than aborting cleanup on the first destructor error;
+- wires recovered native force-IDR;
+- exposes platform, CPU/load/memory/uptime, media state and capability telemetry;
+- explicitly reports FH8626 temperature as unsupported;
+- rejects live `/api/mp4` mutation until the native same-boot reconfigure lifecycle is accepted;
+- provides `tests/fh8626-check.sh` for the focused host contract suite.
 
-These are source mismatches. They are not proof that every build fails on target, but they prevent treating the native path as accepted parity without repair or explicit justification and validation.
+Historical source-level bank/barrier/frame-wait mismatches are no longer the current candidate description. Their corrected contracts remain part of the source and camera documentation; target behavior still requires fresh validation.
 
-## Media/transport constraints retained from historical work
+## Remaining native blockers
 
-Future Divinus work should preserve these implementation constraints:
+The provider deliberately remains not production-ready. Current blockers are:
 
-- source/capture timestamps, not configured FPS alone, drive downstream media timing;
-- one H.264 access unit must use one RTP timestamp across all packets/fragments;
-- reconnect, lens generation changes and encoder restart establish a new random-access epoch and must not expose arbitrary mid-GOP state;
-- slow or dead clients must not hold shared publication/media locks indefinitely;
-- candidate attribution must be proven before interpreting a target test: executable path/hash, PID, listener ownership and ready state.
+- GC1054/MIPI startup still uses the V100 vendor plug-in callback objects; a fully open native sensor backend remains to be completed;
+- RTX transport is hardware-proven, but Divinus currently depends on the separate source-built `fh8626-audio` helper, which the clean Firmware core does not inherently provide;
+- full runtime H.264 configuration changes are not accepted; cold-start config is the supported test path;
+- same-boot teardown/restart still requires target acceptance;
+- the exact latest candidate has not yet completed physical-camera acceptance.
 
-The detailed experiments and obsolete candidate chronology are historical material, not current acceptance criteria.
+JPEG/MJPEG implementation exists but remains target-unaccepted. H.265 is unsupported in the current FH8626 path.
 
-## Acceptance boundary
+## Temperature boundary
 
-A renewed Divinus target candidate needs independent validation of:
+RTC/TSENSOR remain independent research. Divinus must not manufacture a temperature from `/sys/class/thermal/thermal_zone0` on this board. Current FH8626 status reports temperature unavailable/null.
 
-1. sensor/media initialization;
-2. ISP/color behavior;
-3. encoder ownership/lifecycle;
-4. RTSP reconnect/timestamp behavior;
-5. audio if included in the candidate.
+## Transport constraints
 
-Do not combine unrelated repairs into one diagnostic conclusion.
+Preserve these established constraints during target debugging:
+
+- capture/source timing drives downstream timestamps;
+- one H.264 access unit uses one RTP timestamp;
+- reconnect or encoder restart begins a new random-access epoch;
+- slow/dead clients must not retain shared media ownership indefinitely;
+- every target conclusion must identify the exact candidate executable/PID/listener.
+
+## Exact test staging
+
+Firmware `work/fh8626v100-divinus@3ef425e571f392ea1a2b1cadbeb63cb849ff6bee` temporarily pins Divinus `684d0e1...` so the next image is attributable. That personal-fork pin is staging-only; after upstream acceptance Firmware must return to OpenIPC-owned source provenance.
+
+## Acceptance order
+
+1. host contract suite;
+2. exact ARM1176/musl build and artifact identity;
+3. GC1054/ISP/native H.264 startup;
+4. sustained RTSP/raw H.264/fMP4 and force-IDR/reconnect;
+5. ISP exposure/color;
+6. optional JPEG/MJPEG;
+7. optional RTX audio with the intended helper/runtime present;
+8. graceful stop and same-boot restart;
+9. board lens/PTZ/illumination integration through the board owner.
+
+Host/source evidence does not promote the candidate to hardware PASS.
 
 ## Reverse boundary
 
-If a Divinus blocker needs reverse analysis, use the canonical Ghidra MCP project. Do not recreate old local reverse/export workflows from historical Divinus notes.
+If a reproduced Divinus failure needs lower-level analysis, use the canonical Ghidra MCP project for that concrete blocker and promote only the durable result back here. Do not recreate the retired sidecar architecture merely as a workaround.
