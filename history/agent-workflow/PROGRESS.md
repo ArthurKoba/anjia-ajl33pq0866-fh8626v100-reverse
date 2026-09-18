@@ -1,26 +1,26 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_005_IN_PROGRESS`
+Статус: `CHAT_005_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **4**
-- Последний источник: `CHAT-004`
-- Период последнего источника: **2026-08-26 — 2026-08-27**
-- Следующее действие: завершить анализ `CHAT-005`
+- Обработано исторических файлов: **5**
+- Последний источник: `CHAT-005`
+- Период последнего источника: **2026-08-24 — 2026-08-25**
+- Следующее действие: выполнить обязательный post-file refresh
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-004 |
+| Направление | Файл | Состояние после CHAT-005 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 4/?? источников обработано |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 5/?? источников обработано |
 | Ошибки/нарушения агентов | `ERRORS.md` | 21 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 27 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлен dequeue/grey-frame/stock-runtime evidence этап перед persistent-owner |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлен A4.1 self-service reverse evidence |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 30 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | backfill начальной hardware/recovery/TFTP/RAM-boot фазы |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | A0 и A4 дополнены самым ранним manual-chat/TFTP этапом |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -59,7 +59,7 @@
 | 2 | `CHAT-002` | 2026-08-27 | `DONE` | Source-derived ISP runtime, формальный one-archive delivery protocol, self-guarded owner launch, hot-plugin loop, workspace authority cleanup, role-specialized parallel reverse |
 | 3 | `CHAT-003` | 2026-08-26 — 2026-08-27 | `DONE` | Исторический backfill: v3.8→v4.0.4, persistent owner/hot reload, deterministic test lessons, boot automation, AE feedback, отказ от live MMIO rollback; по source numbering пропущенный/смещённый #2 считается закрытым и отдельно не ожидается |
 | 4 | `CHAT-004` | 2026-08-26 — 2026-08-27 | `DONE` | Dequeue/release semantics и движущаяся stream queue; grey-frame локализован выше encoder/upscale; full Apollo + stock runtime bundle; переход к self-service reverse. Поздняя часть частично перекрывает CHAT-003 и использована только как дополнительное evidence |
-| 5 | `CHAT-005` | 2026-08-24 — 2026-08-25 | `IN_PROGRESS` | Исторический backfill самого начала: hardware identification, SPI dump, U-Boot/root access, TFTP path и первый OpenIPC RAM target |
+| 5 | `CHAT-005` | 2026-08-24 — 2026-08-25 | `DONE` | Самый ранний backfill: hardware/dual-lens identification, immutable full-flash dump, U-Boot access, TFTP→RAM proof и выбор hybrid stock-kernel + OpenIPC initramfs strategy |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -190,6 +190,32 @@
 
 Их нельзя датировать по первым четырём источникам.
 
+## Что CHAT-005 добавил к картине
+
+### Новых error-ID почти не потребовалось
+Источник ранний и в основном подтверждает уже найденные позднее проблемы:
+- лишняя проверочность после достаточного доказательства;
+- ненужная ancillary-диагностика вместо functional-path test;
+- склонность заранее разворачивать слишком много будущих веток.
+
+Самый чистый эпизод: после успешного TFTP агент предложил ещё memory display/checksum, а пользователь остановил это и потребовал сразу переходить к OpenIPC build.
+
+### Новые/уточнённые best practices
+- полный flash dump до любой мутации как immutable recovery/provenance anchor;
+- прямой functional test нужного transport вместо починки необязательной проверки;
+- пользователь может отдавать raw bootlog/dump, а анализ и структурирование должны оставаться на агенте;
+- hybrid stock-kernel + OpenIPC initramfs был выбран как сознательная стратегия ещё до первого OpenIPC hardware pass.
+
+### Историческая роль
+Это самый ранний обработанный источник на данный момент. Он предшествует `CHAT-001` и показывает исходный A0 workflow: браузерный чат, UART/programmer/U-Boot у пользователя и практически вся инженерная continuity внутри одного диалога.
+
+### Что по-прежнему отсутствует
+В `CHAT-005` ещё нет:
+- устойчивого workspace/handoff как общей системы;
+- Google Drive evidence store;
+- GitHub authority для собственного FH8626 проекта;
+- MCP/Ghidra shared reverse workspace.
+
 ## Следующее действие
 
-Получить следующий исторический источник. Следующая расширенная live-state сверка — после шестого обработанного файла либо раньше при крупном противоречии.
+Выполнить обязательный post-file refresh. После него ожидать следующий исторический источник. Расширенная live-state сверка будет после шестого обработанного файла либо раньше при противоречии.
