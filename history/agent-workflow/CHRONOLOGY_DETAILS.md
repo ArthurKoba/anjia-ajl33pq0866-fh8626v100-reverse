@@ -456,3 +456,28 @@ Controlled runtime capture подтвердил:
 
 Новый heavy reverse не потребовался; remaining optional validation — только измерение transient/frame-gap с более точной instrumentation.
 
+## D19 — Current-day reverse convergence и runtime integration plan
+
+`CHAT-020` — центральная orchestration branch, где результаты parallel agents перестают существовать отдельными handoff'ами и интегрируются в одну normalized system model.
+
+К этому моменту current-day GC1054 knowledge включает:
+- full AE/brightness loop до sensor registers и day/night profile contracts;
+- AWB statistics/mode1 и coherent AWB→C9F68→CCM propagation с hardware validation;
+- APC/detail, active NR3D, LTM and related runtime-table identities;
+- dual-lens switch implementation + hardware validation;
+- late/heavy ISP writers, VPU/PAE/H.264 path;
+- Cross-Fullhan semantic map как reference, не target proof.
+
+Практический вывод центральной ветки: remaining current-day work в основном implementation/hardware parity, а не broad reverse.
+
+Roadmap нормализован примерно в порядке:
+`AE/live total gain → sensor AE → CDD6C/APC → D0FEC/NR3D → D0630+D0B2C LTM → D1DB0 → cadence`.
+
+Night/1080p/WDR/другие later modes отделяются от current-day parity, чтобы не размывать основной integration path.
+
+Технический state при этом не повышается автоматически до hardware parity: часть блоков exact/reverse-confirmed, но ещё отсутствует или feature-gated в current owner. `IMPLEMENTATION_REGISTRY`/module matrix явно разделяют «разобрано» и «портировано/проверено».
+
+Эта же ветка интегрирует Cross-Fullhan oracle непосредственно в runtime planning: `ctx+0x60 >> 12` закрепляется как live total-gain semantic, а missing per-frame publication рассматривается как конкретный owner gap для gain-dependent APC/NR modules.
+
+Handoff на этой фазе проходит automated health checks и содержит current state, source/reference/evidence/tooling, что делает следующего оркестратора способным стартовать от integration roadmap без повторного wide reverse.
+
