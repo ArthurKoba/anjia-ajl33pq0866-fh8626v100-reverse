@@ -5,8 +5,8 @@
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **31**
-- Последний источник: `CHAT-031`
+- Обработано исторических файлов: **32**
+- Последний источник: `CHAT-032`
 - Период последнего источника: **2026-08-30**
 - Следующее действие: получить следующий уникальный исторический источник
 - Raw chat exports в Git **не сохраняются**
@@ -16,11 +16,11 @@
 
 | Направление | Файл | Состояние после CHAT-031 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 31/?? sources обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 45 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 118 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D29: Divinus V11 hardening |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.21: interaction failures → executable quality artifacts |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 32/?? sources обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 46 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 120 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D30: Agent 7 release-regression и forensic rollback |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.22: failed release → negative-evidence handoff |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -86,6 +86,8 @@
 | 29 | `CHAT-029` | 2026-08-28 — 2026-08-29 | `DONE` | Agent 3 turns reverse contracts into media-runtime/sidecar/RTSP/OpenIPC source staging and Divinus adapter; engineering/upstream profiles split; incomplete repack exposes artifact-verification continuity problem |
 | 30 | `CHAT-030` | 2026-08-30 | `DONE` | Partial Agent5 kernel lane: hardware-proven platform baseline, offline pinctrl/PMU/peripheral closure and cumulative native-kernel plan; stage-archive spam and Python packaging are explicitly rejected |
 | 31 | `CHAT-031` | 2026-08-30 | `DONE` | Agent6 Divinus V11/V11r2 hardening stays PENDING_WSL; MJPEG becomes provider-boundary task; repeated SHA/command-block/Explorer/branching violations are converted into critical command protocol and orchestrator countermeasures |
+
+| 32 | `CHAT-032` | 2026-08-30 | `DONE` | Agent 7 release-ветка: host/ARM gates проходят, но target loop ломает hardware-proven lens/image contracts; software diagnostics ошибочно принимаются за physical truth; R13–R18 карантинизированы, сформирован аварийный negative-evidence handoff |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -1030,3 +1032,11 @@ Divinus hardening advances independently of owner integration, preserving single
 ## Следующее действие
 
 Получить следующий уникальный исторический источник. Следующая плановая expanded live-state сверка — после `CHAT-033` либо раньше при крупном историческом переходе к Drive/Git/MCP.
+
+
+## Что CHAT-032 добавил
+
+- Новый `E-046`: software state/logs не могут supersede hardware-proven contract без более сильного physical evidence.
+- `E-014`, `E-019`, `E-026`, `E-028`, `E-031` получают дополнительное подтверждение: UART-first, target capability, rollback-to-known-good и completion audit нарушались внутри release loop.
+- Новые `I-119/I-120`: hardware-proven baseline защищается как invariant; провалившаяся release-ветка передаётся как quarantine/negative provenance, а не как почти готовый candidate.
+- Техническая история получает D30: target hardware acceptance опровергла software-success R13–R18 и заставила отделить полезные findings от release-кода.

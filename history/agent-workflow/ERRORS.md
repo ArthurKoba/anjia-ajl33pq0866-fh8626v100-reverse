@@ -803,6 +803,26 @@ Evidence: `CHAT-030`.
 
 Evidence: `CHAT-031`.
 
+### E-046 — Software diagnostics подменяют physical evidence и переписывают hardware-proven contract
+Статус: `OBSERVED`.
+
+В `CHAT-032` release-агент изменил уже аппаратно проверенную dual-lens логику: software `current_target` стал авторитетным, а GPIO/FOV — диагностикой. После этого runtime мог печатать успешное `wide→tele→wide`, хотя физический FOV не менялся. На той же ветке несколько новых hypotheses (wide-only shortcut, pinmux, force-write и другие R13–R18 изменения) продолжали наращиваться вместо возврата к последней hardware-proven реализации.
+
+Почему мешает:
+- software/log success создаёт ложный PASS при физической регрессии;
+- known-good hardware contract теряет статус baseline;
+- новые hypotheses начинают объяснять последствия собственных изменений;
+- оператор тратит hardware cycles на ветку, которую следовало рано откатить.
+
+Правильный паттерн:
+- physical/visual hardware evidence имеет приоритет над software state;
+- hardware-proven contract нельзя переписывать без явно более сильного target evidence;
+- первое необъяснимое physical regression → isolate delta / rollback, а не архитектурное расширение;
+- release-candidate обязан иметь независимый physical acceptance gate;
+- провалившаяся ветка карантинизируется и не наследует статус production candidate.
+
+Evidence: `CHAT-032` — Agent 7 R13–R18; итоговый emergency handoff сам фиксирует нарушение working Agent 3 contract, ложные successful logs и do-not-merge quarantine.
+
 ## Пока не подтверждено этим чатом
 
 - исходная гипотеза о специальном env-паттерне для значений, которые «съедает» консоль — в `CHAT-001` недостаточно чистого доказательства; оставить на следующие файлы;

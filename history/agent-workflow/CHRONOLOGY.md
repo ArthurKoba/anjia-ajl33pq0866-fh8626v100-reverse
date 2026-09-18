@@ -316,6 +316,18 @@ MJPEG переосмысляется как отсутствующий JPEG prov
 
 Подробнее: [D29](CHRONOLOGY_DETAILS.md#d29--divinus-v11-hardening).
 
+### 30. Agent 7 release-regression: host-success не выдерживает physical acceptance
+Источник: `CHAT-032`, 2026-08-30.
+
+Agent 7 собрал новый production runtime с lifecycle/single-owner, stats/stream workers, AE/AWB/CCM, IQ manager, lens transaction и host gates; ARM build также дошёл до корректного FH8626 ELF. На target media/ISP/PAE/VPU bootstrap проходил, но дальнейший hardware loop выявил регрессии изображения и lens behavior.
+
+Критическая граница стала очевидной на R13–R18: software target-state и diagnostic GPIO/logs показывали успешные transitions, тогда как физический FOV не менялся. Попытки wide-only/pinmux/force-write продолжили отклонение от ранее hardware-proven Agent 3 contract. Ветка была остановлена и передана как forensic/quarantine, а не как release.
+
+**Переход:** compile/host gates окончательно отделяются от hardware parity; release engineering получает обязательный protected-known-good baseline и negative-evidence provenance.
+
+Подробнее: [D30](CHRONOLOGY_DETAILS.md#d30--agent-7-release-regression-и-forensic-rollback).
+
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.

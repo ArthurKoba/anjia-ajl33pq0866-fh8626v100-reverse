@@ -873,3 +873,20 @@ A WSL runner is prepared to check repo identity/worktree, apply patches, run str
 
 The same chat is also a major workflow-quality event. Repeated command-format, SHA and Explorer mistakes are eventually captured in a dedicated critical protocol and retrospective rather than being left as conversational corrections.
 
+
+
+## D30 — Agent 7 release-regression и forensic rollback
+
+Источник: `CHAT-032`, 2026-08-30.
+
+Поздняя Agent 7 ветка попыталась сразу свести release-runtime: single-owner lock, stream/stats workers, AE scheduler/provider boundary, AWB mode1→CCM, IQ manager, lens transaction, illumination/audio/watchdog hooks. Host selftests и full host linkcheck проходили, затем WSL дал корректный ARM/EABI5/musl binary.
+
+Target acceptance показал другую картину. Bootstrap до ISP/VPU/PAE/VENC проходил, но startup/lens/image behavior расходился с physical ground truth. Наиболее важная ошибка — перенос authority с физического selector/FOV на software `current_target`: лог мог сообщать успешное переключение без изменения оптики. После этого поверх regression появились wide-only, force-write и pinmux hypotheses.
+
+Даже возвращение части Agent 3 sequence не восстановило target behavior. Пользователь остановил release line, потребовал clean-boot retest и затем аварийный handoff. Итоговый branch сам классифицировал R13–R18 как `quarantine/do-not-merge` и разделил:
+- hardware/ASM findings, которые ещё полезны;
+- candidates, требующие повторной проверки;
+- опровергнутые hypotheses;
+- process failures, которые привели к regression.
+
+Это важная historical boundary: успешный host/ARM pipeline больше не трактуется как близость к product parity; release-код обязан сохранить exact hardware-proven invariants и проходить независимый physical acceptance.

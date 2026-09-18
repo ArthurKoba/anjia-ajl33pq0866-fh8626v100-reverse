@@ -430,6 +430,17 @@ to:
 
 CHAT-031 also shows why documentation alone is insufficient: the rule already existed in prior files, yet the agent still violated it. The next maturity step therefore has to be **pre-send enforcement/linting**, not merely more prose.
 
+### A4.22 — Failed release → negative-evidence handoff
+Статус после `CHAT-032`: `OBSERVED`.
+
+Agent 7 впервые даёт особенно чистый пример того, что failure branch тоже должен быть нормальным engineering artifact. После серии неудачных R13–R18 пользователь требует не «ещё один фикс», а оформить весь провал для оркестратора.
+
+Получившаяся модель:
+`release attempt → physical regression → stop → quarantine → enumerate violated contracts / rejected hypotheses / useful findings → orchestrator decides cherry-picks`.
+
+Важное изменение — failed branch больше не пытается сохранить лицо повышением версии. Он обязан явно сказать, какие части мусорны/неподтверждены и что не должно попасть в canonical line. Это защищает multi-agent fan-in от ложной уверенности и превращает неудачную hardware-сессию в reusable negative evidence.
+
+
 ### A5 — Специализированные MCP/агенты
 Статус: `BOOTSTRAP`.
 
