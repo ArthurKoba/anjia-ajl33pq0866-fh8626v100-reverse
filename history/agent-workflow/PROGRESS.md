@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `READY_FOR_NEXT_SOURCE`
+Статус: `CHAT_016_IN_PROGRESS`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **15**
 - Последний источник: `CHAT-015`
 - Период последнего источника: **2026-08-27 — 2026-08-28**
-- Следующее действие: перейти к загруженному источнику `#16`
+- Следующее действие: завершить анализ `CHAT-016`
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -70,6 +70,7 @@
 | 13 | `CHAT-013` | 2026-08-27 | `DONE` | Day AWB mode1 сильно восстановлен и переведён в diag/shadow; hardware identity очищена от JXF37 false lead; stock runtime подтверждает GC1054 1280×720 + downstream 1080 upscale и dual-GC1054 target1/target2 lens lifecycle; сформулирован milestone-driven autonomous reverse contract |
 | 14 | `CHAT-014` | 2026-08-27 | `DONE` | Parallel Agent 3: exact AWB→CCM reverse, coherent v4.2.1 hardware validation and rollback; session-quality retrospective becomes separate artifact with operational-state/state-machine/automation proposals |
 | 15 | `CHAT-015` | 2026-08-27 — 2026-08-28 | `IN_PROGRESS` | Центральная orchestration-ветка: multi-agent decomposition/integration, project-file isolation, long Task N lanes, Cross-Fullhan semantic oracle, APC/total-gain diagnosis и same-SoC external research |
+| 16 | `CHAT-016` | 2026-08-27 — 2026-08-28 | `IN_PROGRESS` | Persistent Agent 1 lane: C949C/C9898 → full AE Task2, completion-audit correction, GC1054 sensor library/runtime captures, day/night numerical replay, exact sensor actuator contract, then dual-lens/light/audio static Task3 and quality-pack v3 |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
