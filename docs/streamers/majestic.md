@@ -28,7 +28,7 @@ When an upstream/vendor Majestic build for FH8626V100 becomes available, record 
 
 ## Current compatibility surface
 
-Firmware `work/fh8626v100-majestic@96be29f2...` contains a source-built ABI probe for the retained FH8852V200 userspace baseline. It is deliberately non-mutating: no sensor, ISP, VI or VENC initialization is called. Its purpose is to separate three questions before the next adapter slice:
+Firmware `work/fh8626v100-majestic@718f6a14...` contains a source-built ABI probe for the retained FH8852V200 userspace baseline. It is deliberately non-mutating: no sensor, ISP, VI or VENC initialization is called. Its purpose is to separate three questions before the next adapter slice:
 
 - are the eight donor libraries loadable as one closure under the FH8626 musl image;
 - which expected Fullhan VMM/SYS/VPSS/VENC/MIPI/ISP symbols are actually resolvable;
@@ -58,3 +58,10 @@ Further offline wrapping is deliberately evidence-gated. The project already has
 
 
 The staging branch also contains a source RTX audio MPI facade. FH8852 `FH_AC_*` frame/config wrappers were statically matched to the same RTX command records already hardware-proven on FH8626, including AI frame/PTS and AO frame submission. This is source-ready but still requires Majestic runtime evidence for actual microphone, speaker and two-way ownership/policy.
+
+
+## Final offline boundary
+
+The clean-room Ghidra pass is complete enough to stop speculative implementation. The compatibility branch now uses source-native sensor/MIPI, VMM, VPSS/VENC/stream and RTX audio layers where concrete ABI mismatches were proved. It deliberately retains isolated donor ISP/ispcore where stock analysis shows a large shared userspace context/state machine and no concrete post-fix incompatibility has yet been observed.
+
+Further changes to ISP/JPEG/audio policy should now be driven by the first real target run, not by guessed replacement code.

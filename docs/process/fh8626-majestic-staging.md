@@ -1,6 +1,6 @@
 # FH8626V100 Majestic staging
 
-Status: `SOFTWARE_MEDIA_STAGING / HISTORICAL_CONTROL_PLANE_HARDWARE_PASS / NEW_BUILD_AND_HARDWARE_PENDING`.
+Status: `OFFLINE_PORT_COMPLETE / HISTORICAL_CONTROL_PLANE_HARDWARE_PASS / NEW_BUILD_AND_HARDWARE_PENDING`.
 
 Checked: 2026-09-18.
 
@@ -125,7 +125,7 @@ The video/ISP path is explicitly unfinished. Do not enable media by default or c
 
 ## Next gates
 
-1. Owner-build Firmware `work/fh8626v100-majestic@96be29f2...` through Builder `work/fh8626v100-anjia` target `fh8626v100_lite_anjia-ajl33pq0866_majestic`; record resolved Buildroot config plus kernel/rootfs sizes.
+1. Owner-build Firmware `work/fh8626v100-majestic@718f6a14...` through Builder `work/fh8626v100-anjia` target `fh8626v100_lite_anjia-ajl33pq0866_majestic`; record resolved Buildroot config plus kernel/rootfs sizes.
 2. Boot the default media-off service and confirm Majestic directly owns port 80 with stock WebUI/API/WebSocket behavior. Characterize `/metrics` as served by Majestic itself; do not insert a proxy or frontend patch.
 3. Run `majestic-fh8626-abi-probe` and retain complete output. Also record `sha256sum /usr/libexec/majestic-fh8852v200/majestic` so the run is attributable to exact donor bytes.
 4. Run strict media mode first and preserve the first failing API/callsite. Run permissive-stub only to expose later optional call ordering. Then run native-video mode.
@@ -175,3 +175,30 @@ Static reverse of FH8852 `libacw_mpi.so` showed that its public MPI is a thin wr
 The recovered donor shared-memory layout also proves that the AO staging region is the tail of the RTX mapping: `mapped_base + (map_length - tail_length)`, with the corresponding transport offset derived from `map_offset`. Firmware therefore now builds a source `libacw_mpi.so` facade with AI frame/PTS retrieval and AO frame submission over native `/dev/rtxbus`.
 
 Advanced AEC/AGC/NR semantics remain explicit unsupported boundaries until a concrete Majestic call requires their exact records. Physical speaker amplifier policy remains board-owned and is not embedded into the generic compatibility library.
+
+
+## Final offline Ghidra audit
+
+The final offline pass used the canonical ANJIA/FH8626 Ghidra projects rather than treating Divinus as authority:
+
+- `anjia_ajl33pq0866_fh8626v100_apollo`;
+- `anjia_ajl33pq0866_fh8626v100_isp`;
+- `anjia_ajl33pq0866_fh8626v100_enc`;
+- `anjia_ajl33pq0866_fh8626v100_media_process`;
+- sensor/MIPI projects plus existing VMM/JPEG/kernel/ARC projects as needed.
+
+Concrete results applied to Firmware:
+- `FH_VPSS_Enable(channel)` passes the channel id to `0xC004694D`; it is not a boolean enable flag;
+- VPU disable is the distinct no-payload `0xC004694E` request;
+- `FH_VPSS_CloseChn(channel)` is `0xC0046950`;
+- frame control is exactly two words: channel plus packed low16/high16 ratio;
+- `FH_VENC_CreateChn` consumes `{support_type, capacity_width, capacity_height}`;
+- normal/smart H.264 support bits are 0x4/0x8;
+- the kernel PAE config remains exactly 0x2c bytes and full RC exactly 0x54 bytes;
+- stock Apollo contains a combined H.264 public-attribute translator that programs PAE config first and full RC second;
+- stock VENC order is `VPSS attr/open/framectrl -> VENC create/attr/start -> SYS bind`, while VI/VPU enable is owned separately;
+- stock ISP image APIs mutate a shared userspace context and are not simple direct-ioctl wrappers.
+
+Because the ISP controls depend on a complete shared userspace context, donor `libisp.so`/`libispcore.so` are deliberately retained as isolated transitional components until the target run proves a concrete mismatch. Replacing them with a partial facade before target evidence would be less correct, not more open.
+
+All Divinus-specific mismatches found during this clean-room audit are tracked separately in `docs/process/fh8626-divinus-correction-ledger.md`.
