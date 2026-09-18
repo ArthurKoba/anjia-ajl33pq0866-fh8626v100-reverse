@@ -1,26 +1,26 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_012_IN_PROGRESS`
+Статус: `CHAT_012_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **11**
-- Последний источник: `CHAT-011`
-- Период последнего источника: **2026-08-24 — 2026-08-26**
-- Следующее действие: завершить анализ `CHAT-012`
+- Обработано исторических файлов: **12**
+- Последний источник: `CHAT-012`
+- Период последнего источника: **2026-08-26**
+- Следующее действие: post-file refresh + 12-file live-state сверка
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-011 |
+| Направление | Файл | Состояние после CHAT-012 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 11/?? уникальных источников обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 29 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 41 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | CHAT-011 добавлен как corroborating divergent branch D5-D8 без дублирования milestones |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | living-master reconciliation и dev-workaround debt добавлены |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 12/?? уникальных источников обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 29 tracked classes/directions; CHAT-012 новых ID не добавил из-за 98% overlap с CHAT-004 |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 42 tracked improvements/directions; добавлен I-042 productionization behind stable boundary |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | уникальный хвост CHAT-012 добавлен как ранняя daemon→Majestic design boundary; повтор CHAT-004 не дублирован |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | A4.2 persistent experiment substrate переведён в CONSOLIDATED |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -66,7 +66,7 @@
 | 9 | `CHAT-009` | 2026-08-26 | `DONE` | Новый уникальный source (~13% exact-line overlap с CHAT-008 только в reused code/helper fragments): hardware H.264 capture + repeated descriptor, broken ISP unload/multi-owner lifetime, persistent daemon direction, SSH key/CRNG/PTTY dev-loop optimization, UART paste fragility и context-limit reproducibility handoff |
 | 10 | `CHAT-010` | 2026-08-26 | `DONE` | Успешное продолжение из reproducible handoff без повторного bring-up; PTY cold-boot closure; exact `PAE 5011` release + `4D05/4D06` query semantics; full-disassembly self-service; livecapture source ordering fix (hardware retest pending); отдельная SSH regression с отклонённым ControlMaster workaround |
 | 11 | `CHAT-011` | 2026-08-24 — 2026-08-26 | `IN_PROGRESS` | Divergent branch: общий префикс с CHAT-001 примерно до L32775, далее отдельная ветка ISP/VPU/H.264/dev-loop; анализируется только уникальный хвост |
-| 12 | `CHAT-012` | 2026-08-26 | `IN_PROGRESS` | Продолжение handoff/dequeue с overlap CHAT-010; уникальная ветка после dequeue: distinct AU proof, grey-frame localization, 720→1080 VPU upscale, SREG/scene reverse, full Apollo substrate и targeted stock-runtime evidence |
+| 12 | `CHAT-012` | 2026-08-26 | `DONE` | Почти полный duplicate CHAT-004: exact common prefix 8392/8556 строк (~98.1% файла), поэтому повторный dequeue/grey/RAW evidence не пересчитывался. Уникальный хвост: stage summary после RAW-DMA breakthrough и решение начать productionization параллельно, сохранив single-owner `fh8626_daemon` boundary перед Majestic |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -467,6 +467,37 @@ Authority endpoint не изменился:
 
 Фактического перехода на GitHub/Drive/MCP authority в этом источнике ещё нет: координация остаётся через локальный workspace, файлы и ручной handoff между агентами.
 
+## Что CHAT-012 добавил к картине
+
+### Source relation
+`CHAT-012` почти полностью совпадает с уже обработанным `CHAT-004`: точный общий префикс составляет **8392 из 8556 строк**. Поэтому dequeue, grey-frame localization, 1080 upscale, Apollo/SREG reverse, stock-runtime bundle и RAW-DMA breakthrough повторно не учитывались как новое evidence.
+
+Уникальным является только финальный хвост после расхождения.
+
+### Новых error-ID нет
+Все существенные ошибки/workflow corrections внутри общего префикса уже были учтены через `CHAT-004`. Повторное повышение статусов по одному и тому же историческому эпизоду не выполнялось.
+
+### Новый improvement
+- I-042: productionization можно начинать параллельно с остаточным low-level reverse, но только за доказанной subsystem boundary.
+
+### Техническая/архитектурная роль уникального хвоста
+На момент расхождения:
+- dequeue уже закрыт;
+- реальный H.264 и stock-like 720→1080 VPU upscale доказаны;
+- RAW DMA уже ожил после восстановления missing ISP input state;
+- оставшийся blocker локализован в корректности RAW/Bayer и последующем ISP tuning.
+
+Пользователь предлагает переходить к firmware/Majestic. В ответ впервые явно формулируется production architecture:
+- один долгоживущий `fh8626_daemon` владеет stateful Fullhan fd и ISP runtime;
+- Majestic не открывает `/dev/isp` вторым owner;
+- Majestic получает готовый stream через downstream interface;
+- stable rootfs/module/startup pieces можно productionize параллельно с последними RAW/ISP A/B tests.
+
+Это design direction, а не Majestic hardware-pass.
+
+### Agentic role
+Это ранний переход от «probe как конечная форма эксперимента» к «stable subsystem contract → production daemon → streamer». Позднее `CHAT-003` реализует persistent experimental substrate гораздо глубже; поэтому A4.2 теперь считается `CONSOLIDATED`.
+
 ## Следующее действие
 
-Получить следующий уникальный исторический источник. После `CHAT-012` выполнить плановую live-state сверку.
+Выполнить обязательный post-file refresh и плановую 12-file live-state сверку с `STATE.md`, `TASKS.md` и relevant branches. После этого ожидать следующий уникальный исторический источник.
