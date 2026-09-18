@@ -203,6 +203,8 @@ CHAT-007 даёт прямое подтверждение: после вопро
 
 `CHAT-011` подчёркивает различие между именем image и его фактической lineage: серии FINAL/FINAL2/FINAL3/FINAL4 недостаточно; master handoff отдельно предупреждает проверять, какой `rootfs.cpio` реально упакован в загруженный uInitrd.
 
+`CHAT-013` усиливает curated-workspace contract: старый неполный `apollo.unpacked` исключается, один `reference/apollo_unpacked_ARM_full.txt` объявляется authoritative, current source checkpoint отделяется от historical checkpoint, а поздние reverse-notes не выдаются за уже интегрированный код.
+
 ### I-019 — Параллельный reverse с непересекающимися зонами ответственности
 Статус: `CONSOLIDATED`.
 
@@ -293,6 +295,8 @@ CHAT-007 показывает более раннюю форму того же p
 В CHAT-007 эта практика дополнительно развивается до полной локальной копии stock userspace и поиска по ней вместо постоянных target-команд.
 
 `CHAT-010` подтверждает self-service модель на `enc.ko`/`media_process.ko`: вместо дальнейшей серии ручных диапазонов пользователь передаёт full disassembly + symbols + sections, после чего агент самостоятельно закрывает `4D05/4D06`, callback mapping и read-index flow.
+
+`CHAT-013` распространяет self-service evidence на sensor variants: JXF37/JXF37P libraries, tuning blobs, readelf/strings/full disassembly собираются одним reverse bundle, после чего agent должен анализировать их локально вместо серии target-side ranges.
 
 ### I-025 — Capture once, analyze offline
 Статус: `OBSERVED`.
@@ -434,6 +438,8 @@ CHAT-007 усиливает принцип: valuable stock runtime сначал�
 
 `CHAT-011` — многократные вопросы «сколько ещё осталось» и «скоро закончится вечный reverse?» повторно показывают, что прогресс нужно отражать subsystem gates, особенно перед длинными ISP call-chain исследованиями.
 
+`CHAT-013` — пользователь просит общий прогресс по направлениям простым языком и repeatedly спрашивает остаток; module-level completion map оказывается полезнее потока адресов и локальных функций.
+
 ### I-035 — Adaptive granularity: группировать routine, дробить только decision boundaries
 Статус: `CONSOLIDATED`.
 
@@ -496,6 +502,8 @@ CHAT-007 усиливает принцип: valuable stock runtime сначал�
 Это дополняет I-010: canonical handoff должен быть компактной картой, но иметь ссылки/manifest на воспроизводимые подробности, а не превращаться в монолитный transcript.
 
 `CHAT-011` развивает master handoff через reconciliation: старые observations не удаляются молча, а сохраняются как historical evidence с пометкой superseded, при этом верхний authoritative state переписывается под текущий proven runtime.
+
+`CHAT-013` снова достигает context limit; пользователь требует передать не только handoff, но и полный workspace/archive плюс prompt следующему агенту. Это подтверждает, что continuity должна переносить и canonical artifacts, и explicit next-agent contract.
 
 ### I-039 — Прошлый агент как fallback, а не основной канал continuity
 Статус: `OBSERVED`.
@@ -562,6 +570,67 @@ CHAT-007 усиливает принцип: valuable stock runtime сначал�
 Это позволяет параллельно готовить rootfs/startup/packages/configuration, не превращая Majestic в дополнительную переменную низкоуровневого reverse.
 
 Источник: уникальный хвост `CHAT-012` после общего префикса с `CHAT-004`.
+
+### I-043 — Автономный reverse loop с milestone-based reporting
+Статус: `OBSERVED`.
+
+В `CHAT-013` пользователь почти дословно формулирует желаемый режим длинной reverse-задачи:
+- продолжать до полного или существенного частичного результата;
+- после каждого внутреннего вывода перепроверять его по коду/disassembly/data;
+- при опровержении самостоятельно менять направление;
+- вести внутреннюю карту адресов, функций, структур и зависимостей;
+- не публиковать каждую промежуточную находку;
+- возвращаться к оператору только при реальном blocker, отсутствующем hardware evidence или завершённом milestone;
+- финальный user-facing update держать кратким: сделано / подтверждено / неизвестно.
+
+Это не означает background execution между сообщениями. Речь о поведении **внутри текущего рабочего прохода**: максимально использовать доступный artifact/tooling до следующего operator-only boundary.
+
+Практический эффект:
+- меньше «продолжай»/«ну что там?» циклов;
+- reverse не дробится по каждой функции;
+- промежуточные ложные гипотезы успевают быть опровергнуты до user-facing отчёта;
+- аппаратный оператор получает уже сформулированный тест, а не поток reasoning.
+
+Источник: `CHAT-013`.
+
+### I-044 — Разделять firmware capability и hardware identity
+Статус: `OBSERVED`.
+
+Vendor image часто содержит drivers/configs для нескольких board revisions. Поэтому наличие sensor library, tuning blob или format table доказывает только **поддержку варианта прошивкой**.
+
+`CHAT-013` даёт чистый пример:
+- JXF37/JXF37P drivers и 1080p contracts действительно существуют;
+- их ABI удалось реверсить и probe частично запускается;
+- но stock runtime конкретной AJL33PQ0866 выбирает GC1054;
+- физический JXF37 I²C target не отвечает;
+- stock wide Full-HD получается из GC1054 1280×720 через scaler;
+- реальный zoom переключает target/GPIO без смены sensor driver.
+
+Устойчивое evidence ladder для hardware identity:
+1. firmware support — `SUPPORTED_VARIANT`;
+2. board config/hw_info — candidate;
+3. stock runtime selection + bus response — strong evidence;
+4. hardware behavior/visual path — acceptance.
+
+Опровергнутую sensor-ветку не удалять: её reverse может быть полезен для другой аппаратной ревизии, но P0 текущей платы должен быть снят.
+
+### I-045 — Shadow/diagnostic mode перед включением восстановленного closed-loop control
+Статус: `OBSERVED`.
+
+При восстановлении AWB/AE и других динамических ISP control loops опасно сразу писать рассчитанные значения в живой pipeline. В `CHAT-013` для `CA4F4` сначала создаётся read-only `awbmode1 diag`, затем `shadow on|off|status`: алгоритм читает настоящие 9 statistics records, вычисляет stock-like gains и temporal/hysteresis state, но не меняет image registers.
+
+Только после:
+- правильного mapping статистики;
+- deterministic/reference tests;
+- сравнения вычисленных значений на live hardware;
+- стабильности нескольких последовательных итераций
+
+можно переходить к отдельному controlled commit в AWB registers.
+
+Обобщение: для recovered closed-loop algorithm безопасная последовательность —
+**offline self-test → live shadow compute → compare/log → gated commit**.
+
+Это снижает риск испортить stateful ISP и отделяет correctness вычислений от side effects.
 
 ## Исходные этапы, ещё не подтверждённые
 
