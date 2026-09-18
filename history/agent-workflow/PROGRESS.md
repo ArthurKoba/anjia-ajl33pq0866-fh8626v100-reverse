@@ -1,26 +1,26 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_020_IN_PROGRESS`
+Статус: `CHAT_020_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **19**
-- Последний источник: `CHAT-019`
+- Обработано исторических файлов: **20**
+- Последний источник: `CHAT-020`
 - Период последнего источника: **2026-08-27 — 2026-08-28**
-- Следующее действие: завершить анализ `CHAT-020`
+- Следующее действие: выполнить post-file refresh
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-019 |
+| Направление | Файл | Состояние после CHAT-020 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 19/?? sources обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 35 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 62 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D18: controlled wide→tele→wide hardware validation |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.10: reverse corpus architecture / workspace map |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 20/?? sources обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 36 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 68 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D19: current-day reverse convergence → runtime integration plan |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.11: governed local master workspace |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -729,6 +729,27 @@ Current `STATE.md@a0022eb...` не отражает все эти newer work tip
 
 Workflow: новых классов нет; E-016 получил ещё один небольшой пример лишнего обходного исследования вместо прямого известного действия.
 
+## Что CHAT-020 добавил к картине
+
+### Новый error-class
+- E-036: нестабильные проценты готовности без fixed progress ontology.
+
+### Reinforced
+- E-013/E-014: unsolicited handoff/version export продолжался даже после явного запрета; E-014 теперь CONSOLIDATED.
+
+### Новые improvements
+- I-063: layered PROJECT_MAP + role/context entrypoints;
+- I-064: automated structural invariants / handoff doctor;
+- I-065: task router + context packs;
+- I-066: sessions/ledger + recovery playbook;
+- I-067: active knowledge separated from provenance/archive;
+- I-068: module/status matrix as fixed progress ontology.
+
+I-047 and I-060 promoted to CONSOLIDATED because operational state and corpus-first architecture are now implemented, not merely proposed.
+
+### Technical/agentic transition
+Three specialist lanes converge into one normalized current-day model. Broad reverse is no longer the default; the main path becomes feature-gated runtime integration and hardware validation. The local handoff becomes a governed workspace with executable quality checks.
+
 ## Следующее действие
 
-Перейти к `CHAT-020`.
+Выполнить post-file refresh, затем перейти к `CHAT-021`; после `CHAT-021` выполнить expanded live-state сверку.
