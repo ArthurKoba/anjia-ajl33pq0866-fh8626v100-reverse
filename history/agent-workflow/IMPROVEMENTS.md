@@ -20,7 +20,7 @@
 Источник: `CHAT-005` формулирует стратегию и доказывает U-Boot/TFTP→RAM transport; `CHAT-001` затем аппаратно подтверждает сам OpenIPC RAM boot.
 
 ### I-006 — Архив/checkpoint как транспорт состояния, рабочие файлы — распакованными
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
 В `CHAT-001` перед reboot начали собирать checkpoint с helper-бинарниками и диагностическим состоянием, передавать его одним пакетом, а затем продолжать работу с распакованным содержимым.
 
@@ -29,6 +29,8 @@
 Ограничение: checkpoint должен иметь явную структуру и не становиться единственным source of truth.
 
 `CHAT-008` показывает практическую ценность checkpoint как active recovery substrate: после очистки `/tmp` старые sensor/ISP/H.264 helper'ы были найдены в `checkpoints/openipc-20260825` и переиспользованы вместо повторной сборки с нуля.
+
+`CHAT-009` подтверждает checkpoint как recovery substrate ещё раз: после reboot/очистки `/tmp` рабочие H.264/ISP helpers и их source находились через `~/FH8626/checkpoints/...` и восстанавливались без повторного reverse.
 
 ### I-007 — Buildroot/OpenIPC собирать в Linux filesystem WSL, не на Windows mount
 Статус: `OBSERVED`.
@@ -80,6 +82,8 @@
 
 Источник: `CHAT-001`.
 
+`CHAT-009` доводит требование handoff до воспроизводимости: при исчерпании контекста пользователь требует не только narrative state, но и полный индекс disassembly/memory/stock evidence, файлов/директорий и exact build/transfer/reverse/run recipes, чтобы следующий агент мог продолжить без скрытого знания.
+
 ### I-011 — Reverse только до уровня, который разблокирует следующий эксперимент
 Статус: `CONSOLIDATED`.
 
@@ -104,8 +108,10 @@ CHAT-007 даёт прямое подтверждение: после вопро
 
 Источник: `CHAT-001`.
 
+`CHAT-009` даёт аппаратное доказательство причины: `rmmod isp` оставил dangling IRQ action и привёл к kernel Oops, а несколько ISP fd давали duplicate handlers. Поэтому persistent owner/daemon — не только ускорение, но и safety requirement.
+
 ### I-013 — Оптимизация dev-loop SSH, а не только самой прошивки
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
 В ходе `CHAT-001` выяснилось, что долгий SSH после RAM boot был отдельным bottleneck разработки. Были устранены ненормальная задержка RNG/host-key lifecycle и PTY-проблема; после этого оставшуюся криптографическую задержку признали характеристикой слабого CPU, а не продолжили бесконечную оптимизацию. Для повторных операций предложено переиспользование SSH-соединения.
 
@@ -113,8 +119,10 @@ CHAT-007 даёт прямое подтверждение: после вопро
 
 Источник: `CHAT-001`.
 
+`CHAT-009` подробно раскладывает dev-loop optimization по слоям: постоянный Dropbear host key на mtd4, статический network path без сломанного `fw_printenv`, persistent `seedrng` state для ранней CRNG readiness, корректный `devpts newinstance`/`ptmx`, а также отдельные замеры IP → TCP/22 → SSH banner. Это превращает «SSH долго» из гадания в boundary-by-boundary diagnosis.
+
 ### I-014 — Разделять «работает» и «полностью доказано»
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
 В конце чата handoff специально сохранял provenance gaps и различал:
 - рабочий hardware bring-up;
@@ -125,6 +133,8 @@ CHAT-007 даёт прямое подтверждение: после вопро
 Обобщаемое правило: не повышать уровень evidence молча. «Устройство отвечает» ≠ «production contract доказан».
 
 Источник: `CHAT-001`.
+
+`CHAT-009` даёт чистый пример evidence boundary: H.264 Annex-B с SPS/PPS/IDR и активными ISP/PAE IRQ доказал hardware encoder path, но серое изображение и один и тот же descriptor означали, что moving-image dequeue ещё не доказан.
 
 ### I-015 — Формальный one-archive delivery protocol
 Статус: `OBSERVED`.
@@ -304,7 +314,7 @@ CHAT-007 усиливает принцип: valuable stock runtime сначал�
 - сразу сохранять визуально проверяемые результаты в Windows filesystem, когда оператор может валидировать их через VLC/другой GUI.
 
 ### I-027 — Явные terminal lanes
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
 В multi-terminal hardware workflow закрепилось удобное разделение:
 - `WSL` — source/build/analysis/scp;
@@ -312,6 +322,8 @@ CHAT-007 усиливает принцип: valuable stock runtime сначал�
 - `U-Boot` — boot/recovery environment.
 
 Команды должны приходить уже для нужного lane. Это снимает с пользователя обязанность преобразовывать SSH one-liner в UART-команды и уменьшает ошибки вставки.
+
+`CHAT-009` показывает практическую цену смешения lane и сложного interactive shell: UART paste повреждал regex/quotes/addresses, PlatformIO monitor и shell prompt смешивались; после этого сложную логику логичнее переносить в script/helper, а UART оставлять плоским.
 
 ### I-028 — Полный flash dump до любой мутации
 Статус: `OBSERVED`.
@@ -438,6 +450,28 @@ CHAT-007 усиливает принцип: valuable stock runtime сначал�
 
 Это важный reusable architecture principle для других unsupported camera SoC: разделять **SoC backend** и **board profile** как можно раньше, но не расширять scope раньше, чем доказан основной media path.
 
+
+### I-038 — Handoff как воспроизводимый manifest, а не только narrative
+Статус: `OBSERVED`.
+
+В конце `CHAT-009` контекст диалога исчерпывается и создаётся большой handoff. Пользователь сразу задаёт более строгий acceptance criterion: новый агент должен суметь повторить работу **без автора исходного чата**.
+
+Минимальное содержимое такого handoff:
+- current proven state и unresolved blockers;
+- canonical working binaries/sources/checkpoints;
+- stock firmware corpus и его provenance;
+- disassembly/reverse artifacts;
+- memory/MMIO/stock runtime captures;
+- точные пути и роль каждой директории;
+- build/toolchain commands;
+- transfer commands и обязательные transport flags;
+- boot/recovery/run recipes;
+- known-bad/crash experiments;
+- команды, которыми заново получить ключевое evidence, если artifact потерян.
+
+Практический вывод: handoff следует проверять вопросом **«сможет ли новый агент воспроизвести milestone только по этому документу и доступным artifacts?»**. Если ответ зависит от неявной памяти старого агента, handoff неполон.
+
+Это дополняет I-010: canonical handoff должен быть компактной картой, но иметь ссылки/manifest на воспроизводимые подробности, а не превращаться в монолитный transcript.
 
 ## Исходные этапы, ещё не подтверждённые
 
