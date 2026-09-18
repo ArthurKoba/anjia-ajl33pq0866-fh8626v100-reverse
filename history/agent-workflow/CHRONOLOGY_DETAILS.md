@@ -104,6 +104,8 @@ Sensor и MIPI path удалось довести до состояния, со�
 
 `CHAT-009` показывает ранний capture milestone подробно: единый helper поднимает ISP config/VMM, VPU, PAE, bind/start/enable и получает Annex-B H.264 с SPS/PPS/IDR. Сохранён `/tmp/capture.h264` на 50 выборок. Одновременно все выборки указывали на один `virt/len`, а декодирование давало серое/неподвижное содержимое. Поэтому milestone фиксируется как «hardware encoder path работает», но live dequeue/frame progression остаётся отдельным gate.
 
+`CHAT-011` независимо приходит к тому же integrated milestone через другую ветку reverse: sensor init, ISP config/start, VPU/PAE и media stream сведены в один process/one `/dev/isp` lifetime. Capture сохраняет 50 выборок и начало файла содержит Annex-B SPS/PPS/IDR, при растущих ISP/PAE IRQ. Одновременно `virt/len` повторяются, поэтому источник правильно оставляет live dequeue отдельным unresolved gate, а не объявляет moving video доказанным.
+
 
 ## D7 — Dev-loop и stateful driver lifetime
 
@@ -125,6 +127,8 @@ Fullhan media drivers оказались чувствительны к lifetime:
 `CHAT-009` даёт прямое доказательство broken lifetime vendor driver: unload ISP/media оставил висячую IRQ registration, и последующее чтение `/proc/interrupts` закончилось kernel Oops. Несколько ISP contexts также давали duplicate handlers. После этого persistent single-owner/daemon стал safety requirement, а не просто удобством. Параллельно SSH dev-loop был разложен по слоям: постоянный Dropbear key на mtd4, persistent `seedrng`, статическая сеть без broken `fw_printenv`, корректный `devpts newinstance` и `/dev/ptmx -> pts/ptmx`.
 
 `CHAT-010` сохраняет отдельную SSH regression после ранних boot-time fixes: каждый новый `ssh/scp` стал занимать около 5–7 секунд. Первоначальная трактовка «это нормальная стоимость KEX» и предложение скрыть задержку через ControlMaster были сняты после напоминания пользователя, что до SSH-правок обычный SCP был быстрым. К концу чата правильный следующий метод — boundary timing TCP connect → SSH banner → KEX → auth; сама причина регрессии в этом источнике ещё не закрыта.
+
+`CHAT-011` дополнительно показывает цену ускорения dev-loop временными image hacks. В процессе SSH/RNG/network оптимизации менялись init ordering, DHCP hook, persistent keys/seed и generated CPIO. К концу ветки пользователь требует отдельной reconciliation заметки: рабочий RAM image не равен финальной OpenIPC архитектуре, все dev-only изменения должны быть либо возвращены, либо перенесены в board-scoped/canonical source перед upstream.
 
 
 ## D8 — Handoff и первые признаки многоагентного workflow
@@ -151,6 +155,8 @@ Fullhan media drivers оказались чувствительны к lifetime:
 `CHAT-008` усиливает этот этап двумя практиками. Во-первых, старые рабочие helper'ы поднимаются из локального checkpoint после потери `/tmp`, а не восстанавливаются по памяти. Во-вторых, parallel ISP checkpoint передаётся с явным требованием сверить с текущими findings и не повторять уже закрытый reverse; результат второго агента затем используется как reference, а не как новая независимая canonical ветка.
 
 `CHAT-009` добавляет context-limit handoff acceptance: при приближении лимита диалога пользователь требует большой handoff, но затем уточняет, что narrative недостаточно. Новый агент должен видеть working files/directories, firmware/memory disassembly, stock captures, checkpoints и exact build/transfer/reverse/run recipes. Это ранняя формулировка handoff как reproducibility manifest.
+
+`CHAT-011` превращает handoff в reconciled living master: другой агент уже работает по старой версии, поэтому вместо создания нового документа ему передаётся prompt на обновление существующего master. Новый authoritative верх переписывается под свежие hardware facts, а старые logs/observations сохраняются как historical evidence с явными superseded notes. Отдельно добавляется checklist временных dev workarounds, которые нельзя спутать с final port.
 
 
 ## D9 — Dequeue, grey frame и stock runtime evidence
