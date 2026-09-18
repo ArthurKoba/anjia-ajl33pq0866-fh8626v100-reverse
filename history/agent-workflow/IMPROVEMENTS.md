@@ -674,6 +674,8 @@ Vendor image часто содержит drivers/configs для нескольк
 
 `CHAT-016` является вторым прямым доказательством: после первоначального «Task 2 завершён» полный requirement audit нашёл крупные недоделки, после чего работа продолжалась до v5 и полного day/night numerical replay.
 
+`CHAT-027` показывает, что completion audit должен проверять не только исходный P0 checklist, но и смену цели пользователя: сначала «release-relevant reverse», затем «максимально полный stock reverse». Иначе STATIC_COMPLETE по одному scope ошибочно звучит как абсолютное DONE.
+
 ### I-047 — Machine-readable operational session state
 Статус: `CONSOLIDATED`.
 
@@ -837,6 +839,8 @@ Workflow:
 
 `CHAT-017` повторно подтверждает focused-corpus правило: пользователь останавливает broad find/re-disassembly и требует работать по уже известным точным путям/ARM_FULL/runtime dump.
 
+`CHAT-027` уточняет эффективный режим для гигантского disassembly: известный address/symbol → короткое окно → один xref → следующий address. Не перечитывать whole ARM dump и не запускать recursive search без конкретного вопроса.
+
 ### I-056 — Размещать вычисление там, где ему место: static heavy work off-target
 Статус: `CONSOLIDATED`.
 
@@ -862,6 +866,8 @@ Autonomous milestone reporting и видимость работы не прот�
 - после substantial milestone дать нормальный технический summary.
 
 Это устраняет циклы «ты тут? / завис?» без возврата к шумному stream-of-consciousness.
+
+`CHAT-027` усиливает sparse heartbeat: при длинном reverse пользователь хочет коротко знать текущий блок/последнюю подтверждённую точку; после tool/reasoning failure checkpoint должен быть сообщён сразу.
 
 ### I-058 — Stale/cache/queue state нужно отличать от active controller state
 Статус: `OBSERVED`.
@@ -1005,6 +1011,8 @@ Agent task сначала классифицируется как AE/AWB/detail/
 Плюс `AGENT_RECOVERY_PLAYBOOK.md`: если агент потерял files/state/tool/semantics, он знает конкретный документ или индекс, который нужно перечитать.
 
 Это переносит continuity из памяти чата в explicit operational substrate.
+
+`CHAT-027` демонстрирует реальный context-loss recovery: после потери активной нити агент восстанавливает current checkpoint из handoff/DELTA/saved closure artifacts и корректирует next action с более поздней точки, а не начинает заново.
 
 ### I-067 — Нормализация artifacts: active knowledge отдельно от provenance/archive
 Статус: `OBSERVED`.
@@ -1398,6 +1406,70 @@ Index разрешает logical ID в:
 - source vault и working core могут обновляться независимо.
 
 Этот принцип позже естественно масштабируется с локальных tar-архивов на отдельные Git/evidence storage systems.
+
+### I-097 — Evidence-directed reverse closure loop
+Статус: `OBSERVED`.
+
+`CHAT-027` оформляет зрелый цикл закрытия reverse:
+
+`static corpus exhaustion → explicit E1–E7 evidence gaps → acquisition Agent 4 → normalized live evidence → Agent 1 targeted second pass → implementation-facing contracts`.
+
+Ключевой эффект — после первого статического прохода агент не продолжает бессистемный objdump. Всё, что нельзя доказать статикой, превращается в named capture package с acceptance criteria. После получения evidence reverse возвращается только в конкретные границы.
+
+### I-098 — Focused pack dependency closure должен быть fail-closed
+Статус: `OBSERVED`.
+
+После ошибки missing reverse substrate в `CHAT-027` появляется reusable packaging rule:
+- построить dependency graph;
+- resolve dedup/redirect;
+- каждый dependency = `EMBEDDED` или `EXTERNAL_VERIFIED`;
+- проверять actual bytes/role, а не только filename;
+- unresolved dependency блокирует выдачу pack.
+
+Это соединяет двухуровневое MASTER/HEAVY хранение с реальной specialist orchestration: heavy можно не копировать, но его доступность должна быть проверяемой.
+
+### I-099 — Reverse status должен различать «release-relevant exhausted» и «maximal corpus exhausted»
+Статус: `OBSERVED`.
+
+В `CHAT-027` несколько раз возникал конфликт целей:
+- сначала задача была «закрыть всё, необходимое для OpenIPC»;
+- затем пользователь явно повысил планку до «дореверсить вообще весь доступный stock corpus, включая optional branches».
+
+Поэтому статусы должны быть отдельными:
+- `IMPLEMENTATION_READY`;
+- `RELEASE_RELEVANT_REVERSE_EXHAUSTED`;
+- `MAXIMAL_STATIC_CORPUS_EXHAUSTED`;
+- `HARDWARE_ONLY_RESIDUAL`.
+
+Это предотвращает преждевременное «всё закончено», когда optional WDR/LSC/dev_ctrl/recognition archaeology всё ещё входит в текущую цель.
+
+### I-100 — Physical evidence может supersede human-readable inference, не уничтожая numeric contract
+Статус: `OBSERVED`.
+
+E3 в `CHAT-027` проходит несколько уровней:
+сначала числовая permutation table `0,3,1,2`, затем Agent 4 физически подтверждает RAW10 и CFA orientations.
+
+Правильная модель:
+- numeric machine contract сохраняется;
+- human label добавляется только после physical corroboration;
+- старые неуверенные названия помечаются superseded;
+- implementation может использовать numeric contract независимо от человекочитаемой CFA терминологии.
+
+Этот паттерн применим к любым reverse enum/bitfield semantics.
+
+### I-101 — Kernel/disassembly address base должен быть частью provenance
+Статус: `OBSERVED`.
+
+При watchdog reverse обнаружено, что старые targeted kernel excerpts были декодированы с неверной адресной базой `0xA...`. Canonical kernel base — `0xC0008000`; старые excerpts помечены superseded и пересозданы.
+
+Для prepared reverse slices нужно хранить:
+- source image;
+- load/virtual base;
+- extraction command/range;
+- symbol/address mapping;
+- superseded status.
+
+Иначе точечный disassembly может выглядеть корректным, но быть семантически ложным.
 
 ## Исходные этапы, ещё не подтверждённые
 
