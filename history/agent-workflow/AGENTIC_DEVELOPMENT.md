@@ -154,6 +154,21 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 
 В `CHAT-008` тот же паттерн виден раньше и проще: parallel ISP agent получает checkpoint с `confirmed/gaps/next priority` и прямым запретом заново реверсить подтверждённое. Основной агент после возврата handoff сверяет его со своей canonical картой и продолжает integration.
 
+### A4.7 — Milestone-driven autonomous reverse loop
+Статус после `CHAT-013`: `OBSERVED`.
+
+К этому моменту пользователь явно перестаёт хотеть поток промежуточных reverse-находок. Он формулирует другой контракт:
+- агент сам ведёт внутреннюю карту функций/адресов/структур;
+- каждую гипотезу перепроверяет по коду/disassembly/data;
+- при опровержении самостоятельно меняет направление;
+- использует уже загруженные artifacts без нового ручного посредничества;
+- возвращается только при operator-only blocker или после существенного milestone;
+- user-facing update кратко разделяет proven / changed / unresolved.
+
+В `CHAT-013` эта модель частично проявляется practically: длинный static AWB reverse продолжается без камеры, hardware tests накапливаются до безопасного checkpoint, а JXF37-гипотеза в итоге снимается stock/hardware evidence без превращения её в permanent architecture.
+
+Ограничение этапа: continuity всё ещё file/handoff-based, а пользователь по-прежнему вручную переносит большие archives и запускает hardware commands. До MCP/repository-native autonomous loop ещё далеко.
+
 ### A5 — Специализированные MCP/агенты
 Статус: `BOOTSTRAP`.
 
@@ -168,7 +183,7 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 
 В `CHAT-011` появляется ещё одна граница ручного режима: proven development image начинает расходиться с canonical source из-за временных overlay/init/network mutations. Без внешнего debt ledger пользователь вынужден сам напоминать, что перед final port эти изменения нельзя забыть вернуть или интегрировать чисто.
 
-## Уроки CHAT-001/002/003/004/005/006/007/008/009/010/011/012 для будущей agentic-системы
+## Уроки CHAT-001/002/003/004/005/006/007/008/009/010/011/012/013 для будущей agentic-системы
 
 1. **Текущее runtime state должно быть внешним фактом, а не памятью диалога.** Потери «stock или OpenIPC?» породили дорогие ошибки.
 2. **Agent handoff — необходим, но не должен становиться гигантской свалкой.** Нужны краткая карта и подробные приложения.
@@ -210,6 +225,9 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 38. **Living handoff обновляется reconciliation-ом, а не размножением master-файлов.** Authoritative верх меняется под fresh facts, historical evidence остаётся с superseded-метками.
 39. **Productionization можно начинать до полного закрытия reverse, но только за доказанной boundary.** Стабильные boot/module/stream слои можно оформлять параллельно; unresolved RAW/ISP должен оставаться изолированным за одним owner и не смешиваться со streamer/RTSP.
 40. **Streamer не должен владеть stateful hardware только потому, что он конечный продукт.** Если lifecycle требует одного долгоживущего owner, media daemon должен держать vendor fd, а Majestic/другой streamer получать уже готовый stream contract.
+41. **Autonomous reverse — это milestone loop, а не поток сообщений.** Агент должен внутренне проверять и отбрасывать гипотезы и репортить только operator blocker или существенный завершённый этап.
+42. **Firmware support не доказывает hardware population.** Driver/blob/format — capability evidence; конкретный BOM подтверждается stock runtime и физическим target evidence.
+43. **Recovered control loop сначала работает в shadow mode.** Для AWB/AE и других динамических алгоритмов безопаснее offline tests → live shadow compute → gated commit, чем сразу писать в hardware state.
 
 ## Следующие исторические переходы, которые нужно искать
 
