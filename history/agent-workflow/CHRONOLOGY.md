@@ -125,6 +125,17 @@ Workspace был очищен от неполного Apollo artifact и пер�
 
 Подробнее: [D12](CHRONOLOGY_DETAILS.md#d12--parallel-heavy-reverse-и-authoritative-artifacts).
 
+### 13. Day AWB mode1 и подтверждение dual-GC1054 lens architecture
+Источник: `CHAT-013`, 2026-08-27.
+
+После parallel heavy reverse текущий day-path был доведён существенно дальше: `CA4F4` восстановлен на реальных 9 AWB-stat records, найден правильный statistics mapping через ISP ioctl, а вычисления получили read-only/shadow режим перед hardware commit. Параллельная JXF37-гипотеза была снята stock evidence: конкретная плата использует GC1054 1280×720, а Full-HD получается downstream upscale.
+
+Stock zoom trace показал, что wide/tele переключение не меняет sensor driver: target1/target2 выбираются GPIO4/GPIO14 при работающем media pipeline. Это закрепило модель двух GC1054 с разной оптикой и перенесло задачу из sensor-family reverse в lifecycle-integrated lens switching.
+
+**Переход:** дальнейшая работа разделяется на day/night ISP parity и интеграцию доказанных lens/upscale contracts в persistent owner/runtime.
+
+Подробнее: [D13](CHRONOLOGY_DETAILS.md#d13--day-awb-mode1-и-dual-gc1054-lens-architecture).
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.
