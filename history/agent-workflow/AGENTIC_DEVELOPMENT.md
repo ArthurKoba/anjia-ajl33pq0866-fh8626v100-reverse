@@ -37,7 +37,7 @@
 Позднее этот принцип развивается в full searchable bundles, curated workspace и внешние authority-системы.
 
 ### A1 — Локальный workspace + checkpoint/handoff
-Статус после `CHAT-001` + `CHAT-008` + `CHAT-009` + `CHAT-010`: `CONSOLIDATED`.
+Статус после `CHAT-001` + `CHAT-008` + `CHAT-009` + `CHAT-010` + `CHAT-011`: `CONSOLIDATED`.
 
 По мере роста количества helper binaries, dumps и reverse-наработок появился устойчивый локальный workspace и checkpoint-наборы. Перед reboot начали сохранять состояние, а к концу чата — собирать воспроизводимый handoff.
 
@@ -50,6 +50,8 @@
 `CHAT-009` доводит критерий handoff до воспроизводимости: при лимите контекста мало пересказать findings — нужно перечислить canonical files/directories, reverse/disassembly/memory evidence и exact build/transfer/run recipes, чтобы следующий агент продолжил без скрытого знания.
 
 `CHAT-010` — первый прямой acceptance-тест этого handoff: новый агент сразу продолжает с dequeue boundary, не возвращается к sensor/ISP/H.264 bring-up и использует сохранённые checkpoint paths и safety constraints как рабочее состояние.
+
+`CHAT-011` добавляет reconciliation-поведение: когда параллельный агент уже работает по старой master-версии, ему не создают ещё один независимый handoff, а дают точный prompt на обновление существующего authoritative файла. Fresh proven state поднимается наверх, старые observations сохраняются как historical/superseded evidence, а временные dev hacks получают отдельный cleanup debt.
 
 ### A1.5 — Идея repository-backed workflow
 Статус после `CHAT-007`: `OBSERVED`, но ещё не внедрено как authority.
@@ -162,7 +164,9 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 
 `CHAT-009` особенно хорошо показывает предел ручного режима: сложные UART paste-блоки повреждаются, пользователь вынужден вручную восстанавливать process/kernel state и отдельно просит прекратить микрошаги. Это сильный исторический аргумент в пользу будущего direct agent workspace/operational tooling.
 
-## Уроки CHAT-001/002/003/004/005/006/007/008/009/010 для будущей agentic-системы
+В `CHAT-011` появляется ещё одна граница ручного режима: proven development image начинает расходиться с canonical source из-за временных overlay/init/network mutations. Без внешнего debt ledger пользователь вынужден сам напоминать, что перед final port эти изменения нельзя забыть вернуть или интегрировать чисто.
+
+## Уроки CHAT-001/002/003/004/005/006/007/008/009/010/011 для будущей agentic-системы
 
 1. **Текущее runtime state должно быть внешним фактом, а не памятью диалога.** Потери «stock или OpenIPC?» породили дорогие ошибки.
 2. **Agent handoff — необходим, но не должен становиться гигантской свалкой.** Нужны краткая карта и подробные приложения.
@@ -199,6 +203,9 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 33. **Handoff должен позволять начать работу с текущего blocker без рекапитуляции проекта.** CHAT-010 показывает, что это проверяемое свойство, а не просто качество текста.
 34. **Прошлый агент — fallback для уникального gap, не штатная база данных.** Сначала использовать текущие artifacts и handoff, потом при необходимости вытаскивать отсутствующий provenance/context.
 35. **Свежая regression observation важнее старого удобного объяснения.** Если пользователь знает, что до наших изменений путь был быстрым/рабочим, сначала изолировать delta, а не накрывать проблему workaround-ом.
+36. **Development workaround должен иметь явный exit plan.** Временная правка обязана сразу получить метку dev-only, место в source/image и действие перед final/upstream: revert, board-scope или clean integration.
+37. **Hardware-proven image и canonical source — разные состояния.** Если generated rootfs/cpio содержит ручные proven fixes, это нужно считать reconciliation debt, а не молча объявлять source tree актуальным.
+38. **Living handoff обновляется reconciliation-ом, а не размножением master-файлов.** Authoritative верх меняется под fresh facts, historical evidence остаётся с superseded-метками.
 
 ## Следующие исторические переходы, которые нужно искать
 
