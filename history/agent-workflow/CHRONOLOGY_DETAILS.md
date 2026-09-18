@@ -115,7 +115,37 @@ Fullhan media drivers оказались чувствительны к lifetime:
 
 Отрицательный момент: handoff быстро вырос до очень большого размера. Это один из исторических аргументов в пользу нынешней схемы «короткая карта + детализированные приложения», а не одного бесконечного master-документа.
 
-## D9 — Source-derived ISP runtime
+## D9 — Persistent owner, hot reload и автоматизация dev-loop
+
+`CHAT-003` заполняет переход между ранним H.264 bring-up и более зрелым source-derived runtime.
+
+Сначала правильная lifecycle-фаза стала видна на `v3.8`: stock-like init, применённый до `ISP_START`, резко улучшил encoded stream и подтвердил, что проблема уже не в базовом transport. Попытка выдёргивать отдельные runtime stages и делать live MMIO rollback позже дала тяжёлые регрессии и один hard hang. После этого массовые live writes были исключены из нормального метода.
+
+Параллельно обнаружились инженерные проблемы самого test loop:
+- wrapped PAE descriptors;
+- повторное открытие stateful media/ISP;
+- owner replacement, требующий reboot;
+- ручной U-Boot/TFTP ritual после каждого reboot.
+
+Ответом стала архитектура одного долгоживущего media owner:
+- один набор `/dev/isp`/PAE/media fd и VMM mappings на boot;
+- ring-wrap handling;
+- reloadable `libfhisp_algo.so`;
+- дальнейшие ISP runtime изменения без замены owner;
+- опасный второй owner запрещён.
+
+Серия `v4.0 → v4.0.4` одновременно показала ценность hardware-proven baseline: несколько новых dequeue/pack/init гипотез дали регрессии, и сравнение с рабочим `v3.8` позволило локализовать обязательный pre-start state и вернуть стабильный transport.
+
+Для reboot-loop была сохранена именованная U-Boot схема:
+- `openipc_boot` — проверенный RAM/TFTP OpenIPC path;
+- `stock_boot` — штатный flash path;
+- OpenIPC сделан development default после проверки.
+
+На стабильном `v4.0.4` впервые стало удобно проверять runtime control через hot plugin. Read-only probes нашли полезную image statistics, а AE v1 доказал замкнутый `statistics → set_intt` feedback. При этом две фиксированные горизонтальные полосы и зелёный оттенок были разделены как разные image-processing проблемы.
+
+Standalone `D0238` полосы не исправил. Это вместе с неудачными одиночными writers окончательно сместило стратегию к восстановлению полного stock lifecycle/writer order, которое затем развивается в `CHAT-002`.
+
+## D10 — Source-derived ISP runtime
 
 `CHAT-002` начинается уже после первого рабочего hardware pipeline. Главная инженерная смена — отказ от лечения визуальных дефектов одиночными snapshot-регистрами.
 
@@ -129,7 +159,7 @@ Fullhan media drivers оказались чувствительны к lifetime:
 
 Зелёный оттенок сохранялся и рассматривался отдельно как незакрытая AE/AWB/Bayer/CCM часть, а не как та же проблема, что горизонтальные полосы.
 
-## D10 — Parallel heavy reverse и authoritative artifacts
+## D11 — Parallel heavy reverse и authoritative artifacts
 
 Во время дальнейшего reverse обнаружилось, что активный binary `apollo.unpacked` неполон для поздних RW/GOT областей. Workspace был нормализован вокруг полного textual ARM dump; старый неполный artifact и лишние extraction copies были исключены из active work.
 
