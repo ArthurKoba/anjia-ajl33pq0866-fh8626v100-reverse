@@ -88,9 +88,9 @@ Stock media modules и sensor libraries были смонтированы из �
 Подробнее: [D8](CHRONOLOGY_DETAILS.md#d8--handoff-и-первые-признаки-многоагентного-workflow).
 
 ### 9. Правильный dequeue и локализация серого кадра
-Источник: `CHAT-004`, 2026-08-26.
+Источник: `CHAT-010` + `CHAT-004`, 2026-08-26.
 
-Статический reverse связал `PAE 0xC0045011` с release/consume encoded stream, а `4D05/4D06` — с query одного и того же media stream. После исправления порядка `query → copy → release` очередь начала реально двигаться: менялись descriptor/timestamp/CRC и был получен последовательный H.264.
+`CHAT-010` статически доказал точный contract: `PAE 0xC0045011` вызывает `pae_enc_stream_release(channel 0..7)`, а `4D05/4D06` — оба query одного stream с разной wait-policy; consume/read-index advance происходит через release → `enc_stream_get`. `CHAT-004` затем/в параллельной ветке даёт hardware evidence правильного dequeue: меняются descriptor/timestamp/CRC и получается последовательный H.264.
 
 Следующий A/B показал, что 720p и воспроизведённый stock-like 1080p upscale оба кодируют одинаковый серый источник. Проблема была локализована выше encoder/scaler — в ISP input/runtime processing. После этого были найдены GC1054 scene profiles и stock `API_ISP_LoadIspParam → API_ISP_Run` lifecycle, а также снят полноценный stock runtime evidence bundle.
 
