@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `READY_FOR_NEXT_SOURCE`
+Статус: `CHAT_009_IN_PROGRESS`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **8**
 - Последний источник: `CHAT-008`
 - Период последнего источника: **2026-08-25**
-- Следующее действие: получить следующий исторический файл
+- Следующее действие: завершить анализ `CHAT-009`
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -63,6 +63,7 @@
 | 6 | `CHAT-006` | 2026-08-24 — 2026-08-25 | `DONE` | Перекрывает CHAT-005, но добавляет root-shell inventory, самостоятельное извлечение `/app` из SPI dump, media module baseline, первые ioctl ABI mappings и переход от ручного target inventory к artifact-assisted analysis |
 | 7 | `CHAT-007` | 2026-08-25 — 2026-08-26 | `DONE` | Partial-overlap: префикс до clean-room fh_mpi повторяет CHAT-006 и не пересчитан. Новая часть: clean OpenIPC RAM baseline, полный stock media stack под OpenIPC, sensor/MIPI/VPU/PAE/ISP reverse, transport/context ошибки, external Fullhan references, documentation/repository design и parallel-agent checkpoint |
 | 8 | `CHAT-008` | 2026-08-25 | `DONE` | Partial-overlap с CHAT-007 до ~L24104. Уникальная ветка: Apollo/ISP reverse, checkpoint recovery, adaptive granularity correction, parallel-agent merge, FH8852 semantic reference, ISP interrupt-mask breakthrough, ~25-fps sensor→ISP proof и SoC-first backend goal |
+| 9 | `CHAT-009` | 2026-08-26 | `IN_PROGRESS` | Новый уникальный source (~13% exact-line overlap с CHAT-008 в переиспользованных code/helper fragments): hardware H.264 capture, repeated-descriptor/live dequeue, ISP lifetime/Oops, persistent-owner direction, SSH/CRNG/PTTY optimization и context-limit handoff |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
