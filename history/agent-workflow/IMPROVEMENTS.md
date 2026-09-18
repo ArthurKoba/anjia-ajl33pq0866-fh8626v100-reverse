@@ -112,6 +112,8 @@ CHAT-007 даёт прямое подтверждение: после вопро
 
 `CHAT-011` даёт ещё одно прямое основание для single-owner architecture: после H.264 capture пользователь спрашивает, можно ли убрать обязательный power-cycle, и решение формулируется как один daemon, который держит `/dev/isp`, `/dev/pae`, `/dev/media_process` и VMM весь lifetime.
 
+`CHAT-014` уточняет границу hot replacement: `kill -9` старого owner не гарантирует чистую повторную инициализацию vendor sensor/ISP state на том же boot. Без явного lifecycle-safe shutdown/supervisor clean reboot остаётся обязательным fallback.
+
 ### I-013 — Оптимизация dev-loop SSH, а не только самой прошивки
 Статус: `CONSOLIDATED`.
 
@@ -279,6 +281,8 @@ CHAT-007 показывает более раннюю форму того же p
 
 Это переносит дешёвые ошибки с аппаратного контура обратно в агентный/локальный контур.
 
+`CHAT-014` показывает полезный preflight нового owner: patcher сначала проверяется локально, затем build должен явно дать ARM EABI5/musl binary до любой camera iteration.
+
 ### I-024 — Full searchable evidence вместо серии ручных extract-команд
 Статус: `CONSOLIDATED`.
 
@@ -342,6 +346,8 @@ CHAT-007 усиливает принцип: valuable stock runtime сначал�
 `CHAT-009` показывает практическую цену смешения lane и сложного interactive shell: UART paste повреждал regex/quotes/addresses, PlatformIO monitor и shell prompt смешивались; после этого сложную логику логичнее переносить в script/helper, а UART оставлять плоским.
 
 `CHAT-010` ещё раз формализует terminal lanes: после проверки PTY пользователь просит все camera-команды давать именно для serial UART, а WSL держать отдельно.
+
+`CHAT-014` повторно закрепляет удачный UX: capture bundle сразу кладётся в Windows-visible каталог и открывается через `explorer.exe`, чтобы пользователь не искал файлы между WSL и Windows.
 
 ### I-028 — Полный flash dump до любой мутации
 Статус: `OBSERVED`.
@@ -439,6 +445,8 @@ CHAT-007 усиливает принцип: valuable stock runtime сначал�
 `CHAT-011` — многократные вопросы «сколько ещё осталось» и «скоро закончится вечный reverse?» повторно показывают, что прогресс нужно отражать subsystem gates, особенно перед длинными ISP call-chain исследованиями.
 
 `CHAT-013` — пользователь просит общий прогресс по направлениям простым языком и repeatedly спрашивает остаток; module-level completion map оказывается полезнее потока адресов и локальных функций.
+
+`CHAT-014` показывает, что progress percentage без requirement checklist мало помогает: лучше сообщать, какие обязательные evidence gates уже закрыты и какой конкретный gate блокирует слово COMPLETE.
 
 ### I-035 — Adaptive granularity: группировать routine, дробить только decision boundaries
 Статус: `CONSOLIDATED`.
@@ -631,6 +639,68 @@ Vendor image часто содержит drivers/configs для нескольк
 **offline self-test → live shadow compute → compare/log → gated commit**.
 
 Это снижает риск испортить stateful ISP и отделяет correctness вычислений от side effects.
+
+### I-046 — Completion audit по исходному acceptance checklist
+Статус: `OBSERVED`.
+
+Перед тем как объявить длинную reverse/integration задачу законченной, агент должен вернуться к **исходному заданию**, а не к собственной сокращённой модели задачи.
+
+В `CHAT-014` это изменило качество работы заметно: static AWB→CCM reverse уже дал правильный механизм, но пользователь потребовал закрыть задачу «полностью». После checklist-а стало ясно, что нужен runtime before/after evidence. Только затем были созданы coherent `v4.2.1` path, hardware validation и rollback.
+
+Рекомендуемый completion gate:
+1. перечислить original deliverables;
+2. для каждого отметить `DONE / PARTIAL / BLOCKED`;
+3. указать evidence class;
+4. отдельно перечислить unresolved, которые **не** блокируют исходную цель;
+5. слово `COMPLETE` использовать только если все обязательные пункты закрыты или пользователь явно сузил scope.
+
+### I-047 — Machine-readable operational session state
+Статус: `OBSERVED`.
+
+Quality-retrospective в конце `CHAT-014` впервые явно предлагает вынести постоянно теряемые operational facts из памяти диалога в единый state artifact, желательно одновременно human-readable и machine-readable.
+
+Минимум:
+- camera IP и active boot mode;
+- WSL project/checkpoint root;
+- Windows capture root;
+- current owner source/binary/version;
+- compiler absolute path;
+- stockapp device/mount;
+- transport conventions;
+- current hardware/reverse stage;
+- last hardware-validated artifact;
+- unsafe workflows и required reboot conditions.
+
+Предложенная форма: `ENVIRONMENT_CURRENT.md` + `CURRENT_SESSION.json`.
+
+Это прямой предшественник современной project-authority модели: не заставлять нового агента восстанавливать operational state по переписке.
+
+### I-048 — Hardware experiment как явная state machine
+Статус: `OBSERVED`.
+
+В quality-pack `CHAT-014` эксперимент формализуется как последовательность состояний, а не произвольный список команд:
+
+`BOOTED → OWNER_READY → RUNNING → BASELINE_VALIDATED → BASELINE_CAPTURED → CHANGE_APPLIED → READBACK_VALIDATED → AFTER_CAPTURED → ROLLBACK → ROLLBACK_VALIDATED`.
+
+Преимущества:
+- нельзя случайно сделать `step` при `running=0`;
+- before/after dumps имеют однозначную семантику;
+- rollback является частью теста, а не необязательным хвостом;
+- следующий блок команд выдаётся только после реальной decision boundary.
+
+### I-049 — Ретроспектива качества агента как отдельный проектный артефакт
+Статус: `OBSERVED`.
+
+В конце `CHAT-014` пользователь специально просит создать отдельный материал для агента, который будет улучшать качество работы других агентов. В результате появляется quality-improvement pack с:
+- каталогом повторяющихся ошибок;
+- interaction protocol;
+- command UX patterns;
+- handoff requirements;
+- tooling plan;
+- automation opportunities;
+- инструкцией основному оркестратору внедрить правила в основной workflow.
+
+Это важный agentic-переход: **сам процесс разработки становится объектом версионируемого инженерного анализа**, а не только неформальной корректировки в текущем чате.
 
 ## Исходные этапы, ещё не подтверждённые
 
