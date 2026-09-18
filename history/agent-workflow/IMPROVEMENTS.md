@@ -1317,6 +1317,88 @@ Source/code audit в `CHAT-025` обнаруживает системный ри
 
 Это не target reverse fact само по себе, а reusable production-architecture pattern, возникший из сопоставления reverse, source audit и внешних Fullhan state machines.
 
+### I-091 — Двухуровневое хранение: MASTER_CORE + REVERSE_HEAVY
+Статус: `OBSERVED`.
+
+`CHAT-026` формализует первый явный разрыв монолитного handoff на два canonical storage-role:
+
+**MASTER_CORE**
+- часто обновляемый;
+- status/contracts/maps/history/runbooks/source summaries;
+- достаточно самодостаточен для обычной работы agents;
+- содержит только небольшие representative excerpts/evidence.
+
+**REVERSE_HEAVY**
+- большой, редко изменяемый vault;
+- full firmware/MTD/kernel/U-Boot binaries;
+- full disassemblies/indexes;
+- RAM/VMM/MMIO/RAW/YUV bulk;
+- vendor/reference reverse corpora.
+
+Это прямой исторический предшественник современной модели «Git current knowledge / external heavy evidence».
+
+### I-092 — Heavy artifacts должны адресоваться стабильными logical IDs
+Статус: `OBSERVED`.
+
+После выноса bulk files из master нельзя оставлять документацию привязанной к случайным filenames/paths.
+
+`CHAT-026` вводит `REVERSE_HEAVY_INDEX` и logical references вида:
+`HEAVY:KERNEL_STOCK_DECOMPRESSED_ARM_FULL`.
+
+Index разрешает logical ID в:
+- actual path;
+- type/size/provenance;
+- назначение;
+- derived artifacts;
+- canonical/superseded status;
+- master summary.
+
+Это позволяет менять physical storage/filename heavy corpus без переписывания сотен knowledge-docs.
+
+### I-093 — Рабочий transfer staging нужно отделять от истории
+Статус: `OBSERVED`.
+
+После inventory TFTP root в `CHAT-026` вводятся:
+- `tftp_active/` — только файлы текущего обмена;
+- `tftp_history/` — завершённые исторические transfer artifacts, разложенные по типам;
+- `TFTP_LAYOUT.md` — простой lifecycle contract.
+
+Новые acquisition files запрещено складывать прямо в корень. После окончания этапа они должны уйти либо в project/evidence corpus, либо в history.
+
+### I-094 — Cleanup сначала inventory/move, удаление только после canonicalization
+Статус: `OBSERVED`.
+
+При уборке старого TFTP-корня агент сознательно не делает `rm`:
+1. inventory;
+2. classify;
+3. move по категориям;
+4. проверить, что root чист;
+5. позже сравнить history с canonical MASTER/HEAVY;
+6. удалять только гарантированные duplicates.
+
+Это безопасный общий паттерн для reverse-проектов, где старый «мусор» может оказаться единственной копией evidence.
+
+### I-095 — Master хранит conclusions/excerpts, heavy — bulk evidence
+Статус: `OBSERVED`.
+
+`CHAT-026` задаёт явное anti-duplication rule:
+- full disassembly/raw firmware/RAM/RAW/YUV/SQLite — только heavy;
+- master содержит summary, addresses, provenance, acquisition method, derived diff и exact heavy reference;
+- representative RAW/YUV в master допускается только если реально нужен для понимания;
+- nested handoff archives внутри canonical archives запрещены.
+
+Это уменьшает размер everyday handoff без потери reproducibility.
+
+### I-096 — Storage role должен быть независим от транспортного контейнера
+Статус: `OBSERVED`.
+
+Архив в `CHAT-026` определяется как способ передачи, а не внутренняя структура знания:
+- старые nested tar/zip распаковываются в canonical directories;
+- исключение — только если архив сам является исследуемым firmware/container artifact;
+- source vault и working core могут обновляться независимо.
+
+Этот принцип позже естественно масштабируется с локальных tar-архивов на отдельные Git/evidence storage systems.
+
 ## Исходные этапы, ещё не подтверждённые
 
 `CHAT-010` является прямым acceptance-тестом этого принципа: новый агент по handoff сразу продолжает с dequeue boundary, не повторяет sensor/ISP/H.264 bring-up и использует указанные checkpoint paths/constraints. Handoff реально переносит инженерное состояние между чатами.
