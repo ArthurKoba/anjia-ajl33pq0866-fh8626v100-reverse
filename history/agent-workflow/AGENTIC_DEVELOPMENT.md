@@ -281,6 +281,25 @@ Central orchestrator теперь интегрирует specialist results в n
 
 При этом выявляется новый safety dimension — resource budget. Read-only capture может разрушить stock runtime через OOM, поэтому размер/tmpfs/RAM становятся частью experiment prerequisites.
 
+### A4.13 — Parallel implementation lane + orchestrated hardware convergence
+Статус после `CHAT-022`: `OBSERVED`.
+
+После evidence/reverse lanes появляется отдельный production-integration executor. Его роль уже принципиально другая:
+- не делать широкий reverse;
+- читать existing contracts/reference code;
+- догонять owner;
+- отдавать пользователю testable source;
+- включать новые features по одной;
+- анализировать hardware feedback;
+- отправлять orchestrator delta + lifecycle/source-consolidation debt.
+
+Человек остаётся аппаратным исполнителем: WSL build, transfer, UART target commands, визуальная оценка. Agent владеет кодом, test design, разбором результата и следующей гипотезой.
+
+Сессия показывает настоящий multi-agent pipeline:
+`reverse specialists → normalized master → implementation agent → hardware operator → orchestrator`.
+
+Появляется и новый bottleneck: уже не скорость reverse, а качество source integration, lifecycle и аппаратных regression cycles.
+
 ### A5 — Специализированные MCP/агенты
 Статус: `BOOTSTRAP`.
 
@@ -295,7 +314,7 @@ Central orchestrator теперь интегрирует specialist results в n
 
 В `CHAT-011` появляется ещё одна граница ручного режима: proven development image начинает расходиться с canonical source из-за временных overlay/init/network mutations. Без внешнего debt ledger пользователь вынужден сам напоминать, что перед final port эти изменения нельзя забыть вернуть или интегрировать чисто.
 
-## Уроки CHAT-001/002/003/004/005/006/007/008/009/010/011/012/013/014/015/016/017/018/019/020/021 для будущей agentic-системы
+## Уроки CHAT-001…CHAT-022 для будущей agentic-системы
 
 1. **Текущее runtime state должно быть внешним фактом, а не памятью диалога.** Потери «stock или OpenIPC?» породили дорогие ошибки.
 2. **Agent handoff — необходим, но не должен становиться гигантской свалкой.** Нужны краткая карта и подробные приложения.
@@ -368,6 +387,10 @@ Central orchestrator теперь интегрирует specialist results в n
 69. **Transition evidence обычно ценнее независимых full-state heap diffs.** Synchronized targeted captures уменьшают temporal noise.
 70. **Hardware acquisition тоже нуждается в coverage matrix.** Canonical/superseded/unavailable states должны быть видимы до следующего эксперимента.
 71. **Evidence лучше передавать delta-пакетом поверх stable master.** Новые captures/static material не требуют пересборки всего корпуса знаний.
+72. **Implementation-agent — отдельная роль от reverse-agent.** Его задача догнать code до доказанного contract, а unknown возвращать как узкий research request.
+73. **Hardware operator и agent должны делить ответственность явно.** Agent готовит source/test/analysis, человек выполняет authoritative build/target run.
+74. **После быстрого experimental роста нужен source-consolidation gate.** Diagnostic snapshots нельзя автоматически повышать до production tree.
+75. **Рабочий механизм не равен готовой архитектуре.** Experimental shutdown или register path может быть hardware-proven и одновременно оставаться production debt.
 
 ## Следующие исторические переходы, которые нужно искать
 
