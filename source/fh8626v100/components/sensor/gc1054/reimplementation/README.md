@@ -28,8 +28,33 @@ for process lifetime after the first `mipi_init`; only the temporary
 The generic six-word input semantics are retained exactly in the source. The
 GC1054 library supplies `{5,0,0,0,0,1}`.
 
+## libgc1054_mipi
+
+`fh8626_libgc1054_mipi_reimplementation.c` covers the complete retained
+GC1054 object's functional surface:
+
+- every exported sensor/I2C/SPI/clock/environment helper;
+- all 26 slots of the 0x68 `Sensor_Create` callback object;
+- all five stock 1280x720 format arrays and both numeric aliases;
+- cached gain/integration/frame-length state;
+- exact gain, integration and VTS programming;
+- mirror/flip register transforms and Bayer-format mapping;
+- named `STD_FRAME_RATE`, `CUR_FRAME_RATE`, `REAL_FLIP_MIRROR` and
+  `MAX_INTT_DIFF` queries;
+- command IDs 1 and 0x80000..0x80003;
+- all four I2C register/data-width modes and multi-message behavior;
+- the external clock helper and the stock `SensorGetEnvInt` parsing quirk;
+- stock teardown semantics: `Sensor_Destory` clears only the callback table.
+
+The remaining compiler-generated routines in the original binary were ARM
+soft-float/libgcc conversions, double multiply/divide/compare helpers, ELF
+frame-registration glue and empty destructor helpers. They contain no
+sensor-specific semantics and are represented by normal C arithmetic/runtime
+behavior in this source reconstruction.
+
 ## Boundary
 
-This reference implementation is not yet hardware acceptance of a rebuilt
-shared object. Hardware validation remains separate from static/reverse
-completeness.
+This is complete static/reverse functional coverage of the two retained
+userspace sensor libraries, not yet hardware acceptance of rebuilt shared
+objects. The source is intended as the auditable replacement specification;
+target compile/link/runtime validation remains a separate evidence gate.
