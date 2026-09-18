@@ -573,3 +573,38 @@ Owner lifecycle продвинулся только частично. Experiment
 
 В конце сессии source snapshot явно классифицирован как integration/diagnostic lineage, не готовое production tree; orchestrator должен провести source consolidation и сохранить hardware findings отдельно от временных diagnostics.
 
+## D22 — OEM-identity AJL33PQ0866, CF26/SM и donor search
+
+`CHAT-024` — внешний research thread, стартовавший с повреждённой наклейки/QR и визуального поиска корпуса.
+
+Раннее visual matching было недостаточно надёжным. Исследование стало существенно сильнее после target-local evidence:
+- application/internal model: `AJL33PQ0866`;
+- firmware string: `YGT.AJL33PQ0866-v230920.1051`;
+- reported SDK marker: `3051380`;
+- physical optics: 3.6 mm wide + 12 mm tele;
+- dual physical cameras / PTZ / 8 front emitters;
+- PCB silkscreen уверенно содержит `CF26`, `SM`, `V1.0` и date 20210401; средняя часть строки читается неоднозначно.
+
+External correlation затем связывает target с широким CF26/SM400/AJ Fullhan cluster:
+- CF26-54SM+400-PL / CF26-37SM400 relatives;
+- `AJ-SM-FH8626V100` software identification у родственных devices;
+- официальный documentation/reference с FH8626V100, dual 1054, 3.6+12, 4 IR + 4 white and CareCamPro-like stack;
+- соседние internal `AJL33*` model IDs.
+
+Найденные donor/research sources различаются по назначению:
+- максимально близкие hardware relatives;
+- devices с реальными SPI dumps;
+- generic FH8626 cases с dump→repack→root/telnet;
+- firmware families с большим количеством RTSP/userspace discussion.
+
+Важная evidence boundary:
+- own PCB/software/dump = target truth;
+- external model = relative/donor/semantic source;
+- сходство корпуса или SoC не доказывает binary firmware compatibility.
+
+Итоговый search fingerprint:
+`AJL33PQ0866 + CF26/SM400 + FH8626V100`,
+с расширением на соседние `AJL33*`, `AJ-SM`, firmware-version and PCB aliases.
+
+Эта линия важна не для переименования проекта в конкретную retail SKU, а для поиска более близких firmware, less-stripped binaries, configs, sensor/ISP data, updater mechanisms и SDK artifacts.
+
