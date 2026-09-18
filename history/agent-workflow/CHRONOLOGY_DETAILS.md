@@ -281,3 +281,36 @@ Stock zoom trace показывает lifecycle переключения:
 
 Night mode в этом источнике отделён как следующий слой, а не новый sensor mode: тот же GC1054, но другие scene/style, AE limits, saturation/IR-cut state и night-specific branches writers. Day core должен быть закрыт первым, после чего те же функции проходят по night path.
 
+## D14 — AWB → CCM coherent runtime и hardware validation
+
+`CHAT-014` — отдельная parallel-agent ветка, которая получает уже доказанные AWB inputs и занимается downstream color path без повторного reverse AE/AWB frontend.
+
+Static reverse:
+- `C9F68` не читает напрямую `ISP+0x224/+0x228`;
+- downstream coordinate идёт через logical state `ctx+A8/+AA`;
+- восстановлены anchor selection/interpolation и state `B0/B1/B2`;
+- `CE670/CE764` восстановлены до packing `ISP+0x4C0..+0x4D4`;
+- color table определена как 4 anchors × 12 signed 13-bit values; первые 9 образуют Q9 3×3 transform, последние 3 — offset terms.
+
+Offline для `512,512,512 → 544,480,544` предсказано:
+- та же anchor pair `3→2`;
+- weight меняется примерно `34→43`;
+- меняются только отдельные matrix coefficients;
+- из шести packed CCM words заметно меняется только `+4C8`.
+
+Первый hardware capture показал важный integration gap: direct `awbmode1 step` меняет `+224/+228/+4BC`, но `+4C0..+4D4` остаются неизменными. То есть custom step обходил stock state transition `CB4F0/CAFC0 → A8/AA → C9F68 → B0/B1/B2 → CE764`.
+
+Для проверки создан coherent diagnostic owner `v4.2.1`. Clean-boot validation дала:
+- `A8=3614`, `AA=3614`;
+- pair `3→2`;
+- weight `43`;
+- `B0/B1/B2` меняются в ожидаемом направлении;
+- `+4C8: 0x1FD1028C → 0x1FF70266`;
+- остальные CCM words не меняются.
+
+Результат совпал с offline reconstruction. Это hardware validation полного AWB→color state path.
+
+Дополнительный важный факт: `awbmode1 restore` вернул AWB gains/state, но CCM остался изменённым. Полный rollback потребовал отдельно восстановить `+4C0..+4D4`. Поэтому будущий experiment protocol должен описывать полный write-set и rollback-set, а не только входной knob.
+
+Попытка hot-replace owner через kill/restart без reboot оказалась небезопасной для vendor sensor/device lifecycle; clean boot остался надёжной границей для смены owner binary.
+
