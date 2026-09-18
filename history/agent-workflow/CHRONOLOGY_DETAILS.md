@@ -847,3 +847,29 @@ The source also records a workflow correction. Because the agent lacked direct w
 
 The user additionally rejects Python as an unnecessary packaging/generation layer for ordinary shell/tar work. The resulting tool discipline prefers native shell tools unless Python adds real analytical value.
 
+## D29 — Divinus V11 hardening
+
+`CHAT-031` continues Agent 6 after context rollover. The current owner is intentionally not integrated because the handoff may contain a stale/missing owner version; that dependency is deferred until the owner lane stabilizes.
+
+Independent Divinus-side work identifies and prepares fixes for:
+- raw H.264 behavior incorrectly coupled to `mp4_enable`;
+- false `running:true` after FH86 source initialization failure;
+- WebUI browser-preview availability when fMP4 is unavailable;
+- sidecar partial-frame/discontinuity handling;
+- generation wrap/session reset;
+- Unix socket cleanup and deterministic init failure;
+- transport torture cases such as oversized payload, partial header/payload and generation reset;
+- runtime API attempts to re-enable hardware-owned features after startup config had rejected them;
+- target temperature/status calls without a provider.
+
+The candidate keeps hardware ownership fail-closed. Frontend-side MP4 muxing remains allowed because it consumes encoded H.264 rather than touching ISP/sensor hardware.
+
+MJPEG is clarified as a provider problem:
+Divinus already has server-side JPEG/MJPEG surface, but FH86 external-source mode only has H.264. The intended future path is:
+`single FH8626 owner → hardware JPEG producer → Divinus JPEG provider → snapshot/MJPEG`.
+Software H.264 decode→JPEG re-encode is intentionally not chosen as the primary solution.
+
+A WSL runner is prepared to check repo identity/worktree, apply patches, run stream/WebUI/publisher regressions, host build, ARM OpenIPC-musl build, and only commit after complete PASS. In this historical source none of those authoritative WSL results have occurred yet; status remains `PENDING_WSL`.
+
+The same chat is also a major workflow-quality event. Repeated command-format, SHA and Explorer mistakes are eventually captured in a dedicated critical protocol and retrospective rather than being left as conversational corrections.
+
