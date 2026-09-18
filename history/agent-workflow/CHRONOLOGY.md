@@ -87,32 +87,43 @@ Stock media modules и sensor libraries были смонтированы из �
 
 Подробнее: [D8](CHRONOLOGY_DETAILS.md#d8--handoff-и-первые-признаки-многоагентного-workflow).
 
-### 9. Стабильный experimental substrate: persistent owner, hot reload и автоматический boot
+### 9. Правильный dequeue и локализация серого кадра
+Источник: `CHAT-004`, 2026-08-26.
+
+Статический reverse связал `PAE 0xC0045011` с release/consume encoded stream, а `4D05/4D06` — с query одного и того же media stream. После исправления порядка `query → copy → release` очередь начала реально двигаться: менялись descriptor/timestamp/CRC и был получен последовательный H.264.
+
+Следующий A/B показал, что 720p и воспроизведённый stock-like 1080p upscale оба кодируют одинаковый серый источник. Проблема была локализована выше encoder/scaler — в ISP input/runtime processing. После этого были найдены GC1054 scene profiles и stock `API_ISP_LoadIspParam → API_ISP_Run` lifecycle, а также снят полноценный stock runtime evidence bundle.
+
+**Переход:** вместо исправления encoder/dequeue и угадывания отдельных MMIO работа перешла к восстановлению ISP lifecycle на основе полного code/runtime evidence.
+
+Подробнее: [D9](CHRONOLOGY_DETAILS.md#d9--dequeue-grey-frame-и-stock-runtime-evidence).
+
+### 10. Стабильный experimental substrate: persistent owner, hot reload и автоматический boot
 Источник: `CHAT-003`, 2026-08-26/27.
 
 После первых рабочих H.264 запусков основным bottleneck стал сам цикл экспериментов: reboot/U-Boot, повторный media bring-up и риск второго ISP owner. Серия v3.8→v4.0.4 привела к стабильному single-owner baseline, reloadable ISP plugin и сохранённым `openipc_boot/stock_boot`, а live MMIO rollback был признан опасным.
 
 **Переход:** аппаратный контур превратился из «перезагрузить и заново поднять всё» в устойчивую платформу для коротких runtime-итераций; это подготовило следующий этап source-derived восстановления `CB970`.
 
-Подробнее: [D9](CHRONOLOGY_DETAILS.md#d9--persistent-owner-hot-reload-и-автоматизация-dev-loop).
+Подробнее: [D10](CHRONOLOGY_DETAILS.md#d10--persistent-owner-hot-reload-и-автоматизация-dev-loop).
 
-### 10. Source-derived ISP runtime вместо register poking
+### 11. Source-derived ISP runtime вместо register poking
 Источник: `CHAT-003` → `CHAT-002`, 2026-08-27.
 
 После базового H.264 bring-up работа сместилась от одиночных MMIO-экспериментов к восстановлению stock lifecycle и `CB970` writer-chain из disassembly/context. Последовательно проверялись source-derived stages через owner/hot-plugin, при этом H.264 оставался стабильным, а ранее наблюдавшиеся фиксированные горизонтальные линии больше не появлялись.
 
 **Переход:** целью стало не «починить картинку одним регистром», а построить связный replacement stock runtime, пригодный для замены `apollo`.
 
-Подробнее: [D10](CHRONOLOGY_DETAILS.md#d10--source-derived-isp-runtime).
+Подробнее: [D11](CHRONOLOGY_DETAILS.md#d11--source-derived-isp-runtime).
 
-### 11. Параллельный heavy reverse и нормализация evidence
+### 12. Параллельный heavy reverse и нормализация evidence
 Источник: `CHAT-002`.
 
 Workspace был очищен от неполного Apollo artifact и переведён на один полный authoritative ARM text dump. После этого тяжёлые функции начали разбираться отдельным parallel reverse-agent с непересекающимся scope. Были восстановлены общий Q7 sine LUT, exact `CFEB0/D0238`, `D1258`, большая часть `D1724/D1DB0`, а затем отдельный AE/AWB frontend.
 
 **Переход:** reverse стал разбиваться на законченные integration units, которые основной агент должен сливать в один canonical runtime.
 
-Подробнее: [D11](CHRONOLOGY_DETAILS.md#d11--parallel-heavy-reverse-и-authoritative-artifacts).
+Подробнее: [D12](CHRONOLOGY_DETAILS.md#d12--parallel-heavy-reverse-и-authoritative-artifacts).
 
 ## Современный anchor
 
