@@ -89,6 +89,8 @@
 
 Источник: `CHAT-001`.
 
+CHAT-007 даёт прямое подтверждение: после вопроса пользователя о чрезмерности sensor-vtable reverse работа была остановлена на достаточном уровне и переключена на загрузку media stack.
+
 ### I-012 — Один долгоживущий owner для stateful vendor media pipeline
 Статус: `CONSOLIDATED`.
 
@@ -137,6 +139,8 @@
 - архив не создаётся/не отправляется просто ради локального изменения документации.
 
 Это первый явно сформулированный **artifact delivery API** между агентом и оператором.
+
+Исторический precursor в CHAT-007: пользователь отказывается вручную редактировать source и требует один готовый копируемый блок, который сам переписывает исходник, собирает и передаёт test binary.
 
 ### I-016 — Self-guarding critical actions
 Статус: `OBSERVED`.
@@ -195,6 +199,8 @@
 Так были параллельно восстановлены shared LUT/heavy writers и затем AE/AWB frontend.
 
 Это уже не просто handoff между чатами, а ранняя форма **role-specialized agent pipeline**, хотя пользователь всё ещё вручную маршрутизирует пакеты между агентами.
+
+CHAT-007 показывает более раннюю форму того же pipeline: findings из external-reference ветки передаются второму ISP reverse-agent как технический checkpoint с локальными путями, confirmed/gaps и запретом повторно реверсить закрытое.
 
 ### I-020 — Автоматизация boot/recovery development loop
 Статус: `OBSERVED`.
@@ -260,6 +266,8 @@
 
 Это резко уменьшает количество terminal round-trips и является ранним прообразом будущего shared reverse workspace/MCP.
 
+В CHAT-007 эта практика дополнительно развивается до полной локальной копии stock userspace и поиска по ней вместо постоянных target-команд.
+
 ### I-025 — Capture once, analyze offline
 Статус: `OBSERVED`.
 
@@ -278,6 +286,8 @@
 - меньше reboot;
 - меньше ручных вопросов к пользователю;
 - hypotheses можно проверять офлайн и возвращаться на железо только с осмысленным A/B.
+
+CHAT-007 усиливает принцип: valuable stock runtime сначала снимается/копируется, после чего Apollo/ioctl/startup анализ переносится в WSL и camera state не дёргается без необходимости.
 
 ### I-026 — Использовать стандартный специализированный инструмент вместо временного велосипеда
 Статус: `OBSERVED`.
@@ -345,6 +355,46 @@
 - дальнейший reverse шёл уже по извлечённому corpus.
 
 Обобщение: **target нужен для нового evidence, а не для повторного извлечения уже имеющихся bytes**.
+
+### I-032 — Искать внешние reference implementations до продолжения дорогого blind reverse
+Статус: `OBSERVED`.
+
+В `CHAT-007` после длинного локального ISP reverse пользователь отдельно просит искать существующие наработки. Поиск находит несколько источников, но особенно полезен clean-room reverse соседнего Fullhan FH8852V201.
+
+Новый workflow:
+- сначала формулировать конкретный missing contract;
+- искать vendor SDK/samples и reverse соседних SoC по уникальным API names;
+- использовать найденное как semantic/API architecture map;
+- затем проверять каждый ABI/address/register на FH8626 собственным evidence.
+
+Эффект: вместо абстрактного поиска причины `ISP IRQ=0` появляется конкретная гипотеза missing chain `MemInit → SensorRegCb → SensorInit → SetSensorFmt → Init → Kick`.
+
+Критическое ограничение: cross-SoC reference не является доказательством FH8626 ABI/MMIO.
+
+### I-033 — Разделять рабочую reverse-документацию, историю экспериментов и upstream deliverable
+Статус: `OBSERVED`.
+
+В `CHAT-007` впервые явно проектируется будущий knowledge repository:
+- current hardware/boot/media/ioctl facts — в структурированных docs;
+- known-good bring-up — отдельным reproducible recipe;
+- failed hypotheses и archaeology — в experiment/history layer;
+- provenance binary/source — отдельно;
+- upstream OpenIPC получает только нужный source/config/device delta и hardware evidence, а не весь reverse-дневник.
+
+Это исторический предшественник современной схемы reverse repo: одна текущая authority на факт, история отдельно, тяжёлое evidence отдельно.
+
+### I-034 — Progress tracking по engineering boundaries
+Статус: `OBSERVED`.
+
+Повторные вопросы пользователя «сколько ещё» в `CHAT-007` показывают необходимость не временной оценки, а карты оставшейся работы.
+
+Устойчивый формат:
+- закрытые subsystem gates;
+- текущий blocker;
+- следующий hardware-visible milestone;
+- 1–3 оставшихся крупных reverse/integration блока.
+
+Так длинный reverse остаётся управляемым без ложных обещаний по времени.
 
 ## Исходные этапы, ещё не подтверждённые
 
