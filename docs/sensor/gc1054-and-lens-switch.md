@@ -13,6 +13,28 @@
 
 Do not treat direct callback invocation as automatically equivalent to the higher-level stock sensor wrapper; historical owner work missed wrapper side effects/order and regressed startup behavior.
 
+## Exact active 720p25 sensor contract
+
+`REVERSE_CONFIRMED`: focused reverse of the retained
+`libgc1054_mipi.so` and `libmipi.so` now closes the normal single-sensor
+bring-up contract used by the exercised 1280x720@25 path.
+
+- Sensor callback init supplies MIPI words `{5,0,0,0,0,1}`.
+- The sensor device opens `/dev/i2c-0`; register traffic uses ioctl
+  `0x707` with per-message address `0x21`.
+- The init path also issues ioctl `0x704` arg `0` and `0x706` arg
+  `0x1a`.
+- Initial cached gain/integration values are `0x40/0xd0`.
+- Format `0x801061a8` (legacy alias `3`) selects the exact 720p25 register
+  script now promoted to
+  `source/fh8626v100/components/sensor/gc1054/gc1054_native_contract.h`.
+- The exact day ISP payload already exists independently at
+  `source/fh8626v100/components/sensor/gc1054/profiles/gc1054_day.bin`.
+
+This closes the static source inputs needed for an open GC1054 active-mode
+implementation. Hardware acceptance of a replacement still requires the
+board-level GPIO5 bootstrap and dual-sensor preparation described below.
+
 ## Cold-boot prerequisite
 
 `HARDWARE_PASS`: dual-sensor visibility requires one board bootstrap after cold boot:

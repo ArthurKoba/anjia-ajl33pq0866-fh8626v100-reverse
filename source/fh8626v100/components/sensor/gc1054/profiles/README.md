@@ -20,3 +20,10 @@ Exact payload mapping:
 The Git blobs were verified byte-for-byte against those container slices during repository cleanup.
 
 These are small reusable camera-profile inputs, not a second copy of the vendor library/container and not generated build output. The complete original vendor container remains external evidence; if profile semantics change, derive them again from the retained container rather than editing these payloads ad hoc.
+
+
+A consumer that already accepts a raw 0xA58 ISP parameter payload may use
+`gc1054_day.bin` directly. It does not need to reconstruct or ship the full
+8648-byte SREG container merely to obtain the active day profile. Container
+parsing remains appropriate only for code whose API explicitly expects the
+multi-profile SREG container.
