@@ -495,7 +495,7 @@ Evidence: `CHAT-013`. `CHAT-024` показывает обратную стор�
 - если для полного закрытия не хватает внешнего evidence — назвать конкретный blocker и запросить ровно его;
 - итоговый status должен отражать самый слабый обязательный gate, а не самый сильный найденный результат.
 
-Evidence: `CHAT-014`. `CHAT-015` усиливает риск слишком мелких specialist tasks: быстрый partial reverse был принят как завершённая работа, хотя пользователь ожидал долгую область с несколькими подзадачами и глубоким acceptance. `CHAT-016` — прямое подтверждение класса: Agent 1 сначала объявил Task 2 завершённым, а затем requirement audit оценил реальное закрытие лишь в 70–80% и перечислил недоделанные C8134/C883C, actuator arithmetic, D0630 history, numerical replay и selftests. `CHAT-017` — Agent 2 сначала объявил большой image-detail Task 2 завершённым, а после прямого checklist audit признал лишь ~55–65% выполнения; после дополнительного static/runtime evidence работа продолжалась до финального APC/NR3D/LTM closure. `CHAT-027` — самый сильный повтор класса: Agent 1 несколько раз сообщал, что static reverse исчерпан или broad reverse закончен, после чего по требованию полного coverage находились новые существенные области — watchdog/human detection, color/HAL, illumination PWM, audio, dev_ctrl, WDR/LSC и optional ISP.
+Evidence: `CHAT-014`. `CHAT-035` даёт особенно сильный system-level пример: ghosting был объявлен «5/5 завершён» после component tests, но последующий полный owner lifecycle/preflight вскрыл неправильный BGM MEM_INIT size, race, pointer truncation, capability/reset и sensor-switch/restart gaps. `CHAT-015` усиливает риск слишком мелких specialist tasks: быстрый partial reverse был принят как завершённая работа, хотя пользователь ожидал долгую область с несколькими подзадачами и глубоким acceptance. `CHAT-016` — прямое подтверждение класса: Agent 1 сначала объявил Task 2 завершённым, а затем requirement audit оценил реальное закрытие лишь в 70–80% и перечислил недоделанные C8134/C883C, actuator arithmetic, D0630 history, numerical replay и selftests. `CHAT-017` — Agent 2 сначала объявил большой image-detail Task 2 завершённым, а после прямого checklist audit признал лишь ~55–65% выполнения; после дополнительного static/runtime evidence работа продолжалась до финального APC/NR3D/LTM closure. `CHAT-027` — самый сильный повтор класса: Agent 1 несколько раз сообщал, что static reverse исчерпан или broad reverse закончен, после чего по требованию полного coverage находились новые существенные области — watchdog/human detection, color/HAL, illumination PWM, audio, dev_ctrl, WDR/LSC и optional ISP.
 
 Кандидат: обязательный **completion audit against original acceptance criteria** перед финальным закрытием задачи.
 
@@ -843,6 +843,27 @@ Evidence: `CHAT-032` — Agent 7 R13–R18; итоговый emergency handoff �
 - статус COMPLETE запрещён, пока остаются существенные unresolved control-flow edges.
 
 Evidence: `CHAT-033` — пользователь инициирует смену методологии после серии пропущенных contracts; Ghidra semantic model формулируется как ответ на системную проблему flat objdump workflow.
+
+### E-048 — Transport archive используется как live workspace и многократно распаковывается
+Статус: `OBSERVED`.
+
+В `CHAT-035` текущий V2/owner/checkpoint corpus неоднократно возвращался в анализ через повторные `tar/unzip`, создавая очередные `working/unpacked/current_owner` деревья. Пользователь прямо останавливает это как антипаттерн: архив должен быть получен, один раз распакован, после чего работа идёт только с обычными файлами.
+
+Почему мешает:
+- возникает несколько почти одинаковых рабочих деревьев;
+- непонятно, где находится фактическая последняя версия C/H;
+- легко объявить файл «потерянным», хотя он лежит в другом распакованном слое;
+- очередной restore может затереть более свежую работу;
+- archive topology начинает заменять project topology.
+
+Правильный паттерн:
+- archive = transport/recovery input, не unit of development;
+- распаковка один раз в canonical workspace/staging;
+- после извлечения все дальнейшие search/edit/test идут по распакованным файлам;
+- повторное восстановление допускается только как явная recovery операция после доказанной потери;
+- parallel extracted trees должны быть либо reconciled, либо удалены после проверки uniqueness.
+
+Evidence: `CHAT-035`; позднее `CHAT-036/037` дополнительно уточняют canonical-workspace/checkpoint модель.
 
 ## Пока не подтверждено этим чатом
 

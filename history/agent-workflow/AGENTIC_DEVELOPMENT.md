@@ -456,6 +456,20 @@ Agent 7 впервые даёт особенно чистый пример то�
 Ghidra предлагается как локальный WSL analyzer/headless backend, а обычные файлы/knowledge index — как общий язык browser-agents. Это важный шаг к будущему Ghidra MCP: reverse knowledge начинает жить во внешней mutable model, а не в памяти одного чата.
 
 
+### A4.24 — Analyst → integrator source handoff
+Статус после `CHAT-035`: `OBSERVED`.
+
+Роли становятся асимметричными и более эффективными. Deep-analysis agent получает право:
+- долго разбирать ASM/Ghidra;
+- писать C/H candidates;
+- делать host/negative/sanitizer checks;
+- прикладывать minimal diff/evidence/Ghidra pointers.
+
+Но он не обязан и не должен автоматически становиться target integrator. Второй agent получает уже переваренный contract и отвечает за actual branch integration, ARM build, firmware/deploy и hardware acceptance.
+
+Это уменьшает повторный reverse у integration-agent и одновременно не даёт browser-analysis ветке объявлять host-tested code production-ready.
+
+
 ### A5 — Специализированные MCP/агенты
 Статус: `BOOTSTRAP`.
 

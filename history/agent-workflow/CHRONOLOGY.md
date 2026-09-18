@@ -328,6 +328,18 @@ Agent 7 собрал новый production runtime с lifecycle/single-owner, st
 Подробнее: [D30](CHRONOLOGY_DETAILS.md#d30--agent-7-release-regression-и-forensic-rollback).
 
 
+### 31. Codec/ghosting reverse: H.264 RC, MJPEG/BGM/NR3D и integration contracts
+Источник: `CHAT-035`, 2026-09-05/06.
+
+Отдельный deep-audit слой переносит reverse с общего ISP на encoded/media behavior. Для H.264 восстанавливаются public/app→wire RC mapping, realtime `0xC01C5055`, field semantics и различия cold/realtime update; для MJPEG/JPEG — buffer/query/release ownership, quantization и shutdown lifecycle; отдельно разбираются audio/container delivery и geometry/upscale.
+
+Ghosting локализуется не к одной «магической настройке»: NR3D, BGM motion path, encoder RC/IDR и queue/lifecycle анализируются раздельно. По результату создаются C/H candidates, state machines и integration contracts, но target acceptance сознательно передаётся отдельному интегратору.
+
+**Переход:** reverse начинает выпускать implementation-ready modules с explicit lifecycle/ABI evidence, а не только описания функций.
+
+Подробнее: [D31](CHRONOLOGY_DETAILS.md#d31--codecghosting-reverse-и-integration-contracts).
+
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.

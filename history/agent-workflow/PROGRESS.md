@@ -5,22 +5,22 @@
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **34**
-- Последний источник: `CHAT-034`
-- Период последнего источника: **2026-08-28 — 2026-08-30**
+- Обработано исторических файлов: **35**
+- Последний источник: `CHAT-035`
+- Период последнего источника: **2026-09-05 — 2026-09-06**
 - Следующее действие: получить следующий уникальный исторический источник
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-033 |
+| Направление | Файл | Состояние после CHAT-035 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 34/?? sources обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 47 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 123 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D30: Agent 7 release-regression и forensic rollback |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.23: semantic Ghidra reverse workspace |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 35/?? sources обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 48 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 125 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D31: codec/ghosting reverse и integration contracts |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.24: analyst → integrator source handoff |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -92,6 +92,8 @@
 | 33 | `CHAT-033` | 2026-08-30 | `DONE` | Методологический перелом reverse: flat objdump признан недостаточным для сложного Apollo/ISP; проектируется Ghidra semantic DB с decompile/CFG/XREF/types/unresolved, cross-binary knowledge, WSL-only workspace и snapshot/delta exchange |
 
 | 34 | `CHAT-034` | 2026-08-28 — 2026-08-30 | `DONE` | Expanded orchestrator mega-thread: parallel reverse/evidence/productization waves, premature master bumps corrected, E1–E7 acquisition loop, Agent 4→Agent 1 closure, source-vault/prepared-reverse split and real MASTER_CORE/REVERSE_HEAVY materialization; mostly consolidates existing classes |
+
+| 35 | `CHAT-035` | 2026-09-05 — 2026-09-06 | `DONE` | Deep codec/ghosting pass: H.264 RC app→wire, MJPEG/BGM/NR3D lifecycle, geometry/upscale, audio/container boundaries; analyst writes source candidates/evidence for separate integrator; repeated archive-working and premature COMPLETE expose process defects |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -1060,3 +1062,11 @@ Divinus hardening advances independently of owner integration, preserving single
 - Frozen-base/DELTA fan-in и evidence→reverse closure показаны не как proposal, а как реально работающая orchestration-схема нескольких параллельных веток.
 - MASTER_CORE/REVERSE_HEAVY физически материализуются: source vault отделяется от дорогого prepared reverse, а reproducible intermediates удаляются только после сохранения рецептов.
 - Плановая 33-file live-state сверка выполнена: современный anchor подтверждён как GitHub current authority + Drive heavy evidence + Ghidra MCP mutable reverse; августовскую историю этим не переписываю.
+
+
+## Что CHAT-035 добавил
+
+- Новый `E-048`: transport archive не должен становиться live workspace; repeated unzip/restore создаёт parallel state и ambiguity.
+- `E-031` усилен: ghosting был назван 5/5 после unit/host tests, а полный owner lifecycle preflight позже нашёл новые blocking defects.
+- Новые `I-124/I-125`: complex work проходит analysis→implementation→independent integration audit; reverse/analysis agent может готовить C/diff/evidence, но target integration принадлежит отдельному агенту.
+- Добавлена D31 по codec/ghosting reverse и A4.24 по analyst→integrator модели.

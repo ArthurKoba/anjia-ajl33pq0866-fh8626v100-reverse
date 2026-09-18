@@ -890,3 +890,16 @@ Target acceptance показал другую картину. Bootstrap до ISP
 - process failures, которые привели к regression.
 
 Это важная historical boundary: успешный host/ARM pipeline больше не трактуется как близость к product parity; release-код обязан сохранить exact hardware-proven invariants и проходить независимый physical acceptance.
+
+
+## D31 — Codec/ghosting reverse и integration contracts
+
+Источник: `CHAT-035`, 2026-09-05—06.
+
+Большой статический проход отдельно восстанавливает encoded/media область. H.264 RC разделяется на публичные режимы приложения и внутренние wire modes; corrected mapping и field semantics снимают старые противоречия `mode1 AVBR/CBR`. Realtime RC ioctl, force-I и cold-init перестают смешиваться. Для MJPEG/JPEG reverse закрывает query/release ownership, shared queue semantics, quant tables и shutdown hazards.
+
+Параллельно разбирается BGM как motion-detection path, NR3D как отдельный temporal filter/ghosting factor и их interaction boundaries. Важная корректировка процесса: первоначальное «ghosting 5/5 complete» после host tests оказалось преждевременным. Full-owner integration audit нашёл дополнительные ABI/lifecycle defects и заставил перейти к шестиступенчатому closure cycle.
+
+Источник также добавляет geometry/upscale implementation candidate и full Stage1 review: analytical agent уже не только описывает reverse, а пишет модульные C/H candidates, tests и exact integration notes. Пользователь при этом жёстко отделяет эту работу от target integration: подключение к актуальному owner/firmware и hardware acceptance выполняет другой агент.
+
+Технически это переход от reverse documents к reusable source contracts, но без ложного повышения до hardware-proven production.
