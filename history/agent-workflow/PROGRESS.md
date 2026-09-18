@@ -1,26 +1,26 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_027_IN_PROGRESS`
+Статус: `CHAT_027_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **26**
-- Последний источник: `CHAT-026`
-- Период последнего источника: **2026-08-29**
-- Следующее действие: завершить анализ `CHAT-027` (source #27)
+- Обработано исторических файлов: **27**
+- Последний источник: `CHAT-027`
+- Период последнего источника: **2026-08-28 — 2026-08-30**
+- Следующее действие: post-file refresh + 27-file live-state refresh
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-026 |
+| Направление | Файл | Состояние после CHAT-027 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 26/?? sources обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 40 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 96 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D24: partial Agent4 watchdog/peripheral corpus |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.16: MASTER_CORE + REVERSE_HEAVY two-tier storage |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 27/?? sources обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 41 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 101 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D25: evidence-directed final reverse closure |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.17: reverse↔evidence closure loop |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -81,7 +81,7 @@
 | 24 | `CHAT-024` | 2026-08-28 | `DONE` | OEM/device research triangulates AJL33PQ0866/YGT software identity, CF26/SM PCB family and physical 3.6/12 dual-lens configuration; builds ranked donor/reference corpus without promoting any retail SKU to target truth |
 | 25 | `CHAT-025` | 2026-08-28 — 2026-08-29 | `DONE` | Cross-platform gap hunter discovers exact-FH8626 public adapter/SDK targets, exposes stats-epoch/lifecycle/RAW architecture leads, audits current source risks and packages targeted inputs instead of repeating Apollo reverse |
 | 26 | `CHAT-026` | 2026-08-29 | `DONE` | Partial export: consolidated Agent4 watchdog/peripheral status; project split into MASTER_CORE + REVERSE_HEAVY with logical heavy IDs; TFTP root reorganized into active/history staging without destructive cleanup |
-| 27 | `CHAT-027` | 2026-08-28 — 2026-08-30 | `IN_PROGRESS` | Agent 1 final reverse closure: static exhaustion → Agent4 E1–E7 live evidence → watchdog/human/color/light/audio/optional ISP closure; context-loss and repeated completion-audit episodes |
+| 27 | `CHAT-027` | 2026-08-28 — 2026-08-30 | `DONE` | Agent 1 evolves from static exhaustion into E1–E7 evidence-directed closure; later closes watchdog/human/color/light/dev_ctrl and most HAL, ending with a small optional WDR/GME tail still under correction |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -884,6 +884,27 @@ Live work tips на момент refresh остались:
 ### Technical/agentic transition
 Доступный хвост сохраняет consolidated watchdog/kernel corpus и peripheral backlog, но главный исторический переход — отделение everyday working knowledge от тяжёлых immutable reverse/evidence artifacts. A4.16 — прямой предшественник современной split authority, но фактический Google Drive/GitHub/MCP transition этим чатом ещё НЕ подтверждён.
 
+## Что CHAT-027 добавил к картине
+
+### Новый error-class
+- E-041: focused handoff не должен ссылаться на отсутствующий reverse/evidence substrate без embedded или verified external dependency.
+
+### Reinforced
+- E-018: archive README referenced files that were not physically present.
+- E-020: broad disassembly scans slowed work; address-window/xref mode became explicit.
+- E-031: repeated premature “reverse exhausted / done” claims were followed by substantial remaining scopes.
+- E-034: user repeatedly requested sparse liveness and last-known checkpoint reporting.
+
+### Новые improvements
+- I-097: evidence-directed reverse closure loop.
+- I-098: fail-closed dependency closure for focused packs.
+- I-099: release-relevant exhausted vs maximal-corpus exhausted.
+- I-100: physical evidence may add/supersede human labels while preserving numeric machine contract.
+- I-101: prepared kernel/disassembly slices must carry correct virtual/load base provenance.
+
+### Technical/agentic transition
+Static reverse is turned into explicit E1–E7 evidence requirements, Agent 4 supplies target evidence, and Agent 1 performs a narrow second pass. Watchdog, human detection, physical RAW/CFA, color/HAL, illumination and dev_ctrl are substantially closed. The source ends before optional WDR/GME archaeology is fully finalized, so CHAT-027 itself does not justify “all stock reverse complete”.
+
 ## Следующее действие
 
-Получить следующий уникальный исторический источник. Следующая expanded live-state сверка — после `CHAT-027` либо раньше при фактическом переходе к Drive/Git/MCP.
+Выполнить post-file refresh и expanded live-state refresh после 27 источников. Затем перейти к `CHAT-028` (source #29).
