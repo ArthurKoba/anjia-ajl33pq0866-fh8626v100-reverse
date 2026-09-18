@@ -218,6 +218,9 @@ Reverse `enc.ko` и `media_process.ko` установил:
 
 Standalone `D0238` полосы не исправил. Это вместе с неудачными одиночными writers окончательно сместило стратегию к восстановлению полного stock lifecycle/writer order, которое затем развивается в `CHAT-002`.
 
+`CHAT-012` добавляет раннюю productionization boundary до более зрелого substrate из `CHAT-003`. В уникальном хвосте пользователь предлагает уже начинать firmware/Majestic, хотя RAW/Bayer ещё не закрыт. Архитектурный ответ: proven boot/rootfs/vendor-module/VPU/PAE/dequeue слои можно productionize параллельно, но stateful Fullhan devices остаются за одним долгоживущим `fh8626_daemon`; Majestic должен получать stream через downstream interface и не становиться вторым `/dev/isp` owner. Это пока design direction, не hardware acceptance Majestic.
+
+
 ## D11 — Source-derived ISP runtime
 
 `CHAT-002` начинается уже после первого рабочего hardware pipeline. Главная инженерная смена — отказ от лечения визуальных дефектов одиночными snapshot-регистрами.
