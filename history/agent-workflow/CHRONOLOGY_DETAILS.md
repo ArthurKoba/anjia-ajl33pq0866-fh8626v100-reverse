@@ -48,6 +48,9 @@
 
 Важная методическая деталь: ошибки инфраструктуры нужно отделять от ошибок target port, иначе media bring-up быстро превращается в смешанный debugging всего сразу.
 
+`CHAT-007` даёт подробную механику этого перехода: первый RAM image действительно дошёл до `Welcome to OpenIPC`, DHCP и Dropbear, но stock kernel merge-ил встроенный factory initramfs с внешним CPIO. Это породило uClibc/factory init scripts внутри musl rootfs. После переноса build с `/mnt/c` в Linux filesystem и правильного overlay factory startup был перекрыт, получен чистый OpenIPC baseline.
+
+
 ## D4 — Stock media stack внутри OpenIPC
 
 Заводской `/app` стал ценнее поиска абстрактного SDK:
@@ -59,6 +62,9 @@
 Это резко сократило неизвестность. Вместо немедленного clean-room переписывания всего media SDK стало возможно использовать stock kernel ABI как мост и постепенно восстанавливать userspace contract.
 
 На этом же этапе был важный поворот workflow: детальный разбор каждого callback sensor library был остановлен, когда стало ясно, что он не отвечает на текущий blocking question.
+
+В `CHAT-007` этот этап доказан по частям на живой системе: stock `/app` смонтирован read-only, `libmipi.so` и `libgc1054_mipi.so` успешно `dlopen()`-ятся непосредственно под musl OpenIPC, а kernel chain `vmm → xbus_rpc → media_process → isp → enc → jpeg → bgm → gpio_wave` загружается в штатном порядке. Появляются `/dev/rtxbus`, `/dev/media_process`, `/dev/isp`, `/dev/pae`, `/dev/jpeg`, `/dev/bgm` и gpio-wave nodes.
+
 
 ## D5 — Оживление ISP
 
@@ -73,6 +79,9 @@ Sensor и MIPI path удалось довести до состояния, со�
 Ключевой найденный разрыв был не в sensor clock/MIPI, а в базовом ISP hardware state, включая interrupt enable/mask. После восстановления соответствующего состояния ISP начал стабильно генерировать interrupt cadence.
 
 Это важный пример смены уровня диагностики: после доказанного sensor/MIPI больше не возвращались к ним при каждом симптоме downstream.
+
+`CHAT-007` заполняет предысторию нулевого ISP IRQ: GC1054 ID/initialization, GPIO select, clocks и MIPI state были доведены до stock-like состояния; VMM/VPU/PAE/media bind уже работали, но ISP/PAE IRQ оставались нулевыми. Stock runtime tracing и внешний clean-room Fullhan reference затем сузили missing layer до полноценной ISP sensor lifecycle/registration sequence, вместо дальнейшего широкого sensor или encoder reverse.
+
 
 ## D6 — Hardware H.264 и граница доказательства
 
@@ -124,6 +133,9 @@ Fullhan media drivers оказались чувствительны к lifetime:
 Положительный момент: неизвестный provenance одного runtime artifact был оставлен как gap, а не заменён выдуманным объяснением.
 
 Отрицательный момент: handoff быстро вырос до очень большого размера. Это один из исторических аргументов в пользу нынешней схемы «короткая карта + детализированные приложения», а не одного бесконечного master-документа.
+
+Ещё до финального master handoff `CHAT-007` показывает отдельную форму knowledge transfer: пользователь просит передать новые находки параллельному ISP reverse-agent. Handoff содержит только новую external-reference ветку, локальные artifact paths, confirmed contracts, unresolved names и конкретный следующий priority, чтобы второй агент не повторял уже закрытое.
+
 
 ## D9 — Dequeue, grey frame и stock runtime evidence
 
