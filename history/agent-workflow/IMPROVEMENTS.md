@@ -671,7 +671,7 @@ Vendor image часто содержит drivers/configs для нескольк
 `CHAT-016` является вторым прямым доказательством: после первоначального «Task 2 завершён» полный requirement audit нашёл крупные недоделки, после чего работа продолжалась до v5 и полного day/night numerical replay.
 
 ### I-047 — Machine-readable operational session state
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
 Quality-retrospective в конце `CHAT-014` впервые явно предлагает вынести постоянно теряемые operational facts из памяти диалога в единый state artifact, желательно одновременно human-readable и machine-readable.
 
@@ -690,6 +690,8 @@ Quality-retrospective в конце `CHAT-014` впервые явно пред�
 Предложенная форма: `ENVIRONMENT_CURRENT.md` + `CURRENT_SESSION.json`.
 
 Это прямой предшественник современной project-authority модели: не заставлять нового агента восстанавливать operational state по переписке.
+
+`CHAT-020` реализует proposal: `ENVIRONMENT_CURRENT.md`, `CURRENT_SESSION.json` и `CURRENT_BINARIES.md` становятся реальными central-state files и входят в handoff doctor.
 
 ### I-048 — Hardware experiment как явная state machine
 Статус: `CONSOLIDATED`.
@@ -888,7 +890,7 @@ Autonomous milestone reporting и видимость работы не прот�
 Этот подход снял последние GOT/table blockers APC, LTM, NR3D и D1DB0 без повторного blind reverse.
 
 ### I-060 — Corpus-first architecture: подготовить reverse substrate один раз и запретить бессмысленное повторение
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
 В конце `CHAT-017` пользователь формулирует уже системную архитектуру:
 - firmware binaries извлекаются один раз;
@@ -900,6 +902,8 @@ Autonomous milestone reporting и видимость работы не прот�
 - есть карта, где физически лежит artifact в Windows/WSL/camera/archive.
 
 Это прямой precursor canonical reverse workspace: knowledge становится адресуемым corpus, а не набором вложений конкретного чата.
+
+`CHAT-020` реализует corpus-first архитектуру физически: raw/reference/reverse/source/evidence разнесены, Apollo SQLite index и lookup helpers используются как primary path, full objdump отмечается как already-materialized expensive work.
 
 ### I-061 — Specialist role-lock вместе с artifact preflight
 Статус: `OBSERVED`.
@@ -916,6 +920,8 @@ Artifact preflight недостаточен: после загрузки общ�
 
 Это предотвращает случай `CHAT-017`, когда Agent 2 после загрузки общего handoff временно начал выдавать результат Agent 1.
 
+`CHAT-020` материализует role separation в отдельном `roles/` и distinct orchestrator/executor entrypoints, уменьшая риск scope bleed.
+
 ### I-062 — Consolidated quality pack вместо независимых retrospective-файлов
 Статус: `OBSERVED`.
 
@@ -927,6 +933,92 @@ Artifact preflight недостаточен: после загрузки общ�
 5. дать orchestrator import prompt.
 
 Это превращает feedback разных specialist lanes в общий evolving process contract и предотвращает расхождение правил между агентами.
+
+### I-063 — Layered project map с отдельными role/context entrypoints
+Статус: `OBSERVED`.
+
+В `CHAT-020` локальный master-tree получает один верхнеуровневый вход `PROJECT_MAP.md` и физическое разделение:
+- `00_START/` — bootstrap/navigation;
+- `state/` — только current state;
+- `roles/` — orchestrator vs executor/reverse agent;
+- `ops/` — WSL/OpenIPC/stock/build/hardware protocols;
+- `runtime/` — implemented vs missing behavior;
+- `roadmap/` — priorities/gates;
+- `history/` — decisions/work/expensive operations;
+- `knowledge/`, `reverse/`, `reference/`, `evidence/`, `source/`, `tools/`.
+
+Это уменьшает context mixing: новый агент не читает весь handoff подряд, а входит через role/task-specific route.
+
+### I-064 — Automated structural invariants вместо ручной проверки handoff
+Статус: `OBSERVED`.
+
+Quality rules в `CHAT-020` превращаются в исполняемые проверки:
+- `HANDOFF_DOCTOR`;
+- `PATH_AUDIT`;
+- `ARCHIVE_AUDIT`;
+- `DUPLICATE_AUDIT`;
+- `SQLITE_INDEX`;
+- `PROJECT_HEALTH`;
+- coverage audit;
+- обязательные entrypoints/tooling checks.
+
+Успех измеряется не «архив вроде открывается», а зелёными invariants:
+`nested_archives=0`, `exact_duplicates=0`, valid paths/index/state files.
+
+### I-065 — Task router + context packs вместо загрузки всего проекта в каждый agent
+Статус: `OBSERVED`.
+
+Создаются `TASK_ROUTER.md`, machine-readable `TASK_ROUTER.json`, context packs и module-status matrix.
+
+Agent task сначала классифицируется как AE/AWB/detail/hardware/build/video/Cross-Fullhan/unknown, после чего агент получает только нужные entrypoints/evidence.
+
+Это одновременно:
+- сокращает контекст;
+- удерживает ownership boundaries;
+- уменьшает repeated reverse;
+- делает specialist startup воспроизводимым.
+
+### I-066 — Session ledger и recovery playbook для долгих agent runs
+Статус: `OBSERVED`.
+
+`CHAT-020` добавляет постоянный `sessions/` слой:
+- checkpoint/current task;
+- command ledger;
+- expensive-work history;
+- blockers;
+- exact next action.
+
+Плюс `AGENT_RECOVERY_PLAYBOOK.md`: если агент потерял files/state/tool/semantics, он знает конкретный документ или индекс, который нужно перечитать.
+
+Это переносит continuity из памяти чата в explicit operational substrate.
+
+### I-067 — Нормализация artifacts: active knowledge отдельно от provenance/archive
+Статус: `OBSERVED`.
+
+Clean master-tree в `CHAT-020` вводит явные правила:
+- normalized current knowledge — в active layers;
+- original agent results/external refs — provenance;
+- historical/superseded — archive/history;
+- ни одного nested archive в active handoff;
+- exact duplicates удаляются;
+- один canonical disassembly на объект;
+- provenance movement должен быть отслеживаемым.
+
+Итог: handoff перестаёт расти простым накоплением файлов.
+
+### I-068 — Fixed progress ontology через module/status matrix
+Статус: `OBSERVED`.
+
+Вместо одной плавающей оценки «готово X%» создаётся `MODULE_STATUS_MATRIX` / implementation registry, где для блока раздельно фиксируются:
+- semantic identity/confidence;
+- reverse status;
+- runtime/source implementation;
+- hardware evidence;
+- next action.
+
+Процент можно считать поверх этой модели, но он больше не является primary state representation.
+
+Это прямое исправление E-036.
 
 ## Исходные этапы, ещё не подтверждённые
 
