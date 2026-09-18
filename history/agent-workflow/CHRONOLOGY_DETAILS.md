@@ -2,28 +2,34 @@
 
 Этот файл дополняет `CHRONOLOGY.md`. Основная хронология остаётся короткой; здесь сохраняются только детали, объясняющие важную развилку, неудачный подход, метод доказательства или инженерный контракт.
 
-Источник первого блока: `CHAT-001` (примерно 2026-08-24 — 2026-08-26).
+Источник первого блока: `CHAT-005` → `CHAT-001` (примерно 2026-08-24 — 2026-08-26).
 
 ## D1 — Первичная разведка и recovery baseline
 
-Стартовали с boot/UART логов и factory firmware. Быстро выяснилось, что камера имеет два переключаемых lens/sensor target, а stock U-Boot даёт достаточно функциональности для network RAM boot.
+Самый ранний источник (`CHAT-005`) начинается с boot/UART log и решения не пытаться сразу строить полноценную камеру.
 
-Вместо ранней записи flash сначала:
-- сняли полный NOR dump;
-- восстановили U-Boot environment и доступ к интерактивному bootloader;
-- подтвердили TFTP path;
-- сохранили stock layout как recovery/evidence baseline.
+Сначала:
+- идентифицированы SoC, 8 MiB NOR, RAM, GC1054 и dual-lens признаки;
+- полный flash dump снят внешним способом до любой мутации;
+- из dump восстановлены фактическая MTD/U-Boot environment и данные, необходимые для штатного доступа к bootloader;
+- после входа в U-Boot подтверждены flash/network commands и реальная environment;
+- маленьким TFTP-файлом напрямую доказан путь `PC → Ethernet → U-Boot → RAM`.
 
-Практический урок: первый milestone порта — не streamer, а безопасный возврат к известному состоянию и возможность загрузить тестовый код без записи flash.
+Важно, что cross-device/web hints на этом этапе использовались только как ориентир; authoritative факты затем брались из собственного dump/bootloader.
+
+Практический урок: первый milestone порта — immutable recovery anchor и безопасный путь исполнения из RAM, а не streamer и не запись flash.
 
 ## D2 — OpenIPC RAM boot
 
-Первый OpenIPC запуск был намеренно гибридным:
+Стратегия гибридного запуска была выбрана ещё в `CHAT-005`: не подменять FH8626 неподтверждённым kernel от другого Fullhan SoC, а использовать stock FH8626 kernel и внешний OpenIPC initramfs через уже доказанный TFTP/RAM transport.
+
+В `CHAT-001` этот план дошёл до hardware result:
 - stock FH8626 kernel;
 - внешний OpenIPC initramfs;
-- загрузка через U-Boot/TFTP.
+- U-Boot/TFTP;
+- OpenIPC shell/network/MTD без записи NOR.
 
-Это позволило аппаратно доказать OpenIPC userspace, Ethernet, MTD и shell до появления native OpenIPC kernel.
+Это позволило аппаратно доказать OpenIPC userspace до появления native OpenIPC kernel.
 
 Разделение kernel/userspace оказалось полезным: неизвестность «работает ли вообще Buildroot/OpenIPC на CPU» была закрыта независимо от более сложного media/kernel port.
 
