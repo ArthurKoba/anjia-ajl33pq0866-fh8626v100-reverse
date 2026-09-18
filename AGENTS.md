@@ -5,9 +5,11 @@ These rules apply to every automated agent or assistant working in this reposito
 ## Git workflow
 
 - Agents MUST NOT create pull requests. Pull requests are created manually by the repository owner only.
-- Use a dedicated working branch for non-trivial source, documentation, reverse or cleanup changes.
-- Do not make normal project changes directly on `main`.
-- After verification, merge the working branch directly by normal fast-forward/merge semantics.
+- For the FH8626V100 effort, keep exactly one active production/integration branch and one persistent working branch per repository. Do not create a new branch for each audit, fix, task, experiment or documentation pass.
+- Continue all unverified FH8626V100 work on the repository's existing `work/*` branch. Create that work branch only if it does not already exist.
+- Production/integration branches receive only state that has passed the applicable source/build/hardware gate. Do not make ordinary unverified work directly on production.
+- Historical checkpoints and superseded experiments belong in annotated tags, immutable commit SHAs or the evidence store, not in additional live branches.
+- After verification, promote the working state by normal fast-forward/merge semantics where the repository model permits it.
 - Never force-update a shared branch unless the repository owner explicitly requests it.
 - Upstream contribution series must be curated deliberately from a verified upstream base with coherent commits.
 
@@ -80,13 +82,23 @@ Host/source checks never imply target hardware acceptance.
 
 ## Related repositories
 
-Changes to related repositories such as `openipc-divinus`, `openipc-builder`, `openipc-firmware`, `openipc-linux` and `u-boot-fullhan` must also use working branches. The no-agent-PR rule applies there as well.
+Changes to related repositories such as `openipc-divinus`, `openipc-builder`, `openipc-firmware`, `openipc-linux` and `u-boot-fullhan` must use the single persistent FH8626V100 work branch for that repository. The no-agent-PR rule applies there as well.
+
+Current FH8626V100 branch roles:
+- reverse repository: production/state `main`; work `work/fh8626v100`;
+- Firmware: production `master`; work `work/fh8626v100`;
+- Builder: production `master`; work `work/fh8626v100-anjia`;
+- Linux: hardware-proven/PR-facing production line `fullhan-fh8626v100`; work `work/fh8626v100`;
+- Divinus: production `master`; work `work/fh8626v100`;
+- U-Boot: hardware-proven production/recovery `fh8626v100-stock-compatible`; work `fh8626v100-mainline`.
+
+Do not introduce additional FH8626V100 live branches unless the owner explicitly changes this branch model.
 
 This repository is the coordination authority for cross-repository work. Keep audit notes, contribution workflow, branch roles, current SHAs, evidence status and handoff state here. Do **not** add fork-local `AGENTS.md`, audit reports or other coordination metadata to an OpenIPC component repository merely to guide later agents. Component repositories should contain only implementation and repository-owned documentation that belongs in their eventual contribution.
 
-Before mutating any related-repository branch, determine whether it is the head of an open upstream pull request or otherwise acts as an integration/submission branch. Treat such a branch as read-only during investigation and intermediate development. Create a topic branch such as `audit/*`, `fix/*` or `rework/*` from the known integration head and make checkpoints there.
+Before mutating any related-repository branch, determine whether the production/integration branch is the head of an open upstream pull request or otherwise acts as a submission branch. Treat it as read-only during investigation and intermediate development. Use the repository's existing persistent `work/*` branch for checkpoints; do not create per-task topic branches.
 
-When a submitted branch needs history cleanup, reconstruct the final coherent series from the verified upstream base on a separate branch, run the applicable static/build/hardware evidence gates, compare the resulting tree with the intended implementation, and only then update the submission branch. If the owner has explicitly authorized a history rewrite, perform one controlled final force update rather than repeatedly force-pushing checkpoints into an active review.
+When a submitted branch needs history cleanup, reconstruct the final coherent series on the existing persistent work branch from the verified upstream base, run the applicable static/build/hardware evidence gates, compare the resulting tree with the intended implementation, and only then update the submission branch. If the owner has explicitly authorized a history rewrite, perform one controlled final force update rather than repeatedly force-pushing checkpoints into an active review.
 
 Do not duplicate camera-level knowledge into those repositories. Record new camera contracts here, then implement or reference them in the repository that owns the component.
 

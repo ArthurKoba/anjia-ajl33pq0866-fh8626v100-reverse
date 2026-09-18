@@ -33,7 +33,6 @@ Current OpenIPC-native working line:
 
 - branch: `fh8626v100-mainline`
 - observed tip: `227bcb40f68147864d778f1431973566cca383d8`
-- equivalent development ref: `fh8626v100-openipc-native` at the same tip
 - evidence level: `SOURCE/BUILD ACCEPTED`, not `HARDWARE_PASS`
 
 Preserved hardware-proven stock-compatible reference:
@@ -92,9 +91,9 @@ Repository: `ArthurKoba/openipc-linux`.
 - PR-facing/integration branch: `fullhan-fh8626v100`
 - live observed tip: `0dfafa643770d78389e444c03f46f1711662eda6`
 - verified parent lineage: `fullhan-fh8852v200@ee1ef844294bfa1ff15b2f0522d35c987a16a220`
-- isolated OpenIPC MTD fix: `fix/fh8626v100-openipc-mtd-layout@28a923a9d9598a9a4e2c6c0ee4b2eee26698731e`
-- exploratory reconstruction: `rework/fh8626v100-clean-series@868bdd8ddde7a35c2c744e5706941d5e1f9faadf`
-- curated staging series: `rework/fh8626v100-final-series@357c2d13e7589db0dbe2bbf89c2ec38b1c036e6e`
+- isolated OpenIPC MTD fix: `archive/fh8626v100-mtd-fix-20260918@28a923a9d9598a9a4e2c6c0ee4b2eee26698731e`
+- exploratory reconstruction: `archive/fh8626v100-clean-series-20260918@868bdd8ddde7a35c2c744e5706941d5e1f9faadf`
+- curated staging series: `work/fh8626v100@357c2d13e7589db0dbe2bbf89c2ec38b1c036e6e`
 
 The former `ebf5d776c748edbd58c1aaf8be9d5b2639a16834` locator is stale after branch identity rewrite/repoint and is not the current integration tip.
 
@@ -112,7 +111,7 @@ Detailed audit: `docs/process/fh8626-kernel-series-audit.md`.
 
 Repository: `ArthurKoba/openipc-divinus`.
 
-- branch: `fh8626v100-canonical`
+- branch: `work/fh8626v100`
 - observed tip: `1e624bd5aca97ba772413d2b00a10314d1db039f`
 - base integration commit: `8d400262898e8e82df6171fde7e8911ec7930249` (`Add generic FH8626V100 platform support`)
 - top preservation commit: `WIP: preserve FH8626V100 native HAL migration state`
@@ -125,19 +124,19 @@ Repository: `ArthurKoba/openipc-firmware`.
 
 Preservation snapshot:
 
-- branch: `fh8626v100-platform`
+- tag: `archive/fh8626v100-platform-20260918`
 - tip: `f4bf49da6ef355c9e733e00d774efe403513b1d4`
 - role: historical mixed WIP/evidence only
 
 Clean integration candidate:
 
-- branch: `rework/fh8626v100-clean-integration`
+- branch: `work/fh8626v100`
 - tip: `c437d6eb62ade81595c20cbb765b8ad10300e3e7`
 - pre-config-audit checkpoint: `f9146dd42a2f606d305ebccd301268848de26880`
 - base: `master@47ccdbee45fa5b8eee69c25c7af656cd5d35a28e`
 - diff: only the FH8626 generic kernel config, generic lite defconfig and CI registration
 
-The clean branch consumes `openipc-linux/rework/fh8626v100-final-series@357c2d13...` directly and carries no FH8626 kernel patch directory. It also carries no AJL board package/fragment, no factory `.ko/.so/.bin`, and no local/patch copy of Divinus. The temporary exact Linux tarball points at the ArthurKoba fork only until the curated series lands in `OpenIPC/linux`; that pin is not upstream-ready provenance.
+The clean branch consumes `openipc-linux/work/fh8626v100@357c2d13...` directly and carries no FH8626 kernel patch directory. It also carries no AJL board package/fragment, no factory `.ko/.so/.bin`, and no local/patch copy of Divinus. The temporary exact Linux tarball points at the ArthurKoba fork only until the curated series lands in `OpenIPC/linux`; that pin is not upstream-ready provenance.
 
 Firmware now inherits the standard OpenIPC 8 MiB assembly budget: 2 MiB kernel plus 5 MiB SquashFS, while the Linux source supplies `256K boot + 64K env + 2048K kernel + 5120K rootfs + rest rootfs_data` (704 KiB remainder on 8 MiB NOR). The prior 3 MiB-kernel arrangement remains preservation evidence only.
 
@@ -149,14 +148,14 @@ Repository: `ArthurKoba/openipc-builder`.
 
 Preservation/device reference:
 
-- branch: `fh8626v100-anjia-ajl33pq0866`
+- tag: `archive/fh8626v100-anjia-preservation-20260918`
 - tip: `bcf8658e4aa612ee9afda8c28d52d8ad1674e2f1`
 - stable pre-Majestic checkpoint: `5603a701c8812aebc705c42e933ebae48aed805f`
 - role: historical working/integration reference, not future base
 
 Clean device-profile staging:
 
-- branch: `rework/fh8626v100-anjia-clean-profile`
+- branch: `work/fh8626v100-anjia`
 - tip: `1ea41ef2dc9a38e138907eda6d316bb743631ebe`
 - base: current Builder `master@e0a643f4942b064a149f470b3c118ebba4daebb5`
 - kernel fragment: `CONFIG_FH8626V100_SD0_1BIT=y`

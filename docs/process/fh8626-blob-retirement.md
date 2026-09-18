@@ -6,11 +6,11 @@ Checked: 2026-09-18.
 
 This document tracks the remaining proprietary FH8626 media/runtime artifacts and the order in which they should be eliminated or given defensible vendor-SDK provenance. It is a roadmap, not a claim that every blob is already understood or replaceable.
 
-The inventory comes from ArthurKoba/openipc-firmware/fh8626v100-platform@f4bf49da6ef355c9e733e00d774efe403513b1d4. Do not copy these binaries into this reverse repository. Heavy or unique binary evidence belongs in the external evidence store with hashes and provenance.
+The inventory comes from preservation tag ArthurKoba/openipc-firmware/archive/fh8626v100-platform-20260918@f4bf49da6ef355c9e733e00d774efe403513b1d4. Do not copy these binaries into this reverse repository. Heavy or unique binary evidence belongs in the external evidence store with hashes and provenance.
 
 ## Working rule
 
-A working factory artifact may remain temporarily in the preservation branch while its role is being replaced. That does not make it acceptable final upstream content.
+A working factory artifact may remain temporarily in the preservation tag/evidence set while its role is being replaced. That does not make it acceptable final upstream content.
 
 For every artifact establish: exact runtime role; callers and ABI; device/ioctl/MMIO contract; official SDK provenance if any; existing reconstructed-source coverage; owning repository; source verification; target hardware evidence. Remove the blob from the final shipped dependency set only after its contract is replaced.
 
@@ -44,7 +44,7 @@ Firmware and sensor/profile objects:
 
 Exact SHA-256 values, duplicate detection and ownership decisions for all 16 preserved binary paths are recorded in `docs/process/fh8626-firmware-ownership-audit.md`. There are 15 unique payloads because the packaged and source-tree `gc1054_day.bin` files are byte-identical.
 
-The clean Firmware candidate `rework/fh8626v100-clean-integration@c437d6eb62ade81595c20cbb765b8ad10300e3e7` ships none of these factory artifacts. This is architecture cleanup, not proof that every runtime contract has been replaced. The preserved WIP branch remains the recovery source until any still-needed unique payload without an external evidence locator has been externalized.
+The clean Firmware candidate `work/fh8626v100@c437d6eb62ade81595c20cbb765b8ad10300e3e7` ships none of these factory artifacts. This is architecture cleanup, not proof that every runtime contract has been replaced. The preserved WIP tag remains the recovery source until any still-needed unique payload without an external evidence locator has been externalized.
 
 ## Mandatory reverse/recovery backlog
 

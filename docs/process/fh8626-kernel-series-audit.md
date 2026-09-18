@@ -12,9 +12,9 @@ Repository: `ArthurKoba/openipc-linux`.
 
 - verified series base: `fullhan-fh8852v200@ee1ef844294bfa1ff15b2f0522d35c987a16a220`;
 - PR-facing/integration branch: `fullhan-fh8626v100@0dfafa643770d78389e444c03f46f1711662eda6`;
-- isolated OpenIPC MTD correction: `fix/fh8626v100-openipc-mtd-layout@28a923a9d9598a9a4e2c6c0ee4b2eee26698731e`;
-- exploratory reconstruction workspace: `rework/fh8626v100-clean-series@868bdd8ddde7a35c2c744e5706941d5e1f9faadf`;
-- curated staging series: `rework/fh8626v100-final-series@357c2d13e7589db0dbe2bbf89c2ec38b1c036e6e`.
+- isolated OpenIPC MTD correction: `archive/fh8626v100-mtd-fix-20260918@28a923a9d9598a9a4e2c6c0ee4b2eee26698731e`;
+- exploratory reconstruction workspace: `archive/fh8626v100-clean-series-20260918@868bdd8ddde7a35c2c744e5706941d5e1f9faadf`;
+- curated staging series: `work/fh8626v100@357c2d13e7589db0dbe2bbf89c2ec38b1c036e6e`.
 
 The PR-facing branch remains untouched during this audit. The exploratory `clean-series` contains audit-time corrections and is not submission history. The separate `final-series` has already been rebuilt from the verified base with no fixup/audit commits and is the source candidate for owner validation.
 
@@ -75,7 +75,7 @@ The original kernel option `CONFIG_FH8626V100_AJL33PQ0866_MMC` embeds a retail c
 
 The reconstruction uses the hardware-oriented `CONFIG_FH8626V100_SD0_1BIT` option. It selects the proven one-bit SD0 platform data and `SD0_1BIT_NO_WP` mux. The named device profile remains responsible for enabling it.
 
-The clean Firmware candidate no longer carries an AJL fragment at all. The named ANJIA Builder staging profile `rework/fh8626v100-anjia-clean-profile@1ea41ef2...` owns this selection and uses `CONFIG_FH8626V100_SD0_1BIT=y`. The preserved Firmware/Builder snapshots keep the old symbol only as history.
+The clean Firmware candidate no longer carries an AJL fragment at all. The named ANJIA Builder staging profile `work/fh8626v100-anjia@1ea41ef2...` owns this selection and uses `CONFIG_FH8626V100_SD0_1BIT=y`. The preserved Firmware/Builder snapshots keep the old symbol only as history.
 
 ### Clock phase handling
 
@@ -147,7 +147,7 @@ Do not mass-reformat recovered `iopad.h` or unrelated legacy Fullhan code merely
 
 ## Curated final staging series
 
-`rework/fh8626v100-final-series@357c2d13e7589db0dbe2bbf89c2ec38b1c036e6e` contains 13 commits over `fullhan-fh8852v200`:
+`work/fh8626v100@357c2d13e7589db0dbe2bbf89c2ec38b1c036e6e` contains 13 commits over `fullhan-fh8852v200`:
 
 1. `a68a09e` — `clk: fullhan: fix phase field handling`
 2. `0a0dae2` — `pinctrl: fullhan: keep register state in persistent storage`
@@ -190,11 +190,11 @@ For every candidate option, classify it as one of:
 - `UNRESOLVED`: dependency/use must be traced before changing it;
 - `REMOVE`: no target/runtime dependency remains and removal is source/build safe.
 
-The first production config pass is complete and recorded in `docs/process/fh8626-kernel-config-audit.md`. Firmware `rework/fh8626v100-clean-integration@c437d6eb...` contains the resulting source candidate. Further removals require the owner build's resolved `.config` or new runtime evidence; do not mechanically minimize the config and do not copy a "smaller" neighboring config.
+The first production config pass is complete and recorded in `docs/process/fh8626-kernel-config-audit.md`. Firmware `work/fh8626v100@c437d6eb...` contains the resulting source candidate. Further removals require the owner build's resolved `.config` or new runtime evidence; do not mechanically minimize the config and do not copy a "smaller" neighboring config.
 
 ## Remaining gates
 
-1. Owner-side contribution validation of `rework/fh8626v100-final-series` together with Firmware `rework/fh8626v100-clean-integration@c437d6eb...`: repository/kernel checks, resolved `.config`, exact OpenIPC build and final `uImage` measurement.
+1. Owner-side contribution validation of `work/fh8626v100` together with Firmware `work/fh8626v100@c437d6eb...`: repository/kernel checks, resolved `.config`, exact OpenIPC build and final `uImage` measurement.
 2. Update the Firmware AJL kernel fragment from `CONFIG_FH8626V100_AJL33PQ0866_MMC` to `CONFIG_FH8626V100_SD0_1BIT` only when Firmware is switched away from its preserved old kernel patch set to the curated Linux series.
 3. Remove Firmware-side duplicate kernel patches from the eventual upstream Firmware contribution once the Linux branch is authoritative.
 4. Retest behavior-changing source deltas as applicable, with special attention to AXI-DMA registration, before promoting the reconstruction beyond `SOURCE_CONFIRMED / AUDIT`.
