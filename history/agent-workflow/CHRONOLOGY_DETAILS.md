@@ -250,3 +250,34 @@ Standalone `D0238` полосы не исправил. Это вместе с н
 
 Методическая граница: если data-object физически отсутствует в authoritative source, он остаётся unresolved/parameterized; значения не угадываются.
 
+## D13 — Day AWB mode1 и dual-GC1054 lens architecture
+
+`CHAT-013` продолжает ISP/runtime работу после `CHAT-002`, но уже не на уровне общей архитектуры, а на конкретной current-day ветке.
+
+По AWB подтверждено:
+- `CB7B0`, `CA13C` и `CA4F4` используют 9 statistics records (3×3), а не 8;
+- live statistics берутся не из фиксированного `VMM+0x48`, а через `ioctl 0x80046905 → base + offset + 0x48`;
+- `CA4F4` normal path включает validity gates, Q12 channel ratios, 64-bit channel sums, fallback на current triplet, base gains, median selection `C9E20`, temporal/hysteresis mixing и final normalization;
+- normal day path не требует большой неизвестной LUT;
+- создан canonical checkpoint `v4.1.9-awbmode1exact`;
+- hardware activation специально разделена: сначала `diag/shadow`, commit в AWB registers остаётся отдельным gate.
+
+Параллельно уточнены `C9740 → C949C → C9898`: `D2774` оказался integer sqrt, current day path использует 9 values → mean → sqrt, dirty state обновляется только при изменении. `CDD6C` calibration row зафиксирован как 13×int16 с 12 consumed values. Часть таблиц/GOT-backed state ещё оставалась unresolved.
+
+Отдельная sensor/lens ветка сначала ушла в JXF37/JXF37P из-за наличия 1080p vendor drivers и tuning. Эта гипотеза была полезно опровергнута:
+- stock `sensor_probe` конкретной платы выбирает `gc1054_mipi`;
+- VI source — 1280×720;
+- stock 1920×1080 main stream получается через downstream VPSS/VENC upscale;
+- JXF37 I²C target физически не отвечает;
+- реальный stock zoom не вызывает новый `Sensor_Create/init/set_fmt`.
+
+Stock zoom trace показывает lifecycle переключения:
+- wide/default: Lens ID 0, target1, GPIO4=1/GPIO14=0;
+- tele: target2, GPIO4=0/GPIO14=1;
+- перед switch stock останавливает только receive path, затем меняет target/GPIO, возвращает mirror/flip и продолжает stream;
+- sensor driver остаётся GC1054.
+
+Следовательно, для этой board revision рабочая модель — две физические GC1054 с разной оптикой, а JXF37/JXF37P остаются firmware-supported вариантами других ревизий. Это также объясняет, почему ручной pre-bringup GPIO switch не был эквивалентен stock zoom: правильный switch — lifecycle operation внутри уже работающего persistent owner.
+
+Night mode в этом источнике отделён как следующий слой, а не новый sensor mode: тот же GC1054, но другие scene/style, AE limits, saturation/IR-cut state и night-specific branches writers. Day core должен быть закрыт первым, после чего те же функции проходят по night path.
+
