@@ -1,26 +1,26 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_004_IN_PROGRESS`
+Статус: `CHAT_004_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **3**
-- Последний источник: `CHAT-003`
+- Обработано исторических файлов: **4**
+- Последний источник: `CHAT-004`
 - Период последнего источника: **2026-08-26 — 2026-08-27**
-- Следующее действие: завершить анализ `CHAT-004`
+- Следующее действие: выполнить обязательный post-file refresh
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-003 |
+| Направление | Файл | Состояние после CHAT-004 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 3/?? источников обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 18 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 23 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | backfill persistent-owner/hot-reload этапа перед source-derived runtime |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлен A4.2 persistent experiment substrate |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 4/?? источников обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 21 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 27 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлен dequeue/grey-frame/stock-runtime evidence этап перед persistent-owner |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлен A4.1 self-service reverse evidence |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -58,7 +58,7 @@
 | 1 | `CHAT-001` | 2026-08-24 — 2026-08-26 | `DONE` | Первая FH8626 bring-up фаза: safe RAM boot, OpenIPC userspace, vendor media stack, ISP/PAE/H.264, dev-loop SSH, checkpoints/handoff; выявлен баланс пошаговости, transport/state/context ошибки |
 | 2 | `CHAT-002` | 2026-08-27 | `DONE` | Source-derived ISP runtime, формальный one-archive delivery protocol, self-guarded owner launch, hot-plugin loop, workspace authority cleanup, role-specialized parallel reverse |
 | 3 | `CHAT-003` | 2026-08-26 — 2026-08-27 | `DONE` | Исторический backfill: v3.8→v4.0.4, persistent owner/hot reload, deterministic test lessons, boot automation, AE feedback, отказ от live MMIO rollback; по source numbering пропущенный/смещённый #2 считается закрытым и отдельно не ожидается |
-| 4 | `CHAT-004` | 2026-08-26 — 2026-08-27 | `IN_PROGRESS` | Переход от dequeue reverse к доказанному live H.264, grey-frame localization, stock runtime evidence bundle и более зрелому full-artifact reverse workflow |
+| 4 | `CHAT-004` | 2026-08-26 — 2026-08-27 | `DONE` | Dequeue/release semantics и движущаяся stream queue; grey-frame локализован выше encoder/upscale; full Apollo + stock runtime bundle; переход к self-service reverse. Поздняя часть частично перекрывает CHAT-003 и использована только как дополнительное evidence |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -156,6 +156,39 @@
 
 Живые ветки, релевантные текущему проекту, также существуют в ожидаемой topology: reverse `main/work/fh8626v100`, Firmware shared/runtime lines, Builder `work/fh8626v100-anjia`, Linux `fullhan-fh8626v100/work/fh8626v100`, Divinus `work/fh8626v100`, U-Boot native + stock-compatible lines.
 
+## Что CHAT-004 добавил к картине
+
+### Новые уникальные ошибки
+- команды должны быть даны для фактического terminal lane: WSL / UART / U-Boot;
+- recursive search должен быть заранее ограничен, иначе binary/web noise засоряет вывод и контекст;
+- baseline-запрет на физический перенос shell-команд через `\` реально нарушался в этой выгрузке.
+
+### Сильные подтверждения существующих классов
+- adaptive granularity: опасное/ветвящееся — пошагово, routine build→scp→run — одним этапом;
+- не использовать Python вместо простых стандартных инструментов без необходимости;
+- не просить заново artifact, уже переданный в текущую историю;
+- handoff/artifact mutation только в согласованном scope;
+- execution-first: после достаточного evidence переходить к реализации, а не продолжать мелкие A/B.
+
+### Новые улучшения
+- полный searchable disassembly/binary bundle вместо серии ручных `objdump/grep`;
+- один comprehensive read-only stock evidence capture с последующим offline analysis;
+- стандартные domain tools (`ffmpeg/ffprobe`) вместо временных parser-ов;
+- явное разделение WSL / UART / U-Boot команд.
+
+### Технический переход
+`CHAT-004` закрывает gap раннего H.264: queue consume исправлен через точную semantics `PAE release + MEDIA query`, после чего серый кадр локализован выше encoder/VPU. Далее найдены GC1054 scene profiles и stock `LoadIspParam → Run` lifecycle, что подготовило более зрелый ISP runtime reverse в `CHAT-003/002`.
+
+### Пересечение источников
+Поздняя часть `CHAT-004` содержит материал, уже наблюдавшийся в `CHAT-003` (v3.x/v4.0.x, persistent owner, boot automation, AE probes). Эти эпизоды не добавлены второй раз в хронологию и используются только как повторное подтверждение соответствующих E/I-классов.
+
+### Исторические переходы, которых всё ещё нет
+- Google Drive как evidence store;
+- GitHub как project authority;
+- Ghidra/MCP как shared reverse workspace.
+
+Их нельзя датировать по первым четырём источникам.
+
 ## Следующее действие
 
-Получить следующий предоставленный исторический файл. Отсутствующий/смещённый source `#2` отдельно не восстанавливать и не ожидать.
+Выполнить обязательный post-file refresh. После него ожидать следующий исторический источник.
