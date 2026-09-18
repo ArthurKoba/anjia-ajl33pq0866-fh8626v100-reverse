@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_027_POST_REFRESH_PENDING`
+Статус: `READY_FOR_NEXT_SOURCE`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **27**
 - Последний источник: `CHAT-027`
 - Период последнего источника: **2026-08-28 — 2026-08-30**
-- Следующее действие: post-file refresh + 27-file live-state refresh
+- Следующее действие: перейти к `CHAT-028` (source #29)
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -905,6 +905,31 @@ Live work tips на момент refresh остались:
 ### Technical/agentic transition
 Static reverse is turned into explicit E1–E7 evidence requirements, Agent 4 supplies target evidence, and Agent 1 performs a narrow second pass. Watchdog, human detection, physical RAW/CFA, color/HAL, illumination and dev_ctrl are substantially closed. The source ends before optional WDR/GME archaeology is fully finalized, so CHAT-027 itself does not justify “all stock reverse complete”.
 
+## 27-file live-state refresh после CHAT-027
+
+Read-only проверены current `main:STATE.md`, `main:TASKS.md`, `main:AGENTS.md` и live branches reverse/Firmware/Builder/Linux/Divinus/U-Boot.
+
+Современный authority endpoint не изменился:
+- GitHub — current camera-level source/docs/contracts/state;
+- Google Drive — heavy/unique primary evidence;
+- Ghidra MCP — canonical mutable reverse workspace.
+
+Current coordination docs остаются на `STATE.md@a0022eb...`, `TASKS.md@4f57717e...`, `AGENTS.md@3f880878...`.
+
+Live work tips:
+- reverse work `d6e842dd...`;
+- Firmware core `80169887...`, Divinus `bc09d12c...`, Majestic `aabf18a6...`;
+- Builder ANJIA `7db8cc1f...`;
+- Linux work `357c2d13...`, hardware-facing `0dfafa64...`;
+- Divinus work `50e3e300...`;
+- U-Boot `7ac0aa7e...` / `49fe46e9...`.
+
+Builder `master` moved to `8984a65d...`, but active FH8626 development line is unchanged. Audit branch does not reconcile modern coordination drift.
+
+Исторический `CHAT-027` всё ещё работает через archive/handoff + manual user routing. Текущая GitHub/Drive/Ghidra authority model не backdate'ится.
+
+Frozen `BASELINE_PROMPT.md` SHA остаётся `1358cffd95f275069bd1eac6ad3a31d700c939aa`.
+
 ## Следующее действие
 
-Выполнить post-file refresh и expanded live-state refresh после 27 источников. Затем перейти к `CHAT-028` (source #29).
+Перейти к `CHAT-028` (source #29).
