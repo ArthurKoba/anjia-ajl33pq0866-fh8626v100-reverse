@@ -209,7 +209,7 @@ reproducible source implementations.
 
 Repository: `ArthurKoba/openipc-builder`.
 
-- active branch: `work/fh8626v100-anjia@a02d325eef241ebacf2734ebb77cba039a77df2d`
+- active branch: `work/fh8626v100-anjia@ee0687c06b2d80285defe7da14596041ffd221ca`
 - one physical device tree with composed `_divinus`, `_majestic` and
   `_diag` variants
 - no live separate Majestic Builder branch
