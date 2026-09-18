@@ -1668,6 +1668,146 @@ Divinus-side `/image.jpg` / `/mjpeg` можно подготовить неза�
 
 Так feature surface можно развивать заранее без создания второго hardware owner или software decode→reencode workaround.
 
+### I-119 — Hardware-proven contract является protected baseline
+Статус: `OBSERVED`.
+
+`CHAT-032` показывает, что compile/host/selftest и красивые runtime counters не могут понизить значение уже полученного physical proof. Если новый candidate расходится с FOV/image/target behavior, first-class действие — вернуться к exact known-good contract и минимально изолировать delta.
+
+Практическое правило: supersede аппаратно подтверждённого механизма допускается только новым physical evidence с не меньшей строгостью.
+
+### I-120 — Failed release branch должен превращаться в negative-evidence handoff
+Статус: `OBSERVED`.
+
+После провала Agent 7 полезным результатом оказался не очередной «исправленный release», а аварийный handoff:
+- R13–R18 явно `quarantine/do-not-merge`;
+- опровергнутые hypotheses перечислены;
+- рабочие findings отделены от неработавшего code;
+- причины regression и нарушения process-contract сохранены;
+- downstream orchestrator получает cherry-pick candidates, а не ложный canonical snapshot.
+
+Провальная ветка поэтому сохраняет инженерную ценность, не заражая production lineage.
+
+### I-121 — Ghidra semantic reverse DB вместо flat-objdump workflow
+Статус: `OBSERVED`.
+
+`CHAT-033` формулирует новый основной static workflow:
+`binary → Ghidra analysis → decompiled C + CFG + XREF + callers/callees + globals/types/strings + unresolved edges → agent interpretation → ASM confirmation`.
+
+Для каждой функции важен не гигантский TXT, а адресуемый semantic record с confidence/provenance. Знания о prototypes/structures/names должны улучшать последующие decompilations, а не жить только в заметках чата.
+
+### I-122 — Cross-binary knowledge layer связывает userspace ↔ ioctl ↔ kernel/modules ↔ hardware
+Статус: `OBSERVED`.
+
+Ghidra хорошо распространяет имена внутри одной программы, но Apollo, kernel и .ko остаются разными binaries. Поэтому поверх per-program analysis нужен общий index:
+- symbols/types;
+- ioctls/device nodes;
+- cross-binary links;
+- claims/conflicts;
+- unresolved relations.
+
+Это позволяет одному агенту назвать функцию/contract, а другим использовать знание без повторного reverse. Git/snapshot служат долговременной фиксацией, а не единственным realtime coordination mechanism.
+
+### I-123 — WSL-only project root + README entrypoint + three storage classes
+Статус: `CONSOLIDATED`.
+
+В `CHAT-033` постепенно нормализуется local architecture: WSL как единственная рабочая среда, `README.md` как обязательная точка входа, компактный working layer, heavy evidence и disposable `tmp`. `CHAT-037` подтверждает это уже практической очисткой project boundary и отделением тяжёлых/воспроизводимых данных.
+
+OpenIPC repos отделяются от reverse evidence; TFTP остаётся transport/staging; transport archives не становятся внутренним storage format.
+
+### I-124 — Complex subsystem: analysis → implementation → independent integration audit
+Статус: `OBSERVED`.
+
+`CHAT-035` показывает правильную последовательность для сложного stateful блока:
+1. reverse/contract analysis;
+2. отдельная source implementation;
+3. unit/negative/sanitizer checks;
+4. full owner preflight по init/run/error/stop/restart/mode-switch;
+5. independent повторный аудит;
+6. только затем `DONE` и handoff.
+
+Именно пропуск шага 4 сначала дал ложный `5/5 COMPLETE`, хотя component code выглядел корректно.
+
+### I-125 — Analyst готовит code candidate, integrator владеет подключением и target acceptance
+Статус: `OBSERVED`.
+
+В `CHAT-035` пользователь явно разделяет роли:
+- reverse/analysis agent восстанавливает ABI/algorithms, пишет C/H, host-checks, diff и integration notes;
+- integration-agent подключает это к актуальному owner/OpenIPC tree, собирает ARM и валидирует target;
+- analyst не обязан тащить на себя deployment и не должен считать host PASS hardware PASS.
+
+Так тяжёлый reverse можно выполнять глубоко и автономно, а production line не блокируется экспериментальным кодом.
+
+### I-126 — One canonical workspace; competing ACTIVE trees запрещены
+Статус: `OBSERVED`.
+
+`CHAT-036` сводит несколько `ACTIVE/ACTIVE_NEW/OLD_INCOMPLETE` деревьев в одну рабочую директорию. Historical/raw provenance остаётся внутри специально маркированной history/evidence структуры, но не конкурирует с current source.
+
+Это устраняет ambiguity «какой C/H настоящий» и делает archive recovery исключением, а не обычным способом навигации.
+
+### I-127 — FILE_INDEX как машинная карта с semantic metadata и deep-index layer
+Статус: `OBSERVED`.
+
+Индекс становится не просто checksum manifest. Для normal layer фиксируются:
+`path / size / mtime / mode / hash / kind / description / use_when / required / duplicate group`.
+
+Для огромного reverse corpus используется отдельный deep index, на который ссылается верхний индекс. Обычный `index` сохраняет ручные semantic поля; `verify-index` может force-rehash. Индекс обновляется после пакета файловых изменений, а не в конце длинной сессии.
+
+### I-128 — Recovery checkpoint и handoff/continuation — разные artifacts
+Статус: `CONSOLIDATED`.
+
+После correction в `CHAT-036` checkpoint определяется как recovery snapshot текущего workspace после значимого этапа/длительной сессии, хранится вне canonical tree и должен реально сохраняться внешне. Handoff/continuation нужен для смены чата/агента. `CHAT-037` подтверждает модель реальным Drive-backed checkpoint layer.
+
+Resume сначала сверяет filesystem с последним known index и не должен перезаписывать повреждённое состояние.
+
+### I-129 — Semantic startup: automation помогает, но агент обязан перечитать контекст сам
+Статус: `OBSERVED`.
+
+Старт новой итерации делится на два слоя:
+1. integrity preflight — index/files/permissions/links;
+2. manual semantic read — README → STATE → PROGRESS → referenced evidence/docs → финальный reread текущей задачи.
+
+Это одновременно context restoration и documentation audit. Скрипт не должен симулировать понимание проекта.
+
+### I-130 — Installed tooling и generated build state живут вне transferable project
+Статус: `OBSERVED`.
+
+`CHAT-037` переносит Ghidra installation в system-style location и Ghidra project DB в отдельный local store; project сохраняет только reverse exports/logs/scripts/knowledge. Аналогично Buildroot `output/dl/build` рассматриваются как воспроизводимый generated state.
+
+Это резко уменьшает handoff и делает project boundary семантической.
+
+### I-131 — Exact-content reconciliation сохраняет уникальный corpus и убирает transport duplicates
+Статус: `OBSERVED`.
+
+При очистке старых handoff/archive деревьев пользователь запрещает удалять их «по имени» или целыми каталогами. Метод:
+1. inventory archive objects;
+2. exact-content grouping;
+3. unpack unique containers один раз в staging;
+4. hash normal files;
+5. сравнить с active corpus;
+6. materialize только реально unique contents;
+7. сохранить provenance/path map;
+8. только затем удалить redundant transport copies.
+
+Content hashes здесь внутренний machine mechanism для дедупликации; это не отменяет правило не засорять user-facing transfer SHA без запроса.
+
+### I-132 — Upload limit решается semantic active/history split, а не byte-split
+Статус: `OBSERVED`.
+
+Когда полный пакет превышает лимит, `CHAT-037` предлагает не `split` произвольных byte parts, а разные storage roles:
+- ACTIVE — current source/docs/reverse для обычной работы;
+- HISTORY/HEAVY — legacy unique corpus, редко нужный;
+- tmp/build/cache — не транспортируются.
+
+Архив сохраняет provenance/mtime, но возраст файла не становится единственным критерием authority.
+
+### I-133 — Не переписывать существующий platform backend без product-level необходимости
+Статус: `OBSERVED`.
+
+После сравнения native Divinus HAL и запуска Majestic FH8852-family стратегия меняется: собственный Fullhan HAL не выбрасывается, а замораживается как reverse/reference/fallback. Product path проверяет более дешёвый compatible backend по реальным gates `VI → VENC → stable RTSP → ISP/control`.
+
+Это anti-sunk-cost pattern: глубокий reverse сохраняется как знание, но product engineering выбирает минимальный путь, если existing family implementation обеспечивает необходимые контракты.
+
+
 ## Исходные этапы, ещё не подтверждённые
 
 `CHAT-010` является прямым acceptance-тестом этого принципа: новый агент по handoff сразу продолжает с dequeue boundary, не повторяет sensor/ISP/H.264 bring-up и использует указанные checkpoint paths/constraints. Handoff реально переносит инженерное состояние между чатами.
