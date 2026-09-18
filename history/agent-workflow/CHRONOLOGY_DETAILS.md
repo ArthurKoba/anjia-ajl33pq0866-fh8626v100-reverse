@@ -437,3 +437,22 @@ Sensor callback capture доказал, что второй zoom в этом с�
 Final Agent 2 Task2 для current GC1054 day был завершён с reference/selftest и owner-parity audit. Integration priority: APC/CDD6C → active NR3D/D0FEC → dynamic LTM D0630/D0B2C.
 
 Отдельный методический результат: static executable disassembly и runtime mutable state — разные evidence layers. Runtime heap не следует массово дизассемблировать как ARM code; mutable pointers/tables нужно связывать с доказанными ARM consumers.
+
+## D18 — Controlled wide → tele → wide runtime validation
+
+`CHAT-018` — расширенный export той же Agent 1 conversation, чей префикс перекрывает `CHAT-016`. В аудит добавлен только уникальный tail.
+
+Controlled runtime capture подтвердил:
+- lens target sequence: `1 → 2 → 2 → 1`;
+- lens switch сам по себе не меняет day/night profile;
+- AE context и sensor callback table остаются общими;
+- отдельного AE state на tele не создаётся;
+- AE history продолжается через switch;
+- tele при том же profile уходит к существенно большей integration/gain;
+- после возврата wide integration/gain возвращаются близко к исходному wide state;
+- статически доказанный transient `intt=64/gain=64` слишком короткий для ручного `dd`, но это не блокирует implementation contract.
+
+После validation область оформлена как implementation-ready Task 3 supplement: runtime sequence, startup-vs-runtime distinction, GPIO control table, day/night/light/audio boundaries и safe integration order.
+
+Новый heavy reverse не потребовался; remaining optional validation — только измерение transient/frame-gap с более точной instrumentation.
+
