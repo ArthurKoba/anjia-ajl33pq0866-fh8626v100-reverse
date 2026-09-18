@@ -1531,6 +1531,49 @@ OpenIPC productization discussion в `CHAT-028` отделяет две цели
 
 Board compatibility проверяется отдельно; same SoC не считается основанием для flash.
 
+### I-107 — Verification evidence belongs to exact bytes/commit, not filename or design intent
+Статус: `OBSERVED`.
+
+`CHAT-029` demonstrates the correct response after artifact reconstruction:
+- original apply-checked patch is lost;
+- reconstructed package is not allowed to inherit the old PASS;
+- status is downgraded to `RFC/rebase-required`;
+- next integration must re-run the applicable gate.
+
+This generalizes to builds, patches, binaries and generated bundles: provenance continuity is part of verification.
+
+### I-108 — Fixed byte-level sidecar ABI decouples 32/64-bit producer/consumer layouts
+Статус: `OBSERVED`.
+
+Agent 3 replaces an implicit C-struct transport with a fixed wire format for encoded frames. The goal is to eliminate padding/alignment dependence between target ARM producer and host/frontend consumer.
+
+The broader rule: cross-process/cross-architecture boundaries should define explicit serialized fields/versioning/generation, not share native C layout by assumption.
+
+### I-109 — Sidecar-first productization preserves the known-good hardware owner
+Статус: `OBSERVED`.
+
+Instead of immediately making Divinus/Majestic own FH8626 hardware, `CHAT-029` builds:
+`single known-good owner → copied encoded frames → sidecar transport → RTSP/Divinus`.
+
+This creates a low-risk productization milestone:
+- hardware lease/release semantics stay in one owner;
+- frontend development can proceed independently;
+- target streaming can be validated before native HAL ownership;
+- native HAL remains a later migration, not a prerequisite.
+
+### I-110 — Buildroot/OpenIPC staging should be source-only and repo-boundary aware
+Статус: `OBSERVED`.
+
+Agent 3 prepares real source-only packages/staging for runtime and ABI probe while explicitly excluding generated ELF, stock `.ko/.so/.bin` and fake firmware images.
+
+The staging separates:
+- generic FH8626 platform/runtime;
+- camera/board-specific support;
+- engineering profile;
+- upstream-clean profile.
+
+This is the first source-level productization bridge from reverse artifacts to intended OpenIPC repository ownership.
+
 ## Исходные этапы, ещё не подтверждённые
 
 `CHAT-010` является прямым acceptance-тестом этого принципа: новый агент по handoff сразу продолжает с dequeue boundary, не повторяет sensor/ISP/H.264 bring-up и использует указанные checkpoint paths/constraints. Handoff реально переносит инженерное состояние между чатами.
