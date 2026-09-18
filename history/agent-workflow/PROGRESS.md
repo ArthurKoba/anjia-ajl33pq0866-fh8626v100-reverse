@@ -1,26 +1,26 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_013_IN_PROGRESS`
+Статус: `CHAT_013_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **12**
-- Последний источник: `CHAT-012`
-- Период последнего источника: **2026-08-26**
-- Следующее действие: завершить анализ `CHAT-013`
+- Обработано исторических файлов: **13**
+- Последний источник: `CHAT-013`
+- Период последнего источника: **2026-08-27**
+- Следующее действие: выполнить обязательный post-file refresh
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-012 |
+| Направление | Файл | Состояние после CHAT-013 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 12/?? уникальных источников обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 29 tracked classes/directions; CHAT-012 новых ID не добавил из-за 98% overlap с CHAT-004 |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 42 tracked improvements/directions; добавлен I-042 productionization behind stable boundary |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | уникальный хвост CHAT-012 добавлен как ранняя daemon→Majestic design boundary; повтор CHAT-004 не дублирован |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | A4.2 persistent experiment substrate переведён в CONSOLIDATED |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 13/?? уникальных источников обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 30 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 45 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D13: exact-ish day AWB mode1, JXF37 superseded branch, dual-GC1054 lens lifecycle |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.7 milestone-driven autonomous reverse loop |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -67,7 +67,7 @@
 | 10 | `CHAT-010` | 2026-08-26 | `DONE` | Успешное продолжение из reproducible handoff без повторного bring-up; PTY cold-boot closure; exact `PAE 5011` release + `4D05/4D06` query semantics; full-disassembly self-service; livecapture source ordering fix (hardware retest pending); отдельная SSH regression с отклонённым ControlMaster workaround |
 | 11 | `CHAT-011` | 2026-08-24 — 2026-08-26 | `IN_PROGRESS` | Divergent branch: общий префикс с CHAT-001 примерно до L32775, далее отдельная ветка ISP/VPU/H.264/dev-loop; анализируется только уникальный хвост |
 | 12 | `CHAT-012` | 2026-08-26 | `DONE` | Почти полный duplicate CHAT-004: exact common prefix 8392/8556 строк (~98.1% файла), поэтому повторный dequeue/grey/RAW evidence не пересчитывался. Уникальный хвост: stage summary после RAW-DMA breakthrough и решение начать productionization параллельно, сохранив single-owner `fh8626_daemon` boundary перед Majestic |
-| 13 | `CHAT-013` | 2026-08-27 | `IN_PROGRESS` | Поздний ISP/AWB + dual-lens branch: CA4F4/C949C/C9898 day reverse, AWB stats fix, JXF37 false lead, stock zoom trace, two-GC1054 lens switching, night-mode scope и living workspace/handoff pressure |
+| 13 | `CHAT-013` | 2026-08-27 | `DONE` | Day AWB mode1 сильно восстановлен и переведён в diag/shadow; hardware identity очищена от JXF37 false lead; stock runtime подтверждает GC1054 1280×720 + downstream 1080 upscale и dual-GC1054 target1/target2 lens lifecycle; сформулирован milestone-driven autonomous reverse contract |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -533,6 +533,36 @@ Authority endpoint не изменился:
 Исторический вывод `CHAT-012` от этого не меняется: в августе это была только ранняя design boundary `single owner daemon → downstream Majestic`, а не современная реализация.
 
 
+## Что CHAT-013 добавил к картине
+
+### Новый error-class
+- E-030: наличие vendor driver/tuning/format доказывает поддержку firmware-варианта, но не физическое наличие sensor на конкретной board revision.
+
+### Усиленные существующие классы
+- E-003/E-008: снова всплыли неверный Windows path, забытый boot/mount state и повторный запрос уже имеющегося authoritative Apollo;
+- E-011: JXF37 был слишком рано повышен из software capability до hardware hypothesis;
+- E-016 теперь `CONSOLIDATED`: пользователь прямо потребовал автономной работы до milestone и меньше промежуточной экспозиции;
+- E-022: повторный запрос Apollo при уже существующем authoritative artifact;
+- E-023: local reverse progress без module-level map снова воспринимался как слишком медленный;
+- E-026/E-027: host utilities и длинные UART paste-blocks снова показали ограничения target lane.
+
+### Новые improvements
+- I-043: milestone-driven autonomous reverse loop — внутренне проверять/отбрасывать гипотезы и возвращаться к оператору только при blocker или substantial milestone;
+- I-044: firmware capability и hardware identity — разные evidence levels;
+- I-045: closed-loop ISP algorithm сначала проходит offline self-test → live shadow/diag → gated hardware commit.
+
+### Технический вклад
+- day `CA4F4` mode1 существенно восстановлен на 9 AWB-stat records;
+- правильный live stats mapping идёт через ISP ioctl offset, а не фиксированный VMM offset;
+- `C949C/C9898` day-path и integer-sqrt/state contract заметно уточнены;
+- JXF37/JXF37P остаются поддерживаемыми firmware variants, но не current AJL33PQ0866 hardware path;
+- stock подтверждает GC1054 1280×720 как source и 1920×1080 как downstream upscale;
+- stock zoom подтверждает две GC1054/lens targets: target1 wide и target2 tele, переключаемые GPIO4/GPIO14 внутри уже работающего media lifecycle;
+- night mode отделён как следующий branch того же GC1054/ISP runtime, а не отдельный sensor mode.
+
+### Agentic role
+Впервые пользователь формулирует почти готовый autonomous-reverse contract: глубокий анализ и hypothesis checking выполняются внутри агента, user-facing сообщения — только по крупным завершённым этапам или реальным hardware blockers. Это ещё file/handoff-era, но уже явный предшественник будущего agentic workflow.
+
 ## Следующее действие
 
-Получить следующий уникальный исторический источник. Следующая плановая расширенная live-state сверка — после пятнадцатого уникального файла либо раньше при крупном противоречии/инфраструктурном переходе.
+Выполнить обязательный post-file refresh. После него ожидать следующий уникальный исторический источник. Плановая расширенная live-state сверка остаётся после пятнадцатого уникального файла.
