@@ -37,7 +37,7 @@
 Позднее этот принцип развивается в full searchable bundles, curated workspace и внешние authority-системы.
 
 ### A1 — Локальный workspace + checkpoint/handoff
-Статус после `CHAT-001` + `CHAT-008` + `CHAT-009`: `CONSOLIDATED`.
+Статус после `CHAT-001` + `CHAT-008` + `CHAT-009` + `CHAT-010`: `CONSOLIDATED`.
 
 По мере роста количества helper binaries, dumps и reverse-наработок появился устойчивый локальный workspace и checkpoint-наборы. Перед reboot начали сохранять состояние, а к концу чата — собирать воспроизводимый handoff.
 
@@ -48,6 +48,8 @@
 `CHAT-008` показывает практическую ценность локального checkpoint: после очистки runtime `/tmp` рабочие sensor/ISP/H.264 helper'ы находят в `checkpoints/openipc-20260825` и переиспользуют без повторной реконструкции. Это уже persistent project state, хотя ещё только на машине пользователя.
 
 `CHAT-009` доводит критерий handoff до воспроизводимости: при лимите контекста мало пересказать findings — нужно перечислить canonical files/directories, reverse/disassembly/memory evidence и exact build/transfer/run recipes, чтобы следующий агент продолжил без скрытого знания.
+
+`CHAT-010` — первый прямой acceptance-тест этого handoff: новый агент сразу продолжает с dequeue boundary, не возвращается к sensor/ISP/H.264 bring-up и использует сохранённые checkpoint paths и safety constraints как рабочее состояние.
 
 ### A1.5 — Идея repository-backed workflow
 Статус после `CHAT-007`: `OBSERVED`, но ещё не внедрено как authority.
@@ -83,7 +85,7 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 `CHAT-009` показывает, что operational channel нужно оптимизировать как инженерную подсистему: network readiness, TCP port, SSH banner, host key, entropy и PTY диагностируются как отдельные boundaries, а не как одно расплывчатое «SSH не работает».
 
 ### A4.1 — Self-service reverse evidence
-Статус после `CHAT-004`: `OBSERVED`.
+Статус после `CHAT-004` + `CHAT-010`: `CONSOLIDATED`.
 
 В начале этапа reverse всё ещё требовал серии ручных команд: пользователь запускал `objdump/grep`, возвращал очередной диапазон, после чего агент просил следующий.
 
@@ -95,6 +97,8 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 Агент получил возможность самостоятельно искать xrefs/call chains и возвращаться к пользователю уже только за hardware evidence или target-only экспериментом.
 
 Это ранний шаг от **user-mediated reverse lookup** к будущему shared reverse workspace: источник истины ещё передаётся файлами, но пользователь перестаёт выполнять каждый поисковый запрос агента.
+
+`CHAT-010` повторяет модель уже для `enc.ko` и `media_process.ko`: пользователь один раз генерирует full disassembly/symbols/sections, после чего агент самостоятельно закрывает ioctl mapping и queue semantics без новых ручных диапазонов.
 
 ### A4.2 — Persistent experiment substrate
 Статус после `CHAT-003`: `OBSERVED`.
@@ -126,6 +130,8 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 
 Это всё ещё не автономная агентная система: пользователь по-прежнему является маршрутизатором контекста и архивов между чатами.
 
+В `CHAT-010` прошлый агент становится fallback, а не основной continuity channel: сначала используются handoff/checkpoint/artifacts, и только отсутствующий уникальный факт предполагается уточнять через пользователя у предыдущего агента.
+
 Главный урок: handoff должен быть не «всё подряд», а **доказанные факты + gaps + reproduction path + next boundary**.
 
 ### A4.6 — Role-specialized agent pipeline
@@ -156,7 +162,7 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 
 `CHAT-009` особенно хорошо показывает предел ручного режима: сложные UART paste-блоки повреждаются, пользователь вынужден вручную восстанавливать process/kernel state и отдельно просит прекратить микрошаги. Это сильный исторический аргумент в пользу будущего direct agent workspace/operational tooling.
 
-## Уроки CHAT-001/002/003/004/005/006/007/008/009 для будущей agentic-системы
+## Уроки CHAT-001/002/003/004/005/006/007/008/009/010 для будущей agentic-системы
 
 1. **Текущее runtime state должно быть внешним фактом, а не памятью диалога.** Потери «stock или OpenIPC?» породили дорогие ошибки.
 2. **Agent handoff — необходим, но не должен становиться гигантской свалкой.** Нужны краткая карта и подробные приложения.
@@ -190,6 +196,9 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 30. **Сложный control flow нельзя делать UART-интерфейсом.** Multi-line `if`, regex, quoting и critical MMIO/process logic должны жить в переданном script/helper; serial shell — для короткого запуска и чтения результата.
 31. **Handoff должен проходить reproducibility test.** Новый агент должен суметь найти canonical artifacts и повторить build/transfer/reverse/run без неявной памяти автора.
 32. **Infrastructure failure нужно локализовать по boundaries.** Network up, TCP listen, protocol banner, auth и PTY — разные gates; измерять их отдельно дешевле, чем менять несколько подсистем сразу.
+33. **Handoff должен позволять начать работу с текущего blocker без рекапитуляции проекта.** CHAT-010 показывает, что это проверяемое свойство, а не просто качество текста.
+34. **Прошлый агент — fallback для уникального gap, не штатная база данных.** Сначала использовать текущие artifacts и handoff, потом при необходимости вытаскивать отсутствующий provenance/context.
+35. **Свежая regression observation важнее старого удобного объяснения.** Если пользователь знает, что до наших изменений путь был быстрым/рабочим, сначала изолировать delta, а не накрывать проблему workaround-ом.
 
 ## Следующие исторические переходы, которые нужно искать
 
