@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_018_POST_REFRESH_PENDING`
+Статус: `READY_FOR_NEXT_SOURCE`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **18**
 - Последний источник: `CHAT-018`
 - Период последнего источника: **2026-08-27 — 2026-08-28**
-- Следующее действие: post-file refresh + 18-file live-state сверка
+- Следующее действие: перейти к `CHAT-019`
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -698,6 +698,24 @@ The handoff starts evolving from a transport archive into a mapped local workspa
 - I-048 experiment state-machine повышен до CONSOLIDATED: baseline/immediate/settled/restore capture реально помог отделить transient от устойчивого state.
 - Новых уникальных error-классов нет.
 
+## 18-file live-state refresh после CHAT-018
+
+Read-only проверены current `main:STATE.md`, `main:TASKS.md`, `main:AGENTS.md` и live branches reverse/Firmware/Builder/Linux/Divinus/U-Boot.
+
+Современная authority-модель прежняя: GitHub current source/state/contracts, Google Drive heavy evidence, Ghidra MCP mutable reverse workspace.
+
+Live work tips снова ушли вперёд относительно части coordination locators:
+- reverse `work/fh8626v100@d6e842dd...`;
+- Firmware Divinus `bc09d12c...`, Majestic `aabf18a6...`, shared core `80169887...`;
+- Builder ANJIA `7db8cc1f...`;
+- Divinus `work/fh8626v100@50e3e300...`;
+- Linux work остаётся `357c2d13...`;
+- U-Boot lines остаются `7ac0aa7e...` / `49fe46e9...`.
+
+Current `STATE.md@a0022eb...` не отражает все эти newer work tips. В audit branch ничего не исправлялось; это отдельный coordination-reconciliation debt.
+
+Историческая граница сохранена: эти modern refs не используются как доказательство состояния августа 2026.
+
 ## Следующее действие
 
-Выполнить обязательный post-file refresh и expanded live-state сверку после 18 источников. Затем перейти к `CHAT-019`.
+Перейти к `CHAT-019`. Следующая плановая expanded live-state сверка — после `CHAT-021` либо раньше при крупном инфраструктурном переходе.
