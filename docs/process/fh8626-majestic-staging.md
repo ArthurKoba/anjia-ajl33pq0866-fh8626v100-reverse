@@ -15,11 +15,11 @@ Majestic officially supports FH8626V100.
 ## Current repository checkpoint
 
 - Firmware core: `ArthurKoba/openipc-firmware/work/fh8626v100@80169887`
-- Firmware Majestic: `ArthurKoba/openipc-firmware/work/fh8626v100-majestic@cf4c6c47`
+- Firmware Majestic: `ArthurKoba/openipc-firmware/work/fh8626v100-majestic@aabf18a6`
 - Firmware Divinus composition: `ArthurKoba/openipc-firmware/work/fh8626v100-divinus@255b8c8d`
-- Builder: `ArthurKoba/openipc-builder/work/fh8626v100-anjia@dc7ddabf`
+- Builder: `ArthurKoba/openipc-builder/work/fh8626v100-anjia@7db8cc1f`
 - Linux staging: `ArthurKoba/openipc-linux/work/fh8626v100@357c2d13`
-- Divinus peer implementation: `ArthurKoba/openipc-divinus/work/fh8626v100@875e0697`
+- Divinus peer implementation: `ArthurKoba/openipc-divinus/work/fh8626v100@809561bd`
 - U-Boot native direction: `ArthurKoba/u-boot-fullhan/fh8626v100-mainline@7ac0aa7e`
 - Cross-agent coordination: reverse issue #3.
 
@@ -153,6 +153,8 @@ sensor plug-ins are installed.
 
 ## Sensor / MIPI
 
+Detailed callback evidence: `docs/process/fh8626-majestic-sensor-abi.md`.
+
 The original sensor failure is closed architecturally:
 
 - FH8852 public sensor callback object: 0x7c bytes;
@@ -161,8 +163,7 @@ The original sensor failure is closed architecturally:
 - the compatibility facade presents the FH8852 shape and translates recovered
   operations onto the FH8626 sensor contract.
 
-The active GC1054/MIPI path is source-owned. Archived vendor GC1054/MIPI blobs
-must not be reintroduced as fallback.
+The active GC1054/MIPI path is source-owned. The FH8852-shaped 0x7c callback table is typed and complete except the deliberate reserved +0x48 slot; no permissive sensor callback stubs remain. AE base/current frame semantics, register output-pointer ABI, CommonIf separation and self-contained sensor connect probing were rechecked against three FH8852 donors plus stock FH8626 GC1054/libispcore. Archived vendor GC1054/MIPI blobs must not be reintroduced as fallback.
 
 ## VPSS / VENC / stream
 
@@ -235,7 +236,7 @@ verified independently in Ghidra against `isp.ko:vpu_set_logov2`:
 - global selector 0 graph index: 0..1;
 - channel selectors 1/2 SET graph index: 0..3; channel GET graph index: 0..4.
 
-Firmware Majestic `cf4c6c47` now enforces those limits before issuing the
+Firmware Majestic `aabf18a6` now enforces those limits before issuing the
 native ioctl. This is a shared native contract, not a Divinus-specific policy.
 
 ## Audio
