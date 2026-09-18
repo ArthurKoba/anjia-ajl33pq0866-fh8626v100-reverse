@@ -1,204 +1,425 @@
 # FH8626V100 Majestic staging
 
-Status: `OFFLINE_PORT_COMPLETE / HISTORICAL_CONTROL_PLANE_HARDWARE_PASS / NEW_BUILD_AND_HARDWARE_PENDING`.
+Status: `FULL_FEATURE_OFFLINE_CLOSURE / BUILD_GATE_READY / HARDWARE_PENDING`
 
 Checked: 2026-09-18.
 
-This document is the coordination authority for the FH8626V100 Majestic direction. The goal of the current branch is **not** to finish the FH8626 media port. It preserves the proven Majestic control-plane experiment in a cleaner build architecture so Builder can reproduce it on top of the current FH8626 core.
+This document is the camera-level coordination authority for the FH8626V100
+Majestic direction. The active product experiment runs the FH8852V200 Majestic
+userspace on FH8626V100 through a source compatibility boundary plus a retained,
+pinned FH8626 kernel/ARC media runtime.
 
-## Historical experiment
+This remains a compatibility/bring-up architecture. It is not a claim that
+Majestic officially supports FH8626V100.
 
-The historical Builder experiment is identified by immutable Git SHAs only:
+## Current repository checkpoint
 
-- WIP commit: `bcf8658e4aa612ee9afda8c28d52d8ad1674e2f1`;
-- parent/checkpoint: `5603a701c8812aebc705c42e933ebae48aed805f`;
-- commit message: `WIP: preserve FH8626V100 Majestic builder experiment`.
+- Firmware core: `ArthurKoba/openipc-firmware/work/fh8626v100@80169887`
+- Firmware Majestic: `ArthurKoba/openipc-firmware/work/fh8626v100-majestic@04e09360`
+- Firmware Divinus composition: `ArthurKoba/openipc-firmware/work/fh8626v100-divinus@255b8c8d`
+- Builder: `ArthurKoba/openipc-builder/work/fh8626v100-anjia@a02d325e`
+- Linux staging: `ArthurKoba/openipc-linux/work/fh8626v100@357c2d13`
+- Divinus peer implementation: `ArthurKoba/openipc-divinus/work/fh8626v100@44c4fb94`
+- U-Boot native direction: `ArthurKoba/u-boot-fullhan/fh8626v100-mainline@7ac0aa7e`
+- Cross-agent coordination: reverse issue #3.
 
-No live Builder branch or tag is retained for that experiment. Its useful content has been reconstructed on the current clean staging branches.
+Exact build provenance must record full resolved SHAs rather than relying on
+these shortened documentation locators.
 
-That one commit mixed useful Majestic work with obsolete platform material. The copied generic FH8626 kernel config and the 2993-line Firmware-side kernel patch are **not** carried forward: the current Firmware/Linux core already owns those concerns cleanly.
+## Historical hardware evidence
 
-The useful historical conclusions are:
+The retained historical experiment proves only the following facts:
 
-1. the FH8852V200 Majestic ARM/musl binary loads on the real FH8626V100 when its userspace dependency set is supplied;
-2. the loader dependency closure was reduced to eight FH8852V200 vendor libraries: `libadvapi.so`, `libadvapi_isp.so`, `libadvapi_smartir.so`, `libdsp.so`, `libisp.so`, `libispcore.so`, `libmipi.so`, `libvmm.so`;
-3. Majestic reached normal process startup and served HTTP on port 80;
-4. sensor autodetection did not work; with the native GC1054 plug-in explicitly selected, SDK initialization reached the sensor path and then segfaulted;
-5. direct I2C reads on bus 0 returned GC1054 chip ID bytes `0x10` and `0x54`, so that failure did not establish a dead/reset sensor;
-6. disabling media consumers prevented `start_sdk()` from being entered and left Majestic running successfully as an HTTP/control plane;
-7. a later image proved automatic `S95majestic` startup, built-in haserl, WebUI files under `/var/www`, and Majestic listening on port 80.
+1. the FH8852V200 ARM/musl Majestic executable can load on the real
+   FH8626V100 when its userspace dependencies are supplied;
+2. Majestic can reach ordinary process startup and serve its own HTTP/WebUI
+   control plane on port 80;
+3. media-off startup avoids `start_sdk()` and was stable enough to prove the
+   control plane;
+4. enabling the old media path reached the explicitly selected GC1054 path and
+   then failed inside SDK startup;
+5. direct sensor reads still returned GC1054 ID `0x10/0x54`.
 
-The old image was constrained by the historical 3776 KiB rootfs partition and had to be trimmed to about 3694 KiB. The current core targets the standard OpenIPC 5120 KiB rootfs partition; the historical size workaround is evidence, not a reason to restore the old partition layout.
+That old crash is no longer described as an unexplained sensor failure. Reverse
+analysis proved that the FH8852 sensor callback table is 0x7c bytes and the
+native FH8626 GC1054 callback table is 0x68 bytes with a different callback
+order. Feeding the native object directly to an FH8852 consumer was an ABI
+error.
 
-## Current branch architecture
+Historical control-plane evidence is not evidence that the current source
+compatibility layer, current kernel, current rootfs composition or current full
+feature profile has passed hardware.
 
-Firmware:
+## Accepted architecture
 
-- shared streamer-neutral core: `ArthurKoba/openipc-firmware/work/fh8626v100@eabd1ccd4684af6997771269c4655f7e4435bcec`;
-- Divinus direction: current dedicated `work/fh8626v100-divinus` line;
-- Majestic direction: current dedicated `work/fh8626v100-majestic` line (latest ref is tracked in `STATE.md`).
+Majestic HTTP/API/WebSocket/WebUI remain native. Port 80 belongs directly to
+Majestic. No JavaScript patch, route interception or auxiliary HTTP proxy is
+part of the accepted architecture.
 
-Builder:
+The stack is:
 
-- single active ANJIA device line: `ArthurKoba/openipc-builder/work/fh8626v100-anjia@9c507b85481df2787bb214e535f17003bdebb6e6`;
-- composed Majestic target: `fh8626v100_lite_anjia-ajl33pq0866_majestic`;
-- Majestic fragment: `br-ext-chip-fullhan/configs/variants/fh8626v100_lite_anjia-ajl33pq0866_majestic.config`;
-- matching Firmware metadata: `br-ext-chip-fullhan/configs/variants/fh8626v100_lite_anjia-ajl33pq0866_majestic.firmware`;
-- retired separate Builder Majestic branch is preserved only as `archive/fh8626v100-anjia-majestic-branch-20260918`.
+`Majestic FH8852 public ABI -> FH8626 compatibility source -> native FH8626 ABI`
 
-Builder no longer carries a copied Majestic device profile. It composes the Firmware generic FH8626 lite defconfig, one shared ANJIA board delta and the short Majestic runtime fragment. The fragment selects only the Firmware-owned Majestic compatibility package; GPIO, Wi-Fi, microSD, illumination, lens, persistent board policy and optional PTZ come from the same ANJIA base/package used by the other variants.
+where the native ABI is established by Apollo/userspace/kernel Ghidra evidence,
+not by assuming Divinus is correct.
 
-Core platform/kernel fixes belong in shared Firmware/Linux. Majestic compatibility implementation remains in the Majestic Firmware direction unless/until ownership changes upstream.
+Divinus is a peer implementation and regression oracle. Shared platform
+contracts are synchronized through issue #3. If Divinus and Majestic disagree,
+stock/Ghidra evidence decides.
 
+## Shared FH8626 kernel/ARC media runtime
 
-## Reconstructed Majestic Firmware integration
+Source cleanup correctly removed opaque media payloads from active branches,
+but a pre-deploy audit found that those still-required bytes temporarily had no
+build-time owner. This is fixed by Firmware package
+`fullhan-media-fh8626v100`.
 
-The Majestic Firmware branch adds only:
+The package downloads the exact hardware-proven payloads from immutable
+preservation commit:
 
-- one Buildroot package, `majestic-fh8852v200-compat`;
-- the package's Config.in registration;
-- Majestic selection in the branch's FH8626 lite defconfig.
+`f4bf49da6ef355c9e733e00d774efe403513b1d4`
 
-The package:
+and verifies each payload by SHA-256:
 
-- downloads the FH8852V200 Majestic `lite.master` binary;
-- stores the donor executable outside the normal PATH and exposes `/usr/bin/majestic` through a wrapper;
-- isolates the eight donor libraries under `/usr/lib/majestic-fh8852v200`;
-- reuses the normal OpenIPC json-c/libevent/libogg/libyaml/mbedTLS/Opus packages;
-- selects Majestic WebUI/haserl;
-- installs a media-off `/etc/majestic.yaml`;
-- installs an init script using the hardware-proven HTTP-only invocation;
-- builds and installs `majestic-fh8626-abi-probe`, which performs no SDK/media initialization and makes no device writes;
-- builds a source `majestic-fh8626/libgc1054_mipi.so` facade for the proven FH8852 0x7c -> FH8626 0x68 sensor mismatch;
-- builds source `libvmm.so` and `libdsp.so` facades for the recovered FH8626 VMM/SYS/VPSS/VENC boundary;
-- translates native FH8626 stream descriptors into the FH8852 public stream representation and preserves exactly-once descriptor release;
-- includes strict, permissive-stub and fixed native-video runners; native-video is constrained to the recovered 1280x720@25 H.264 Baseline/VBR contract;
-- keeps the normal init service media-off;
-- installs **no** FH8852 kernel modules, firmware, load scripts or donor sensor plug-ins.
+- `vmm.ko`
+- `xbus_rpc.ko`
+- `media_process.ko`
+- `isp.ko`
+- `enc.ko`
+- `jpeg.ko`
+- `bgm.ko`
+- `gpio_wave.ko`
+- `rtthread_arc.bin`
 
-This is intentionally a compatibility staging package, not a statement that FH8852 userspace blobs are the final FH8626 media architecture.
+Active source branches do not store these binaries.
 
-## FH8852 API to FH8626 native translation map
+The current Majestic compatibility package explicitly selects
+`BR2_PACKAGE_FULLHAN_MEDIA_FH8626V100`, so selecting Majestic cannot silently
+produce a media image without the required FH8626 kernel/ARC runtime.
 
-Static inspection of the exact eight donor libraries already present in Firmware, combined with the recovered FH8626 contracts used by Divinus, gives the following implementation map. Symbol presence is donor-library evidence; the FH8626 side comes from the platform reverse/native implementation. It does **not** prove that FH8852 and FH8626 structures have identical layouts.
+OpenIPC `S70vendor` invokes `load_fullhan -i`. The loader preserves the
+recovered order:
 
-| FH8852-facing API family | Representative donor symbols | FH8626 native operation |
-|---|---|---|
-| VMM | `FH_SYS_VmmAlloc`, `FH_SYS_VmmFree`, `FH_SYS_Mmap`, `FH_SYS_Munmap` | `/dev/vmm_userdev` and recovered VMM allocation/mapping contract |
-| system/media bind | `FH_SYS_Init`, `FH_SYS_Exit`, `FH_SYS_BindVpu2Enc` | native media ownership, `MEDIA_BIND` / unbind and lifecycle ledger |
-| VI/VPSS/VPU | `FH_VPSS_SysInitMem`, `FH_VPSS_SetViAttr`, `Query*Mem`, `ChnInitMem`, `OpenChn`, `Enable` | recovered VPU system/channel memory, VI attributes, channel open/enable and frame-control ioctls |
-| H.264 VENC | `FH_VENC_SysInitMem`, `CreateChn`, `SetChnAttr`, `StartRecvPic` | recovered PAE system/channel memory, encoder config and start |
-| encoded stream | `FH_VENC_GetStream*`, `FH_VENC_ReleaseStream` | `MEDIA_STREAM_6`, ring-wrap decode and exactly-once `PAE_STREAM_STEP` release |
-| IDR/runtime RC | `FH_VENC_RequestIDR`, `SetRCAttr`, `SetRcChangeParam` | native force-I operation plus the recovered stopped-channel/full RC and bounded realtime RC controls |
-| MIPI/sensor | `mipi_init`, `API_ISP_SensorRegCb`, `SensorInit`, `SetSensorFmt` | GC1054/MIPI callback contract, board GPIO5 bootstrap and native sensor sequencing |
-| ISP | `API_ISP_MemInit`, `Init`, `Run`, `Exit`, AE/AWB/mirror calls | recovered `/dev/isp` initialization/statistics/control path and platform ISP state machine |
-| high-level image controls | `FHAdv_Isp_*` | adapter onto native ISP controls plus board-owned day/night/illumination policy |
+`VMM -> XBUS/ARC -> media_process -> ISP -> enc -> jpeg -> bgm -> gpio_wave`
 
-The next adapter work should recover signatures/record layouts only for the smallest API slice being implemented. Cross-Fullhan names are semantic guidance; FH8852 structure layouts must never be copied into FH8626 code without evidence.
+and requires the critical media device nodes:
+
+- `/dev/vmm_userdev`
+- `/dev/media_process`
+- `/dev/isp`
+- `/dev/pae`
+- `/dev/jpeg`
+
+The retained modules report
+`vermagic=4.9.129 mod_unload ARMv6 p2v8`, matching the target kernel family.
+That is a static compatibility result; actual `insmod` remains a hardware
+gate.
+
+## Current Majestic userspace compatibility closure
+
+The active FH8852-facing ABI is no longer an eight-library donor stack.
+
+Source-built compatibility now owns:
+
+- GC1054 FH8852-shaped sensor facade over the recovered FH8626 sensor contract;
+- active GC1054 native implementation;
+- MIPI;
+- VMM;
+- SYS/VPSS;
+- multi-channel H.264 VENC/RC;
+- encoded stream acquire/release and ring-wrap translation;
+- JPEG/MJPEG;
+- motion-facing YC mean/CPY VPSS surface;
+- OSD-facing GraphV2 VPSS surface;
+- ACW/RTX audio and VQE-facing calls.
+
+The retained donor userspace closure is intentionally limited to:
+
+- `libadvapi.so`
+- `libadvapi_isp.so`
+- `libadvapi_md.so`
+- `libadvapi_osd.so`
+- `libadvapi_smartir.so`
+- `libisp.so`
+- `libispcore.so`
+
+The donor ISP/ispcore/advapi layer remains coherent because stock Apollo shows a
+large shared userspace ISP context/state machine. Replacing isolated functions
+with partial guessed shims would be less correct than retaining that coherent
+layer until a demonstrated incompatibility requires replacement.
+
+No FH8852 kernel modules, FH8852 ARC firmware, donor load scripts or donor
+sensor plug-ins are installed.
+
+## Sensor / MIPI
+
+The original sensor failure is closed architecturally:
+
+- FH8852 public sensor callback object: 0x7c bytes;
+- FH8626 native GC1054 callback object: 0x68 bytes;
+- callback order differs;
+- the compatibility facade presents the FH8852 shape and translates recovered
+  operations onto the FH8626 sensor contract.
+
+The active GC1054/MIPI path is source-owned. Archived vendor GC1054/MIPI blobs
+must not be reintroduced as fallback.
+
+## VPSS / VENC / stream
+
+Ghidra/kernel reverse established the native lifecycle and corrected earlier
+Divinus-derived assumptions:
+
+- `FH_VPSS_Enable(channel)` carries the channel id, not boolean 1;
+- VPU disable is separate request `0xC004694E`;
+- OpenChn is `0xC004694F`;
+- CloseChn is `0xC0046950`;
+- frame control is an 8-byte `{channel, packed_fps}` request;
+- stock sequencing separates VI/VPU ownership from encoder lifecycle.
+
+The H.264 compatibility path supports the current product surface:
+
+- main/sub/analytics channel topology;
+- capacity-aware CreateChn;
+- resolution/profile/GOP;
+- VBR, CBR, AVBR, CVBR and fixed-QP style RC;
+- RC/channel readback;
+- realtime RC changes;
+- IDR;
+- correct VPU -> VENC bind ids;
+- shared encoded FIFO routing by native descriptor channel;
+- bounded stream acquire;
+- ring wrap conversion;
+- balanced exactly-once release.
+
+The source layer does not own a fake global producer gate per encoder channel.
+
+H.265/HEVC is explicitly unsupported because the retained FH8626 stock encoder
+stack does not provide an HEVC engine. Unsupported H.265 calls return an error
+rather than fake success.
+
+## JPEG / MJPEG
+
+The Majestic-facing source layer covers:
+
+- memory query/init/uninit;
+- snapshot JPEG and continuous MJPEG;
+- channel configuration/readback;
+- native quality mapping;
+- MJPEG RC/readback;
+- start/stop;
+- stream query/translation/release;
+- rotate;
+- submit/submit-ex;
+- drop policy;
+- hardware timing projection.
+
+The Divinus and Majestic quality APIs intentionally differ by layer: Divinus
+accepts application percentage and converts to a hardware bucket; the FH8852
+public JPEG ABI already supplies the bucket.
+
+## Motion / OSD / GraphV2
+
+Motion and OSD retain their small donor feature backends
+`libadvapi_md.so`/`libadvapi_osd.so`, while the FH8626-facing VPSS operations
+they require are source translated.
+
+Native GraphV2 is the folded 0x448-byte request family
+`0xC448696D/0xC448696E`, translating the FH8852 public 273-word object into
+one selector + 273-word native record.
+
+A final cross-agent audit found a missing validation boundary in the Majestic
+facade. Divinus had introduced native GraphV2 slot limits; this was then
+verified independently in Ghidra against `isp.ko:vpu_set_logov2`:
+
+- selector/logov2-number: 0..2;
+- global selector 0 graph index: 0..1;
+- channel selectors 1/2 graph index: 0..3.
+
+Firmware Majestic `04e09360` now enforces those limits before issuing the
+native ioctl. This is a shared native contract, not a Divinus-specific policy.
+
+## Audio
+
+The Majestic ACW/RTX facade includes:
+
+- transport init/reset/mmap/deinit;
+- exact AJL33PQ0866 retail DSP init payload in normal `FH_AC_Init`;
+- separate external-codec init behavior;
+- 7-word config and selector extension;
+- AI/AO enable/disable;
+- capture frames, raw paths and PTS;
+- playback;
+- volume controls;
+- pause/resume/clear/wait/sync;
+- AEC, AGC, capture NR and playback NR-facing commands;
+- HPF/mic-bias/extension controls.
+
+Physical speaker-amplifier GPIO24 policy remains board-owned. The generic
+audio facade uses a board-neutral lifecycle hook: unmute after AO is ready,
+mute before AO teardown.
+
+## Day/night
+
+The full Majestic profile uses the recovered ANJIA board contract:
+
+- IR-cut DAY/closed coil: GPIO18;
+- IR-cut NIGHT/open coil: GPIO60;
+- bistable pulse: 190 ms;
+- IR LED: GPIO25 active high;
+- white LED: GPIO23 active high, shared with SADC1;
+- ambient light: SADC1;
+- speaker mute: GPIO24 active high.
+
+The full profile maps the IR-cut pair and IR backlight into Majestic's native
+day/night configuration. The white LED is not pretended to be a second
+Majestic backlight.
+
+Physical direction still requires target acceptance. A reversed result must be
+debugged against the board contract rather than hidden by undocumented pin
+swaps.
+
+## ABI guards
+
+The package checks:
+
+1. direct Fullhan imports of the downloaded Majestic binary;
+2. whether a required symbol resolves only to an unsupported stub;
+3. transitive imports of the retained donor feature libraries.
+
+At the current selected closure, retained donor libraries have no dependency on
+remaining unsupported compatibility exports.
+
+This means a future moving Majestic build that begins importing a new unsupported
+SDK symbol should fail the build instead of silently producing a partial image.
+
+## Moving Majestic donor boundary
+
+The FH8626 kernel/ARC payload is immutable and SHA-256 pinned.
+
+The FH8852V200 Majestic executable itself is still downloaded from the upstream
+moving object:
+
+`majestic.fh8852v200.lite.master.tar.bz2`
+
+The first controlled build must therefore retain the exact downloaded/installed
+Majestic SHA-256 and the resolved build provenance.
+
+The direct/transitive ABI guard reduces the risk of an unnoticed API expansion,
+but a moving donor is not full product reproducibility. Production acceptance
+still requires an immutable donor object, official FH8626 Majestic support, or
+an otherwise reproducible and fully characterized binary contract.
+
+This does not prevent a controlled first hardware bring-up when exact bytes are
+recorded.
 
 ## Builder assembly
 
-The Majestic device target is:
+The active Builder has one ANJIA device tree and composes runtime variants
+rather than maintaining a separate Majestic branch.
+
+Majestic target:
 
 `fh8626v100_lite_anjia-ajl33pq0866_majestic`
 
-Its Builder-local `.firmware` metadata binds it by default to the fork-local Firmware Majestic direction, so normal staging invocation is now simply:
+Composition:
+
+1. Firmware `br-ext-chip-fullhan/configs/fh8626v100_lite_defconfig`;
+2. Builder ANJIA `base.config`;
+3. short Majestic runtime fragment.
+
+The sibling `.firmware` metadata selects
+`ArthurKoba/openipc-firmware@work/fh8626v100-majestic` automatically.
+
+Normal invocation is:
 
 ```sh
-bash builder.sh fh8626v100_lite_anjia-ajl33pq0866_majestic
+./builder.sh fh8626v100_lite_anjia-ajl33pq0866_majestic
 ```
 
-Explicit `OPENIPC_FW_REPO` / `OPENIPC_FW_REV` values may still override that metadata for controlled bisect/debug work.
+Environment repo/ref overrides are for explicit bisect/debug only.
 
-There is no separate active Majestic Builder branch and no copied Majestic board overlay. The composed FH8626 Builder targets remain CI-opted-out while their required Firmware state is fork-local.
+## Default boot and acceptance runners
 
-No new Builder CI/build/hardware validation was run for the current `9c507b85481df2787bb214e535f17003bdebb6e6` Builder tip during the latest source-architecture/documentation pass.
+Default boot remains media-off. That keeps the historical control-plane baseline
+separate from full media acceptance.
 
+The image supplies a diagnostic ladder ending in
+`majestic-fh8626-full-run`, whose strict profile enables native media with
+permissive stubs disabled.
 
-## Evidence boundary
+The full profile exercises together:
 
-The **historical experiment** is hardware evidence for Majestic HTTP/control-plane viability on AJL33PQ0866.
+- H.264 main 1280x720@25;
+- H.264 sub 640x360@25;
+- JPEG 640x384;
+- OSD;
+- motion;
+- audio input/output;
+- RTSP;
+- ANJIA day/night.
 
-The **new reconstructed branches** are source staging only. They have not yet been built or flashed, and must not inherit `HARDWARE_PASS` merely because they were reconstructed from the historical experiment.
+It does not replace the persistent media-off configuration.
 
-The video/ISP path is explicitly unfinished. Do not enable media by default or call the Majestic direction complete until the SDK/sensor/ISP compatibility boundary is implemented and tested.
+## Image limits and first build gate
 
-## Next gates
+The U-Boot/Firmware layout requires:
 
-1. Owner-build Firmware `work/fh8626v100-majestic@718f6a14...` through Builder `work/fh8626v100-anjia` target `fh8626v100_lite_anjia-ajl33pq0866_majestic`; record resolved Buildroot config plus kernel/rootfs sizes.
-2. Boot the default media-off service and confirm Majestic directly owns port 80 with stock WebUI/API/WebSocket behavior. Characterize `/metrics` as served by Majestic itself; do not insert a proxy or frontend patch.
-3. Run `majestic-fh8626-abi-probe` and retain complete output. Also record `sha256sum /usr/libexec/majestic-fh8852v200/majestic` so the run is attributable to exact donor bytes.
-4. Run strict media mode first and preserve the first failing API/callsite. Run permissive-stub only to expose later optional call ordering. Then run native-video mode.
-5. Native-video acceptance is VI -> VENC -> balanced descriptor acquire/release -> sustained RTSP at the fixed 1280x720@25 H.264 Baseline/VBR contract.
-6. After base H.264 is stable, validate the staged RTX audio path and characterize JPEG/ISP behavior. The donor JPEG kernel request family and substantial donor ispcore request subset already match FH8626 literally, so preserve compatible donor code unless a concrete public-record/layout mismatch is observed; do not replace layers merely because the SoC name differs.
-7. Regress shutdown/restart, PTZ, lens, illumination and storage.
-8. Pin/reproduce the exact donor binary before product acceptance. Do not copy old Firmware kernel patches, factory blobs or FH8852 kernel-side payloads into the design.
+- `uImage <= 2048 KiB`
+- `rootfs.squashfs <= 5120 KiB`
 
+The nine proprietary media/ARC payloads account for roughly 798 KiB raw before
+SquashFS, so final rootfs headroom must be measured rather than assumed.
 
-## Sensor ABI mismatch and first source adapter
+The active branches are still `NOT_BUILT` as a composed current image. No
+historical image size is accepted as proof for the current tree.
 
-The retained hardware experiment is now more precisely explained. The FH8852 Majestic build accepted the explicit native GC1054 path and logged `Using fh8626/libgc1054_mipi sensor` before its SDK path crashed, while direct bus-0 reads still returned GC1054 ID `0x10/0x54`. That result proved neither sensor failure nor simple loader failure.
+## First hardware ladder
 
-A later static comparison closes the missing ABI question:
+After a successful exact build:
 
-- native FH8626 GC1054 `Sensor_Create()` returns a 0x68-byte callback table;
-- FH8852V200 GC4653, JXF32 and MN34425 plug-ins each return a 0x7c-byte table;
-- their callback ordering differs materially, not merely by appended optional fields.
+1. retain resolved Builder/Firmware/Linux SHAs and build config;
+2. retain final image sizes/hashes and media-package hash verification;
+3. record installed Majestic SHA-256;
+4. boot using the already-working boot chain first; do not mix the initial
+   Majestic media experiment with U-Boot migration;
+5. confirm `S70vendor` loads the FH8626 media runtime and required device
+   nodes exist;
+6. prove the unchanged media-off Majestic baseline;
+7. run `majestic-fh8626-abi-probe`;
+8. use narrower strict/native runners only to localize a failure;
+9. run `majestic-fh8626-full-run`;
+10. prove simultaneous main/sub RTSP;
+11. exercise bitrate/RC/GOP/profile/readback and live reconfiguration;
+12. test JPEG/MJPEG, OSD, motion, image/day-night, microphone, speaker/talkback;
+13. regress repeated stop/start/restart without reboot;
+14. regress PTZ, lens/bootstrap, illumination, storage, Wi-Fi and shutdown.
 
-Firmware `work/fh8626v100-majestic@7fd1ee93...` therefore no longer feeds the native 0x68-byte object directly to an FH8852 consumer for the next media experiment. It builds an FH8852-shaped GC1054 facade and maps only recovered semantics onto the native FH8626 callback object. Proven mappings include VI attributes, initialization, format, register access, integration, gain and available AWB callbacks. FH8852-only or not-yet-proven operations are localized as staging stubs and can be forced to `-ENOSYS` with `FH8626_MAJESTIC_STRICT=1`.
+Only failures reproduced on the exact built candidate should drive new
+compatibility code.
 
-This facade is transitional evidence tooling. It still expects the transitional native FH8626 GC1054 plug-in when the explicit media runner is used; it is not the final open sensor backend and it is not enabled by the default media-off service.
+## U-Boot boundary
 
-## Donor/native ioctl overlap
+Builder does not build or flash U-Boot.
 
-Static donor inspection also shows that not every FH8852 userspace layer needs replacement merely because the SoC differs. At least these literal operations overlap the recovered FH8626 contract exactly:
+The native OpenIPC U-Boot direction is separately source/build accepted at
+`fh8626v100-mainline@7ac0aa7e`, but full migration is not yet hardware
+accepted. Keep it out of the first Majestic userspace/media test. After media
+acceptance, U-Boot migration is a separate cold-boot/recovery gate with a full
+flash backup and external SPI recovery available.
 
-- FH8852 `libdsp.so` contains `MEDIA_BIND 0xC0084D00` and `MEDIA_UNBIND_SRC 0xC0044D02`;
-- the donor JPEG core uses the same recovered FH8626 requests for memory query/init/uninit, channel config, MJPEG config, start, stop and release: `0xC0104A02`, `0xC0184A00`, `0xC0184A01`, `0xC0104A03`, `0xC0344A05`, `0xC0044A09`, `0xC0044A0A`, `0xC0044A10`;
-- donor `libispcore.so` contains exact FH8626 requests `0x6919`, `0x40016920`, `0x40016921`, `0x690A`, `0x40046924`, `0x40016911`, `0x40046930`, `0x8010690E` and `0x40046908`;
-- donor `libisp.so` and donor `libvmm.so` do not show the same direct-literal overlap for the recovered native request set; VMM is therefore explicitly replaced in the source-first media path.
+## Completion definition
 
-This is evidence of partial ioctl-family continuity, not proof that the associated structures or complete libraries are binary-compatible. Adapter work should replace a donor layer only after its actual argument/layout contract is shown to differ.
+For the currently demonstrated FH8852V200 Lite runtime surface, offline source
+coverage is considered complete.
 
+The next phase is not more speculative SDK emulation. New code should be driven
+by one of:
 
-## HTTP/WebUI and metrics boundary
+- a real build failure;
+- ABI guard failure on the exact downloaded Majestic object;
+- target runtime failure;
+- new Ghidra evidence that a currently unsupported API is actually required.
 
-Majestic continues to own its normal HTTP port, API, WebSocket and frontend directly. No JavaScript rewrite and no auxiliary HTTP proxy are part of the accepted staging architecture.
-
-The historical empty `GET /metrics` result is therefore still a real backend/provider blocker. CPU, RAM, uptime and network source data are available from Linux, but any fix must land in the actual Majestic/platform metrics-provider boundary (or official Majestic FH8626 support), not by hiding the route behind a second web server.
-
-
-## RTX audio compatibility facade
-
-Static reverse of FH8852 `libacw_mpi.so` showed that its public MPI is a thin wrapper over the same RTX command family already hardware-proven on FH8626. Matching contracts include reset `0x40000000`, command transport `0x20000000`, init `0x01040004`, config `0x01040005`, AI frame `0x01008000`, AO frame `0x01008002`, and the same simple command IDs for AI/AO enable/disable, volume, mode, clear and playback completion.
-
-The recovered donor shared-memory layout also proves that the AO staging region is the tail of the RTX mapping: `mapped_base + (map_length - tail_length)`, with the corresponding transport offset derived from `map_offset`. Firmware therefore now builds a source `libacw_mpi.so` facade with AI frame/PTS retrieval and AO frame submission over native `/dev/rtxbus`.
-
-Advanced AEC/AGC/NR semantics remain explicit unsupported boundaries until a concrete Majestic call requires their exact records. Physical speaker amplifier policy remains board-owned and is not embedded into the generic compatibility library.
-
-
-## Final offline Ghidra audit
-
-The final offline pass used the canonical ANJIA/FH8626 Ghidra projects rather than treating Divinus as authority:
-
-- `anjia_ajl33pq0866_fh8626v100_apollo`;
-- `anjia_ajl33pq0866_fh8626v100_isp`;
-- `anjia_ajl33pq0866_fh8626v100_enc`;
-- `anjia_ajl33pq0866_fh8626v100_media_process`;
-- sensor/MIPI projects plus existing VMM/JPEG/kernel/ARC projects as needed.
-
-Concrete results applied to Firmware:
-- `FH_VPSS_Enable(channel)` passes the channel id to `0xC004694D`; it is not a boolean enable flag;
-- VPU disable is the distinct no-payload `0xC004694E` request;
-- `FH_VPSS_CloseChn(channel)` is `0xC0046950`;
-- frame control is exactly two words: channel plus packed low16/high16 ratio;
-- `FH_VENC_CreateChn` consumes `{support_type, capacity_width, capacity_height}`;
-- normal/smart H.264 support bits are 0x4/0x8;
-- the kernel PAE config remains exactly 0x2c bytes and full RC exactly 0x54 bytes;
-- stock Apollo contains a combined H.264 public-attribute translator that programs PAE config first and full RC second;
-- stock VENC order is `VPSS attr/open/framectrl -> VENC create/attr/start -> SYS bind`, while VI/VPU enable is owned separately;
-- stock ISP image APIs mutate a shared userspace context and are not simple direct-ioctl wrappers.
-
-Because the ISP controls depend on a complete shared userspace context, donor `libisp.so`/`libispcore.so` are deliberately retained as isolated transitional components until the target run proves a concrete mismatch. Replacing them with a partial facade before target evidence would be less correct, not more open.
-
-All Divinus-specific mismatches found during this clean-room audit are tracked separately in `docs/process/fh8626-divinus-correction-ledger.md`.
+Production readiness remains stricter than a successful first video stream. It
+requires reproducible build/runtime contracts and target evidence for the full
+selected feature surface.
