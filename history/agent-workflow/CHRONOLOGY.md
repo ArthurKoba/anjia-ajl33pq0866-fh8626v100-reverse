@@ -215,6 +215,19 @@ Full independent heap diffs признаны слишком шумными; пр
 
 Подробнее: [D20](CHRONOLOGY_DETAILS.md#d20--stock-evidence-campaign-и-normalized-runtime-dataset).
 
+### 21. Production catch-up: reverse contracts превращаются в hardware-tested runtime
+Источник: `CHAT-022`, 2026-08-28.
+
+Production integration-agent перенёс накопленный reverse в единый candidate runtime: live gain, physical AE commits, AWB→CCM, APC, NR3D, LTM, dual-sensor switching, reloadable algorithm module, capture/gates/rollback. Hardware loop подтвердил WIDE H.264 и несколько независимых механизмов.
+
+Ключевой dual-sensor blocker локализован до cold-boot board sequence: `GPIO5 LOW → media modules → GPIO5 HIGH`. После правильного bootstrap stock probe видит оба GC1054, а WIDE↔TELE даёт реальное изображение.
+
+Параллельно отделены два remaining production blockers: exact owner teardown/re-init/control-plane architecture и persistent green cast, который после механически успешного AWB→CCM переносится в отдельную RAW/Bayer/early-color parity задачу.
+
+**Переход:** проект фактически выходит из режима «reverse-first» в staged implementation/hardware-validation loop.
+
+Подробнее: [D21](CHRONOLOGY_DETAILS.md#d21--production-catch-up-и-hardware-parity-session).
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.
