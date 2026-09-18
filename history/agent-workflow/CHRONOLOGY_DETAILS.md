@@ -758,3 +758,40 @@ The important historical result is the closure loop itself:
 
 This replaces broad reverse as the normal next step.
 
+## D26 — OpenIPC product strategy и Divinus-first path
+
+`CHAT-028` is a large central-orchestrator thread with substantial overlap with earlier handoff/evidence sources. The unique late contribution is a productization strategy after Agent 1–4 convergence.
+
+The historical research in this chat separates three concerns:
+
+1. **FH8626 hardware/media backend**
+   - sensor/bootstrap;
+   - ISP/VENC/audio;
+   - lifecycle/ownership;
+   - board controls.
+
+2. **Generic capability/control boundary**
+   - stream;
+   - lens;
+   - night/illumination;
+   - audio capture/playback;
+   - PTZ;
+   - ISP controls.
+
+3. **Frontend**
+   - Divinus;
+   - Majestic;
+   - minimal RTSP/other consumer.
+
+The chat's source-level survey treats Majestic as a mature but closed component whose exact FH8626 backend cannot simply be assumed. Divinus is historically evaluated as open and extensible but less feature-complete: streaming/web/audio-capture foundations are attractive, while generic talkback, PTZ, multi-lens and broad ISP controls require extension.
+
+This leads to a staged port:
+- **Stage A:** keep the known single hardware owner and expose encoded H.264 through a sidecar/external-source contract to Divinus;
+- **Stage B:** only after lifecycle/ABI confidence, move ownership into a native FH8626 HAL if that remains desirable.
+
+The same thread separates **engineering bring-up** from **upstream-clean productization**. Locally supplied vendor dependencies can help establish hardware behavior, but official upstream needs a defensible source/provenance/build path.
+
+A related external-research lane searches for FH8626 SDK/BSP traces and downloadable OEM firmware. Its purpose is not arbitrary flashing; extracted kernel/modules/SDK strings are compared against the target heavy corpus to establish lineage and reusable provenance. Same-SoC firmware is explicitly not treated as board-compatible by default.
+
+The chat also clarifies historical dual-sensor attribution: early `Agent 3 / Task 3` reverse and later `Agent 3 OpenIPC` are different agent waves. The actual hardware root cause GPIO5 sequencing was found during a later integration/hardware session.
+
