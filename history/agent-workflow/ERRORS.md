@@ -908,6 +908,26 @@ Evidence: `CHAT-036`.
 
 Evidence: `CHAT-036`.
 
+### E-052 — Installed tools/build outputs/project databases включаются в transferable project tree
+Статус: `OBSERVED`.
+
+В `CHAT-037` локальный `~/FH8626V100` разросся примерно до десятков гигабайт из-за Buildroot outputs/toolchains, Ghidra installation и Ghidra project databases, хотя эти данные не являются everyday agent handoff payload. Первые архивы получались сотни мегабайт даже после исключения очевидного tmp.
+
+Почему мешает:
+- handoff size начинает определяться инструментами, а не знаниями проекта;
+- agent archive случайно содержит воспроизводимые build outputs;
+- project boundary смешивает source/evidence и installed software;
+- backup/dedup становится дорогим и непрозрачным.
+
+Правильный паттерн:
+- installed Ghidra/toolchains → system/tool location вне project;
+- mutable Ghidra project DB → отдельное local reverse storage, при необходимости stable symlink;
+- project хранит scripts/exports/logs/knowledge, которые нужны agent workflow;
+- Buildroot `output/dl/build` не попадают в source handoff;
+- vendor binaries/evidence исключаются не по расширению вслепую, а по storage role.
+
+Evidence: `CHAT-037`.
+
 ## Пока не подтверждено этим чатом
 
 - исходная гипотеза о специальном env-паттерне для значений, которые «съедает» консоль — в `CHAT-001` недостаточно чистого доказательства; оставить на следующие файлы;

@@ -352,6 +352,18 @@ Codec/ghosting contracts из предыдущего этапа переводя
 Подробнее: [D32](CHRONOLOGY_DETAILS.md#d32--post-v2-standalone-closure-и-canonical-workspace-recovery).
 
 
+### 33. Divinus regression audit и смена product-path на Majestic family
+Источник: `CHAT-037`, 2026-09-12—14.
+
+Сравнение current native Divinus HAL с exact owner/reference вскрывает несколько конкретных orchestration regressions: AWB/E2 stats читаются не из selected runtime bank, frontend barrier перенесён в неверный address domain, control cadence получил неподтверждённый blocking frame-wait, а RTSP нарушил descriptor/parser ownership.
+
+Одновременно FH8852-family Majestic после минимальной адаптации способен хотя бы стартовать на FH8626. Это меняет product strategy: native Divinus больше не должен поглощать всё время только из-за уже вложенных усилий. Его сохраняют как reference/diagnostic implementation, а Majestic становится целевым practical path при условии прохождения реальных media gates.
+
+**Переход:** reverse assets сохраняются, но продуктовая реализация отделяется от исследовательской и выбирает существующий совместимый frontend/backend там, где это сокращает неподтверждённую hardware orchestration.
+
+Подробнее: [D33](CHRONOLOGY_DETAILS.md#d33--divinus-regression-audit-и-majestic-target-path).
+
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.

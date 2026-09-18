@@ -5,22 +5,22 @@
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **36**
-- Последний источник: `CHAT-036`
-- Период последнего источника: **2026-09-08 — 2026-09-11**
+- Обработано исторических файлов: **37**
+- Последний источник: `CHAT-037`
+- Период последнего источника: **2026-09-12 — 2026-09-14**
 - Следующее действие: получить следующий уникальный исторический источник
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-036 |
+| Направление | Файл | Состояние после CHAT-037 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 36/?? sources обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 51 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 129 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D32: post-V2 standalone closure + canonical workspace recovery |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.25: canonical indexed workspace + recovery checkpoints |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 37/?? sources обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 52 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 133 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D33: Divinus regression audit → Majestic target path |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.26: Drive-backed workspace + corpus reconciliation |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -96,6 +96,8 @@
 | 35 | `CHAT-035` | 2026-09-05 — 2026-09-06 | `DONE` | Deep codec/ghosting pass: H.264 RC app→wire, MJPEG/BGM/NR3D lifecycle, geometry/upscale, audio/container boundaries; analyst writes source candidates/evidence for separate integrator; repeated archive-working and premature COMPLETE expose process defects |
 
 | 36 | `CHAT-036` | 2026-09-08 — 2026-09-11 | `DONE` | Post-V2 standalone closure и большой workspace-recovery цикл: contradictory docs vs files, parallel ACTIVE trees, complete/deep indexes, startup semantics, checkpoint-vs-handoff, external persistence и Drive-sync design; BGM/VMM/NR3D/H.264 contracts host-verified |
+
+| 37 | `CHAT-037` | 2026-09-12 — 2026-09-14 | `DONE` | Divinus regression audit finds stale AWB bank/barrier/RTSP ownership mistakes; native Divinus frozen as reference/fallback while Majestic FH8852-family becomes product target. Google Drive becomes real persistent workspace; local tree is normalized by moving Ghidra/tool DB/build bulk out and reconciling archive-only unique reverse corpus. Source #37 was not provided; source #39 maps directly to CHAT-037. |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -1081,3 +1083,12 @@ Divinus hardening advances independently of owner integration, preserving single
 - `I-126..I-129`: одна canonical directory, semantic+deep indexing, checkpoint/handoff separation и обязательное human/agent context read поверх machine checks.
 - D32 фиксирует software-level post-V2 closure без ложного hardware PASS; A4.25 — превращение workspace в recoverable engineering state.
 - Это третий источник после CHAT-033 live-state boundary; расширенная современная сверка будет выполнена после регистрации текущего файла.
+
+
+## Что CHAT-037 добавил
+
+- `I-002 Workspace → Google Drive` теперь `CONSOLIDATED`: CHAT-036 формализовал sync/recovery contract, CHAT-037 реально создал Drive workspace и checkpoint layer.
+- Новый `E-052`: installed tools/project DB/build outputs не должны жить внутри transferable project tree.
+- `I-130..I-133`: external tool storage, content-hash reconciliation без user-facing checksum noise, logical active/history split и strategy pivot от bespoke HAL к existing compatible backend.
+- Добавлены D33 и A4.26.
+- `I-003 Google Drive → GitHub authority` намеренно остаётся BOOTSTRAP: этот источник ещё не показывает фактический переход к GitHub как engineering source of truth.

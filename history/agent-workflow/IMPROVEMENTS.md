@@ -1678,9 +1678,9 @@ Divinus-side `/image.jpg` / `/mjpeg` можно подготовить неза�
 `CHAT-001` показывает уже локальный WSL workspace/checkpoints, но сам переход из ещё более ранней схемы пока не восстановлен.
 
 ### I-002 — Workspace → Google Drive
-Статус: `BOOTSTRAP`.
+Статус: `CONSOLIDATED`.
 
-В `CHAT-001` не наблюдается.
+`CHAT-036` сначала формализует Drive как обязательное persistent mirror/recovery layer, а `CHAT-037` показывает фактическое создание `reverse_FH8626V100_WORKSPACE` с browseable canonical docs, index и full checkpoint. Локальный workspace больше не считается достаточной долговременной authority сам по себе.
 
 ### I-003 — Google Drive → GitHub authority
 Статус: `BOOTSTRAP`.

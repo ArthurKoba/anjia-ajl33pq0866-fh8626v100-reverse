@@ -916,3 +916,20 @@ Target acceptance показал другую картину. Bootstrap до ISP
 К концу периода одна canonical directory получает текущий standalone, reference/deep reverse corpus и двухуровневый index. Historical task documents остаются provenance, но active top-level сокращается до минимального current state. Важная граница: scripts проверяют integrity, но не заменяют чтение документов агентом.
 
 Это software/knowledge milestone, не hardware acceptance.
+
+
+## D33 — Divinus regression audit и Majestic target path
+
+Источник: `CHAT-037`, 2026-09-12—14.
+
+Текущий FH8626 native Divinus сравнивается с exact owner v4.3.0 и ранее рабочим RTSP. Конкретно обнаружены:
+- selected runtime bank и AWB statistics root могут расходиться;
+- frontend barrier работает с runtime context в owner, но был ошибочно перенесён в MMIO;
+- самодельный frame-wait contract не подтверждён stock semantics;
+- RTSP raw fd и FILE* ownership смешаны, parser state не очищается при reuse.
+
+То есть поздний green/hang behavior объясняется не обязательной несостоятельностью алгоритмов AWB/CCM/NR3D, а orchestration regressions вокруг них.
+
+На этом фоне пользователь сообщает, что family-specific Majestic от FH8852 после адаптации запускается на FH8626. Источник сознательно не считает process-start достаточным: необходимы VI frames, stable VENC, RTSP, ISP и controls. Но cost model проекта меняется — native Divinus замораживается как reference/fallback, а Majestic становится product target.
+
+Это не удаляет результаты Divinus reverse: они превращаются в diagnostic knowledge для проверки Majestic/Fullhan path.

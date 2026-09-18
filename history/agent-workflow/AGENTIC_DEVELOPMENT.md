@@ -485,6 +485,21 @@ Handoff-файл перестаёт быть единственным носит
 Ещё важнее correction пользователя: никакой startup script не заменяет actual context read. Automation отвечает за integrity, агент — за понимание. Это становится базовой предпосылкой будущего repository/Drive-based workflow.
 
 
+### A4.26 — Drive-backed workspace + local corpus reconciliation
+Статус после `CHAT-037`: `OBSERVED`.
+
+Локальный workspace впервые получает реальное внешнее persistent mirror: Google Drive хранит browseable canonical docs/index и полный checkpoint. Это закрывает failure mode, где browser-session local files исчезали между сессиями.
+
+Параллельно local WSL corpus очищается не «rm старое», а полноценной archaeology/reconciliation:
+- installed tools/build products выносятся за project boundary;
+- transport archives inventory/dedup;
+- unique historical contents materialize into semantic reverse corpus;
+- active project и heavy history получают разные transfer roles;
+- следующий agent должен начинать с persistent workspace context, а не краткого chat summary.
+
+Это первый фактически доказанный шаг bootstrap-перехода `workspace → Drive`. GitHub authority и Ghidra MCP как следующий уровень ещё исторически не наступили в этом источнике.
+
+
 ### A5 — Специализированные MCP/агенты
 Статус: `BOOTSTRAP`.
 
