@@ -340,6 +340,18 @@ Ghosting локализуется не к одной «магической на
 Подробнее: [D31](CHRONOLOGY_DETAILS.md#d31--codecghosting-reverse-и-integration-contracts).
 
 
+### 32. Post-V2 standalone closure и восстановление canonical workspace
+Источник: `CHAT-036`, 2026-09-08—11.
+
+Codec/ghosting contracts из предыдущего этапа переводятся в более полный standalone SDK layer: BGM capability/bind lifecycle, dedicated VMM ownership/free/recovery, NR3D cold/restart state machine, realtime H.264 RC и transition policy получают host implementation и расширенные tests. Production owner/Divinus сознательно не меняются.
+
+Одновременно независимый integrity audit обнаруживает, что workspace continuity ненадёжен: C/H, документы и несколько ACTIVE trees расходятся, status местами опережает source. Проект восстанавливает единое canonical дерево и отделяет current source от deep historical/reverse corpus.
+
+**Переход:** software contracts становятся host-verified standalone substrate, а сама engineering state впервые оформляется как индексируемый/recoverable workspace, а не как последовательность handoff-архивов.
+
+Подробнее: [D32](CHRONOLOGY_DETAILS.md#d32--post-v2-standalone-closure-и-canonical-workspace-recovery).
+
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.

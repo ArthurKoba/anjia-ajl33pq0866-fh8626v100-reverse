@@ -470,6 +470,21 @@ Ghidra предлагается как локальный WSL analyzer/headless 
 Это уменьшает повторный reverse у integration-agent и одновременно не даёт browser-analysis ветке объявлять host-tested code production-ready.
 
 
+### A4.25 — Canonical indexed workspace + external recovery checkpoints
+Статус после `CHAT-036`: `OBSERVED`.
+
+Handoff-файл перестаёт быть единственным носителем continuity. Проект пытается хранить engineering state как:
+`one canonical directory + machine index + current docs + deep provenance + external recovery checkpoints`.
+
+Появляется явное различие:
+- working state;
+- checkpoint для восстановления;
+- continuation/handoff для смены агента;
+- historical evidence.
+
+Ещё важнее correction пользователя: никакой startup script не заменяет actual context read. Automation отвечает за integrity, агент — за понимание. Это становится базовой предпосылкой будущего repository/Drive-based workflow.
+
+
 ### A5 — Специализированные MCP/агенты
 Статус: `BOOTSTRAP`.
 

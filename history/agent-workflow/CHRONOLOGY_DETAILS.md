@@ -903,3 +903,16 @@ Target acceptance показал другую картину. Bootstrap до ISP
 Источник также добавляет geometry/upscale implementation candidate и full Stage1 review: analytical agent уже не только описывает reverse, а пишет модульные C/H candidates, tests и exact integration notes. Пользователь при этом жёстко отделяет эту работу от target integration: подключение к актуальному owner/firmware и hardware acceptance выполняет другой агент.
 
 Технически это переход от reverse documents к reusable source contracts, но без ложного повышения до hardware-proven production.
+
+
+## D32 — Post-V2 standalone closure и canonical workspace recovery
+
+Источник: `CHAT-036`, 2026-09-08—11.
+
+После глубокого codec/ghosting reverse standalone слой последовательно закрывает BGM proc/capability grammar, exact bind/unbind, отдельный VMM fd и allocation lifecycle, partial-ownership recovery, NR3D cold/restart semantics, realtime H.264 RC и общую `HOT_OK / RESTART_REQUIRED / RECOVERY_REQUIRED` transition policy. Host strict/sanitizer/analyzer suites проходят; target integration по-прежнему вынесена за границу этапа.
+
+Одновременно source вскрывает process debt, который уже влияет на техническую достоверность: поздние docs описывают код, которого нет в текущем C/H; parallel ACTIVE trees содержат разные наборы; restore из transport archives создаёт новые слои. Поэтому значительная часть работы превращается в evidence/source reconciliation.
+
+К концу периода одна canonical directory получает текущий standalone, reference/deep reverse corpus и двухуровневый index. Historical task documents остаются provenance, но active top-level сокращается до минимального current state. Важная граница: scripts проверяют integrity, но не заменяют чтение документов агентом.
+
+Это software/knowledge milestone, не hardware acceptance.
