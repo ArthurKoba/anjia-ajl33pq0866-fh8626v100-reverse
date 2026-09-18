@@ -95,39 +95,39 @@ This is an independent platform research task and does **not** block Firmware, D
 
 ## P1 — Divinus target completion
 
-33. Use `openipc-divinus/fh8626v100-canonical` as the latest source candidate, with the top WIP treated as source-only until retested.
-34. Build the exact latest candidate reproducibly and record its identity.
-35. Deploy it to the physical camera and prove candidate PID/executable/listener ownership before interpreting stream results.
-36. Validate sensor/media startup, visible image, VENC and sustained RTSP.
-37. Validate restart/reconnect and random-access/timestamp behavior.
-38. Validate WIDE/TELE switching and board sensor bootstrap behavior.
-39. Validate ISP/exposure/color/day-night behavior to the level actually exercised.
-40. Validate microphone and speaker/two-way audio where supported by the candidate.
-41. Repair only failures reproduced on that latest target candidate.
-42. After hardware acceptance, curate a clean upstream-ready FH8626V100 Divinus series. The agent does not create the final pull request.
+35. Use `openipc-divinus/fh8626v100-canonical` as the latest source candidate, with the top WIP treated as source-only until retested.
+36. Build the exact latest candidate reproducibly and record its identity.
+37. Deploy it to the physical camera and prove candidate PID/executable/listener ownership before interpreting stream results.
+38. Validate sensor/media startup, visible image, VENC and sustained RTSP.
+39. Validate restart/reconnect and random-access/timestamp behavior.
+40. Validate WIDE/TELE switching and board sensor bootstrap behavior.
+41. Validate ISP/exposure/color/day-night behavior to the level actually exercised.
+42. Validate microphone and speaker/two-way audio where supported by the candidate.
+43. Repair only failures reproduced on that latest target candidate.
+44. After hardware acceptance, curate a clean upstream-ready FH8626V100 Divinus series. The agent does not create the final pull request.
 
 ## P2 — Majestic product path
 
-43. Keep the Builder Majestic experiment isolated until the Divinus reference path is closed.
-44. Pin an exact Majestic candidate/build, libraries and canonical config.
-45. Validate VI -> VENC -> sustained RTSP before ISP work.
-46. Validate ISP/color/exposure/day-night after the base media path is stable.
-47. Validate audio capture/playback/two-way behavior.
-48. Integrate PTZ and illumination/IR-cut using the accepted camera contracts rather than rediscovering their low-level backends.
-49. Reuse Divinus-derived knowledge only where it is architecture-neutral; do not assume source-level portability between streamers.
+45. Keep the Builder Majestic experiment isolated until the Divinus reference path is closed.
+46. Pin an exact Majestic candidate/build, libraries and canonical config.
+47. Validate VI -> VENC -> sustained RTSP before ISP work.
+48. Validate ISP/color/exposure/day-night after the base media path is stable.
+49. Validate audio capture/playback/two-way behavior.
+50. Integrate PTZ and illumination/IR-cut using the accepted camera contracts rather than rediscovering their low-level backends.
+51. Reuse Divinus-derived knowledge only where it is architecture-neutral; do not assume source-level portability between streamers.
 
 ## P3 — firmware product integration
 
-50. Once streamer ownership is settled, retain shared FH8626 SoC/runtime packages and load policy in Firmware where they genuinely belong.
-51. Do not duplicate camera-specific profiles, kernel patches or streamer implementation source into Firmware.
+52. Once streamer ownership is settled, retain shared FH8626 SoC/runtime packages and load policy in Firmware where they genuinely belong.
+53. Do not duplicate camera-specific profiles, kernel patches or streamer implementation source into Firmware.
 
 ## P4 — Builder final device profile
 
-52. Use Builder last as the thin AJL33PQ0866 assembly layer.
-53. Start later Builder work from the then-current upstream `master`, not by blindly extending the preserved diverged branch.
-54. Use `5603a701c8812aebc705c42e933ebae48aed805f` as the preserved pre-Majestic reference checkpoint, not as a future upstream base.
-55. Keep only per-device deltas: package selection, first-boot GPIO/bootstrap policy, sensor/lens defaults, camera-specific audio/PTZ/illumination config, excludes and other device-only packaging.
-56. Do not retain duplicate kernel patches, generic FH8626 runtime code or Divinus/Majestic implementation source in the final Builder profile.
+54. Use Builder last as the thin AJL33PQ0866 assembly layer.
+55. Start later Builder work from the then-current upstream `master`, not by blindly extending the preserved diverged branch.
+56. Use `5603a701c8812aebc705c42e933ebae48aed805f` as the preserved pre-Majestic reference checkpoint, not as a future upstream base.
+57. Keep only per-device deltas: package selection, first-boot GPIO/bootstrap policy, sensor/lens defaults, camera-specific audio/PTZ/illumination config, excludes and other device-only packaging.
+58. Do not retain duplicate kernel patches, generic FH8626 runtime code or Divinus/Majestic implementation source in the final Builder profile.
 
 ## Standing repository rules
 
