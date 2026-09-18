@@ -555,6 +555,8 @@ CHAT-007 усиливает принцип: valuable stock runtime сначал�
 
 Обобщение: handoff — стартовое инженерное состояние, но свежая воспроизводимая observation имеет приоритет над старой интерпретацией.
 
+`CHAT-028` расширяет этот принцип до product strategy: FH8626 hardware/media backend должен быть независим от конкретного frontend; Divinus, Majestic или другой consumer подключаются поверх generic stream/control capability boundary.
+
 ### I-041 — Ledger временных workaround-ов и отдельный final-reconciliation gate
 Статус: `OBSERVED`.
 
@@ -1470,6 +1472,64 @@ E3 в `CHAT-027` проходит несколько уровней:
 - superseded status.
 
 Иначе точечный disassembly может выглядеть корректным, но быть семантически ложным.
+
+### I-102 — Stable agent identity: wave + role + task вместо bare Agent N
+Статус: `OBSERVED`.
+
+После путаницы раннего и позднего `Agent 3` в `CHAT-028` durable provenance должен использовать составной ID:
+`wave / role / task / branch`.
+
+Например:
+- `W1-A3-DUAL_SENSOR_REVERSE`;
+- `W2-A3-OPENIPC_PRODUCTIZATION`.
+
+Числовой номер можно оставить удобным UI-label, но он не должен быть единственным ключом в chronology, handoff или merge notes.
+
+### I-103 — Orchestrator routing graph: integration gap → external lead → exact reverse → productization
+Статус: `OBSERVED`.
+
+Центральный поток `CHAT-028` формализует взаимодействие трёх основных lane:
+- OpenIPC/productization обнаруживает конкретный integration blocker;
+- External Research ищет SDK/source/homolog и формирует lead;
+- Exact Reverse подтверждает FH8626 semantics;
+- productization получает подтверждённый contract обратно.
+
+Промежуточные материалы передаются пакетами, а orchestrator остаётся единственной точкой canonical merge. Это уменьшает прямые cross-agent conflicts и не создаёт несколько competing truths.
+
+### I-104 — Frontend decoupling: hardware backend не должен зависеть от Majestic/Divinus
+Статус: `OBSERVED`.
+
+В `CHAT-028` появляется чёткая продуктовая архитектура:
+
+`FH8626 platform/media/control backend → generic capability/API → Divinus / Majestic adapter / другой frontend`.
+
+Majestic больше не является обязательным условием работоспособности камеры. Divinus можно сначала подключить через encoded-source sidecar, а native HAL развивать позже.
+
+Так reverse и hardware ownership остаются reusable независимо от судьбы конкретного streamer-а.
+
+### I-105 — Engineering bring-up и upstream-clean profile нужно разделять
+Статус: `OBSERVED`.
+
+OpenIPC productization discussion в `CHAT-028` отделяет две цели:
+- engineering/private bring-up может временно использовать externally supplied vendor/stock dependencies;
+- upstream candidate должен иметь допустимый provenance/build path и не поставлять случайно извлечённые factory blobs как canonical source.
+
+Это позволяет не останавливать hardware development из-за supply-chain blocker, но и не выдавать engineering hack за upstream-ready решение.
+
+### I-106 — External firmware corpus полезен для provenance и lineage, не только для reverse
+Статус: `OBSERVED`.
+
+Поздний `CHAT-028` строит практический firmware-research workflow:
+`download → binwalk/extract → inventory kernel/modules → compare SDK strings/vermagic/symbols/sections/exact files`.
+
+Цель — не прошивать чужую OEM firmware, а:
+- найти независимые повторяющиеся vendor payload;
+- установить SDK/kernel lineage;
+- сравнить media modules;
+- усилить provenance;
+- обнаружить более близкий reference corpus.
+
+Board compatibility проверяется отдельно; same SoC не считается основанием для flash.
 
 ## Исходные этапы, ещё не подтверждённые
 
