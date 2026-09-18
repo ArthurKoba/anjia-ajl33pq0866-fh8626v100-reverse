@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_020_POST_REFRESH_PENDING`
+Статус: `READY_FOR_NEXT_SOURCE`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **20**
 - Последний источник: `CHAT-020`
 - Период последнего источника: **2026-08-27 — 2026-08-28**
-- Следующее действие: выполнить post-file refresh
+- Следующее действие: перейти к `CHAT-021`
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -752,4 +752,4 @@ Three specialist lanes converge into one normalized current-day model. Broad rev
 
 ## Следующее действие
 
-Выполнить post-file refresh, затем перейти к `CHAT-021`; после `CHAT-021` выполнить expanded live-state сверку.
+Перейти к `CHAT-021`; после него выполнить expanded live-state сверку.
