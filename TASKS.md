@@ -98,7 +98,7 @@ This is an independent platform research task and does **not** block Firmware, D
 
 ## P1 — Divinus target completion
 
-35. Use `openipc-divinus/work/fh8626v100@44c4fb94...` as the current candidate and `openipc-firmware/work/fh8626v100-divinus@255b8c8d...` as its matching Firmware direction.
+35. Use `openipc-divinus/work/fh8626v100@875e0697...` as the current candidate and `openipc-firmware/work/fh8626v100-divinus@255b8c8d...` as its matching Firmware direction.
 36. Keep Majestic/Divinus shared-contract coordination in reverse issue #3. The old issue #2 is closed as superseded.
 37. Current Divinus already incorporates the critical Apollo/Ghidra lifecycle corrections: channel-valued VPU enable, distinct VPU disable, VI/VPU ownership split, StartRecvPic -> force-I -> media bind, and tightened H.264 RC/JPEG handling.
 38. The Builder Divinus YAML intentionally keeps audio and JPEG/MJPEG disabled for the first target pass even though the implementation is broader. Do not confuse test sequencing with repository capability.
@@ -126,7 +126,7 @@ This is an independent platform research task and does **not** block Firmware, D
 
 ## P4 — Builder cleanup and final device profile
 
-54. Active Builder line is `ArthurKoba/openipc-builder/work/fh8626v100-anjia@a6d6fca7...`. One ANJIA device tree composes `_divinus`, `_majestic` and `_diag`; the separate Majestic branch remains retired.
+54. Active Builder line is `ArthurKoba/openipc-builder/work/fh8626v100-anjia@dc7ddabf...`. One ANJIA device tree composes `_divinus`, `_majestic` and `_diag`; the separate Majestic branch remains retired.
 55. Preserve the composition rule: Firmware generic defconfig -> ANJIA `base.config` -> short runtime fragment. Do not reintroduce copied full defconfigs.
 56. Builder contains no proprietary media binaries. The generic pinned media-kernel package is owned by Firmware and selected by the FH8626 base defconfig.
 57. Keep ANJIA-only PTZ/lens/illumination/audio-mute/storage/update policy device-local. Production PTZ remains stateless relative movement; no boot calibration or inferred absolute coordinates.
