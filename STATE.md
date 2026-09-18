@@ -153,7 +153,7 @@ Active directions:
 
 - core: `work/fh8626v100@80169887be80c43471f9f4792dde3e2a5bd18a8c`
 - Divinus: `work/fh8626v100-divinus@255b8c8deea8e7da5ef7429b6f8f2b176a430aec`
-- Majestic: `work/fh8626v100-majestic@04e093605fbd18706f69c4d3363cb508e08bfcf1`
+- Majestic: `work/fh8626v100-majestic@cf4c6c4736a3c6fae054f816f9812f508f929d64`
 
 All three directions consume the exact Linux staging source
 `openipc-linux/work/fh8626v100@357c2d13e7589db0dbe2bbf89c2ec38b1c036e6e`.
@@ -209,7 +209,7 @@ reproducible source implementations.
 
 Repository: `ArthurKoba/openipc-builder`.
 
-- active branch: `work/fh8626v100-anjia@ee0687c06b2d80285defe7da14596041ffd221ca`
+- active branch: `work/fh8626v100-anjia@f91c1ff1a297bab6f1a8607a271125b29184df7e`
 - one physical device tree with composed `_divinus`, `_majestic` and
   `_diag` variants
 - no live separate Majestic Builder branch
@@ -295,7 +295,7 @@ native HTTP/WebUI when media was disabled. The old explicit sensor path then
 segfaulted because multiple FH8852/FH8626 ABI boundaries were still wrong.
 
 Current Firmware direction:
-`work/fh8626v100-majestic@04e09360...`.
+`work/fh8626v100-majestic@cf4c6c47...`.
 
 The offline compatibility closure is now substantially reconstructed rather
 than a fixed 720p bring-up shim:
@@ -310,7 +310,7 @@ than a fixed 720p bring-up shim:
 - native JPEG/MJPEG public surface;
 - motion YCmean/CPY backend;
 - OSD GraphV2 backend, including Ghidra-confirmed native selector/slot limits
-  (global slots 0..1, channel slots 0..3);
+  (global slots 0..1; channel SET slots 0..3; channel GET slots 0..4);
 - source RTX/ACW audio including retail DSP init, AEC/NR/AGC extensions and
   board-neutral AO lifecycle hook;
 - recovered ANJIA day/night GPIO contract in the strict full profile;
