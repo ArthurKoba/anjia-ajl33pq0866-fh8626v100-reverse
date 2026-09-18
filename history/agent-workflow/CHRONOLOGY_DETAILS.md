@@ -82,6 +82,8 @@ Sensor и MIPI path удалось довести до состояния, со�
 
 `CHAT-007` заполняет предысторию нулевого ISP IRQ: GC1054 ID/initialization, GPIO select, clocks и MIPI state были доведены до stock-like состояния; VMM/VPU/PAE/media bind уже работали, но ISP/PAE IRQ оставались нулевыми. Stock runtime tracing и внешний clean-room Fullhan reference затем сузили missing layer до полноценной ISP sensor lifecycle/registration sequence, вместо дальнейшего широкого sensor или encoder reverse.
 
+`CHAT-008` даёт независимую hardware-localization ветку того же milestone. После восстановления API lifecycle и сравнения с `C4998` обнаружено, что на OpenIPC `ISP+0x08` оставался нулевым, тогда как stock init первой аппаратной записью включает interrupt mask. Запись маски немедленно подняла ISP IRQ. Последующая изоляция отдельных mask bits показала реальный sensor cadence около 25 fps. Это доказало границу: sensor/MIPI → ISP уже живы, а следующий blocker находится в переходе ISP → VPU/PAE.
+
 
 ## D6 — Hardware H.264 и граница доказательства
 
@@ -135,6 +137,8 @@ Fullhan media drivers оказались чувствительны к lifetime:
 Отрицательный момент: handoff быстро вырос до очень большого размера. Это один из исторических аргументов в пользу нынешней схемы «короткая карта + детализированные приложения», а не одного бесконечного master-документа.
 
 Ещё до финального master handoff `CHAT-007` показывает отдельную форму knowledge transfer: пользователь просит передать новые находки параллельному ISP reverse-agent. Handoff содержит только новую external-reference ветку, локальные artifact paths, confirmed contracts, unresolved names и конкретный следующий priority, чтобы второй агент не повторял уже закрытое.
+
+`CHAT-008` усиливает этот этап двумя практиками. Во-первых, старые рабочие helper'ы поднимаются из локального checkpoint после потери `/tmp`, а не восстанавливаются по памяти. Во-вторых, parallel ISP checkpoint передаётся с явным требованием сверить с текущими findings и не повторять уже закрытый reverse; результат второго агента затем используется как reference, а не как новая независимая canonical ветка.
 
 
 ## D9 — Dequeue, grey frame и stock runtime evidence
