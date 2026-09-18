@@ -234,6 +234,30 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 
 Это ещё локальный file/handoff workspace: пользователь всё ещё вручную переносит artifacts. Но по структуре это уже прямой предшественник repository/MCP-native проекта — знания становятся адресуемой картой, а не памятью конкретного чата.
 
+### A4.11 — Local master workspace с automated governance
+Статус после `CHAT-020`: `OBSERVED`.
+
+То, что в `CHAT-017` было proposed reverse-corpus architecture, в центральной orchestration-ветке становится реальной файловой системой проекта.
+
+Появляются:
+- единый `PROJECT_MAP.md` и role-specific bootstrap;
+- current operational state в human + machine-readable форме;
+- task router/context packs;
+- module/implementation status matrices;
+- persistent `sessions/` layer;
+- runbooks для WSL/OpenIPC/stock/build/reverse;
+- disassembly-first policy;
+- SQLite index и lookup helpers;
+- recovery playbook;
+- decision/change/work/expensive-task history;
+- automated handoff/path/archive/duplicate/index/coverage health checks.
+
+Главное изменение ответственности: новому агенту больше не нужно «понять архив» целиком. Он должен войти через role/task router, прочитать current state, использовать prepared corpus и автоматически проверить workspace health.
+
+Central orchestrator теперь интегрирует specialist results в normalized knowledge, а raw agent outputs сохраняет как provenance, не как второй параллельный source of truth.
+
+Ограничение этапа сохраняется: workspace всё ещё переносится handoff-архивами и physical attachments; общий GitHub/Drive/Ghidra MCP authority исторически ещё впереди.
+
 ### A5 — Специализированные MCP/агенты
 Статус: `BOOTSTRAP`.
 
@@ -248,7 +272,7 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 
 В `CHAT-011` появляется ещё одна граница ручного режима: proven development image начинает расходиться с canonical source из-за временных overlay/init/network mutations. Без внешнего debt ledger пользователь вынужден сам напоминать, что перед final port эти изменения нельзя забыть вернуть или интегрировать чисто.
 
-## Уроки CHAT-001/002/003/004/005/006/007/008/009/010/011/012/013/014/015/016/017 для будущей agentic-системы
+## Уроки CHAT-001/002/003/004/005/006/007/008/009/010/011/012/013/014/015/016/017/018/019/020 для будущей agentic-системы
 
 1. **Текущее runtime state должно быть внешним фактом, а не памятью диалога.** Потери «stock или OpenIPC?» породили дорогие ошибки.
 2. **Agent handoff — необходим, но не должен становиться гигантской свалкой.** Нужны краткая карта и подробные приложения.
@@ -311,6 +335,11 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 59. **Specialist role нужно фиксировать так же жёстко, как artifact access.** Общий handoff не должен стирать ownership конкретного Agent/Task.
 60. **Reverse corpus должен быть подготовлен до следующего агента.** Manifest/status map/toolkit уменьшают просьбы к оператору и повтор expensive work.
 61. **Retrospectives нескольких агентов нужно консолидировать.** Общий process contract полезнее набора несовместимых quality packs.
+62. **Workspace invariants должны исполняться, а не только описываться.** Doctor/path/archive/duplicate/index checks превращают quality rules в автоматические gates.
+63. **Role/task routing должен определять контекст до чтения corpus.** Agent получает релевантный context pack вместо всего master-tree.
+64. **Continuity долгой задачи живёт в session ledger.** Checkpoint, blocker, expensive work и next action должны переживать chat/context loss.
+65. **Normalized knowledge и provenance — разные слои.** Raw agent result сохраняется для проверки, но active source of truth остаётся один.
+66. **Progress должен иметь ontology.** Module/status matrix надёжнее одной плавающей цифры процентов.
 
 ## Следующие исторические переходы, которые нужно искать
 
