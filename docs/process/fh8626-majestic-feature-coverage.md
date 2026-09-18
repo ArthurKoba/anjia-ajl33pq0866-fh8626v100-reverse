@@ -8,7 +8,7 @@ loader compatibility.
 ## Current estimate
 
 Approximate offline coverage for the current FH8852V200 Lite Majestic feature
-surface on FH8626V100: **~97%**.
+surface on FH8626V100: **~98%**.
 
 The remaining percentage is not core H.264/JPEG/audio functionality. It is
 mainly unobserved or SDK-only controls such as crop/rotate/slice variants,
@@ -18,7 +18,7 @@ lifecycle validation.
 Canonical cross-agent coordination: reverse issue #3.
 
 Current refs:
-- Firmware Majestic: `work/fh8626v100-majestic@a60789ae`
+- Firmware Majestic: `work/fh8626v100-majestic@8694de42`
 - Divinus: `work/fh8626v100@5979e160`
 
 ## Video
@@ -145,16 +145,39 @@ frontend patch is part of this port.
 The historical `/metrics` symptom is a separate Majestic/platform-provider
 question and must not be hidden by auxiliary HTTP code.
 
+## Strict full-feature acceptance profile
+
+Firmware now installs `majestic-fh8626-full-run`. It selects
+`native-strict`: native FH8626 VENC is enabled while permissive
+`FH8626_MAJESTIC_STUB_OK` remains disabled.
+
+The dedicated full profile simultaneously enables:
+- H.264 main 1280x720@25;
+- H.264 sub 640x360@25;
+- JPEG 640x384 at 5 fps;
+- stock-schema OSD with the selected `majestic-fonts` asset;
+- motion detection;
+- 8 kHz Opus capture plus audio output;
+- RTSP.
+
+It is intentionally separate from the persistent media-off default service.
+
 ## Remaining offline queue
 
-Before declaring every advertised setting complete:
-1. determine whether the current Fullhan Majestic build actually invokes
-   crop/rotate/slice SDK controls (including dynamic lookup paths);
-2. ensure hardware-unsupported H.265/high-profile options are not falsely
-   advertised by the target capability schema;
-3. keep the Divinus and Majestic RC/JPEG/audio wire definitions synchronized
-   through reverse issue #3;
-4. then stop offline work and move to build/flash/target validation.
+Only unobserved SDK-only controls remain:
+1. crop/extra rotate/slice controls if the current Fullhan Majestic build is
+   later proved to import or dynamically call them;
+2. capability advertisement for H.265/high-profile must remain honest about
+   FH8626 hardware support;
+3. keep Majestic and Divinus contracts synchronized through reverse issue #3.
+
+The current historical FH8852 build/report contains no evidence of crop,
+sliceUnits or HEVC use, and the selected donor closure has zero dependencies on
+the remaining unsupported exports. A build-time guard now rejects future
+Majestic/vendor updates that cross that boundary.
+
+There is no GitHub Actions workflow available for these branches, so the real
+Buildroot compile is the next external gate.
 
 Target acceptance must cover:
 - main/sub enable/disable and simultaneous streams;
