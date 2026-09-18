@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `READY_FOR_NEXT_SOURCE`
+Статус: `CHAT_011_IN_PROGRESS`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **10**
 - Последний источник: `CHAT-010`
 - Период последнего источника: **2026-08-26**
-- Следующее действие: получить следующий уникальный исторический файл
+- Следующее действие: завершить анализ `CHAT-011`
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -65,6 +65,7 @@
 | 8 | `CHAT-008` | 2026-08-25 | `DONE` | Partial-overlap с CHAT-007 до ~L24104. Уникальная ветка: Apollo/ISP reverse, checkpoint recovery, adaptive granularity correction, parallel-agent merge, FH8852 semantic reference, ISP interrupt-mask breakthrough, ~25-fps sensor→ISP proof и SoC-first backend goal |
 | 9 | `CHAT-009` | 2026-08-26 | `DONE` | Новый уникальный source (~13% exact-line overlap с CHAT-008 только в reused code/helper fragments): hardware H.264 capture + repeated descriptor, broken ISP unload/multi-owner lifetime, persistent daemon direction, SSH key/CRNG/PTTY dev-loop optimization, UART paste fragility и context-limit reproducibility handoff |
 | 10 | `CHAT-010` | 2026-08-26 | `DONE` | Успешное продолжение из reproducible handoff без повторного bring-up; PTY cold-boot closure; exact `PAE 5011` release + `4D05/4D06` query semantics; full-disassembly self-service; livecapture source ordering fix (hardware retest pending); отдельная SSH regression с отклонённым ControlMaster workaround |
+| 11 | `CHAT-011` | 2026-08-24 — 2026-08-26 | `IN_PROGRESS` | Divergent branch: общий префикс с CHAT-001 примерно до L32775, далее отдельная ветка ISP/VPU/H.264/dev-loop; анализируется только уникальный хвост |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
