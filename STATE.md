@@ -1,6 +1,6 @@
 # Current project state
 
-Status: `ACTIVE / UBOOT_OPENIPC_NATIVE_SOURCE_READY / KERNEL_GATE / FIRMWARE_CLEAN_CANDIDATE / DIVINUS_SOURCE_CLEAN_CANDIDATE / MAJESTIC_TARGET`.
+Status: `ACTIVE / UBOOT_NATIVE_BUILD_READY / KERNEL_STAGING / PINNED_MEDIA_RUNTIME / MAJESTIC_OFFLINE_CLOSURE / OWNER_BUILD_GATE`.
 
 Checked: `2026-09-18`.
 
@@ -115,123 +115,149 @@ Detailed audit: `docs/process/fh8626-kernel-series-audit.md`.
 Repository: `ArthurKoba/openipc-divinus`.
 
 - branch: `work/fh8626v100`
-- current source-clean candidate: `168b2ecfeffcb53c2ed2a1d86c4897fdd3423820`
-- preserved migration input: `1e624bd5aca97ba772413d2b00a10314d1db039f`
-- generic integration base: `8d400262898e8e82df6171fde7e8911ec7930249`
+- current candidate: `6860cb9b58074d80c3f4e86ffe5dba9fa9dbb983`
+- evidence class: `SOURCE_CANDIDATE / TARGET_PENDING`
 
-The current work line has been audited and cleaned rather than restarted. The external `source: fh86` encoded-owner/socket/FIFO path and its protocol tests are removed. FH8626 now uses the native Divinus HAL path directly; the weak board-preparation hook was removed so AJL GPIO/lens/PTZ/illumination policy cannot leak into the generic HAL.
+The Divinus agent and Majestic agent now share recovered contracts through reverse
+issue #3. Current Divinus already incorporates the critical Apollo/Ghidra
+corrections found during the Majestic clean-room pass: VPU enable receives the
+channel id rather than a boolean, VPU disable is the distinct request, VI/VPU
+ownership is separated from VENC start, and the VENC startup order is
+StartRecvPic -> force-I -> media bind. H.264 RC defaults, fixed-QP/CVBR and
+JPEG/MJPEG wire handling were also tightened against the same recovered
+contracts.
 
-The native source now carries direct FH8626 sensor/ISP/VPU/PAE/VENC ownership, encoded-ring copy/release, corrected ISP runtime-bank/barrier behavior, recovered rate-control mapping, native force-IDR, JPEG/MJPEG source, RTX audio integration boundary, best-effort teardown and structured platform/media telemetry. `/api/status` exposes CPU/load/memory/uptime, platform identity, channel/encoder state and evidence-class FH8626 capabilities. Temperature is explicitly unavailable: no RTC/TSENSOR or generic thermal-zone value is exposed as FH8626 temperature without hardware proof.
+The implementation is broader than the current Builder acceptance YAML. The
+Builder Divinus profile intentionally keeps audio and JPEG/MJPEG disabled for
+the first target gate; that is test sequencing, not missing repository
+ownership.
 
-This is `SOURCE_CLEAN_CANDIDATE / HARDWARE_PENDING`, not a new hardware pass. The provider deliberately reports remaining blockers: vendor GC1054/MIPI plug-in dependency, external RTX audio-helper dependency, full runtime video-reconfigure transaction, same-boot teardown/restart acceptance and exact-candidate hardware acceptance. Live `/api/mp4` mutation is rejected on FH8626 until that lifecycle is accepted; cold-start configuration remains the test path.
-
-Focused host checks are grouped in `tests/fh8626-check.sh`. They were not executed in this API-only pass. The next authoritative gate is an ARM1176/musl build plus target validation of the exact candidate.
-
-Firmware test staging is pinned to that exact candidate at `ArthurKoba/openipc-firmware/work/fh8626v100-divinus@d589e0546384a4fc094cc959f81d6f2864ce997f`. This fork pin is test provenance only and must return to OpenIPC-owned provenance after upstream integration.
-
-Detailed handoff: `docs/process/fh8626-divinus-cleanup.md`.
+No Divinus result is a substitute for the canonical Apollo/kernel evidence.
+New disagreements between the two runtime implementations must be recorded in
+issue #3 before either implementation becomes the new reference.
 
 ### Firmware
 
 Repository: `ArthurKoba/openipc-firmware`.
 
-Preservation snapshot:
+Preservation/evidence snapshot:
 
 - tag: `archive/fh8626v100-platform-20260918`
-- tip: `f4bf49da6ef355c9e733e00d774efe403513b1d4`
-- role: historical mixed WIP/evidence only
+- commit: `f4bf49da6ef355c9e733e00d774efe403513b1d4`
+- role: immutable historical source of the still-proprietary media kernel/ARC
+  payloads plus old mixed implementation evidence
 
-Clean integration candidate:
+Active directions:
 
-- branch: `work/fh8626v100`
-- tip: `eabd1ccd4684af6997771269c4655f7e4435bcec`
-- pre-config-audit checkpoint: `f9146dd42a2f606d305ebccd301268848de26880`
-- base: `master@47ccdbee45fa5b8eee69c25c7af656cd5d35a28e`
-- diff: only the FH8626 generic kernel config, generic lite defconfig and CI registration
+- core: `work/fh8626v100@80169887be80c43471f9f4792dde3e2a5bd18a8c`
+- Divinus: `work/fh8626v100-divinus@255b8c8deea8e7da5ef7429b6f8f2b176a430aec`
+- Majestic: `work/fh8626v100-majestic@527e3d8b8e1ca48cf5a0b64e91176e0ff552f687`
 
-The clean/core branch consumes `openipc-linux/work/fh8626v100@357c2d13...` directly, carries no FH8626 kernel patch directory, and is now streamer-neutral: it deliberately selects neither Divinus nor Majestic. It also carries no AJL board package/fragment, no factory `.ko/.so/.bin`, and no local/patch copy of Divinus. The temporary exact Linux tarball points at the ArthurKoba fork only until the curated series lands in `OpenIPC/linux`; that pin is not upstream-ready provenance.
+All three directions consume the exact Linux staging source
+`openipc-linux/work/fh8626v100@357c2d13e7589db0dbe2bbf89c2ec38b1c036e6e`.
+The standard OpenIPC 8 MiB budget is 2048 KiB kernel and 5120 KiB SquashFS,
+matching the native U-Boot map.
 
-Firmware now inherits the standard OpenIPC 8 MiB assembly budget: 2 MiB kernel plus 5 MiB SquashFS, while the Linux source supplies `256K boot + 64K env + 2048K kernel + 5120K rootfs + rest rootfs_data` (704 KiB remainder on 8 MiB NOR). The prior 3 MiB-kernel arrangement remains preservation evidence only.
+### Proprietary media-kernel runtime ownership
 
-Runtime direction branches are layered on that core:
+A pre-deploy audit found that the earlier source cleanup removed the checked-in
+Fullhan media blobs correctly but also removed the build-time owner for their
+still-required kernel ABI. That gap is now closed by generic package
+`fullhan-media-fh8626v100`, selected by the FH8626 base defconfig in all
+three runtime directions.
 
-- Divinus Firmware direction: `work/fh8626v100-divinus@d589e0546384a4fc094cc959f81d6f2864ce997f`; it selects Divinus and temporarily pins the exact hardware-test candidate `ArthurKoba/openipc-divinus@168b2ec...`. The personal-fork pin is staging-only provenance.
-- Majestic Firmware direction: `work/fh8626v100-majestic@7ed2a17a67fce0c2ee8d80bc798cafe81cfa6c38`; it adds the isolated FH8852V200 Majestic compatibility/control-plane package and a media-off configuration. This is staging, not an upstream-ready FH8626 media implementation.
+Active source branches do **not** contain the binary payloads. Buildroot
+downloads exactly nine pinned files from the immutable preservation commit and
+verifies every one by SHA-256:
 
-The clean branch is `SOURCE_CONFIRMED / CLEAN_ARCH_CANDIDATE`, not a build or hardware acceptance. A production kernel-config audit removed only traced legacy/debug/dead facilities, made RTC device registration opt-in, and made recovery NFS explicitly v3-only. The exact decisions are in `docs/process/fh8626-kernel-config-audit.md`. The owner still needs to run the authoritative build and record the resolved `.config` plus final kernel/rootfs sizes. Binary ownership and exact hashes are recorded in `docs/process/fh8626-firmware-ownership-audit.md`.
+- `bgm.ko`
+- `enc.ko`
+- `gpio_wave.ko`
+- `isp.ko`
+- `jpeg.ko`
+- `media_process.ko`
+- `vmm.ko`
+- `xbus_rpc.ko`
+- `rtthread_arc.bin`
+
+Independent immutable copies of those same bytes were also ingested into Koba
+artifact storage. The package installs no archived sensor plug-in or archived
+`libmipi.so`; those userspace boundaries are owned by current runtime
+implementations.
+
+The installed `load_fullhan -i` integrates with standard OpenIPC
+`S70vendor` and preserves the historical load order:
+VMM -> XBUS/ARC -> media_process -> ISP -> encoder -> JPEG -> BGM ->
+gpio_wave. It fails unless the required media character devices are created.
+
+The eight modules report `vermagic=4.9.129 mod_unload ARMv6 p2v8`, matching
+the target kernel family/config ABI. The current Linux staging commits alter
+platform/GMAC/PWM/RTC/USB areas, not the proprietary media module ABI. This is
+a strong static compatibility check, not a replacement for target module-load
+acceptance.
+
+Raw proprietary media/ARC payload size is about 798 KiB before SquashFS. The
+5120 KiB rootfs budget therefore remains an explicit owner-build gate.
+
+This package is transitional deployment infrastructure, not blob retirement.
+The final architecture still aims to replace the opaque kernel/ARC pieces with
+reproducible source implementations.
 
 ### Builder
 
 Repository: `ArthurKoba/openipc-builder`.
 
-Current Builder topology is intentionally simple:
-
-- production/base: `master@e0a643f4942b064a149f470b3c118ebba4daebb5`;
-- single active FH8626/ANJIA development line: `work/fh8626v100-anjia@9c507b85481df2787bb214e535f17003bdebb6e6`;
-- no separate live Majestic Builder branch.
-
-Preserved historical/reference states:
-
-- old mixed Majestic experiment: `bcf8658e4aa612ee9afda8c28d52d8ad1674e2f1` with pre-experiment checkpoint `5603a701c8812aebc705c42e933ebae48aed805f`;
-- pre-cleanup stock-style PTZ controller: `archive/fh8626v100-anjia-stock-ptz-controller-20260918@a51eec5b294b03e8d16430e9018c3a0441647e49`;
-- retired separate Majestic Builder line: `archive/fh8626v100-anjia-majestic-branch-20260918`.
-
-The active Builder line now models **one physical ANJIA device with multiple runtime variants**, not several copied device profiles.
-
-Selectable composed targets are:
-
-- `fh8626v100_lite_anjia-ajl33pq0866_divinus`;
-- `fh8626v100_lite_anjia-ajl33pq0866_majestic`;
-- `fh8626v100_lite_anjia-ajl33pq0866_diag`.
+- active branch: `work/fh8626v100-anjia@9b9a7f0e470d51d18b3a32c6cdaecb0102fb4376`
+- one physical device tree with composed `_divinus`, `_majestic` and
+  `_diag` variants
+- no live separate Majestic Builder branch
 
 Composition is:
 
-`Firmware generic fh8626v100_lite_defconfig -> ANJIA base.config -> runtime fragment`.
+`Firmware fh8626v100_lite_defconfig -> ANJIA base.config -> runtime fragment`.
 
-The sibling `firmware-base` selector names the generic Firmware defconfig to inherit. Builder therefore no longer duplicates the generic FH8626 architecture/toolchain/kernel/filesystem defconfig. The ANJIA `base.config` contains only board/device deltas such as the board kernel fragment, microSD policy, RTL8188FU selection and board-support package. Streamer/diagnostic selections live only in short runtime fragments.
+Sibling `.firmware` metadata chooses the correct Firmware direction
+automatically:
 
-Each variant also has a small `.firmware` metadata file. By default Builder maps:
+- Divinus -> `work/fh8626v100-divinus`
+- Majestic -> `work/fh8626v100-majestic`
+- diag -> `work/fh8626v100`
 
-- Divinus -> `ArthurKoba/openipc-firmware.git@work/fh8626v100-divinus`;
-- Majestic -> `ArthurKoba/openipc-firmware.git@work/fh8626v100-majestic`;
-- diagnostic -> `ArthurKoba/openipc-firmware.git@work/fh8626v100`.
+Builder remains thin. It does not store proprietary FH8626 media binaries.
+Board-local packages own PTZ, lens, illumination/IR-cut/SADC policy,
+speaker-amplifier mute, storage, Wi-Fi selection and persistent target/update
+identity.
 
-Explicit `OPENIPC_FW_REPO` / `OPENIPC_FW_REV` overrides remain available for bisect/debug work.
-
-ANJIA-only Buildroot packages are now device-local under
-`devices/fh8626v100_lite_anjia-ajl33pq0866/general/package/`. They are registered only for this device tree and no longer widen unrelated Builder targets. The shared board-support package owns lens, illumination/IR-cut/SADC helpers, persistent board identity/update policy and optional PTZ capability. Divinus YAML remains a separate Divinus-only package.
-
-PTZ is now an explicit optional device capability selected by
-`BR2_PACKAGE_ANJIA_AJL33PQ0866_PTZ=y`. The production backend remains stateless relative movement through the standard `gpio-motors PAN_STEPS TILT_STEPS DELAY_MS` interface. It keeps the hardware-proven PWM transaction/channel mapping, lock and safe-disable path, while startup calibration, boot movement, persistent inferred coordinates, `home` and absolute `goto` remain outside production. Current Divinus/Majestic/diagnostic variants enable the capability explicitly; future variants may omit it without losing lens/illumination/device policy.
-
-Lens switching remains independent from PTZ. `fh8626-lens` owns only the physical GPIO4/GPIO14 selector/order/settle boundary. The GPIO5 cold-boot dual-sensor prerequisite and the VENC/orientation/exposure transaction remain media-runtime responsibilities.
-
-Persistent runtime identity is no longer a one-shot customizer assumption. The image carries `/etc/openipc/builder-target` and `/etc/openipc/update-target`; idempotent `S32anjia-env` validates them on NOR boot and changes U-Boot environment only when values differ. Diagnostic images deliberately have an empty update target and therefore do not redirect the camera's production self-update path. TFTP/initramfs validation remains read-only with respect to persistent U-Boot environment.
-
-Builder mechanics on the work line are also hardened:
-
-- no self-`git pull` during a build;
-- non-upstream Firmware repository overrides require an explicit ref;
-- Firmware is resolved in a temporary checkout before replacing `openipc/`;
-- branch/tag/SHA staging refs are resolved explicitly and the final Firmware SHA is recorded;
-- one checkout-level `flock` prevents concurrent Builder runs from trampling the same `openipc/`;
-- ambiguous target definitions and device/global package collisions are rejected early;
-- composed metadata is removed before Firmware build;
-- archive collection handles missing optional artifacts safely;
-- archives use second-resolution timestamps and include Builder SHA, requested/resolved Firmware SHA and resolved Buildroot configuration provenance when available.
-
-The main GitHub workflow file still cannot be changed through the permitted GitHub App because that identity lacks workflow-write permission. No alternate GitHub path was used. Exact composed targets are already supported by `builder.sh` and the dedicated `build-one` path; any remaining `master.yml` dispatch polish is workflow-permission debt, not a reason to duplicate profiles.
-
-**Validation boundary:** no CI run, tree-wide CI self-test, Builder/Firmware build or hardware test was run for the current `9c507b85481df2787bb214e535f17003bdebb6e6` tip in this documentation-sync iteration. Earlier host/source checks validated the PTZ/lens backend before the later variant/package/composition refactors, but must not be treated as validation of the current complete Builder state. All three composed FH8626 targets remain explicit `NOT_BUILT` staging targets while their required Firmware directions are fork-local.
-
+The device README was refreshed during the pre-deploy audit and is now the
+operator-facing build/deployment checklist. The current variants remain
+`NOT_BUILT`; no current composed image size or hardware pass may be inferred
+from historical builds.
 
 ## Proprietary media/runtime retirement
 
-The preserved Firmware branch still carries proprietary Fullhan runtime artifacts required by the historical working stack. They are transitional dependencies, not the target upstream architecture.
+The active Firmware/Builder branches no longer carry opaque FH8626 media bytes.
+The preservation tag
+`openipc-firmware/archive/fh8626v100-platform-20260918@f4bf49da...`
+remains the immutable provenance source.
 
-Current preservation inventory: eight kernel modules (`bgm.ko`, `enc.ko`, `gpio_wave.ko`, `isp.ko`, `jpeg.ko`, `media_process.ko`, `vmm.ko`, `xbus_rpc.ko`), two userspace plug-ins (`libmipi.so`, `libgc1054_mipi.so`) and six firmware/profile `.bin` objects including `rtthread_arc.bin` and GC1054 sensor/profile data.
+For pre-deploy testing, the still-required kernel/ARC runtime is now selected
+through `fullhan-media-fh8626v100`: package metadata, loader scripts and
+SHA-256 manifests live in active source, while the nine opaque payloads are
+fetched from the immutable preservation commit and independently mirrored in
+Koba artifact storage.
 
-The project already has substantial source-level ISP/AE/AWB/CCM/media-owner reconstruction. Reuse it rather than restarting ISP reverse wholesale, but do not equate userspace source coverage with replacement of the proprietary kernel modules. Retirement order and acceptance rules are in `docs/process/fh8626-blob-retirement.md`.
+This fixes build ownership without pretending blob retirement is complete.
+The proprietary runtime is still technical debt. Kernel source currently does
+not contain open replacements for `isp.ko`, `enc.ko`, `jpeg.ko`,
+`media_process.ko`, `vmm.ko`, `xbus_rpc.ko`, `bgm.ko` or
+`gpio_wave.ko`; `rtthread_arc.bin` also remains opaque.
+
+Majestic has already retired the active vendor GC1054 and MIPI userspace path
+with source implementations. Do not reintroduce the archived sensor/MIPI blobs
+into the deployment package.
+
+Retirement order and evidence rules remain in
+`docs/process/fh8626-blob-retirement.md`.
 
 ## Ownership boundary
 
@@ -261,17 +287,57 @@ The candidate still requires the focused host suite, exact ARM1176/musl Firmware
 
 ## Majestic
 
-Majestic has a preserved hardware-proven **control-plane** result and a newly reconstructed staging path. The historical FH8852V200 binary successfully loaded on FH8626, served HTTP/WebUI on port 80, and remained stable when media consumers were disabled. Explicit GC1054 media initialization reached the SDK path and then crashed; direct I2C reads still returned GC1054 chip ID 0x10/0x54, so that experiment did not prove a dead sensor path.
+Majestic remains the product-focus runtime. Historical hardware evidence proves
+its control plane: the FH8852V200 Lite binary ran on FH8626 and served the
+native HTTP/WebUI when media was disabled. The old explicit sensor path then
+segfaulted because multiple FH8852/FH8626 ABI boundaries were still wrong.
 
-Current staging is split correctly: Firmware `work/fh8626v100-majestic@718f6a14...` owns the generic compatibility package; Builder now uses the single composed-device line `work/fh8626v100-anjia@0945bd3...`, whose `fh8626v100_lite_anjia-ajl33pq0866_majestic` fragment selects that Firmware direction. The former separate Builder Majestic branch is retired and retained only as an archive tag. No FH8852 kernel modules or firmware are installed. See `docs/process/fh8626-majestic-staging.md`.
+Current Firmware direction:
+`work/fh8626v100-majestic@527e3d8b...`.
 
-The Firmware staging package has reached the offline media-adapter boundary. It contains independent donor/source ABI probes; an FH8852-shaped GC1054 facade over a source-native FH8626 0x68-byte GC1054 implementation; a source reimplementation of the recovered FH8626 MIPI MMIO contract; source `libvmm.so` and `libdsp.so` facades for VMM/SYS/VPSS/VENC; a fixed native 1280x720@25 H.264 Baseline/VBR path; exact FH8852<->FH8626 frame-control translation; balanced encoded-stream lease translation; real GC1054 mirror/flip translation; loader-complete optional DSP/JPEG symbols as explicit staging boundaries; and a source `libacw_mpi.so` facade over the hardware-proven FH8626 `/dev/rtxbus` transport with balanced AI/AO teardown. The explicit media/AV runners therefore no longer need the retained vendor GC1054 or MIPI object for the active sensor path. The normal service remains media-off.
+The offline compatibility closure is now substantially reconstructed rather
+than a fixed 720p bring-up shim:
 
-Majestic HTTP/WebUI is intentionally untouched. No JavaScript patch and no auxiliary HTTP proxy are part of the accepted direction. The historical empty `/metrics` behavior remains a real Majestic/platform metrics-provider blocker and must be fixed at that boundary rather than hidden by a second web server.
+- source GC1054 and MIPI path;
+- FH8852 sensor-table -> FH8626 callback translation;
+- source VMM facade;
+- source SYS/VPSS/VENC/stream translation;
+- main/sub/analytics H.264 channel ownership;
+- profile, GOP, visible geometry, full stock RC modes, readback and realtime RC;
+- exact encoded FIFO/channel/lease translation;
+- native JPEG/MJPEG public surface;
+- motion YCmean/CPY backend;
+- OSD GraphV2 backend;
+- source RTX/ACW audio including retail DSP init, AEC/NR/AGC extensions and
+  board-neutral AO lifecycle hook;
+- recovered ANJIA day/night GPIO contract in the strict full profile;
+- direct + transitive ABI guard that rejects a moving Majestic/vendor update if
+  it begins depending on an unsupported SDK boundary.
 
-A canonical Ghidra audit against Apollo, `isp.ko` and `enc.ko` has now corrected the VPSS enable ABI, recovered the distinct disable/close requests, validated frame-control packing, recovered the public VENC CreateChn capability record, and identified the stock combined H.264 SetChnAttr -> PAE config + full-RC translator. Donor ISP/ispcore remain intentionally isolated rather than replaced by a partial fake context implementation.
+HEVC/H.265 is explicitly unsupported because the retained FH8626 encoder stack
+does not register an HEVC engine. Unsupported SDK-only exports are errors, not
+fake success.
 
-This is `OFFLINE_PORT_COMPLETE / BUILD_AND_HARDWARE_PENDING`, not completed product support. Arbitrary VENC/RC layouts, full ISP replacement, Majestic JPEG behavior, full audio/two-way policy, day/night integration and same-boot opaque ISP teardown remain runtime-evidence-dependent. The moving donor `master` binary must still be pinned/reproduced before product acceptance.
+The retained donor ISP/ispcore/advapi layer stays isolated as one coherent
+userspace ISP context; replacing isolated pieces with guessed direct ioctls
+would reduce correctness.
+
+Majestic HTTP/WebUI remains untouched. No auxiliary proxy and no JavaScript
+patch are accepted. The historical empty `/metrics` result remains a separate
+provider/backend question.
+
+Default boot stays media-off. `majestic-fh8626-full-run` is the strict target
+acceptance profile: native VENC enabled, permissive stubs disabled, main+sub
+H.264, JPEG, OSD, motion, audio, RTSP and board day/night enabled together.
+
+The offline selected runtime closure is complete enough to stop speculative
+adapter work. The next blocker is now an **actual composed build**: verify the
+new pinned media package downloads/hashes, require `uImage <= 2048 KiB` and
+`rootfs.squashfs <= 5120 KiB`, then test on the camera.
+
+A successful build is still not product acceptance. Same-boot/reconfigure,
+media devices, RTSP/JPEG/OSD/motion/audio/day-night/PTZ/storage and persistent
+boot/update behavior remain hardware gates.
 
 ## Audio
 
@@ -298,12 +364,31 @@ Firmware, dumps and other heavy primary evidence remain external and SHA-address
 
 ## Immediate engineering sequence
 
-1. reconcile the FH8626 kernel branch/upstream PR and build the final intended OpenIPC `uImage`;
-2. measure that image against the standard 2 MiB kernel partition and audit configuration/compression only if it does not fit;
-3. when matching kernel/rootfs images are ready, hardware-test the complete OpenIPC-native U-Boot/layout migration;
-4. after hardware acceptance, curate the U-Boot history into a clean contribution series and update the stale workflow through an authorized identity;
-5. classify the mixed Firmware preservation snapshot by repository ownership;
-6. build and target-test the latest Divinus candidate until its FH8626 path is complete;
-7. transition the product path to Majestic;
-8. integrate shared runtime pieces into Firmware;
-9. owner-build and hardware-regress the cleaned thin Builder profiles; source cleanup is complete, but Builder build/target acceptance is still pending.
+1. Owner-build
+   `fh8626v100_lite_anjia-ajl33pq0866_majestic` from Builder
+   `work/fh8626v100-anjia`; retain the archived composed config and resolved
+   Builder/Firmware/Linux SHAs.
+2. Verify all nine `fullhan-media-fh8626v100` downloads pass SHA-256 and the
+   final target contains the eight modules, `rtthread_arc.bin`,
+   `fh-media-modules` and `load_fullhan`.
+3. Record exact image sizes. Hard gates: `uImage <= 2048 KiB`,
+   `rootfs.squashfs <= 5120 KiB`; also record remaining headroom.
+4. For the first Majestic media test, avoid combining it with the new native
+   U-Boot migration unless the existing bootloader cannot boot the matching
+   kernel/rootfs layout. The new U-Boot mainline remains a separate cold-boot
+   hardware gate.
+5. Boot the default media-off image and verify board/network/control-plane
+   baseline. Confirm `S70vendor` creates `/dev/vmm_userdev`,
+   `/dev/media_process`, `/dev/isp`, `/dev/pae` and `/dev/jpeg`.
+6. Run `majestic-fh8626-abi-probe`; retain complete output and exact Majestic
+   build identity.
+7. Run `majestic-fh8626-full-run` and validate simultaneous main/sub RTSP,
+   live RC/GOP/readback, JPEG, OSD, motion, capture/playback audio and
+   day/night/IR-cut.
+8. Regress repeated stop/start/reconfigure, lens, PTZ, storage, Wi-Fi, reset,
+   shutdown and board-safe GPIO states.
+9. Only after media/runtime acceptance decide whether to migrate the same test
+   image onto `u-boot-fullhan/fh8626v100-mainline`; perform that migration
+   with full-flash backup and external SPI recovery available.
+10. Feed every target finding back into reverse issue #3 when it changes a
+    shared FH8626 contract used by Majestic and Divinus.
