@@ -110,6 +110,8 @@ CHAT-007 даёт прямое подтверждение: после вопро
 
 `CHAT-009` даёт аппаратное доказательство причины: `rmmod isp` оставил dangling IRQ action и привёл к kernel Oops, а несколько ISP fd давали duplicate handlers. Поэтому persistent owner/daemon — не только ускорение, но и safety requirement.
 
+`CHAT-011` даёт ещё одно прямое основание для single-owner architecture: после H.264 capture пользователь спрашивает, можно ли убрать обязательный power-cycle, и решение формулируется как один daemon, который держит `/dev/isp`, `/dev/pae`, `/dev/media_process` и VMM весь lifetime.
+
 ### I-013 — Оптимизация dev-loop SSH, а не только самой прошивки
 Статус: `CONSOLIDATED`.
 
@@ -120,6 +122,8 @@ CHAT-007 даёт прямое подтверждение: после вопро
 Источник: `CHAT-001`.
 
 `CHAT-009` подробно раскладывает dev-loop optimization по слоям: постоянный Dropbear host key на mtd4, статический network path без сломанного `fw_printenv`, persistent `seedrng` state для ранней CRNG readiness, корректный `devpts newinstance`/`ptmx`, а также отдельные замеры IP → TCP/22 → SSH banner. Это превращает «SSH долго» из гадания в boundary-by-boundary diagnosis.
+
+`CHAT-011` показывает полную dev-loop reconciliation: boot-time SSH ускорился, но затем пользователь обнаружил 5-секундную regression каждого SCP; оптимизация была пересмотрена по measured boundaries, а не принята как завершённая.
 
 ### I-014 — Разделять «работает» и «полностью доказано»
 Статус: `CONSOLIDATED`.
@@ -197,6 +201,8 @@ CHAT-007 даёт прямое подтверждение: после вопро
 
 `CHAT-004` добавляет вторую сторону того же принципа: если агент снова и снова просит вырезать диапазоны из одного бинарника, нужно один раз материализовать полный searchable disassembly/binary bundle, проверить его provenance и дальше искать локально без участия пользователя.
 
+`CHAT-011` подчёркивает различие между именем image и его фактической lineage: серии FINAL/FINAL2/FINAL3/FINAL4 недостаточно; master handoff отдельно предупреждает проверять, какой `rootfs.cpio` реально упакован в загруженный uInitrd.
+
 ### I-019 — Параллельный reverse с непересекающимися зонами ответственности
 Статус: `CONSOLIDATED`.
 
@@ -257,6 +263,8 @@ CHAT-007 показывает более раннюю форму того же p
 Это особенно важно в reverse engineering, где несколько одновременно изменённых неизвестных быстро делают результат неинтерпретируемым.
 
 `CHAT-010` даёт второй классический regression case: после SSH/rootfs правок новый `scp` стал стабильно медленнее, а пользователь помнил быстрый pre-change baseline. После отказа от workaround-гипотезы агент вернулся к boundary timing и поиску фактического delta.
+
+`CHAT-011` — после cold boot прежний sensor/media path «сломался», но сравнение с known-good session быстро выявило пропущенный GPIO5 reset pulse. Это ещё один пример восстановления через known-good delta, а не новый blind reverse.
 
 ### I-023 — Preflight перед hardware delivery
 Статус: `OBSERVED`.
@@ -396,7 +404,7 @@ CHAT-007 усиливает принцип: valuable stock runtime сначал�
 `CHAT-008` показывает зрелое применение этого правила: FH8852 reference используется для имён `SensorRegCb/SensorInit/SensorKick/KickStart` и ожидаемой архитектуры, а каждый адрес/handler затем подтверждается независимым FH8626 disassembly/runtime evidence.
 
 ### I-033 — Разделять рабочую reverse-документацию, историю экспериментов и upstream deliverable
-Статус: `OBSERVED`.
+Статус: `CONSOLIDATED`.
 
 В `CHAT-007` впервые явно проектируется будущий knowledge repository:
 - current hardware/boot/media/ioctl facts — в структурированных docs;
@@ -406,6 +414,8 @@ CHAT-007 усиливает принцип: valuable stock runtime сначал�
 - upstream OpenIPC получает только нужный source/config/device delta и hardware evidence, а не весь reverse-дневник.
 
 Это исторический предшественник современной схемы reverse repo: одна текущая authority на факт, история отдельно, тяжёлое evidence отдельно.
+
+`CHAT-011` независимо подтверждает границу current-dev vs upstream: пользователь требует не забыть вернуть временные network/init hacks, а handoff получает отдельный reconciliation список dev-only изменений и финальных production решений.
 
 ### I-034 — Progress tracking по engineering boundaries
 Статус: `CONSOLIDATED`.
@@ -421,6 +431,8 @@ CHAT-007 усиливает принцип: valuable stock runtime сначал�
 Так длинный reverse остаётся управляемым без ложных обещаний по времени.
 
 `CHAT-008` повторно подтверждает необходимость tracker: пользователь несколько раз спрашивал остаток работы, а прежняя оценка «2–3 узких неизвестных» оказалась слишком оптимистичной.
+
+`CHAT-011` — многократные вопросы «сколько ещё осталось» и «скоро закончится вечный reverse?» повторно показывают, что прогресс нужно отражать subsystem gates, особенно перед длинными ISP call-chain исследованиями.
 
 ### I-035 — Adaptive granularity: группировать routine, дробить только decision boundaries
 Статус: `CONSOLIDATED`.
@@ -483,6 +495,8 @@ CHAT-007 усиливает принцип: valuable stock runtime сначал�
 
 Это дополняет I-010: canonical handoff должен быть компактной картой, но иметь ссылки/manifest на воспроизводимые подробности, а не превращаться в монолитный transcript.
 
+`CHAT-011` развивает master handoff через reconciliation: старые observations не удаляются молча, а сохраняются как historical evidence с пометкой superseded, при этом верхний authoritative state переписывается под текущий proven runtime.
+
 ### I-039 — Прошлый агент как fallback, а не основной канал continuity
 Статус: `OBSERVED`.
 
@@ -508,6 +522,25 @@ CHAT-007 усиливает принцип: valuable stock runtime сначал�
 - сравнить с known-good behavior и локализовать появившийся delta.
 
 Обобщение: handoff — стартовое инженерное состояние, но свежая воспроизводимая observation имеет приоритет над старой интерпретацией.
+
+### I-041 — Ledger временных workaround-ов и отдельный final-reconciliation gate
+Статус: `OBSERVED`.
+
+В bring-up неизбежны временные решения: board-неспецифичный overlay, ручная mutation generated rootfs, dev-only service ordering, compatibility runtime, hard-coded test assumptions или удаление блокирующего универсального hook.
+
+`CHAT-011` показывает, что просто помнить о них недостаточно. К концу длинной сессии часть working image уже опережала canonical source, а пользователь отдельно потребовал сохранить обязательство «всё вернуть обратно» при финальном оформлении.
+
+Практика:
+- при каждой временной правке сразу писать **зачем она введена**, **где живёт**, **что считается clean final replacement**;
+- держать единый debt/reconciliation section в handoff/state;
+- различать `PROVEN_DEV_WORKAROUND` и `FINAL_INTENDED_ARCHITECTURE`;
+- перед upstream/production выполнить отдельный проход: каждую запись либо revert, либо board-scope, либо перенести в canonical source нормальным способом;
+- не считать generated CPIO/image source of truth, даже если именно он hardware-proven;
+- generic OpenIPC behavior не менять permanently только потому, что это ускоряет одну development camera.
+
+Результат: hardware-proven экспериментальные решения не теряются, но и не превращаются незаметно в архитектурный долг финального порта.
+
+Источник: `CHAT-011`.
 
 ## Исходные этапы, ещё не подтверждённые
 
