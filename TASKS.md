@@ -98,7 +98,7 @@ This is an independent platform research task and does **not** block Firmware, D
 
 ## P1 — Divinus target completion
 
-35. Use `openipc-divinus/work/fh8626v100@875e0697...` as the current candidate and `openipc-firmware/work/fh8626v100-divinus@255b8c8d...` as its matching Firmware direction.
+35. Use `openipc-divinus/work/fh8626v100@809561bd...` as the current candidate and `openipc-firmware/work/fh8626v100-divinus@255b8c8d...` as its matching Firmware direction.
 36. Keep Majestic/Divinus shared-contract coordination in reverse issue #3. The old issue #2 is closed as superseded.
 37. Current Divinus already incorporates the critical Apollo/Ghidra lifecycle corrections: channel-valued VPU enable, distinct VPU disable, VI/VPU ownership split, StartRecvPic -> force-I -> media bind, and tightened H.264 RC/JPEG handling.
 38. The Builder Divinus YAML intentionally keeps audio and JPEG/MJPEG disabled for the first target pass even though the implementation is broader. Do not confuse test sequencing with repository capability.
@@ -111,13 +111,13 @@ This is an independent platform research task and does **not** block Firmware, D
 
 ## P2 — Majestic product path
 
-45. **Offline selected-runtime closure is complete; build/hardware acceptance is not.** Current Firmware direction is `work/fh8626v100-majestic@cf4c6c47...`.
-46. The Majestic branch now includes source GC1054/MIPI, VMM, multi-channel H.264 SYS/VPSS/VENC/stream, full stock RC/readback/realtime controls, JPEG/MJPEG, motion YCmean/CPY, OSD GraphV2 and recovered RTX/ACW audio/VQE. H.265 is explicit unsupported because the FH8626 encoder stack has no HEVC engine. GraphV2 native selector/slot limits were rechecked against `isp.ko` after the Divinus OSD pass and are enforced in Majestic `cf4c6c47`, including the native asymmetry: global 0..1, channel SET 0..3, channel GET 0..4.
+45. **Offline selected-runtime closure is complete; build/hardware acceptance is not.** Current Firmware direction is `work/fh8626v100-majestic@aabf18a6...`.
+46. The Majestic branch now includes source GC1054/MIPI, a typed and fully populated FH8852-shaped 0x7c sensor callback table over the stock 0x68 FH8626 ABI, VMM, multi-channel H.264 SYS/VPSS/VENC/stream, full stock RC/readback/realtime controls, JPEG/MJPEG, motion YCmean/CPY, OSD GraphV2 and recovered RTX/ACW audio/VQE. H.265 is explicit unsupported because the FH8626 encoder stack has no HEVC engine. GraphV2 native selector/slot limits are enforced with the native asymmetry: global 0..1, channel SET 0..3, channel GET 0..4. Sensor ABI evidence is in `docs/process/fh8626-majestic-sensor-abi.md`.
 47. The Majestic compatibility package itself selects the shared pinned `fullhan-media-fh8626v100` kernel/ARC runtime. Do not claim the userspace port works if the media modules are absent, and do not rely only on the base defconfig for this dependency.
 48. Direct and transitive ABI guards must remain mandatory: a moving Majestic or selected donor library that reaches an unsupported SDK API must fail the build rather than boot with a fake-success stub.
 49. Default boot remains media-off and native Majestic HTTP/WebUI remains untouched. No proxy or frontend JavaScript patch is accepted.
 50. Owner build gate: run `./builder.sh fh8626v100_lite_anjia-ajl33pq0866_majestic`; record resolved Builder/Firmware/Linux SHAs, media-package SHA verification, exact installed Majestic executable SHA-256 and final image sizes. The FH8852 `lite.master` donor is still moving upstream, so exact donor bytes are mandatory build evidence. Do not rely on the historical control-plane build as proof of the current tree.
-51. Hardware ladder: media-off control plane -> media device nodes -> `majestic-fh8626-abi-probe` -> `majestic-fh8626-full-run`. Full-run must prove simultaneous main/sub RTSP, runtime RC/GOP/readback, JPEG, OSD, motion, audio input/output, speaker mute lifecycle and ANJIA day/night/IR-cut. Characterize `/metrics` at the real Majestic provider boundary; do not add another web server.
+51. Hardware ladder: media-off control plane -> media device nodes -> `majestic-fh8626-abi-probe` -> `majestic-fh8626-full-run`. ABI probe must pass selected-library loading, required symbols, required media devices and every active FH8852 sensor callback slot. Full-run must prove simultaneous main/sub RTSP, runtime RC/GOP/readback, JPEG, OSD, motion, audio input/output, speaker mute lifecycle and ANJIA day/night/IR-cut. Characterize `/metrics` at the real Majestic provider boundary; do not add another web server.
 
 ## P3 — firmware product integration
 
@@ -126,7 +126,7 @@ This is an independent platform research task and does **not** block Firmware, D
 
 ## P4 — Builder cleanup and final device profile
 
-54. Active Builder line is `ArthurKoba/openipc-builder/work/fh8626v100-anjia@dc7ddabf...`. One ANJIA device tree composes `_divinus`, `_majestic` and `_diag`; the separate Majestic branch remains retired.
+54. Active Builder line is `ArthurKoba/openipc-builder/work/fh8626v100-anjia@7db8cc1f...`. One ANJIA device tree composes `_divinus`, `_majestic` and `_diag`; the separate Majestic branch remains retired.
 55. Preserve the composition rule: Firmware generic defconfig -> ANJIA `base.config` -> short runtime fragment. Do not reintroduce copied full defconfigs.
 56. Builder contains no proprietary media binaries. The generic pinned media-kernel package is owned by Firmware and selected by the FH8626 base defconfig.
 57. Keep ANJIA-only PTZ/lens/illumination/audio-mute/storage/update policy device-local. Production PTZ remains stateless relative movement; no boot calibration or inferred absolute coordinates.
