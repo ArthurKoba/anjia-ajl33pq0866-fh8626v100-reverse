@@ -1,25 +1,25 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_024_IN_PROGRESS`
+Статус: `CHAT_024_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **23**
-- Последний источник: `CHAT-023`
+- Обработано исторических файлов: **24**
+- Последний источник: `CHAT-024`
 - Период последнего источника: **2026-08-28**
-- Следующее действие: завершить анализ `CHAT-024`
+- Следующее действие: post-file refresh + 24-file live-state refresh
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-023 |
+| Направление | Файл | Состояние после CHAT-024 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 23/?? sources обработано |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 24/?? sources обработано |
 | Ошибки/нарушения агентов | `ERRORS.md` | 39 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 82 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D21: production catch-up + hardware parity session |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 85 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D22: AJL33PQ0866 / CF26-SM OEM identity and donor corpus |
 | Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.14: frozen-base fan-out / DELTA fan-in |
 
 ## Обязательный цикл для каждого следующего файла
@@ -78,7 +78,7 @@
 | 21 | `CHAT-021` | 2026-08-28 | `DONE` | Systematic stock evidence campaign: four canonical imaging states, bidirectional lens/day-night transitions, white-light/audio/JPEG/PTZ, targeted Apollo runtime evidence, static reverse preparation, evidence catalog/state matrix and delta package; OOM/resource and metadata-correction lessons |
 | 22 | `CHAT-022` | 2026-08-28 | `DONE` | Production integration catches code up to reverse; hardware validates WIDE H264, gain/APC/NR3D/LTM/manual AE/AWB→CCM and dual-sensor after GPIO5 bootstrap; lifecycle/control-plane and RAW/Bayer become focused remaining blockers |
 | 23 | `CHAT-023` | 2026-08-28 | `DONE` | Orchestrator formalizes reverse vs implementation vs evidence lanes, retracts premature v20/v21 as official distribution points, introduces frozen-master integration barrier and layered progress ontology |
-| 24 | `CHAT-024` | 2026-08-28 | `IN_PROGRESS` | External OEM/device identification: AJL33PQ0866/YGT/SDK fingerprint, CF26/SM PCB family, Light Vision/CF26 relatives, donor dump hunting and hardware/software identity triangulation |
+| 24 | `CHAT-024` | 2026-08-28 | `DONE` | OEM/device research triangulates AJL33PQ0866/YGT software identity, CF26/SM PCB family and physical 3.6/12 dual-lens configuration; builds ranked donor/reference corpus without promoting any retail SKU to target truth |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -823,6 +823,16 @@ Reverse contracts впервые массово догоняются кодом 
 - A4.14: frozen-base fan-out / DELTA fan-in orchestration.
 - Нового самостоятельного hardware milestone нет; CHAT-023 главным образом нормализует распределение уже идущей работы.
 
+## Что CHAT-024 добавил к картине
+
+- E-011/E-030 reinforced: visual or same-SoC similarity is not enough to declare exact model/hardware compatibility.
+- E-016 reinforced: final orchestrator handoff had to be compressed after an overlong first version.
+- I-083: target identity triangulation from software ID + PCB + physical fingerprint.
+- I-084: hardware similarity and reverse usefulness are separate donor dimensions.
+- I-085: search fingerprint built from internal identifiers rather than retail names.
+- D22: historical establishment of AJL33PQ0866 + CF26/SM OEM-family search and donor corpus.
+- Exact retail SKU remains unresolved by design; own target dump/PCB/software remains authority.
+
 ## Следующее действие
 
-Перейти к `CHAT-024`; после него выполнить expanded live-state refresh.
+Выполнить post-file refresh и expanded live-state refresh после 24 источников. Затем перейти к `CHAT-025`.
