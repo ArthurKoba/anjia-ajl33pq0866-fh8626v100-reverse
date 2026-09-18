@@ -1,26 +1,26 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_023_IN_PROGRESS`
+Статус: `CHAT_023_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **22**
-- Последний источник: `CHAT-022`
+- Обработано исторических файлов: **23**
+- Последний источник: `CHAT-023`
 - Период последнего источника: **2026-08-28**
-- Следующее действие: завершить анализ `CHAT-023`
+- Следующее действие: выполнить post-file refresh
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-022 |
+| Направление | Файл | Состояние после CHAT-023 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 22/?? sources обработано |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 23/?? sources обработано |
 | Ошибки/нарушения агентов | `ERRORS.md` | 39 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 79 tracked improvements/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 82 tracked improvements/directions |
 | История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D21: production catch-up + hardware parity session |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.13: parallel implementation lane |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.14: frozen-base fan-out / DELTA fan-in |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -77,7 +77,7 @@
 | 20 | `CHAT-020` | 2026-08-27 — 2026-08-28 | `IN_PROGRESS` | Central orchestrator: quality rules become automated workspace architecture, clean master-tree, task router/sessions/runbooks/health checks, integration of three specialist lanes and Cross-Fullhan references |
 | 21 | `CHAT-021` | 2026-08-28 | `DONE` | Systematic stock evidence campaign: four canonical imaging states, bidirectional lens/day-night transitions, white-light/audio/JPEG/PTZ, targeted Apollo runtime evidence, static reverse preparation, evidence catalog/state matrix and delta package; OOM/resource and metadata-correction lessons |
 | 22 | `CHAT-022` | 2026-08-28 | `DONE` | Production integration catches code up to reverse; hardware validates WIDE H264, gain/APC/NR3D/LTM/manual AE/AWB→CCM and dual-sensor after GPIO5 bootstrap; lifecycle/control-plane and RAW/Bayer become focused remaining blockers |
-| 23 | `CHAT-023` | 2026-08-28 | `IN_PROGRESS` | Central orchestrator: split reverse vs implementation lanes, evidence-preparation ordering, delta integration, premature v20/v21 correction, progress ontology and parallel-team reflection |
+| 23 | `CHAT-023` | 2026-08-28 | `DONE` | Orchestrator formalizes reverse vs implementation vs evidence lanes, retracts premature v20/v21 as official distribution points, introduces frozen-master integration barrier and layered progress ontology |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -812,6 +812,16 @@ Current `STATE.md@a0022eb...` по-прежнему не отражает все
 ### Technical transition
 Reverse contracts впервые массово догоняются кодом и hardware validation. GPIO5 reset sequence превращает dual sensor в реальный product contract; green cast переводится из CCM tuning в отдельный RAW/Bayer early-color blocker; experimental shutdown показывает возможность healthy restart, но не exact production lifecycle.
 
+## Что CHAT-023 добавил к картине
+
+- E-013/E-014 снова подтверждены: orchestrator начал готовить/мутировать состояние раньше точной задачи и преждевременно повысил master v20/v21.
+- E-036 уточнён: progress должен различать contract-level 100% и subsystem/product readiness.
+- I-080: frozen master + integration barrier.
+- I-081: evidence-preparation pass перед глубоким reverse.
+- I-082: 100% конкретного contract отдельно от 100% подсистемы.
+- A4.14: frozen-base fan-out / DELTA fan-in orchestration.
+- Нового самостоятельного hardware milestone нет; CHAT-023 главным образом нормализует распределение уже идущей работы.
+
 ## Следующее действие
 
-Перейти к `CHAT-023`.
+Выполнить post-file refresh, затем перейти к `CHAT-024`; после CHAT-024 выполнить expanded live-state refresh.
