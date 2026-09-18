@@ -124,6 +124,8 @@ Fullhan media drivers оказались чувствительны к lifetime:
 
 `CHAT-009` даёт прямое доказательство broken lifetime vendor driver: unload ISP/media оставил висячую IRQ registration, и последующее чтение `/proc/interrupts` закончилось kernel Oops. Несколько ISP contexts также давали duplicate handlers. После этого persistent single-owner/daemon стал safety requirement, а не просто удобством. Параллельно SSH dev-loop был разложен по слоям: постоянный Dropbear key на mtd4, persistent `seedrng`, статическая сеть без broken `fw_printenv`, корректный `devpts newinstance` и `/dev/ptmx -> pts/ptmx`.
 
+`CHAT-010` сохраняет отдельную SSH regression после ранних boot-time fixes: каждый новый `ssh/scp` стал занимать около 5–7 секунд. Первоначальная трактовка «это нормальная стоимость KEX» и предложение скрыть задержку через ControlMaster были сняты после напоминания пользователя, что до SSH-правок обычный SCP был быстрым. К концу чата правильный следующий метод — boundary timing TCP connect → SSH banner → KEX → auth; сама причина регрессии в этом источнике ещё не закрыта.
+
 
 ## D8 — Handoff и первые признаки многоагентного workflow
 
@@ -176,6 +178,9 @@ Reverse `enc.ko` и `media_process.ko` установил:
 Параллельно stock был загружен как reference runtime. Вместо дальнейших догадок был снят read-only evidence bundle: process/VMM mappings, ISP/MIPI state, ISP parameter data, ioctl trace, clock/interrupt evidence и code artifacts.
 
 Ключевой методический результат этой главы: если проблема остаётся после доказанного transport/encoder path, следующий уровень должен восстанавливаться из stock lifecycle/code/runtime evidence, а не серией несвязанных register pokes.
+
+`CHAT-010` закрывает точную dequeue semantics статически. `PAE 0xC0045011` проходит через handler `0x10370`, копирует 32-bit аргумент и вызывает `pae_enc_stream_release`; сама функция принимает encoder channel `0..7` и при active stream вызывает `media_stream_release`. `4D05` и `4D06` оказались не query/get парой: оба вызывают один `media_query_stream`, где `4D05` — nonblocking query, а `4D06` — query с timeout. Для encoded stream type 4 callback ведёт в `pae_enc_stream_query → media_stream_query → enc_stream_query`. Read index продвигается только release-path через `enc_stream_get`. Текущий livecapture был найден с ошибочным release-before-first-query порядком и исправлен на `query → copy/CRC → release current`. В этом чате исправленный helper ещё не прошёл clean-boot hardware validation из-за отдельной SSH-regression ветки; hardware proof dequeue остаётся в другой ветке/источнике.
+
 
 ## D10 — Persistent owner, hot reload и автоматизация dev-loop
 
