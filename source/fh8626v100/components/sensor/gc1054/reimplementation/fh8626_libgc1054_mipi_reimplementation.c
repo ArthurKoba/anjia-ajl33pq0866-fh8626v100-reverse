@@ -66,7 +66,7 @@ static uint32_t sensor_frame_length;
 static void (*fps_change_callback)(int32_t old_fps_x10000,
                                    int32_t new_fps_x10000);
 static int (*fps_adjust_callback)(int32_t nominal_fps_x10000,
-                                 uint32_t *target_fps_x10000);
+                                 int32_t *target_fps_x10000);
 static uint32_t sensor_frame_override;
 
 /* Exact target callback object: 26 x 32-bit slots = 0x68 bytes. */
@@ -510,14 +510,14 @@ static int Gc1054WriteMirrorFlipRegister(uint32_t logical, int orientation)
     return 0;
 }
 
-static void Gc1054SetMirrorFlip(uint32_t logical)
+static int Gc1054SetMirrorFlip(uint32_t logical)
 {
-    (void)Gc1054WriteMirrorFlipRegister(logical, sensor_orientation);
+    return Gc1054WriteMirrorFlipRegister(logical, sensor_orientation);
 }
 
-static void Gc1054GetMirrorFlip(uint32_t *logical)
+static int Gc1054GetMirrorFlip(uint32_t *logical)
 {
-    (void)Gc1054ReadMirrorFlipRegister(logical, sensor_orientation);
+    return Gc1054ReadMirrorFlipRegister(logical, sensor_orientation);
 }
 
 static void Gc1054SetFrameLength(uint32_t frame_length)
@@ -679,12 +679,12 @@ static uint32_t Gc1054Command(uint32_t command, int *arg)
     double nominal_fps;
     uint32_t base_frame;
     int32_t nominal_x10000;
-    uint32_t target_x10000;
+    int32_t target_x10000;
     uint32_t frame;
 
     if (command == 0x80001u) {
         fps_adjust_callback =
-            (int (*)(int32_t, uint32_t *))(uintptr_t)arg;
+            (int (*)(int32_t, int32_t *))(uintptr_t)arg;
         return 0u;
     }
 
@@ -719,11 +719,21 @@ static uint32_t Gc1054Command(uint32_t command, int *arg)
         return 0u;
     }
 
-    if (!fps_adjust_callback || !f)
+    if (!fps_adjust_callback)
         return UINT32_MAX;
 
-    nominal_fps = f->nominal_fps;
-    nominal_x10000 = stock_double_to_i32(nominal_fps * 10000.0);
+    /*
+     * Stock still invokes the adjustment callback for an unsupported format.
+     * In that case BuildViAttr fails, nominal fps is -10000 and base_frame is
+     * zero. Do not short-circuit merely because f is NULL.
+     */
+    if (f) {
+        nominal_fps = f->nominal_fps;
+        nominal_x10000 = stock_double_to_i32(nominal_fps * 10000.0);
+    } else {
+        nominal_x10000 = -10000;
+    }
+
     if (fps_adjust_callback(nominal_x10000, &target_x10000) != 0)
         return UINT32_MAX;
 

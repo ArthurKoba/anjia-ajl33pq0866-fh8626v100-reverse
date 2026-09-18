@@ -52,6 +52,26 @@ frame-registration glue and empty destructor helpers. They contain no
 sensor-specific semantics and are represented by normal C arithmetic/runtime
 behavior in this source reconstruction.
 
+## Source↔Ghidra audit corrections
+
+The post-reconstruction audit is performed against the migrated programs in
+`anjia_ajl33pq0866_fh8626v100_apollo:/sensor/`.
+
+The first audit pass corrected three subtle issues that were hidden by
+decompiler presentation rather than missing binary coverage:
+
+- callback slots `+0x1c/+0x20` tail-call the low-level mirror/flip helpers and
+  therefore preserve their integer return value; the source callbacks return
+  `int`, not `void`;
+- command `0x80002` uses a signed target-fps callback output;
+- command `0x80002` still invokes the registered adjustment callback for an
+  unsupported format, passing nominal fps `-10000` with base frame length
+  zero, instead of returning before the callback.
+
+The earlier mistaken interpretation of a trailing `0/0` format-table
+sentinel was also removed: all five arrays are exactly 145 pairs and the data
+following the 25-fps array is the Bayer map.
+
 ## Boundary
 
 This is complete static/reverse functional coverage of the two retained
