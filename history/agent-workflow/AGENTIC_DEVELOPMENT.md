@@ -170,7 +170,7 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 Ограничение этапа: continuity всё ещё file/handoff-based, а пользователь по-прежнему вручную переносит большие archives и запускает hardware commands. До MCP/repository-native autonomous loop ещё далеко.
 
 ### A4.8 — Quality engineering of the agent workflow
-Статус после `CHAT-014`: `OBSERVED`.
+Статус после `CHAT-014` + `CHAT-016`: `CONSOLIDATED`.
 
 Впервые процесс улучшения работы агента сам становится отдельным deliverable проекта. После длинной hardware/reverse-сессии пользователь просит не просто «учесть замечания», а собрать отдельный пакет для агента, который будет улучшать agentic workflow.
 
@@ -192,8 +192,10 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 
 Это ещё не repository-native automation и не MCP, но уже явный **meta-engineering layer**: система начинает проектировать собственный workflow так же, как технический runtime.
 
+В `CHAT-016` quality layer становится итеративным: создаётся pack v3, который не переписывает старую ретроспективу, а добавляет новые lessons — stock=TFTP-only, minimal BusyBox, focused reverse corpus, heavy processing off-target, liveness heartbeat и stale-vs-active state discipline.
+
 ### A4.9 — Central orchestrator + persistent specialist lanes
-Статус после `CHAT-015`: `OBSERVED`.
+Статус после `CHAT-015` + `CHAT-016`: `CONSOLIDATED`.
 
 Параллельность становится не просто «второй агент помогает», а явной orchestration model.
 
@@ -208,6 +210,8 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 После первых слишком коротких задач модель усложняется: специалист остаётся в той же вкладке и получает `Task 2`, `Task 3` с более крупной cohesive subsystem областью. Это сохраняет локально набранный контекст и уменьшает onboarding overhead.
 
 Одновременно выявляется инфраструктурный предел эпохи: общий Project context не гарантирует общий файловый sandbox. Поэтому оркестратор ещё вручную прикрепляет authoritative handoff каждому specialist lane.
+
+`CHAT-016` подтверждает A4.9 practically: тот же Agent 1 сохраняет контекст после Task 1, получает большой Task 2, проходит несколько самостоятельных static/runtime evidence циклов, закрывает full AE loop до GC1054 registers и затем переходит к Task 3 по lens/peripheral orchestration. То есть persistent specialist lane реально amortize'ит onboarding и переносит knowledge между последовательными задачами.
 
 Это уже близко к настоящей multi-agent engineering system, но пользователь всё ещё остаётся router-ом physical artifacts между чатами.
 
@@ -225,7 +229,7 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 
 В `CHAT-011` появляется ещё одна граница ручного режима: proven development image начинает расходиться с canonical source из-за временных overlay/init/network mutations. Без внешнего debt ledger пользователь вынужден сам напоминать, что перед final port эти изменения нельзя забыть вернуть или интегрировать чисто.
 
-## Уроки CHAT-001/002/003/004/005/006/007/008/009/010/011/012/013/014/015 для будущей agentic-системы
+## Уроки CHAT-001/002/003/004/005/006/007/008/009/010/011/012/013/014/015/016 для будущей agentic-системы
 
 1. **Текущее runtime state должно быть внешним фактом, а не памятью диалога.** Потери «stock или OpenIPC?» породили дорогие ошибки.
 2. **Agent handoff — необходим, но не должен становиться гигантской свалкой.** Нужны краткая карта и подробные приложения.
@@ -279,6 +283,11 @@ Google Drive в `CHAT-001` ещё не является наблюдаемым �
 50. **Главный агент интегрирует, specialists исследуют.** Они возвращают finished units с confidence/unresolved/integration notes, но не сливают друг друга и не меняют hardware runtime самостоятельно.
 51. **Semantic oracle ускоряет reverse, но не заменяет target proof.** Именованный соседний Fullhan сначала даёт смысл/структуру, затем Apollo/FH8626 подтверждает ABI/state/MMIO.
 52. **External research должен иметь provenance и reusable method.** Один living research document полезнее серии забытых веб-находок.
+53. **Длинная автономная работа требует редкого liveness heartbeat.** Findings репортятся по milestone, но затянувшийся tool/reverse pass не должен выглядеть как зависание.
+54. **Heavy static work выполняется off-target.** Камера нужна для runtime evidence; disassembly/diff/parsing/selftests — WSL/PC, желательно по уже подготовленным TXT.
+55. **Focused corpus лучше recursive project scan.** Для subsystem reverse собрать минимальный набор файлов и искать адресно, а не обходить всё дерево.
+56. **Runtime number без lifecycle semantics не является current state.** Dirty/cache/deferred queue нужно отличать от активного controller state.
+57. **Persistent specialist lane доказан как рабочая единица orchestration.** Один thread может последовательно закрывать Task 1/2/3, сохраняя локальный контекст и возвращая интегрируемые units.
 
 ## Следующие исторические переходы, которые нужно искать
 
