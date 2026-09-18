@@ -1,6 +1,6 @@
 # FH8626V100 Firmware ownership and provenance audit
 
-Status: `ACTIVE / CLEAN_FIRMWARE_CANDIDATE`.
+Status: `ACTIVE / CLEAN_SOURCE + PINNED_TRANSITIONAL_MEDIA_RUNTIME`.
 
 Checked: 2026-09-18.
 
@@ -9,15 +9,15 @@ This document records the ownership decision for the mixed FH8626V100 Firmware p
 ## Repositories and refs
 
 - Firmware preservation evidence tag: `ArthurKoba/openipc-firmware/archive/fh8626v100-platform-20260918@f4bf49da6ef355c9e733e00d774efe403513b1d4`.
-- Firmware clean candidate: `ArthurKoba/openipc-firmware/work/fh8626v100@eabd1ccd4684af6997771269c4655f7e4435bcec`.
+- Firmware clean/core candidate: `ArthurKoba/openipc-firmware/work/fh8626v100@80169887be80c43471f9f4792dde3e2a5bd18a8c`.
 - Firmware pre-config-audit checkpoint: `work/fh8626v100@f9146dd42a2f606d305ebccd301268848de26880`.
 - Firmware base: `master@47ccdbee45fa5b8eee69c25c7af656cd5d35a28e`.
 - Linux source candidate: `ArthurKoba/openipc-linux/work/fh8626v100@357c2d13e7589db0dbe2bbf89c2ec38b1c036e6e`.
 - Historical Builder experiment WIP: `bcf8658e4aa612ee9afda8c28d52d8ad1674e2f1` (no live branch/tag retained; provenance only).
-- Builder active ANJIA composition line: `ArthurKoba/openipc-builder/work/fh8626v100-anjia@9c507b85481df2787bb214e535f17003bdebb6e6`.
-- Divinus source candidate: `ArthurKoba/openipc-divinus/work/fh8626v100@1e624bd5aca97ba772413d2b00a10314d1db039f`.
-- Firmware Divinus direction: `ArthurKoba/openipc-firmware/work/fh8626v100-divinus@0b12c87c202b12733b0a1b535b56d66891e4ca93`.
-- Firmware Majestic direction: `ArthurKoba/openipc-firmware/work/fh8626v100-majestic@7ed2a17a67fce0c2ee8d80bc798cafe81cfa6c38`.
+- Builder active ANJIA composition line: `ArthurKoba/openipc-builder/work/fh8626v100-anjia@9b9a7f0e470d51d18b3a32c6cdaecb0102fb4376`.
+- Divinus source candidate: `ArthurKoba/openipc-divinus/work/fh8626v100@6860cb9b58074d80c3f4e86ffe5dba9fa9dbb983`.
+- Firmware Divinus direction: `ArthurKoba/openipc-firmware/work/fh8626v100-divinus@255b8c8deea8e7da5ef7429b6f8f2b176a430aec`.
+- Firmware Majestic direction: `ArthurKoba/openipc-firmware/work/fh8626v100-majestic@527e3d8b8e1ca48cf5a0b64e91176e0ff552f687`.
 - Builder runtime model: one ANJIA device tree with composed `_divinus`, `_majestic` and `_diag` targets; the former separate Majestic Builder branch is retired and preserved only as `archive/fh8626v100-anjia-majestic-branch-20260918`.
 
 ## Clean Firmware decision
@@ -30,7 +30,9 @@ The clean Firmware branch is rebuilt from current Firmware `master`, not by dele
 
 The defconfig consumes the exact curated Linux SHA directly. No FH8626 kernel patch directory is present. The pin currently uses the ArthurKoba Linux fork because the curated series has not yet landed in `OpenIPC/linux`; this is an engineering dependency and must be replaced by the OpenIPC-owned Linux ref before an upstream-ready Firmware contribution.
 
-The clean/core branch deliberately contains no AJL33PQ0866 board package or kernel fragment, no factory `.ko/.so/.bin`, no local Divinus source path, no FH8626 Divinus patch and no selected streamer. Device policy remains a Builder responsibility; Divinus implementation remains a Divinus responsibility.
+The clean/core branch deliberately contains no AJL33PQ0866 board package or kernel fragment, no checked-in factory `.ko/.so/.bin`, no local Divinus source path, no FH8626 Divinus patch and no selected streamer. Device policy remains a Builder responsibility; Divinus implementation remains a Divinus responsibility.
+
+A pre-deploy audit found that completely removing the binary package also removed the build-time owner of the still-required FH8626 media kernel ABI. The core now selects `fullhan-media-fh8626v100`. That package contains only metadata, loaders and SHA-256 hashes in active source. Buildroot downloads the exact hardware-proven media modules and ARC firmware from immutable preservation commit `f4bf49da...`. The same nine payloads are independently mirrored in Koba immutable artifact storage. This is transitional runtime packaging, not blob retirement.
 
 The generic Firmware config does not enable a retail-camera SD wiring option. The clean ANJIA Builder model inherits the generic Firmware FH8626 lite defconfig and applies a board-only fragment selecting:
 
@@ -46,7 +48,7 @@ On an 8 MiB NOR this leaves 704 KiB for `rootfs_data`.
 
 The branch is a source/layout candidate, not a hardware-accepted firmware. An owner-side build must still record final `uImage` and SquashFS sizes, followed by the applicable target boot/media checks. CI registration currently marks the FH8626 family unbuilt because the kernel source is still a temporary fork pin and the defconfig builds its own GCC/musl toolchain.
 
-Runtime branches are deliberately outside the clean-core ownership claim. The Divinus direction only selects the normal Divinus package. The Majestic direction is an explicit compatibility experiment: it reuses the existing FH8852V200 Majestic binary and eight existing FH8852V200 userspace libraries in an isolated directory, installs no FH8852 kernel modules/firmware, and defaults to media-off HTTP/WebUI operation. It is not an upstream-ready source replacement and does not relax the FH8626 factory-blob retirement rules.
+Runtime branches are deliberately outside the clean-core streamer ownership claim. All three directions inherit the shared pinned FH8626 media-kernel package. The Divinus direction adds Divinus; the Majestic direction adds the isolated FH8852V200 userspace compatibility layer while continuing to use FH8626 kernel/ARC runtime. No FH8852 kernel modules or firmware are installed.
 
 ## Binary inventory
 
@@ -73,7 +75,31 @@ All hashes below were calculated from the exact bytes stored in the Firmware pre
 
 There are 16 preserved paths but 15 unique payloads because the two day-profile paths are byte-identical.
 
-The external evidence manifest already retains `sensor_gc1054_mipi.bin` by SHA-256. The other proprietary payloads are still recoverable from the preserved Git branch but do not yet have individual external-evidence locators. Do not retire the preservation branch as an evidence source until any still-needed unique payload has been externalized with SHA-256, role/provenance and locator.
+The nine still-required kernel/ARC deployment payloads now have immutable Koba artifact locators in addition to the preservation commit. `sensor_gc1054_mipi.bin` is separately retained in the evidence manifest. Remaining sensor/profile evidence should continue to be externalized by SHA-256 as needed; do not delete the preservation tag while it remains the canonical provenance source.
+
+
+### Externalized deployment locators for still-required media runtime
+
+The nine payloads below are now externalized from active source history for
+reproducible staging. Buildroot fetches them from immutable preservation commit
+`f4bf49da...` and verifies the SHA-256 already listed in the inventory.
+Independent Koba artifact IDs are content-addressed by the same SHA-256:
+
+| Payload | Koba artifact ID |
+| --- | --- |
+| `bgm.ko` | `sha256:715b099afb54145e11073238ecc034b3cf1c45a6e6e4253c59d887ed600bb17a` |
+| `enc.ko` | `sha256:bdf5ce5f71bdec3dc9c7aeab4d78cfe1bb85de36f32b1104d196aaac8e911207` |
+| `gpio_wave.ko` | `sha256:58fdd10dc91a476a910758868d039b269c71986631e6c35ec9185baf45930afb` |
+| `isp.ko` | `sha256:2c77f9c294f007ef0f90d0e1855191cb24a5dea223e03d8b97c1fa5e4fd738ac` |
+| `jpeg.ko` | `sha256:1c4d45eb81b54dc19158013b3e9b9136b29f73e5140fb21fb7460a6f7c6853d2` |
+| `media_process.ko` | `sha256:46c38614814d1dcfc507d95abaaeb01ce5235c72fab4fe8a2a2e21d75d31811d` |
+| `vmm.ko` | `sha256:06e07a91cf2dd8e3043769df64138160c656bd7114c76c90dc12f18fbfedd09e` |
+| `xbus_rpc.ko` | `sha256:8ffe386b7c73ca83e12582f7c306cb0e3633f9bbca39142041fc39cee2639267` |
+| `rtthread_arc.bin` | `sha256:3cfd2a04b158e624fb4c95123d0f282d261351e27337889c3d9418b552528361` |
+
+These locators make the first deployment build reproducible without putting
+opaque bytes back into active Git. They do **not** satisfy the definition of
+blob retirement; production still depends on factory-extracted opaque code.
 
 ## Ownership summary
 

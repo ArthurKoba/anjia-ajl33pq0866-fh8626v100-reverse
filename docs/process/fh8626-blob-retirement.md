@@ -1,6 +1,6 @@
 # FH8626V100 proprietary blob retirement
 
-Status: ACTIVE DEBT / PRESERVATION ONLY.
+Status: ACTIVE DEBT / PINNED TEST PACKAGING / NOT RETIRED.
 
 Checked: 2026-09-18.
 
@@ -44,7 +44,9 @@ Firmware and sensor/profile objects:
 
 Exact SHA-256 values, duplicate detection and ownership decisions for all 16 preserved binary paths are recorded in `docs/process/fh8626-firmware-ownership-audit.md`. There are 15 unique payloads because the packaged and source-tree `gc1054_day.bin` files are byte-identical.
 
-The clean Firmware candidate `work/fh8626v100@eabd1ccd4684af6997771269c4655f7e4435bcec` ships none of these factory artifacts. This is architecture cleanup, not proof that every runtime contract has been replaced. The preserved WIP tag remains the recovery source until any still-needed unique payload without an external evidence locator has been externalized.
+Active Firmware source branches contain none of these opaque bytes directly. Current core `work/fh8626v100@80169887...` instead selects `fullhan-media-fh8626v100`, which pins the still-required eight media modules plus `rtthread_arc.bin` to immutable preservation commit `f4bf49da...` and verifies their SHA-256 during Buildroot download. Independent Koba content-addressed copies also exist for those nine payloads.
+
+This restores reproducible **test/deployment packaging** after source cleanup, but it is not retirement: the produced image still executes factory-extracted opaque kernel/ARC code. The preserved tag remains the provenance source until source replacements make those payloads unnecessary.
 
 ## Mandatory reverse/recovery backlog
 
