@@ -1,14 +1,14 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_002_IN_PROGRESS`
+Статус: `READY_FOR_CHAT_003`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **1**
-- Последний источник: `CHAT-001`
-- Период последнего источника: примерно **2026-08-24 — 2026-08-26**
-- Следующее действие: завершить анализ `CHAT-002`
+- Обработано исторических файлов: **2**
+- Последний источник: `CHAT-002`
+- Период последнего источника: **2026-08-27**
+- Следующее действие: выполнить post-file refresh и получить `CHAT-003`
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -16,11 +16,11 @@
 
 | Направление | Файл | Состояние после CHAT-001 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 1/?? источников обработан |
-| Ошибки/нарушения агентов | `ERRORS.md` | 12 подтверждённых классов/статусов |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 10 подтверждённых улучшений |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | восстановлена первая большая фаза |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | A0/A1/A4/A4.5 наблюдаются |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 2/?? источников обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 15 подтверждённых классов/статусов |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 15 подтверждённых улучшений |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена фаза source-derived runtime + parallel heavy reverse |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | A0/A1/A4 наблюдаются; A4.5 consolidated; A4.6 observed |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -56,7 +56,7 @@
 | № | ID | Период | Статус | Основной вклад |
 |---:|---|---|---|---|
 | 1 | `CHAT-001` | 2026-08-24 — 2026-08-26 | `DONE` | Первая FH8626 bring-up фаза: safe RAM boot, OpenIPC userspace, vendor media stack, ISP/PAE/H.264, dev-loop SSH, checkpoints/handoff; выявлен баланс пошаговости, transport/state/context ошибки |
-| 2 | `CHAT-002` | 2026-08-27 | `IN_PROGRESS` | Продолжение runtime/ISP reverse, формализация file-delivery protocol, hot-plugin workflow, parallel reverse и workspace cleanup |
+| 2 | `CHAT-002` | 2026-08-27 | `DONE` | Source-derived ISP runtime, формальный one-archive delivery protocol, self-guarded owner launch, hot-plugin loop, workspace authority cleanup, role-specialized parallel reverse |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -87,9 +87,31 @@
 - camera hang от intrusive tracer выделен отдельно, потому что это уже experimental safety, а не просто лишняя проверка;
 - изменение handoff без разрешения выделено отдельно как mutation-scope ошибка.
 
+## Что CHAT-002 добавил к картине
+
+### Новые подтверждённые ошибки
+- явный workflow-протокол может быть нарушен даже сразу после его формулировки — его нужно применять как hard contract;
+- критические команды должны быть идемпотентными/self-guarded, потому что console/paste может повторить запуск;
+- длинная техническая экспозиция сама по себе стала проблемой: пользователь предпочитает execution-first и короткий progress report.
+
+### Новые подтверждённые улучшения
+- one-test-stage → one-versioned-archive + готовые WSL/camera blocks;
+- hot-plugin validation поверх одного долгоживущего owner резко уменьшает reboot-cost;
+- workspace должен иметь один authoritative reverse artifact, а повреждённые/дублирующие substrate удаляться;
+- parallel agents эффективны при непересекающемся scope и finished integration units.
+
+### Исторический переход
+`CHAT-002` — первая явно оформленная **роль-специализированная параллельная разработка**: один агент держит canonical runtime/integration, другой делает deep reverse тяжёлых функций, пользователь пока вручную передаёт handoff-пакеты между ними.
+
+### Пока всё ещё не подтверждено
+- Google Drive как постоянное evidence-хранилище;
+- GitHub как authority именно для текущего FH8626 engineering state;
+- MCP/Ghidra как прямой shared workspace между агентами;
+- отдельный устойчивый env-паттерн для значений, которые «съедает» терминал.
+
 ## Следующее действие
 
-Получить `CHAT-002`, перечитать накопленный контекст и искать:
-- подтверждение/опровержение уже созданных классов;
-- новые workflow transitions;
-- начало перехода от локального handoff/workspace к более долговременной инфраструктуре.
+После обязательного post-file refresh получить `CHAT-003` и искать:
+- дальнейшее подтверждение новых delivery/idempotency правил;
+- момент появления постоянного внешнего хранилища;
+- переход к GitHub authority и затем MCP/shared-agent infrastructure.
