@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `READY_FOR_NEXT_SOURCE`
+Статус: `CHAT_021_IN_PROGRESS`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **20**
 - Последний источник: `CHAT-020`
 - Период последнего источника: **2026-08-27 — 2026-08-28**
-- Следующее действие: перейти к `CHAT-021`
+- Следующее действие: завершить анализ `CHAT-021`
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -75,6 +75,7 @@
 | 18 | `CHAT-018` | 2026-08-27 — 2026-08-28 | `DONE` | Expanded snapshot overlapping CHAT-016; unique tail validates wide→tele→wide on stock, shared AE context/history and implementation-ready dual-lens contract |nded snapshot of Agent 1 branch: prefix overlaps CHAT-016; unique tail adds controlled wide→tele→wide runtime validation, implementation-ready dual-lens closure and Task3 orchestrator supplement |
 | 19 | `CHAT-019` | 2026-08-28 | `DONE` | Partial export: stock RTSP auth behavior and known HTTP JPEG snapshot endpoint; no new major workflow class |
 | 20 | `CHAT-020` | 2026-08-27 — 2026-08-28 | `IN_PROGRESS` | Central orchestrator: quality rules become automated workspace architecture, clean master-tree, task router/sessions/runbooks/health checks, integration of three specialist lanes and Cross-Fullhan references |
+| 21 | `CHAT-021` | 2026-08-28 | `IN_PROGRESS` | Stock evidence acquisition campaign: four imaging states, transitions, light/audio/JPEG/PTZ, targeted runtime memory, static module extraction/reverse-prep, canonical evidence matrix and delta package |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
