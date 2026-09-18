@@ -1,26 +1,26 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_028_IN_PROGRESS`
+Статус: `CHAT_028_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **27**
-- Последний источник: `CHAT-027`
+- Обработано исторических файлов: **28**
+- Последний источник: `CHAT-028`
 - Период последнего источника: **2026-08-28 — 2026-08-30**
-- Следующее действие: завершить анализ `CHAT-028` (source #29)
+- Следующее действие: выполнить post-file refresh
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-027 |
+| Направление | Файл | Состояние после CHAT-028 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 27/?? sources обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 41 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 101 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D25: evidence-directed final reverse closure |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.17: reverse↔evidence closure loop |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 28/?? sources обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 42 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 106 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D26: OpenIPC frontend decoupling / Divinus-first strategy |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.18: role pipeline + orchestrator dependency graph |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -82,7 +82,7 @@
 | 25 | `CHAT-025` | 2026-08-28 — 2026-08-29 | `DONE` | Cross-platform gap hunter discovers exact-FH8626 public adapter/SDK targets, exposes stats-epoch/lifecycle/RAW architecture leads, audits current source risks and packages targeted inputs instead of repeating Apollo reverse |
 | 26 | `CHAT-026` | 2026-08-29 | `DONE` | Partial export: consolidated Agent4 watchdog/peripheral status; project split into MASTER_CORE + REVERSE_HEAVY with logical heavy IDs; TFTP root reorganized into active/history staging without destructive cleanup |
 | 27 | `CHAT-027` | 2026-08-28 — 2026-08-30 | `DONE` | Agent 1 evolves from static exhaustion into E1–E7 evidence-directed closure; later closes watchdog/human/color/light/dev_ctrl and most HAL, ending with a small optional WDR/GME tail still under correction |
-| 28 | `CHAT-028` | 2026-08-28 — 2026-08-30 | `IN_PROGRESS` | Central orchestrator mega-thread: merges Agent1–4, two-tier master/heavy restructuring, OpenIPC/Divinus strategy, agent routing and later coordination refinements; large overlap with CHAT-023..027 |
+| 28 | `CHAT-028` | 2026-08-28 — 2026-08-30 | `DONE` | Large orchestrator mega-thread; overlap deduped. Unique tail establishes role pipeline, frontend-independent FH8626 architecture, Divinus-first sidecar strategy, engineering-vs-upstream profiles and firmware/SDK provenance research; exposes reused Agent-N identity collision |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -931,6 +931,27 @@ Builder `master` moved to `8984a65d...`, but active FH8626 development line is u
 
 Frozen `BASELINE_PROMPT.md` SHA остаётся `1358cffd95f275069bd1eac6ad3a31d700c939aa`.
 
+## Что CHAT-028 добавил к картине
+
+Источник имеет большой overlap с CHAT-023…027; преждевременные v20/v21, Agent2/4 merge, E1–E7 и MASTER/HEAVY повторно не учитывались.
+
+### Новый error-class
+- E-042: bare Agent N переиспользуется между waves и ломает durable provenance.
+
+### Reinforced
+- E-035: orchestrator смешал Agent 1/3 при вопросе только об Agent 2.
+- E-016: после длинного Divinus анализа пользователь попросил более компактный user-facing слой.
+
+### Новые improvements
+- I-102: stable agent identity = wave + role + task.
+- I-103: integration gap → external lead → exact reverse → productization routing.
+- I-104: frontend-independent FH8626 backend.
+- I-105: engineering bring-up отдельно от upstream-clean supply chain.
+- I-106: external firmware corpus как provenance/lineage research.
+
+### Technical/agentic transition
+Divinus становится исторически главным открытым frontend-кандидатом через sidecar-first path; Majestic остаётся optional closed frontend. Orchestrator начинает управлять dependency graph между evidence, external research, exact reverse и productization, а не только принимать независимые архивы.
+
 ## Следующее действие
 
-Перейти к `CHAT-028` (source #29).
+Выполнить post-file refresh, затем перейти к `CHAT-029` (source #30).
