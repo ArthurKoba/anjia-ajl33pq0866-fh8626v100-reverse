@@ -9,7 +9,8 @@ This document records the ownership decision for the mixed FH8626V100 Firmware p
 ## Repositories and refs
 
 - Firmware preservation evidence: `ArthurKoba/openipc-firmware/fh8626v100-platform@f4bf49da6ef355c9e733e00d774efe403513b1d4`.
-- Firmware clean candidate: `ArthurKoba/openipc-firmware/rework/fh8626v100-clean-integration@f9146dd42a2f606d305ebccd301268848de26880`.
+- Firmware clean candidate: `ArthurKoba/openipc-firmware/rework/fh8626v100-clean-integration@c437d6eb62ade81595c20cbb765b8ad10300e3e7`.
+- Firmware pre-config-audit checkpoint: `rework/fh8626v100-clean-integration@f9146dd42a2f606d305ebccd301268848de26880`.
 - Firmware base: `master@47ccdbee45fa5b8eee69c25c7af656cd5d35a28e`.
 - Linux source candidate: `ArthurKoba/openipc-linux/rework/fh8626v100-final-series@357c2d13e7589db0dbe2bbf89c2ec38b1c036e6e`.
 - Builder preservation/device reference: `ArthurKoba/openipc-builder/fh8626v100-anjia-ajl33pq0866@bcf8658e4aa612ee9afda8c28d52d8ad1674e2f1`.

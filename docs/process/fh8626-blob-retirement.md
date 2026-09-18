@@ -44,7 +44,7 @@ Firmware and sensor/profile objects:
 
 Exact SHA-256 values, duplicate detection and ownership decisions for all 16 preserved binary paths are recorded in `docs/process/fh8626-firmware-ownership-audit.md`. There are 15 unique payloads because the packaged and source-tree `gc1054_day.bin` files are byte-identical.
 
-The clean Firmware candidate `rework/fh8626v100-clean-integration@f9146dd42a2f606d305ebccd301268848de26880` ships none of these factory artifacts. This is architecture cleanup, not proof that every runtime contract has been replaced. The preserved WIP branch remains the recovery source until any still-needed unique payload without an external evidence locator has been externalized.
+The clean Firmware candidate `rework/fh8626v100-clean-integration@c437d6eb62ade81595c20cbb765b8ad10300e3e7` ships none of these factory artifacts. This is architecture cleanup, not proof that every runtime contract has been replaced. The preserved WIP branch remains the recovery source until any still-needed unique payload without an external evidence locator has been externalized.
 
 ## Mandatory reverse/recovery backlog
 
