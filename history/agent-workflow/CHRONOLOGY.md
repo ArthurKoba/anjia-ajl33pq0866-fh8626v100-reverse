@@ -52,7 +52,7 @@ Stock media modules и sensor libraries были смонтированы из �
 Подробнее: [D4](CHRONOLOGY_DETAILS.md#d4--stock-media-stack-внутри-openipc).
 
 ### 5. Sensor/MIPI → ISP
-Источник: `CHAT-007` + `CHAT-008` + `CHAT-009` → `CHAT-001`.
+Источник: `CHAT-007` + `CHAT-008` + `CHAT-009` + `CHAT-011` → `CHAT-001`.
 
 После сочетания stock scripts, dynamic probes, static reverse и аппаратных проверок был восстановлен достаточный sensor/MIPI/ISP bring-up. `CHAT-009` дополнительно закрепил обязательный cold-boot GPIO5 reset pulse. Ключевой перелом — обнаружение пропущенного ISP interrupt-enable state; после его восстановления ISP IRQ стал стабильно идти.
 
@@ -61,7 +61,7 @@ Stock media modules и sensor libraries были смонтированы из �
 Подробнее: [D5](CHRONOLOGY_DETAILS.md#d5--оживление-isp).
 
 ### 6. ISP → VPU → PAE → H.264
-Источник: `CHAT-009` → `CHAT-001`.
+Источник: `CHAT-009` + `CHAT-011` → `CHAT-001`.
 
 После исправления ISP geometry и согласования VPU/PAE конфигурации encoder начал работать на hardware cadence. Затем был получен H.264 Annex-B output с SPS/PPS/IDR и сохранён capture-файл.
 
@@ -72,14 +72,14 @@ Stock media modules и sensor libraries были смонтированы из �
 Подробнее: [D6](CHRONOLOGY_DETAILS.md#d6--hardware-h264-и-граница-доказательства).
 
 ### 7. Ускорение инженерного цикла
-Источник: `CHAT-009` → `CHAT-001`.
+Источник: `CHAT-009` + `CHAT-011` → `CHAT-001`.
 
 Повторные power-cycle/SSH delays стали отдельным bottleneck. Появилась идея одного долгоживущего media owner/daemon, а boot/SSH path был ускорен и стабилизирован; повторные подключения начали рассматриваться как часть dev-loop, а не посторонняя проблема.
 
 Подробнее: [D7](CHRONOLOGY_DETAILS.md#d7--dev-loop-и-stateful-driver-lifetime).
 
 ### 8. Переход к handoff и параллельной агентной работе
-Источник: `CHAT-007` + `CHAT-008` + `CHAT-009` → `CHAT-001` → `CHAT-002`, 2026-08-25/27.
+Источник: `CHAT-007` + `CHAT-008` + `CHAT-009` + `CHAT-011` → `CHAT-001` → `CHAT-002`, 2026-08-25/27.
 
 `CHAT-007` показывает ранний parallel checkpoint: внешние Fullhan references, локальные пути, confirmed/gaps и текущий ISP blocker передаются второму агенту без повторного reverse. Позже, когда контекст одного чата стал исчерпываться, результаты были собраны в master handoff, а в `CHAT-002` parallel roles стали уже явно специализированными.
 
