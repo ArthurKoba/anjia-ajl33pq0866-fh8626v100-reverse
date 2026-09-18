@@ -1092,3 +1092,12 @@ Divinus hardening advances independently of owner integration, preserving single
 - `I-130..I-133`: external tool storage, content-hash reconciliation без user-facing checksum noise, logical active/history split и strategy pivot от bespoke HAL к existing compatible backend.
 - Добавлены D33 и A4.26.
 - `I-003 Google Drive → GitHub authority` намеренно остаётся BOOTSTRAP: этот источник ещё не показывает фактический переход к GitHub как engineering source of truth.
+
+## Post-refresh после CHAT-037
+
+- Перечитаны актуальные README/HANDOFF/PROGRESS/ERRORS/IMPROVEMENTS/CHRONOLOGY/CHRONOLOGY_DETAILS/AGENTIC_DEVELOPMENT.
+- Проверены непрерывность ID: `E-001..E-052` и `I-001..I-133`, дублей и gaps нет.
+- `BASELINE_PROMPT.md` остаётся неизменным.
+- Плановые live-state refresh после CHAT-033 и CHAT-036 подтверждают современный anchor GitHub / Drive / Ghidra MCP; он не подмешан ретроспективно в августовские источники.
+- Raw exports не добавлены в Git.
+- Статус: `READY_FOR_NEXT_SOURCE`.
