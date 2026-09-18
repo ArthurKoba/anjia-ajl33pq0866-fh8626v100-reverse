@@ -193,6 +193,17 @@ Tele в том же профиле требует существенно бол�
 
 Подробнее: [D18](CHRONOLOGY_DETAILS.md#d18--controlled-wide--tele--wide-runtime-validation).
 
+### 19. Current-day reverse convergence и переход к runtime integration
+Источник: `CHAT-020`, 2026-08-28.
+
+Центральный оркестратор свёл результаты трёх specialist lanes: full AE, hardware-validated AWB→CCM и detail/APC/NR3D/LTM. Широкий reverse current-day пути перестал быть главным режимом; roadmap переключился на последовательную интеграцию уже доказанных loops с отдельными hardware gates.
+
+Основной runtime order после convergence: live total gain / sensor AE → APC/CDD6C → active NR3D/D0FEC → dynamic LTM D0630/D0B2C → оставшийся D1DB0/cadence.
+
+**Переход:** задача меняется с «найти архитектуру stock ISP» на «портировать доказанные contracts и измерять parity».
+
+Подробнее: [D19](CHRONOLOGY_DETAILS.md#d19--current-day-reverse-convergence-и-runtime-integration-plan).
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.
