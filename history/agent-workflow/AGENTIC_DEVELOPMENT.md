@@ -300,6 +300,26 @@ Central orchestrator теперь интегрирует specialist results в n
 
 Появляется и новый bottleneck: уже не скорость reverse, а качество source integration, lifecycle и аппаратных regression cycles.
 
+### A4.14 — Frozen-base fan-out / DELTA fan-in orchestration
+Статус после `CHAT-023`: `OBSERVED`.
+
+Multi-agent работа перестаёт быть просто «несколько вкладок параллельно». Оркестратор формализует release barrier:
+
+1. все активные agents стартуют от одной frozen master version;
+2. acquisition/reverse/implementation работают независимо в своих scopes;
+3. каждый возвращает только DELTA, не новый master;
+4. orchestrator накапливает результаты без version bump;
+5. после завершения wave выполняется conflict/dedup/source-consolidation pass;
+6. только затем выпускается следующая canonical master.
+
+Параллельно разделяется sequencing:
+- implementation может сразу использовать уже доказанные contracts;
+- evidence-agent заранее закрывает очевидные corpus gaps;
+- deep reverse стартует после evidence normalization;
+- orchestrator остаётся единственной точкой canonical merge.
+
+Пользователь отдельно замечает, что parallel-agent режим появился только примерно 27 августа; за последующие ~сутки orchestration стала похожа на небольшую embedded/reverse team, а bottleneck сместился от raw analysis к hardware validation и integration quality.
+
 ### A5 — Специализированные MCP/агенты
 Статус: `BOOTSTRAP`.
 
@@ -314,7 +334,7 @@ Central orchestrator теперь интегрирует specialist results в n
 
 В `CHAT-011` появляется ещё одна граница ручного режима: proven development image начинает расходиться с canonical source из-за временных overlay/init/network mutations. Без внешнего debt ledger пользователь вынужден сам напоминать, что перед final port эти изменения нельзя забыть вернуть или интегрировать чисто.
 
-## Уроки CHAT-001…CHAT-022 для будущей agentic-системы
+## Уроки CHAT-001…CHAT-023 для будущей agentic-системы
 
 1. **Текущее runtime state должно быть внешним фактом, а не памятью диалога.** Потери «stock или OpenIPC?» породили дорогие ошибки.
 2. **Agent handoff — необходим, но не должен становиться гигантской свалкой.** Нужны краткая карта и подробные приложения.
@@ -391,6 +411,10 @@ Central orchestrator теперь интегрирует specialist results в n
 73. **Hardware operator и agent должны делить ответственность явно.** Agent готовит source/test/analysis, человек выполняет authoritative build/target run.
 74. **После быстрого experimental роста нужен source-consolidation gate.** Diagnostic snapshots нельзя автоматически повышать до production tree.
 75. **Рабочий механизм не равен готовой архитектуре.** Experimental shutdown или register path может быть hardware-proven и одновременно оставаться production debt.
+76. **Parallel wave должна иметь frozen base.** Иначе каждый ранний DELTA создаёт новую несовместимую master-version.
+77. **Fan-in принадлежит оркестратору.** Specialist возвращает delta; canonical state меняется только после единого reconcile pass.
+78. **Evidence acquisition можно вынести впереди reverse.** Один structured capture pass дешевле серии случайных hardware blockers у research-agent.
+79. **100% — допустимый статус для узкого доказанного contract.** Нельзя смешивать его с product/upstream readiness всей подсистемы.
 
 ## Следующие исторические переходы, которые нужно искать
 
