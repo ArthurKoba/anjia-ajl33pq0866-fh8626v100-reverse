@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_012_POST_REFRESH_PENDING`
+Статус: `READY_FOR_NEXT_SOURCE`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **12**
 - Последний источник: `CHAT-012`
 - Период последнего источника: **2026-08-26**
-- Следующее действие: post-file refresh + 12-file live-state сверка
+- Следующее действие: получить следующий уникальный исторический файл
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -498,6 +498,40 @@ Authority endpoint не изменился:
 ### Agentic role
 Это ранний переход от «probe как конечная форма эксперимента» к «stable subsystem contract → production daemon → streamer». Позднее `CHAT-003` реализует persistent experimental substrate гораздо глубже; поэтому A4.2 теперь считается `CONSOLIDATED`.
 
+## 12-file live-state refresh после CHAT-012
+
+Выполнено после двенадцатого уникального источника.
+
+Проверено read-only:
+- `main:STATE.md@a0022eb2...`;
+- `main:TASKS.md@4f57717e...`;
+- `main:AGENTS.md@58075253...`;
+- live branch lists reverse/Firmware/Builder/Linux/Divinus/U-Boot.
+
+Современная authority-модель сохраняется:
+- GitHub — current source/docs/contracts/state/manifests;
+- Google Drive — heavy/unique primary evidence;
+- Ghidra MCP через Koba MCP Bridge — canonical mutable reverse workspace.
+
+Технический endpoint остаётся существенно дальше исторического `CHAT-012`:
+- U-Boot native source/build line `fh8626v100-mainline@7ac0aa7e...` готова к hardware acceptance, stock-compatible recovery сохранён отдельно;
+- Linux curated work line `work/fh8626v100@357c2d13...` и PR-facing `fullhan-fh8626v100@0dfafa64...` присутствуют;
+- Firmware сохраняет streamer-neutral core и отдельные Divinus/Majestic runtime directions;
+- current status по-прежнему `ACTIVE / UBOOT_OPENIPC_NATIVE_SOURCE_READY / KERNEL_GATE / FIRMWARE_CLEAN_CANDIDATE / DIVINUS_REFERENCE / MAJESTIC_TARGET`.
+
+Одновременно выявлен **coordination drift**, который нельзя молча принимать за current truth:
+- `STATE.md` указывает Firmware core `eabd1ccd...`, live branch уже `80169887...`;
+- `STATE.md` указывает Firmware Divinus `0b12c87c...`, live branch `255b8c8d...`;
+- `STATE.md` указывает Firmware Majestic `7ed2a17a...`, live branch `a1acd664...`;
+- `STATE.md` указывает Divinus work `1e624bd5...`, live branch уже `bd878506...`;
+- Builder device branch в `STATE.md` указан как `a51eec5b...`, live `work/fh8626v100-anjia` уже `dc7ddabf...`;
+- main `AGENTS.md` и `STATE.md` называют Builder Majestic staging `work/fh8626v100-anjia-majestic`, но в live branch list такой ветки сейчас нет.
+
+Это не исправлялось в рамках исторического аудита: current coordination docs/branches read-only. Для последующей инженерной работы live refs должны быть reconciled с authority-документами отдельной рабочей сессией.
+
+Исторический вывод `CHAT-012` от этого не меняется: в августе это была только ранняя design boundary `single owner daemon → downstream Majestic`, а не современная реализация.
+
+
 ## Следующее действие
 
-Выполнить обязательный post-file refresh и плановую 12-file live-state сверку с `STATE.md`, `TASKS.md` и relevant branches. После этого ожидать следующий уникальный исторический источник.
+Получить следующий уникальный исторический источник. Следующая плановая расширенная live-state сверка — после пятнадцатого уникального файла либо раньше при крупном противоречии/инфраструктурном переходе.
