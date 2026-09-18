@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `READY_FOR_NEXT_SOURCE`
+Статус: `CHAT_028_IN_PROGRESS`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **27**
 - Последний источник: `CHAT-027`
 - Период последнего источника: **2026-08-28 — 2026-08-30**
-- Следующее действие: перейти к `CHAT-028` (source #29)
+- Следующее действие: завершить анализ `CHAT-028` (source #29)
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -82,6 +82,7 @@
 | 25 | `CHAT-025` | 2026-08-28 — 2026-08-29 | `DONE` | Cross-platform gap hunter discovers exact-FH8626 public adapter/SDK targets, exposes stats-epoch/lifecycle/RAW architecture leads, audits current source risks and packages targeted inputs instead of repeating Apollo reverse |
 | 26 | `CHAT-026` | 2026-08-29 | `DONE` | Partial export: consolidated Agent4 watchdog/peripheral status; project split into MASTER_CORE + REVERSE_HEAVY with logical heavy IDs; TFTP root reorganized into active/history staging without destructive cleanup |
 | 27 | `CHAT-027` | 2026-08-28 — 2026-08-30 | `DONE` | Agent 1 evolves from static exhaustion into E1–E7 evidence-directed closure; later closes watchdog/human/color/light/dev_ctrl and most HAL, ending with a small optional WDR/GME tail still under correction |
+| 28 | `CHAT-028` | 2026-08-28 — 2026-08-30 | `IN_PROGRESS` | Central orchestrator mega-thread: merges Agent1–4, two-tier master/heavy restructuring, OpenIPC/Divinus strategy, agent routing and later coordination refinements; large overlap with CHAT-023..027 |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
