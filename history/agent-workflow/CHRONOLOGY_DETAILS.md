@@ -481,3 +481,52 @@ Night/1080p/WDR/другие later modes отделяются от current-day p
 
 Handoff на этой фазе проходит automated health checks и содержит current state, source/reference/evidence/tooling, что делает следующего оркестратора способным стартовать от integration roadmap без повторного wide reverse.
 
+## D20 — Stock evidence campaign и normalized runtime dataset
+
+`CHAT-021` — отдельная acquisition phase после master-handoff convergence.
+
+Canonical steady imaging states:
+- WIDE_DAY;
+- TELE_DAY;
+- WIDE_NIGHT;
+- TELE_NIGHT.
+
+Captured transition classes:
+- wide↔tele;
+- automatic day↔night;
+- white-light coupled day-path transition and return;
+- talkback full cycle;
+- siren one-shot cycle;
+- manual PTZ pan/tilt.
+
+Additional stock contracts:
+- HTTP snapshot `/snapshot.jpg` → VPSS channel 1 → 640×368 JPEG, quality 37;
+- audio input initialized at boot; talkback/siren use AO/speaker path and GPIO24 mute;
+- white illumination is coupled with IR-off/IR-cut day optical path rather than independent light-only state;
+- PTZ application path observed for both pan and tilt;
+- full stock boot UART retained as primary startup evidence.
+
+Sensor/state evidence:
+- GC1054 bus/address confirmed;
+- page-0 state captures across four imaging states;
+- exposure registers provide clear state differences;
+- lens/day-night targeted transitions include selected sensor registers and small Apollo RAM regions.
+
+A major methodological correction came from heap analysis: independent full heaps changed ~49–52% because of live buffers/allocator/temporal activity. Those snapshots remain provenance, but semantic transition analysis uses synchronized targeted regions around known Apollo state objects. The transition deltas are far smaller and causally interpretable.
+
+Acquisition also exposed unsafe/invalid approaches:
+- storing a large physical-RAM dump in stock RAM-backed `/tmp` caused OOM and killed Apollo;
+- VMM userdev mappings are not ordinary sequential files and their mmap offset must not be assumed to be physical DRAM;
+- `/proc/PID/mem` works for ordinary process heap but not device-backed mappings.
+
+Static stock preparation was expanded for selected modules/libraries, each with binary provenance, file/readelf/symbol/relocation/string/disassembly material. Existing authoritative Apollo/JXF37 representations were deliberately not regenerated.
+
+Final evidence organization distinguishes:
+- canonical captures;
+- superseded/mislabeled raw captures retained only for provenance;
+- corrected metadata;
+- available vs unavailable trace/PCAP capabilities;
+- remaining optional gaps.
+
+The stock evidence is packaged as a delta over stable master rather than duplicating the complete handoff.
+
