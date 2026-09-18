@@ -14,11 +14,11 @@ This document records the ownership decision for the mixed FH8626V100 Firmware p
 - Firmware base: `master@47ccdbee45fa5b8eee69c25c7af656cd5d35a28e`.
 - Linux source candidate: `ArthurKoba/openipc-linux/work/fh8626v100@357c2d13e7589db0dbe2bbf89c2ec38b1c036e6e`.
 - Historical Builder experiment WIP: `bcf8658e4aa612ee9afda8c28d52d8ad1674e2f1` (no live branch/tag retained; provenance only).
-- Builder clean staging candidate: `ArthurKoba/openipc-builder/work/fh8626v100-anjia@a51eec5b294b03e8d16430e9018c3a0441647e49`.
+- Builder active ANJIA composition line: `ArthurKoba/openipc-builder/work/fh8626v100-anjia@9c507b85481df2787bb214e535f17003bdebb6e6`.
 - Divinus source candidate: `ArthurKoba/openipc-divinus/work/fh8626v100@1e624bd5aca97ba772413d2b00a10314d1db039f`.
 - Firmware Divinus direction: `ArthurKoba/openipc-firmware/work/fh8626v100-divinus@0b12c87c202b12733b0a1b535b56d66891e4ca93`.
 - Firmware Majestic direction: `ArthurKoba/openipc-firmware/work/fh8626v100-majestic@7ed2a17a67fce0c2ee8d80bc798cafe81cfa6c38`.
-- Builder Majestic staging: `ArthurKoba/openipc-builder/work/fh8626v100-anjia-majestic@91314aa183e31070bb521364e81dacea569e08dd`.
+- Builder runtime model: one ANJIA device tree with composed `_divinus`, `_majestic` and `_diag` targets; the former separate Majestic Builder branch is retired and preserved only as `archive/fh8626v100-anjia-majestic-branch-20260918`.
 
 ## Clean Firmware decision
 
@@ -32,11 +32,11 @@ The defconfig consumes the exact curated Linux SHA directly. No FH8626 kernel pa
 
 The clean/core branch deliberately contains no AJL33PQ0866 board package or kernel fragment, no factory `.ko/.so/.bin`, no local Divinus source path, no FH8626 Divinus patch and no selected streamer. Device policy remains a Builder responsibility; Divinus implementation remains a Divinus responsibility.
 
-The generic Firmware config does not enable a retail-camera SD wiring option. The clean ANJIA Builder staging profile now selects:
+The generic Firmware config does not enable a retail-camera SD wiring option. The clean ANJIA Builder model inherits the generic Firmware FH8626 lite defconfig and applies a board-only fragment selecting:
 
 `CONFIG_FH8626V100_SD0_1BIT=y`
 
-from a board-only fragment. The historical symbol `CONFIG_FH8626V100_AJL33PQ0866_MMC` is preservation-only and is absent from the clean staging profile.
+The Builder no longer carries a copied generic FH8626 full defconfig. The historical symbol `CONFIG_FH8626V100_AJL33PQ0866_MMC` is preservation-only and is absent from the clean staging profile.
 
 Firmware inherits the existing standard 8 MiB image budget: 2048 KiB kernel plus 5120 KiB SquashFS. The curated Linux source carries the matching MTD layout:
 
@@ -79,10 +79,10 @@ The external evidence manifest already retains `sensor_gc1054_mipi.bin` by SHA-2
 
 - **OpenIPC/linux:** kernel source, SoC platform code and source replacements for kernel-side FH8626 media modules.
 - **OpenIPC/firmware:** generic FH8626 Buildroot/kernel-config integration and only shared runtime packages that have acceptable source/provenance.
-- **OpenIPC/builder:** ANJIA AJL33PQ0866 SD/MMC selection, GPIO/PTZ/illumination/device overlay and other one-camera policy.
+- **OpenIPC/builder:** ANJIA AJL33PQ0866 SD/MMC selection, GPIO/lens/illumination/device policy, optional PTZ capability and short runtime composition fragments over the Firmware generic FH8626 profile.
 - **OpenIPC/divinus:** FH8626 HAL/media/ISP/sensor implementation and Divinus-specific behavior.
 - **Reverse repository / evidence store:** factory binaries, stock captures, hashes, contracts and migration evidence.
 
-Builder CI currently lists the clean ANJIA staging profile in `NOT_BUILT` because its required generic FH8626 Firmware base is not yet present in the upstream Firmware checkout used by normal Builder jobs. That opt-out is an integration guard, not evidence of a build failure.
+Builder currently keeps all three composed ANJIA targets (`_divinus`, `_majestic`, `_diag`) in `NOT_BUILT` because their required FH8626 Firmware directions remain fork-local. That opt-out is an integration guard, not evidence of a build failure. No new Builder CI/build validation was run for the current `9c507b85...` composition tip during the latest documentation synchronization.
 
 No classification above is permission to delete the only known working artifact. The preferred path is to locate complete vendor SDK source/build inputs; when those exist, reproduce the component from source and verify compatibility. Where source is absent or incomplete, reverse the consumed ABI/data/protocol/hardware contract and implement the replacement. In either path, factory-extracted opaque bytes are reference evidence only and must disappear from the final production dependency set.

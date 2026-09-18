@@ -12,6 +12,14 @@ The generic FH8626V100 platform configuration and the ANJIA product/device profi
 
 The Builder device profile is the product-image assembly boundary. Verify the current Builder interface/profile before each integration cycle.
 
+For AJL33PQ0866 the current Builder interface is composed rather than one copied full defconfig. The selectable targets are:
+
+- `fh8626v100_lite_anjia-ajl33pq0866_divinus`;
+- `fh8626v100_lite_anjia-ajl33pq0866_majestic`;
+- `fh8626v100_lite_anjia-ajl33pq0866_diag`.
+
+Builder composes the selected Firmware branch's generic `fh8626v100_lite_defconfig`, the shared ANJIA board-only base and one short runtime fragment. Do not hand-copy one runtime's files into another target.
+
 Kernel changes affect a product image only after they are propagated into the kernel source/patch input actually consumed by the build. Rebuild/invalidate the relevant package so stale Buildroot output cannot silently survive.
 
 ## Live candidate testing
@@ -50,3 +58,5 @@ A TFTP RAM boot is a test mechanism and does not itself modify flash. Keep tempo
 ## Evidence boundary
 
 Build or host-test success is not `HARDWARE_PASS`. New firmware candidates still require the target acceptance appropriate to the changed subsystem.
+
+As of the current Builder composition tip `9c507b85481df2787bb214e535f17003bdebb6e6`, CI/tests/builds are intentionally deferred. Documentation of the composition model is current; do not infer image validity until the owner explicitly enters the later validation phase.

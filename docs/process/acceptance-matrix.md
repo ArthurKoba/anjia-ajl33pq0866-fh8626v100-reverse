@@ -11,10 +11,10 @@ Never collapse source existence, host tests, successful ARM build, target execut
 | Divinus external-owner transport baseline | HISTORICAL TARGET STREAM PASS / RETIRED ARCHITECTURE | retained target observations | evidence/reference only; the sidecar/source protocol is no longer the product path |
 | Divinus native FH8626 HAL candidate | SOURCE-CLEAN CANDIDATE / HARDWARE PENDING | `openipc-divinus/work/fh8626v100@168b2ec...` + retained FH8626 contracts | run focused host suite, build exact ARM1176/musl candidate, then validate media/ISP/transport/audio/teardown on target |
 | Divinus transitional native dependencies | EXPLICIT BLOCKERS | current provider capability/blocker state | replace vendor GC1054/MIPI plug-in and external RTX helper when their clean owning implementation is ready; do not hide them as production-ready |
-| Board PTZ motor backend (`fh8626-ptz`) | HARDWARE PASS | retained hardware acceptance | release regression only |
+| Board PTZ electrical/PWM contract | HARDWARE PASS | retained hardware acceptance for accepted mapping/transaction | current optional Builder packaging/backend integration still needs later release regression |
 | PTZ motor mapping | HARDWARE PASS after connector correction | retained PTZ evidence | preserve mapping and single-owner policy unless deliberately revalidated |
 | Divinus HTTP/ONVIF PTZ adapter | TARGET CURL PASS for movement/restore/presets | retained ONVIF/PTZ integration evidence | Frigate calibration/live person autotracking |
-| Builder AJL33PQ0866 profile | IMPLEMENTED; components hardware-backed | retained Builder/device-profile state | final image regression after current integration is rebuilt |
+| Builder AJL33PQ0866 composed profiles | SOURCE ARCHITECTURE READY / CURRENT TIP UNVALIDATED | `openipc-builder/work/fh8626v100-anjia@9c507b85...`; one shared ANJIA base with Divinus/Majestic/diagnostic fragments; earlier component-level hardware/source evidence | later CI selector self-test, exact three-target builds, then board regression; no current-tip build/CI/hardware claim |
 | Storage/recording profile | IMPLEMENTED / policy documented | retained device-profile state | product endurance/recovery acceptance |
 | Majestic FH8852-family binary on FH8626 | OPERATOR-REPORTED PROCESS START | retained operator/project state | pin exact candidate and prove VI/VENC/sustained RTSP |
 | Majestic ISP on FH8626 | NOT ACCEPTED | no complete current target acceptance | validate color/exposure/day-night after media path is stable |
