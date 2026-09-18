@@ -87,6 +87,24 @@ Stock media modules и sensor libraries были смонтированы из �
 
 Подробнее: [D8](CHRONOLOGY_DETAILS.md#d8--handoff-и-первые-признаки-многоагентного-workflow).
 
+### 9. Source-derived ISP runtime вместо register poking
+Источник: `CHAT-002`, 2026-08-27.
+
+После базового H.264 bring-up работа сместилась от одиночных MMIO-экспериментов к восстановлению stock lifecycle и `CB970` writer-chain из disassembly/context. Последовательно проверялись source-derived stages через owner/hot-plugin, при этом H.264 оставался стабильным, а ранее наблюдавшиеся фиксированные горизонтальные линии больше не появлялись.
+
+**Переход:** целью стало не «починить картинку одним регистром», а построить связный replacement stock runtime, пригодный для замены `apollo`.
+
+Подробнее: [D9](CHRONOLOGY_DETAILS.md#d9--source-derived-isp-runtime).
+
+### 10. Параллельный heavy reverse и нормализация evidence
+Источник: `CHAT-002`.
+
+Workspace был очищен от неполного Apollo artifact и переведён на один полный authoritative ARM text dump. После этого тяжёлые функции начали разбираться отдельным parallel reverse-agent с непересекающимся scope. Были восстановлены общий Q7 sine LUT, exact `CFEB0/D0238`, `D1258`, большая часть `D1724/D1DB0`, а затем отдельный AE/AWB frontend.
+
+**Переход:** reverse стал разбиваться на законченные integration units, которые основной агент должен сливать в один canonical runtime.
+
+Подробнее: [D10](CHRONOLOGY_DETAILS.md#d10--parallel-heavy-reverse-и-authoritative-artifacts).
+
 ## Современный anchor
 
 Современная GitHub/Drive/Ghidra/MCP архитектура появилась позже. `CHAT-001` её ещё не доказывает; следующие исторические файлы должны восстановить переход от handoff/checkpoint подхода к текущей системе.
