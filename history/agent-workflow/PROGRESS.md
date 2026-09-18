@@ -1,26 +1,26 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_017_IN_PROGRESS`
+Статус: `CHAT_017_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **16**
-- Последний источник: `CHAT-016`
+- Обработано исторических файлов: **17**
+- Последний источник: `CHAT-017`
 - Период последнего источника: **2026-08-27 — 2026-08-28**
-- Следующее действие: завершить анализ `CHAT-017`
+- Следующее действие: выполнить обязательный post-file refresh
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-016 |
+| Направление | Файл | Состояние после CHAT-017 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 16/?? уникальных источников обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 34 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 58 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D16: full AE loop до GC1054 + day/night parity; D13 уточнена exact lens-switch orchestration |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | A4.8/A4.9 переведены в CONSOLIDATED; persistent specialist Task N доказан practically |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 17/?? уникальных источников обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 35 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 62 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D17: APC/NR3D/LTM detail pipeline + runtime RW/GOT closure |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.10: reverse corpus architecture / workspace map |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -71,7 +71,7 @@
 | 14 | `CHAT-014` | 2026-08-27 | `DONE` | Parallel Agent 3: exact AWB→CCM reverse, coherent v4.2.1 hardware validation and rollback; session-quality retrospective becomes separate artifact with operational-state/state-machine/automation proposals |
 | 15 | `CHAT-015` | 2026-08-27 — 2026-08-28 | `IN_PROGRESS` | Центральная orchestration-ветка: multi-agent decomposition/integration, project-file isolation, long Task N lanes, Cross-Fullhan semantic oracle, APC/total-gain diagnosis и same-SoC external research |
 | 16 | `CHAT-016` | 2026-08-27 — 2026-08-28 | `DONE` | Persistent Agent 1 lane: Task1 C949C/C9898 → large Task2 full AE loop; premature completion corrected by full audit; stock GC1054 library + runtime captures close sensor-register contract and day/night replay; Task3 statically closes much of dual-lens/light/audio orchestration; quality-pack v3 adds focused-work/liveness/tool-placement rules |
-| 17 | `CHAT-017` | 2026-08-27 — 2026-08-28 | `IN_PROGRESS` | Persistent Agent 2 lane: CDD6C/D0B2C tables → large image-detail Task2; completion audit, runtime Apollo RW/GOT closure, APC/NR3D/LTM semantics and exact current-day table identities |
+| 17 | `CHAT-017` | 2026-08-27 — 2026-08-28 | `DONE` | Persistent Agent 2: image-detail Task2 corrected after premature completion; live Apollo RW/GOT closes APC/NR3D/LTM/D1DB0 tables; final current-day detail handoff + selftest; quality retrospectives consolidated into proposed full reverse-corpus architecture |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -669,6 +669,27 @@ CHAT-016 является прямым proof persistent specialist model: оди
 
 Quality pack v3 показывает, что meta-workflow улучшения уже стали итеративной практикой, а не единичной ретроспективой.
 
+## Что CHAT-017 добавил к картине
+
+### Новый error-class
+- E-035: cross-agent specialist scope contamination / role identity loss.
+
+### Reinforced/consolidated
+- E-022 promoted to CONSOLIDATED: do not re-request/re-disassemble artifacts already present;
+- E-007/E-020/E-024/E-031/E-032 reinforced.
+
+### Новые improvements
+- I-059: static code + live runtime data as two complementary reverse layers;
+- I-060: corpus-first pre-materialized reverse substrate with manifest/status map;
+- I-061: specialist role-lock + artifact preflight;
+- I-062: consolidate multiple agent retrospectives into one master process contract.
+
+### Технический вклад
+Agent 2 finally closes current-day image-detail reverse: APC/CDD6C, active NR3D/D0FEC, dynamic LTM D0630/D0B2C and D1DB0 runtime tables. Missing APC remains the strongest firmware-side softness cause, followed by active NR3D and LTM parity gaps.
+
+### Agentic role
+The handoff starts evolving from a transport archive into a mapped local workspace/corpus: prepared reverse representations, runtime evidence, environment map, reusable tools, expensive-work history and machine-readable status.
+
 ## Следующее действие
 
-Получить следующий уникальный исторический источник. Следующая плановая расширенная live-state сверка — после восемнадцатого уникального файла либо раньше при крупном инфраструктурном переходе.
+Выполнить обязательный post-file refresh. Затем перейти к `CHAT-018`; после него выполнить плановую expanded live-state сверку.
