@@ -1,26 +1,26 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_010_IN_PROGRESS`
+Статус: `CHAT_010_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **9**
-- Последний источник: `CHAT-009`
+- Обработано исторических файлов: **10**
+- Последний источник: `CHAT-010`
 - Период последнего источника: **2026-08-26**
-- Следующее действие: завершить анализ `CHAT-010`
+- Следующее действие: выполнить обязательный post-file refresh
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-009 |
+| Направление | Файл | Состояние после CHAT-010 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 9/?? уникальных источников обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 27 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 38 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | D5-D8 дополнены GPIO5 reset, H.264 capture, stateful lifetime и reproducible handoff |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | manual local workflow limits зафиксированы; reproducibility/serial-script rules добавлены |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 10/?? уникальных источников обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 28 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 40 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | D9 дополнен точной 5011/4D05/4D06 semantics; SSH regression сохранена как pending |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | A1 handoff acceptance и A4.1 self-service reverse подтверждены |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -64,7 +64,7 @@
 | 7 | `CHAT-007` | 2026-08-25 — 2026-08-26 | `DONE` | Partial-overlap: префикс до clean-room fh_mpi повторяет CHAT-006 и не пересчитан. Новая часть: clean OpenIPC RAM baseline, полный stock media stack под OpenIPC, sensor/MIPI/VPU/PAE/ISP reverse, transport/context ошибки, external Fullhan references, documentation/repository design и parallel-agent checkpoint |
 | 8 | `CHAT-008` | 2026-08-25 | `DONE` | Partial-overlap с CHAT-007 до ~L24104. Уникальная ветка: Apollo/ISP reverse, checkpoint recovery, adaptive granularity correction, parallel-agent merge, FH8852 semantic reference, ISP interrupt-mask breakthrough, ~25-fps sensor→ISP proof и SoC-first backend goal |
 | 9 | `CHAT-009` | 2026-08-26 | `DONE` | Новый уникальный source (~13% exact-line overlap с CHAT-008 только в reused code/helper fragments): hardware H.264 capture + repeated descriptor, broken ISP unload/multi-owner lifetime, persistent daemon direction, SSH key/CRNG/PTTY dev-loop optimization, UART paste fragility и context-limit reproducibility handoff |
-| 10 | `CHAT-010` | 2026-08-26 | `IN_PROGRESS` | Продолжение после handoff: PTY cold-boot closure, точный dequeue reverse (`5011`, `4D05/4D06`), full-disassembly self-service, livecapture ordering fix и отдельная SSH-regression ветка |
+| 10 | `CHAT-010` | 2026-08-26 | `DONE` | Успешное продолжение из reproducible handoff без повторного bring-up; PTY cold-boot closure; exact `PAE 5011` release + `4D05/4D06` query semantics; full-disassembly self-service; livecapture source ordering fix (hardware retest pending); отдельная SSH regression с отклонённым ControlMaster workaround |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -396,6 +396,37 @@ Authority endpoint не изменился:
 
 Особенно хорошо видно эволюционное расстояние: в `CHAT-009` context limit требовал гигантского ручного handoff; в текущем проекте handoff опирается на repository authority, manifests, branch roles и external reverse workspace.
 
+## Что CHAT-010 добавил к картине
+
+### Новый error-class
+- E-028: если пользователь сообщает, что после наших изменений ранее быстрый/рабочий путь деградировал, нельзя нормализовать это как «особенность железа» и скрывать workaround-ом; сначала нужен known-good diff и regression isolation.
+
+### Усиленные существующие классы
+- E-001: оператор явно выполняет команды строго по агенту; лишнее техническое ветвление/уточнения нельзя перекладывать на него;
+- E-002: новый unknown reverse идёт пошагово, но routine не должен дробиться без decision boundary;
+- E-019: camera lane — прямые UART-команды, WSL отдельно;
+- E-023: stage summary по текущему blocker полезнее расплывчатой оценки остатка.
+
+### Новые/уточнённые improvements
+- I-022 `Known-good baseline + regression isolation` → `CONSOLIDATED`;
+- I-024 `Full searchable evidence` → `CONSOLIDATED`: полный `enc/media_process` disassembly заменяет ручные диапазоны;
+- I-038 reproducible handoff → `CONSOLIDATED`: новый агент реально продолжает с dequeue boundary;
+- I-039: предыдущий агент — fallback только для отсутствующего уникального gap;
+- I-040: fresh regression observation имеет приоритет над старой интерпретацией handoff.
+
+### Технический вклад
+- `PAE 0xC0045011` статически доказан как `pae_enc_stream_release(channel 0..7)`;
+- `4D05` и `4D06` оба query одного encoded stream; различается wait policy;
+- queue read-index двигается через `release → media_stream_release → enc_stream_get`;
+- найден bug текущего livecapture: release выполнялся до чтения первого queued AU;
+- source исправлен на `query → copy/CRC → release current`, но clean-boot hardware retest в этом source ещё не завершён;
+- отдельная SSH-ветка заканчивается на локализации 5–7 sec regression по TCP/banner/KEX/auth boundaries, без подтверждённого root cause.
+
+### Agentic role
+`CHAT-010` — первый прямой acceptance-test handoff из предыдущего исчерпанного чата: доказанные sensor/ISP/H.264 этапы не повторяются, checkpoint paths и safety constraints используются как рабочее состояние.
+
+Пользователь всё ещё остаётся ручным мостом к предыдущему агенту и локальным WSL artifacts; фактического перехода на GitHub/Drive/MCP authority в этом источнике ещё нет.
+
 ## Следующее действие
 
-Получить следующий уникальный исторический источник. Следующая плановая расширенная live-state сверка — после двенадцатого уникального файла либо раньше при крупном противоречии/инфраструктурном переходе.
+Выполнить обязательный post-file refresh. После него ожидать следующий уникальный исторический источник. Плановая live-state сверка остаётся после двенадцатого уникального файла.
