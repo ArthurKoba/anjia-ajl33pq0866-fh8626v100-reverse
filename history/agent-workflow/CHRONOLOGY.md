@@ -250,6 +250,15 @@ Specialist external-research lane перестаёт делать широкий
 
 Подробнее: [D23](CHRONOLOGY_DETAILS.md#d23--cross-platform-gap-hunter-и-targeted-reverse-leads).
 
+### 24. Late Agent-4 corpus: watchdog evidence и peripheral backlog
+Источник: `CHAT-026`, partial export, 2026-08-29.
+
+Доступная часть экспорта не содержит сам ранний reverse-процесс Agent 4, но сохраняет consolidated technical state: stock watchdog ownership/runtime API и kernel driver path считаются разобранными; подготовлены exact stock kernel/U-Boot reverse artifacts. Human-detection path выделен в отдельный будущий OpenIPC adapter backlog, PTZ software/backend считается closed при отложенной physical actuator validation.
+
+**Переход:** эти тяжёлые kernel/runtime artifacts становятся первым явным кандидатом на отдельный REVERSE_HEAVY vault вместо everyday master handoff.
+
+Подробнее: [D24](CHRONOLOGY_DETAILS.md#d24--late-agent-4-watchdogperipheral-corpus).
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.
