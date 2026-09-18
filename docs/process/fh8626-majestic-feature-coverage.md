@@ -22,9 +22,9 @@ validation remain a separate next phase.
 Canonical cross-agent coordination: reverse issue #3.
 
 Current refs:
-- Firmware Majestic: `work/fh8626v100-majestic@04e09360`
+- Firmware Majestic: `work/fh8626v100-majestic@cf4c6c47`
 - Divinus: `work/fh8626v100@44c4fb94`
-- Builder: `work/fh8626v100-anjia@ee0687c0`
+- Builder: `work/fh8626v100-anjia@f91c1ff1`
 - Linux: `work/fh8626v100@357c2d13`
 
 ## Video
@@ -94,8 +94,8 @@ Their required FH8626-facing VPSS dependencies are implemented:
 GraphV2 uses the recovered FH8626 folded 0x448-byte request
 `0xC448696D/0xC448696E`, translating the FH8852 public 273-word GraphV2
 object. A final Divinus cross-check was independently verified against Ghidra
-`isp.ko:vpu_set_logov2`: selector is 0..2, global graph index is 0..1 and
-channel graph index is 0..3. Majestic now rejects out-of-range slots before
+`isp.ko:vpu_set_logov2`: selector is 0..2, global graph index is 0..1, channel SET graph index is
+0..3 and channel GET graph index is 0..4. Majestic now rejects out-of-range slots before
 the native ioctl.
 
 BGM/NN SDK exports that are not selected or imported by the current runtime
