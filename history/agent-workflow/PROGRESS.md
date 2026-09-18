@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `READY_FOR_NEXT_SOURCE`
+Статус: `CHAT_017_IN_PROGRESS`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **16**
 - Последний источник: `CHAT-016`
 - Период последнего источника: **2026-08-27 — 2026-08-28**
-- Следующее действие: получить следующий уникальный исторический источник
+- Следующее действие: завершить анализ `CHAT-017`
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -71,6 +71,7 @@
 | 14 | `CHAT-014` | 2026-08-27 | `DONE` | Parallel Agent 3: exact AWB→CCM reverse, coherent v4.2.1 hardware validation and rollback; session-quality retrospective becomes separate artifact with operational-state/state-machine/automation proposals |
 | 15 | `CHAT-015` | 2026-08-27 — 2026-08-28 | `IN_PROGRESS` | Центральная orchestration-ветка: multi-agent decomposition/integration, project-file isolation, long Task N lanes, Cross-Fullhan semantic oracle, APC/total-gain diagnosis и same-SoC external research |
 | 16 | `CHAT-016` | 2026-08-27 — 2026-08-28 | `DONE` | Persistent Agent 1 lane: Task1 C949C/C9898 → large Task2 full AE loop; premature completion corrected by full audit; stock GC1054 library + runtime captures close sensor-register contract and day/night replay; Task3 statically closes much of dual-lens/light/audio orchestration; quality-pack v3 adds focused-work/liveness/tool-placement rules |
+| 17 | `CHAT-017` | 2026-08-27 — 2026-08-28 | `IN_PROGRESS` | Persistent Agent 2 lane: CDD6C/D0B2C tables → large image-detail Task2; completion audit, runtime Apollo RW/GOT closure, APC/NR3D/LTM semantics and exact current-day table identities |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
