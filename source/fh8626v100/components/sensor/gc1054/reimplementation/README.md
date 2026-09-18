@@ -66,7 +66,11 @@ decompiler presentation rather than missing binary coverage:
 - command `0x80002` uses a signed target-fps callback output;
 - command `0x80002` still invokes the registered adjustment callback for an
   unsupported format, passing nominal fps `-10000` with base frame length
-  zero, instead of returning before the callback.
+  zero, instead of returning before the callback;
+- raw `I2CSensor_Read` uses 2-byte reads for every mode other than 0 and 2,
+  including mode values >=4; this is not equivalent to a parity-only rule;
+- the VI-attribute builder zeroes all 24 output bytes before format dispatch,
+  so an unsupported format returns failure with a zeroed output structure.
 
 The earlier mistaken interpretation of a trailing `0/0` format-table
 sentinel was also removed: all five arrays are exactly 145 pairs and the data

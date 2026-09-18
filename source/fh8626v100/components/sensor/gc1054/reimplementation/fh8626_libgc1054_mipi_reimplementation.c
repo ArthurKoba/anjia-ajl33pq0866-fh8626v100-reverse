@@ -150,7 +150,14 @@ static unsigned build_read_address(uint32_t reg, uint8_t data[2])
 
 static unsigned read_value_size(void)
 {
-    return (sensor_mode & 1u) ? 2u : 1u;
+    /*
+     * Stock branches explicitly: mode 0 -> 1 byte, mode 1 -> 2,
+     * mode 2 -> 1, every other mode -> 2. Do not collapse this to
+     * parity: raw I2CSensor_Read remains callable for mode >= 4.
+     */
+    if (sensor_mode == 0u || sensor_mode == 2u)
+        return 1u;
+    return 2u;
 }
 
 static void i2c_write_common(uint32_t reg, uint32_t value, int quiet,
@@ -410,9 +417,16 @@ long SensorGetEnvInt(const char *name, long default_value)
 
 static int Gc1054BuildViAttr(void *attr, double *fps)
 {
-    const struct fh8626_gc1054_format_contract *f =
-        fh8626_gc1054_find_format(sensor_format);
+    const struct fh8626_gc1054_format_contract *f;
 
+    /*
+     * Stock clears all 24 output bytes before format dispatch. Unsupported
+     * formats therefore return -1 with a zeroed attr structure.
+     */
+    if (attr)
+        memset(attr, 0, sizeof(struct fh8626_gc1054_vi_attr_raw));
+
+    f = fh8626_gc1054_find_format(sensor_format);
     if (!f) {
         printf("[gc1054_mipi]sensor_get_vi_attr: unsupported format %d(0x%08x)\n",
                (int)sensor_format, sensor_format);
