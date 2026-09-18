@@ -1,26 +1,26 @@
 # Прогресс аудита исторических чатов
 
-Статус: `CHAT_003_IN_PROGRESS`
+Статус: `CHAT_003_POST_REFRESH_PENDING`
 
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **2**
-- Последний источник: `CHAT-002`
-- Период последнего источника: **2026-08-27**
-- Следующее действие: завершить анализ `CHAT-003`
+- Обработано исторических файлов: **3**
+- Последний источник: `CHAT-003`
+- Период последнего источника: **2026-08-26 — 2026-08-27**
+- Следующее действие: post-file refresh + обязательная 3-file сверка с live STATE/TASKS/branches
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-002 |
+| Направление | Файл | Состояние после CHAT-003 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 2/?? источников обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 15 подтверждённых классов/статусов |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 15 подтверждённых улучшений |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена фаза source-derived runtime + parallel heavy reverse |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | A0/A1/A4 наблюдаются; A4.5 consolidated; A4.6 observed |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 3/?? источников обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 18 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 23 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | backfill persistent-owner/hot-reload этапа перед source-derived runtime |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлен A4.2 persistent experiment substrate |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -57,7 +57,7 @@
 |---:|---|---|---|---|
 | 1 | `CHAT-001` | 2026-08-24 — 2026-08-26 | `DONE` | Первая FH8626 bring-up фаза: safe RAM boot, OpenIPC userspace, vendor media stack, ISP/PAE/H.264, dev-loop SSH, checkpoints/handoff; выявлен баланс пошаговости, transport/state/context ошибки |
 | 2 | `CHAT-002` | 2026-08-27 | `DONE` | Source-derived ISP runtime, формальный one-archive delivery protocol, self-guarded owner launch, hot-plugin loop, workspace authority cleanup, role-specialized parallel reverse |
-| 3 | `CHAT-003` | 2026-08-26 — 2026-08-27 | `IN_PROGRESS` | Исторически более ранняя часть: v3.8→v4.0.4, persistent owner/hot reload, AE probe, boot automation, переход от live MMIO pokes к lifecycle-derived runtime |
+| 3 | `CHAT-003` | 2026-08-26 — 2026-08-27 | `DONE` | Исторический backfill: v3.8→v4.0.4, persistent owner/hot reload, deterministic test lessons, boot automation, AE feedback, отказ от live MMIO rollback; по source numbering пропущенный/смещённый #2 считается закрытым и отдельно не ожидается |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -110,9 +110,33 @@
 - MCP/Ghidra как прямой shared workspace между агентами;
 - отдельный устойчивый env-паттерн для значений, которые «съедает» терминал.
 
+## Что CHAT-003 добавил к картине
+
+### Новые уникальные ошибки
+- физический A/B test нельзя строить на ручном отсчёте секунд и неоднозначных командах;
+- test artifact нельзя отдавать в hardware loop без доступного compile/preflight;
+- будущие fallback-сценарии не должны вытеснять выбранный основной dev path.
+
+### Усиленные существующие классы
+- потеря уже имеющихся dumps/runtime state;
+- лишняя проверочность и остановки между очевидными действиями;
+- intrusive live-MMIO experimentation;
+- опасность второго owner;
+- избыточные SHA/служебная информация при передаче файлов.
+
+### Новые/уточнённые best practices
+- persistent owner + reloadable algorithm plugin;
+- автоматизированные `openipc_boot/stock_boot`;
+- deterministic per-state evidence capture;
+- hardware-proven baseline + regression isolation;
+- compile/self-test before hardware delivery.
+
+### Историческая роль
+Этот источник хронологически заполняет разрыв перед `CHAT-002`: именно здесь появляется стабильный experimental substrate, на котором затем стало возможно быстро проверять source-derived CB970 stages и параллелить reverse.
+
+### Нумерация входных файлов
+Пользователь указал, что исходный файл/индекс `#2` утерян либо историческая нумерация смещена. Не ждать отдельный `#2` и не создавать для него placeholder; текущая выгрузка `#3` обработана как audit ID `CHAT-003`.
+
 ## Следующее действие
 
-Получить `CHAT-003` и искать:
-- дальнейшее подтверждение новых delivery/idempotency правил;
-- момент появления постоянного внешнего хранилища;
-- переход к GitHub authority и затем MCP/shared-agent infrastructure.
+Выполнить обязательный post-file refresh и 3-file live-state сверку. После этого ожидать следующий предоставленный исторический файл, не пытаясь восстановить отсутствующий source #2.
