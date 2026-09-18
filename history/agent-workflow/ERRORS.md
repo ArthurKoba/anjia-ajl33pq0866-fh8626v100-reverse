@@ -272,7 +272,7 @@ Evidence: `CHAT-003` — пользователь прямо сообщил, ч�
 - проверить наличие всех archive members и соответствие compile command;
 - warnings, которые противоречат ожидаемой архитектуре, анализировать, а не просто отключать `-Werror`.
 
-Evidence: `CHAT-003`. `CHAT-009` — сгенерированный через `sed` source получил лишний `\&ch` и не компилировался; пользователь поймал ошибку на своей сборке, хотя такой syntax/preflight можно было проверить до hardware loop. `CHAT-022` — переданный runtime candidate содержал `Makefile.camera`, в котором отсутствовал `fh8626_stock_ae_state_ref.c`; пользователь поймал linker failures уже на своей WSL-сборке.
+Evidence: `CHAT-003`. `CHAT-009` — сгенерированный через `sed` source получил лишний `\&ch` и не компилировался; пользователь поймал ошибку на своей сборке, хотя такой syntax/preflight можно было проверить до hardware loop. `CHAT-022` — переданный runtime candidate содержал `Makefile.camera`, в котором отсутствовал `fh8626_stock_ae_state_ref.c`; пользователь поймал linker failures уже на своей WSL-сборке. `CHAT-027` — handoff v3 ссылался из README на документы, которых физически не было в архиве; позже пришлось пересобирать v4. В другой focused Agent 4 pack reverse dependencies были упомянуты, но не включены, из-за чего watchdog heavy corpus пришлось досылать отдельно.
 
 Кандидат: «не передавать пользователю test artifact, пока доступный локальный compile/preflight не прошёл».
 
@@ -307,7 +307,7 @@ Evidence: `CHAT-008` — агент попросил прикрепить фай
 
 Кандидат: bounded-search rule для grep/find/objdump.
 
-Evidence: `CHAT-016` — широкие/рекурсивные file scans заметно тормозили работу; пользователь потребовал focused workspace и точечный `grep/sed` по конкретным disassembly-файлам. `CHAT-017` — агент предлагал рекурсивный `find` по нескольким большим деревьям даже после того, как точный путь TFTP-файла уже был известен пользователю. `CHAT-021` — слишком широкий перенос Windows corpus через wildcard начал захватывать лишние деревья; пользователь потребовал копировать только корневые `fh_stock_*`/`fh_static_*` artifacts.
+Evidence: `CHAT-016` — широкие/рекурсивные file scans заметно тормозили работу; пользователь потребовал focused workspace и точечный `grep/sed` по конкретным disassembly-файлам. `CHAT-017` — агент предлагал рекурсивный `find` по нескольким большим деревьям даже после того, как точный путь TFTP-файла уже был известен пользователю. `CHAT-021` — слишком широкий перенос Windows corpus через wildcard начал захватывать лишние деревья; пользователь потребовал копировать только корневые `fh_stock_*`/`fh_static_*` artifacts. `CHAT-027` — на позднем optional-ISP pass широкие чтения больших disassembly заметно замедляли работу; пользователь потребовал работать только от опорного адреса/символа маленькими окнами и xref-переходами.
 
 ### E-021 — Перенос команд через обратный слеш вопреки базовому правилу
 Статус: `OBSERVED`.
@@ -495,7 +495,7 @@ Evidence: `CHAT-013`. `CHAT-024` показывает обратную стор�
 - если для полного закрытия не хватает внешнего evidence — назвать конкретный blocker и запросить ровно его;
 - итоговый status должен отражать самый слабый обязательный gate, а не самый сильный найденный результат.
 
-Evidence: `CHAT-014`. `CHAT-015` усиливает риск слишком мелких specialist tasks: быстрый partial reverse был принят как завершённая работа, хотя пользователь ожидал долгую область с несколькими подзадачами и глубоким acceptance. `CHAT-016` — прямое подтверждение класса: Agent 1 сначала объявил Task 2 завершённым, а затем requirement audit оценил реальное закрытие лишь в 70–80% и перечислил недоделанные C8134/C883C, actuator arithmetic, D0630 history, numerical replay и selftests. `CHAT-017` — Agent 2 сначала объявил большой image-detail Task 2 завершённым, а после прямого checklist audit признал лишь ~55–65% выполнения; после дополнительного static/runtime evidence работа продолжалась до финального APC/NR3D/LTM closure.
+Evidence: `CHAT-014`. `CHAT-015` усиливает риск слишком мелких specialist tasks: быстрый partial reverse был принят как завершённая работа, хотя пользователь ожидал долгую область с несколькими подзадачами и глубоким acceptance. `CHAT-016` — прямое подтверждение класса: Agent 1 сначала объявил Task 2 завершённым, а затем requirement audit оценил реальное закрытие лишь в 70–80% и перечислил недоделанные C8134/C883C, actuator arithmetic, D0630 history, numerical replay и selftests. `CHAT-017` — Agent 2 сначала объявил большой image-detail Task 2 завершённым, а после прямого checklist audit признал лишь ~55–65% выполнения; после дополнительного static/runtime evidence работа продолжалась до финального APC/NR3D/LTM closure. `CHAT-027` — самый сильный повтор класса: Agent 1 несколько раз сообщал, что static reverse исчерпан или broad reverse закончен, после чего по требованию полного coverage находились новые существенные области — watchdog/human detection, color/HAL, illumination PWM, audio, dev_ctrl, WDR/LSC и optional ISP.
 
 Кандидат: обязательный **completion audit against original acceptance criteria** перед финальным закрытием задачи.
 
@@ -561,7 +561,7 @@ Evidence: `CHAT-015`.
 - давать heartbeat только если операция заметно затянулась;
 - после tool failure/обрыва немедленно сообщить, где именно продолжится работа.
 
-Evidence: `CHAT-016`.
+Evidence: `CHAT-016`. `CHAT-027` — пользователь многократно спрашивал, где агент остановился, просил чаще короткие статусы и после internal reasoning failure отдельно восстанавливал last-known checkpoint.
 
 Кандидат: **silent reasoning + sparse liveness heartbeat** для длительных autonomous tasks.
 
@@ -696,6 +696,28 @@ Evidence: `CHAT-022`.
 - удалять historical copy только после доказанной canonicalization/dedup.
 
 Evidence: `CHAT-026`.
+
+### E-041 — Focused handoff не замыкает собственные dependencies
+Статус: `OBSERVED`.
+
+Симптом: специализированный архив содержит документы, которые ссылаются на обязательный reverse/evidence substrate, но сами bytes отсутствуют и нет гарантированного external locator.
+
+В `CHAT-027` Agent 4 focused pack ссылался на Apollo/kernel/U-Boot reverse material, но часть heavy watchdog corpus физически не была вложена. В результате Agent 1 снова зависел от ручной маршрутизации пользователя и отдельной передачи уже подготовленного `fh8626_watchdog_reverse_heavy_v1`.
+
+Почему мешает:
+- focused agent вынужден повторно просить уже существующий corpus;
+- возникает риск повторного objdump/disassembly;
+- semantic handoff выглядит complete, хотя dependency graph разомкнут;
+- человек остаётся скрытым package manager между agent branches.
+
+Правильный паттерн:
+- до выдачи focused pack строить dependency graph;
+- каждый required dependency должен быть либо `EMBEDDED`, либо `EXTERNAL_VERIFIED` с устойчивым locator;
+- проверять не filename, а фактическое содержимое/размер/role;
+- unresolved dependency блокирует выпуск focused pack;
+- heavy corpus можно не дублировать, но locator/resolver должен быть воспроизводимым.
+
+Evidence: `CHAT-027`.
 
 ## Пока не подтверждено этим чатом
 
