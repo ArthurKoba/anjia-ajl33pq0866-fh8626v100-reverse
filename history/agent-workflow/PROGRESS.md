@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `READY_FOR_NEXT_SOURCE`
+Статус: `NEAR_FINAL_REVIEW`
 
 ## Текущее состояние
 
@@ -8,7 +8,7 @@
 - Обработано исторических файлов: **43**
 - Последний источник: `CHAT-043`
 - Период последнего источника: **2026-09-17 — 2026-09-18**
-- Следующее действие: получить следующий уникальный исторический источник
+- Следующее действие: review `BASE_PROMPT_V2.md` и `LOCAL_CONTEXT_CONTRACT.md`, затем решить, какие правила переносить в Project instructions / root `AGENTS.md`; новые исторические источники при необходимости можно продолжать добавлять.
 - Raw chat exports в Git **не сохраняются**
 - Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
 
@@ -1168,3 +1168,13 @@ Divinus hardening advances independently of owner integration, preserving single
 - Ghidra project inventory подтверждает canonical AJL/FH8626 projects; отдельного sensor_libs.gpr больше нет.
 - Raw chat exports в Git не добавлялись.
 - Статус: READY_FOR_NEXT_SOURCE.
+
+
+## Near-final artifacts
+
+- `FINAL_REPORT.md` — сводный вердикт по 43 источникам, ошибкам, удачным практикам и эволюции workflow.
+- `BASE_PROMPT_V2.md` — универсальный proposed prompt без machine/project-specific значений.
+- `LOCAL_CONTEXT_CONTRACT.md` — схема отделения local environment/IP/path/toolchain state от универсального prompt.
+- `BASELINE_PROMPT.md` — frozen исходная версия, не менять.
+
+Текущая рекомендация: сначала review этих трёх новых документов; только после отдельного решения переносить выбранные runtime rules в действующие Project/repository instructions.
