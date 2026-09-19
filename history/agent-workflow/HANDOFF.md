@@ -1,118 +1,51 @@
-# Handoff: аудит исторических чатов
+# Handoff: FH8626 historical case-study audit
 
-Этот файл — точка входа для любого нового агента, продолжающего аудит.
+Repository:
+`ArthurKoba/anjia-ajl33pq0866-fh8626v100-reverse`
 
-## Где работать
+Audit branch:
+`audit/agent-workflow-history`
 
-Repository: `ArthurKoba/anjia-ajl33pq0866-fh8626v100-reverse`
+## Scope
 
-Рабочая ветка аудита: `audit/agent-workflow-history`
+This branch now owns only:
+- historical source registry;
+- FH8626/ANJIA technical chronology;
+- project-specific case-study details.
 
-**Ничего из аудита не писать в `main`, `work/fh8626v100` или связанные OpenIPC-репозитории.** Их можно читать для проверки контекста.
+Universal agent methodology has moved to:
 
-Финальное перенесение выводов в постоянную документацию или базовый промпт выполняется только после отдельного решения пользователя.
+`ArthurKoba/ai-agent-workflow`
 
-## Raw chat exports
+Before changing universal prompts, roles, audit rules, MCP strategy, terminal interaction policy or best practices, work in that repository instead.
 
-Исходные выгрузки не являются артефактами репозитория.
+## Startup
 
-Никогда не:
-- добавлять их в Git;
-- складывать рядом с аудитом;
-- сохранять в Git большие цитаты/логи из них;
-- переносить приватные данные, пароли, идентификаторы или эмоциональные реплики.
+1. Read this file.
+2. Read `PROGRESS.md`.
+3. Read `CHRONOLOGY.md`.
+4. Read `CHRONOLOGY_DETAILS.md` only as needed.
+5. For reusable agent-workflow analysis, read the universal repo `AGENTS.md` and route through its workflow-audit skill.
 
-Использовать только как вход для анализа. В реестре обозначать их нейтральными ID: `CHAT-001`, `CHAT-002` и т. д.
+## Raw sources
 
-## Что прочитать перед продолжением
+Raw chat exports remain input-only:
+- do not commit them;
+- do not copy secrets/private identifiers;
+- use neutral IDs `CHAT-NNN`;
+- deduplicate overlapping exports.
 
-Обязательный порядок:
-1. корневой `AGENTS.md`;
-2. `history/agent-workflow/README.md`;
-3. `history/agent-workflow/PROGRESS.md`;
-4. `history/agent-workflow/ERRORS.md`;
-5. `history/agent-workflow/IMPROVEMENTS.md`;
-6. `history/agent-workflow/CHRONOLOGY.md`;
-7. `history/agent-workflow/CHRONOLOGY_DETAILS.md`;
-8. `history/agent-workflow/AGENTIC_DEVELOPMENT.md`;
-9. `history/agent-workflow/BASELINE_PROMPT.md`;
-10. при необходимости актуальные `STATE.md`, `TASKS.md` и документы/ветки, на которые ссылается анализируемый чат.
+## Processing a new FH8626 source
 
-## Пять задач
+- determine whether content is unique;
+- assign next neutral CHAT ID only for unique content;
+- update the source registry;
+- add only meaningful project chronology;
+- send generalized workflow lessons to the universal audit registry;
+- do not recreate local ERRORS/IMPROVEMENTS/prompt files.
 
-1. Вести реестр и прогресс каждого полученного исторического файла.
-2. Консолидировать уникальные ошибки/нарушения агентов.
-3. Консолидировать улучшения workflow и best practices.
-4. Восстанавливать техническую хронологию реверса/портирования FH8626V100.
-5. Восстанавливать эволюцию агентной разработки как отдельную переиспользуемую историю.
+## Live-state rule
 
-## Цикл обработки одного нового файла
+Historical state must not be confused with current project state.
 
-### До анализа
-- перечитать все рабочие журналы;
-- проверить, не обработан ли файл ранее; при точном дубликате не назначать новый `CHAT-NNN`, не увеличивать счётчик и только отметить duplicate receipt в `PROGRESS.md`;
-- зарегистрировать нейтральный ID источника только для нового уникального содержания;
-- определить его относительное место в истории;
-- при необходимости проверить живой контекст проекта через MCP.
-
-### Во время анализа
-Искать:
-- прямые замечания пользователя агенту;
-- места сильного раздражения как индикатор серьёзной проблемы, но классифицировать техническую причину, а не эмоцию;
-- неверные/опасные/галлюцинированные команды;
-- перекладывание решений и анализа на пользователя;
-- слишком раннюю остановку;
-- избыточную пошаговость;
-- лишнюю ручную работу;
-- потерю env, параметров, путей и уже известных фактов;
-- удачные изменения workflow;
-- новые инструменты/хранилища/каналы;
-- технические этапы реверса/портирования;
-- переходы ответственности от человека к агенту.
-
-### После анализа
-- обновить существующие классы ошибок вместо создания дублей;
-- добавить только действительно новые улучшения;
-- `CHRONOLOGY.md` обновить только опорными этапами;
-- детали при необходимости вынести в `CHRONOLOGY_DETAILS.md`;
-- обновить agentic-хронологию, если изменился способ работы;
-- завершить строку файла в `PROGRESS.md`;
-- коротко записать, какие выводы подтвердились/изменились;
-- **перечитать обновлённые README/HANDOFF/PROGRESS/ERRORS/IMPROVEMENTS/CHRONOLOGY/CHRONOLOGY_DETAILS/AGENTIC_DEVELOPMENT после каждого файла**;
-- оставить репозиторий в полностью handoff-ready состоянии.
-
-## Освежение контекста
-
-Минимум перед **каждым** новым чат-файлом перечитываются все рабочие журналы аудита.
-
-Дополнительно после каждых 3 обработанных файлов, а также при любом противоречии или крупном переходе:
-- перечитать актуальные `STATE.md` и `TASKS.md`;
-- посмотреть текущие relevant branches/commits связанных репозиториев;
-- не путать современное состояние с историческим состоянием обсуждаемого чата.
-
-## Дедупликация
-
-Один и тот же класс ошибки может встречаться десятки раз. Это не десять разных ошибок.
-
-Новый ID создаётся только если отличается хотя бы одно из ключевых свойств:
-- корневая причина;
-- правильная стратегия исправления;
-- контекст, где существующее правило не работает;
-- класс последствий.
-
-Повторные эпизоды должны повышать статус от `BOOTSTRAP` к `OBSERVED` и затем к `CONSOLIDATED`, а также улучшать формулировку будущего правила.
-
-## Ограничение источника
-
-Исторические выгрузки содержат диалог, но не гарантируют полную видимость внутренних tool calls агента. Поэтому нельзя утверждать «агент не проверял X» только потому, что вызов инструмента не виден. Можно уверенно фиксировать только то, что видно по тексту, результатам, ошибкам и реакции пользователя.
-
-## Когда аудит будет считаться готовым
-
-- все предоставленные чаты зарегистрированы и обработаны;
-- нет необъяснимых дублей ошибок/улучшений;
-- краткая техническая хронология остаётся читаемой;
-- детали вынесены из основной хронологии;
-- эволюция agentic workflow связна;
-- для каждого сильного будущего правила понятно, какие реальные эпизоды его обосновывают;
-- отдельно подготовлены предложения по изменению базового промпта, но исходный `BASELINE_PROMPT.md` сохранён неизменным;
-- перед финализацией выполнено сравнение с живым состоянием проекта и учтена параллельная работа других агентов.
+When a source refers to modern branches/tools, verify current state only if needed to understand the historical claim; do not retroactively rewrite history.

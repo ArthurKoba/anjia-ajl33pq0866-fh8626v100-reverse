@@ -1,6 +1,6 @@
-# Прогресс аудита исторических чатов
+# Прогресс исторического аудита FH8626V100
 
-Статус: `PROMPT_CONSOLIDATION / REPO_EXTRACTION_PENDING`
+Статус: `CASE_HISTORY / UNIVERSAL_WORKFLOW_MOVED`
 
 ## Текущее состояние
 
@@ -8,48 +8,29 @@
 - Обработано исторических файлов: **43**
 - Последний источник: `CHAT-043`
 - Период последнего источника: **2026-09-17 — 2026-09-18**
-- Следующее действие: review `BASE_PROMPT_V2.md` и `LOCAL_CONTEXT_CONTRACT.md`, затем решить, какие правила переносить в Project instructions / root `AGENTS.md`; новые исторические источники при необходимости можно продолжать добавлять.
 - Raw chat exports в Git **не сохраняются**
-- Базовый промпт сохранён неизменным в `BASELINE_PROMPT.md`
+- Универсальные prompts/errors/best-practices/agent evolution перенесены в `ArthurKoba/ai-agent-workflow`
 
-## Пять направлений
+## Что продолжаем вести здесь
 
-| Направление | Файл | Состояние после CHAT-043 |
-|---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 43/?? sources обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 58 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 159 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D39: Majestic FH8852→FH8626 compatibility closure |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.29: shared contract issue + cross-agent code review |
+- source registry;
+- FH8626/ANJIA technical chronology;
+- project-specific historical details.
 
-## Обязательный цикл для каждого следующего файла
+## Что больше не ведём здесь
 
-### 1. Refresh
-Перед новым источником перечитать:
-- `HANDOFF.md`
-- `PROGRESS.md`
-- `ERRORS.md`
-- `IMPROVEMENTS.md`
-- `CHRONOLOGY.md`
-- `CHRONOLOGY_DETAILS.md`
-- `AGENTIC_DEVELOPMENT.md`
+- universal error catalog;
+- universal improvements/best practices;
+- account/project/task prompt hierarchy;
+- generic agent role model;
+- MCP strategy;
+- generalized agent-system evolution.
 
-После каждых 3 файлов или при противоречии дополнительно освежить актуальные `STATE.md`, `TASKS.md` и relevant branches проекта.
+Эти направления теперь принадлежат универсальному AI workflow repository.
 
-### 2. Register
-Назначить нейтральный ID `CHAT-NNN` и поставить `IN_PROGRESS`. Не коммитить исходный файл.
+## Следующее действие
 
-### 3. Analyze
-Искать замечания пользователя, ошибки агента, улучшения workflow, технические этапы и изменения распределения ответственности человек ↔ агент.
-
-### 4. Consolidate
-Повторные эпизоды не превращать в новые ID без новой корневой причины.
-
-### 5. Update
-Обновить только затронутые журналы. Основную `CHRONOLOGY.md` держать короткой; подробности — в companion-файле.
-
-### 6. Handoff
-Состояние после каждого источника должно быть продолжабельным без устного контекста.
+При получении нового исторического источника: deduplicate → register → update FH8626 chronology if useful → route reusable workflow lessons to `ai-agent-workflow/audit/`.
 
 ## Реестр источников
 
