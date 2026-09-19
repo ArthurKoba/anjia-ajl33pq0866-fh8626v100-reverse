@@ -17,7 +17,7 @@ Use this page after `README.md`, `AGENTS.md`, `STATE.md` and `TASKS.md`.
 ## Agent/project operation
 
 - `process/agent-operation.md` — project-specific Git/tool/build/coordination policy selected by the repository `AGENTS.md` map.
-- `process/chatgpt-project-prompt.md` — human-maintained source for ChatGPT Project instructions; agents do **not** reread it during normal repository startup.
+- `process/chatgpt-project-prompt.md` — pointer to the canonical broader Reverse Project prompt in `ArthurKoba/ai-agent-workflow`; no duplicate Project prompt is maintained here.
 
 Universal prompts, roles and task skills are maintained in `ArthurKoba/ai-agent-workflow`, not duplicated here.
 
