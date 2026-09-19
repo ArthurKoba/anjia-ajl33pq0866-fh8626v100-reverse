@@ -117,3 +117,17 @@
 `BASELINE_PROMPT.md` остаётся неизменным историческим снимком.
 
 До отдельного решения пользователя proposed prompt **не переносится автоматически** в root `AGENTS.md` или main/work branches.
+
+
+## Canonical prompt proposal
+
+Активный proposed canonical для дальнейшего review:
+- `BASE_PROMPT.md` — единый universal base prompt;
+- `ACCOUNT_PROMPT_DRAFT.md` — компактные 10 account-level правил;
+- `PROJECT_INSTRUCTIONS_DRAFT.md` — project bootstrap;
+- `ROLE_MODEL.md` — Implementer / Reviewer / Orchestrator;
+- `INFRASTRUCTURE_POLICY_DRAFT.md` — Koba Bridge/GitHub Apps/cURL infrastructure policy;
+- `WORKFLOW_MODULE_HARDWARE_REVERSE.md` — отдельный embedded/reverse module;
+- `MIGRATION_PLAN.md` — перенос universal content из ANJIA в отдельные repositories.
+
+`BASELINE_PROMPT.md` и `BASE_PROMPT_V2.md` теперь только historical provenance и не должны использоваться как active instructions.

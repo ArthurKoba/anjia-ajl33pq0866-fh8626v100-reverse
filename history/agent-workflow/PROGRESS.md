@@ -1,6 +1,6 @@
 # Прогресс аудита исторических чатов
 
-Статус: `NEAR_FINAL_REVIEW`
+Статус: `PROMPT_CONSOLIDATION / REPO_EXTRACTION_PENDING`
 
 ## Текущее состояние
 
@@ -1178,3 +1178,13 @@ Divinus hardening advances independently of owner integration, preserving single
 - `BASELINE_PROMPT.md` — frozen исходная версия, не менять.
 
 Текущая рекомендация: сначала review этих трёх новых документов; только после отдельного решения переносить выбранные runtime rules в действующие Project/repository instructions.
+
+
+## Prompt consolidation
+
+- `BASE_PROMPT.md` объединяет смыслы historical baseline и v2 с учётом современной authority/tool architecture.
+- Account-specific слой сокращён до 10 общих interaction rules.
+- Reverse/hardware methodology вынесена в отдельный module.
+- Koba MCP Bridge, cURL presets и GitHub App roles вынесены в infrastructure policy, а не в universal account prompt.
+- `MIGRATION_PLAN.md` определяет два будущих authority repositories: `ai-agent-workflow` и private `infrastructure`.
+- Фактический перенос заблокирован только отсутствием repository-create capability/installation в Koba GitHub App; обходным GitHub tool migration не выполняется.

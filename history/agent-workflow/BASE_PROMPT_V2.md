@@ -1,5 +1,7 @@
 # Base Prompt v2 — универсальный рабочий контракт агента
 
+> **SUPERSEDED / HISTORICAL INPUT.** Этот файл больше не является кандидатом на действующий prompt. Он сохранён только как provenance аудита. Текущий proposed canonical: [BASE_PROMPT.md](BASE_PROMPT.md). План переноса: [MIGRATION_PLAN.md](MIGRATION_PLAN.md).
+
 Статус: `PROPOSED`.
 
 Это новая универсальная версия рабочего промпта, полученная из исторического аудита. Она **не содержит machine/project-specific значений**: IP-адресов, usernames, абсолютных путей, имён локальных каталогов, toolchain paths, board-specific GPIO и подобных параметров.
