@@ -364,6 +364,18 @@ Codec/ghosting contracts из предыдущего этапа переводя
 Подробнее: [D33](CHRONOLOGY_DETAILS.md#d33--divinus-regression-audit-и-majestic-target-path).
 
 
+### 34. OpenIPC-native U-Boot: от preservation layout к нормальной product architecture
+Источник: CHAT-038, 2026-09-17/18.
+
+Рабочий modern U-Boot port FH8626 проходит contribution-oriented audit. Первоначальная stock-compatible схема сохраняется как hardware-proven recovery baseline, но перестаёт определять production layout. Новая mainline переходит на стандарт OpenIPC 8 MiB: 256K boot / 64K env / 2M kernel / 5M rootfs / rootfs_data.
+
+Fullhan-specific boot container остаётся внутренней board/SoC деталью стандартного boot; descriptor/JAMCRC генерируются из фактического payload, factory environment и compatibility helpers уходят в migration/recovery target. Generated binaries исключаются из source Git.
+
+**Переход:** low-level platform port впервые оформляется не как восстановленная китайская прошивка, а как самостоятельный OpenIPC-native component с clean source/build boundary и contribution path.
+
+Подробнее: [D34](CHRONOLOGY_DETAILS.md#d34--openipc-native-u-boot-curation).
+
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.

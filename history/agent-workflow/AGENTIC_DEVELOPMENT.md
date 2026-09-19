@@ -500,6 +500,16 @@ Handoff-файл перестаёт быть единственным носит
 Это первый фактически доказанный шаг bootstrap-перехода `workspace → Drive`. GitHub authority и Ghidra MCP как следующий уровень ещё исторически не наступили в этом источнике.
 
 
+### A4.27 — Koba Bridge Git authority + Agent/Reviewer identities
+Статус после CHAT-038: OBSERVED.
+
+Исторический переход Drive → GitHub authority становится фактом. Current project state больше не пересылается между агентами архивами: camera authority живёт в GitHub reverse repo, component implementation — в соответствующих forks, heavy evidence — отдельно.
+
+Koba MCP Bridge даёт browser-agent штатную mutation surface. Реальный workflow уже включает Agent App commits, branch/ref introspection, controlled identity rewrite, reserved-branch admin operation, explicit permission/policy reporting и Reviewer App independent verification.
+
+Роль пользователя смещается ещё дальше от file/context router к owner hardware/build/permission gates. Если API чего-то не умеет, агент формулирует Bridge gap вместо обхода через другой connector или GitHub Actions.
+
+
 ### A5 — Специализированные MCP/агенты
 Статус: `BOOTSTRAP`.
 

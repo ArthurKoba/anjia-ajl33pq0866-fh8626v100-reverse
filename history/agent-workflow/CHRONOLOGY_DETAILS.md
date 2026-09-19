@@ -933,3 +933,23 @@ Target acceptance показал другую картину. Bootstrap до ISP
 На этом фоне пользователь сообщает, что family-specific Majestic от FH8852 после адаптации запускается на FH8626. Источник сознательно не считает process-start достаточным: необходимы VI frames, stable VENC, RTSP, ISP и controls. Но cost model проекта меняется — native Divinus замораживается как reference/fallback, а Majestic становится product target.
 
 Это не удаляет результаты Divinus reverse: они превращаются в diagnostic knowledge для проверки Majestic/Fullhan path.
+
+
+## D34 — OpenIPC-native U-Boot curation
+
+Источник: CHAT-038, 2026-09-17—18.
+
+Поздняя repository-native стадия возвращается к U-Boot не ради нового reverse, а ради product curation. Hardware-proven stock-compatible line сохраняется отдельно, затем development path переводится на стандартный OpenIPC NOR contract.
+
+Ключевые изменения:
+- standard 256 KiB boot содержит Fullhan 64 KiB reconstructed Boot-ROM/DDR container и 192 KiB physical U-Boot slot;
+- env переезжает на 0x40000;
+- kernel/rootfs/rootfs_data совпадают с generic OpenIPC 8 MiB layout;
+- descriptor size/JAMCRC вычисляются из фактического U-Boot payload;
+- factory compatibility остаётся recovery/migration concern;
+- board identity AJL33PQ0866 отделяется от generic FH8626V100 SoC support;
+- source Git не хранит generated binaries.
+
+Source/build self-validation закрыта, но OpenIPC-native cold-boot ещё не повышен до hardware PASS до сборки подходящего 2 MiB kernel/rootfs и контролируемой migration.
+
+Параллельно Koba MCP Bridge впервые становится реальным Git mutation/review layer: App identity, history rewrite, reserved-ref administration и независимая Reviewer verification используются на живом repository.

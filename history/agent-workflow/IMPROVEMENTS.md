@@ -1808,6 +1808,50 @@ Content hashes здесь внутренний machine mechanism для деду
 Это anti-sunk-cost pattern: глубокий reverse сохраняется как знание, но product engineering выбирает минимальный путь, если existing family implementation обеспечивает необходимые контракты.
 
 
+### I-134 — PR-facing branch отделяется от working/development line
+Статус: OBSERVED.
+
+Если branch является head уже открытого upstream PR либо intended contribution line, промежуточная работа не должна насыпаться туда по одному экспериментальному commit. Рабочие изменения идут в current work/topic branch, затем после complete review/build/hardware gate PR-facing history обновляется один раз чистой серией.
+
+Правило не превращается в догму «ровно две ветки»: крупная изолированная задача может иметь topic branch, но после завершения она не остаётся вечным competing head.
+
+### I-135 — Один authority repo хранит ownership matrix и live upstream rules
+Статус: OBSERVED.
+
+CHAT-038 создаёт durable openipc-upstream-rules.md: ownership Linux/Firmware/Builder/Divinus/Majestic/U-Boot/ipctool, direct links на live upstream rules, дату последней проверки и обязанность обновить local rules при upstream drift.
+
+### I-136 — Generated binaries не живут в source Git
+Статус: OBSERVED.
+
+U-Boot pass закрепляет: .bin/.img/.elf, kernel images и другие generated artifacts остаются ignored build output, release artifacts либо external artifact/evidence storage. Source Git хранит source/config/tooling/docs.
+
+### I-137 — Target conventions имеют приоритет над factory migration reference
+Статус: OBSERVED.
+
+OpenIPC-native U-Boot прячет Fullhan-specific 64 KiB Boot-ROM/DDR container + 192 KiB U-Boot внутри стандартного 256 KiB OpenIPC boot partition, переносит env на 0x40000, kernel на 0x50000 и rootfs на 0x250000.
+
+Главный принцип: адаптировать SoC/board к target ecosystem, а не ecosystem к factory layout. Special case допускается только если standard contract объективно невозможен.
+
+### I-138 — Browser/API-first agent не имитирует недоступные local build capabilities
+Статус: OBSERVED.
+
+В kernel/U-Boot работе пользователь повторно пресекает попытку разворачивать тяжёлые локальные build/checkpatch операции в browser-agent среде. Agent доводит source/audit через API, а authoritative owner build остаётся в пользовательском WSL/CI surface.
+
+Если Bridge permission отсутствует, это фиксируется как permission gap; workaround через другой connector/Actions не подменяет штатный workflow.
+
+### I-139 — Agent и Reviewer — разные identities и разные полномочия
+Статус: OBSERVED.
+
+Koba Bridge реально использует отдельные GitHub Apps: Agent mutates branches/files/history; Reviewer независимо читает/сверяет refs/commits/trees и не выполняет source mutations.
+
+### I-140 — History rewrite должен быть controlled semantic operation, а не unrestricted force-push
+Статус: OBSERVED.
+
+Первый реальный Bridge use-case приводит к high-level capabilities: rewrite branch identity с expected_head_sha, dry-run, old→new mapping и tree preservation; reserved-branch admin repoint только при проверенном same-content contract; explicit capability/policy introspection.
+
+История переписывается только при сохранении messages/dates/trees и независимой Reviewer verification.
+
+
 ## Исходные этапы, ещё не подтверждённые
 
 `CHAT-010` является прямым acceptance-тестом этого принципа: новый агент по handoff сразу продолжает с dequeue boundary, не повторяет sensor/ISP/H.264 bring-up и использует указанные checkpoint paths/constraints. Handoff реально переносит инженерное состояние между чатами.
@@ -1823,9 +1867,9 @@ Content hashes здесь внутренний machine mechanism для деду
 `CHAT-036` сначала формализует Drive как обязательное persistent mirror/recovery layer, а `CHAT-037` показывает фактическое создание `reverse_FH8626V100_WORKSPACE` с browseable canonical docs, index и full checkpoint. Локальный workspace больше не считается достаточной долговременной authority сам по себе.
 
 ### I-003 — Google Drive → GitHub authority
-Статус: `BOOTSTRAP`.
+Статус: `CONSOLIDATED`.
 
-В `CHAT-001` проект ещё не организован по современной Git-authority модели.
+CHAT-038 показывает уже фактическую repository-native модель: reverse repo хранит current state/rules/contracts; связанные OpenIPC repos содержат implementation; Koba MCP Bridge выполняет branch/file/history mutations; Reviewer App независимо проверяет результат. Google Drive остаётся heavy evidence/recovery layer, но current engineering truth переходит в Git.
 
 ### I-005 — Env-переменные как устойчивый способ передачи сложных значений
 Статус: `BOOTSTRAP`.

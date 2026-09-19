@@ -928,6 +928,50 @@ Evidence: `CHAT-036`.
 
 Evidence: `CHAT-037`.
 
+### E-053 — Микроветки на каждую правку скрывают актуальную development line
+Статус: OBSERVED.
+
+В CHAT-038 агент последовательно создавал fix/audit/rework ветки под небольшие kernel/Firmware/Builder задачи. Пользователь остановил это не запретом веток вообще, а требованием нормального Git-flow: мелкие изменения идут в текущую work/develop line, крупные topic branches после проверки вливаются и удаляются, стабильная линия остаётся очевидной.
+
+Почему мешает:
+- актуальная реализация размазывается по множеству heads;
+- следующий агент не понимает, какая ветка authoritative;
+- завершённые experiments остаются живыми refs и выглядят как competing truth;
+- cross-repo orchestration превращается в ручной поиск commit'ов.
+
+Правильный паттерн: минимальное число долгоживущих линий; topic branch только для реально изолированной/рискованной работы; после acceptance — merge/rebase в work line и удаление topic ref; history сохраняется SHA/tag, а не вечной веткой.
+
+Evidence: CHAT-038.
+
+### E-054 — Coordination/audit metadata кладётся в implementation repositories
+Статус: OBSERVED.
+
+В kernel pass CHAT-038 агент сначала добавил AGENTS.md и audit metadata непосредственно в openipc-linux, Firmware и Builder. Пользователь потребовал убрать их: coordination rules, cross-repo state и audit должны жить в основном reverse/authority repo, а component repos содержат только относящийся к ним source/config/docs.
+
+Почему мешает:
+- upstream-facing diff загрязняется локальной orchestration инфраструктурой;
+- одни и те же правила начинают расходиться между репозиториями;
+- contribution review получает проектный мусор;
+- source ownership становится неочевидным.
+
+Правильный паттерн: один coordination authority; component repository хранит только component-local contribution material.
+
+Evidence: CHAT-038.
+
+### E-055 — Preservation/reference architecture принимается за целевую product architecture
+Статус: OBSERVED.
+
+На первом U-Boot pass агент почти закрепил stock-compatible Fullhan layout как target для OpenIPC. Пользователь исправил направление: factory layout нужен для migration/recovery evidence, но production должен максимально следовать стандартной OpenIPC 8 MiB схеме.
+
+Почему мешает:
+- legacy ограничения превращаются в бессрочные special cases;
+- Firmware/Builder вынуждены обслуживать китайскую раскладку вместо нормального OpenIPC contract;
+- работающий preservation snapshot ошибочно принимается за правильную upstream architecture.
+
+Правильный паттерн: factory/stock = evidence + recovery reference; OpenIPC conventions = target; если стандарт невозможно соблюсти — нужен конкретный технический proof.
+
+Evidence: CHAT-038.
+
 ## Пока не подтверждено этим чатом
 
 - исходная гипотеза о специальном env-паттерне для значений, которые «съедает» консоль — в `CHAT-001` недостаточно чистого доказательства; оставить на следующие файлы;
