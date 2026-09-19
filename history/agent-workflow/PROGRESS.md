@@ -1142,7 +1142,7 @@ Divinus hardening advances independently of owner integration, preserving single
 
 - Новый E-057: mutable reverse work продолжался в неканоническом Ghidra project, создавая competing reverse authority.
 - Новые I-148/I-149: migrate analysis state into canonical project and delete duplicate; feature surface must map every exposed setting to a proven contract or explicit unsupported state.
-- D37 фиксирует source-first Divinus repair; A4.23 semantic Ghidra workspace повышается до CONSOLODIDATED практикой канонического project ownership.
+- D37 фиксирует source-first Divinus repair; A4.23 semantic Ghidra workspace повышается до CONSOLIDATED практикой канонического project ownership.
 
 
 ## Что CHAT-042 добавил
@@ -1158,3 +1158,13 @@ Divinus hardening advances independently of owner integration, preserving single
 - E-028/E-031/E-036/E-057 усилены: web-proxy detour, premature offline 100%, scoped-percentage correction и initial wrong Ghidra discovery.
 - Новые I-155..I-159: layered ABI facade, Ghidra triangulation over secondary implementation, fail-closed ABI/capability guards, shared cross-agent contract issue, pre-deploy dependency closure with pinned external runtime.
 - D39 фиксирует Majestic compatibility closure до owner build gate; A4.29 — фактическую shared-contract collaboration между parallel agents.
+
+## Post-refresh после CHAT-043
+
+- Обработаны все шесть новых repository-native источников: CHAT-038..CHAT-043.
+- Проверены непрерывность ID: E-001..E-058 и I-001..I-159, дублей и gaps нет.
+- BASELINE_PROMPT.md остаётся frozen с исходным SHA.
+- Плановые live-state refresh после CHAT-040 и CHAT-043 подтверждают современный authority split: GitHub current state/source, Drive heavy evidence, Ghidra MCP mutable reverse.
+- Ghidra project inventory подтверждает canonical AJL/FH8626 projects; отдельного sensor_libs.gpr больше нет.
+- Raw chat exports в Git не добавлялись.
+- Статус: READY_FOR_NEXT_SOURCE.
