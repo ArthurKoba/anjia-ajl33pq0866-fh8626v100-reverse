@@ -1852,6 +1852,28 @@ Koba Bridge реально использует отдельные GitHub Apps: 
 История переписывается только при сохранении messages/dates/trees и независимой Reviewer verification.
 
 
+### I-141 — Upstream series реконструируется от чистого base, а не полируется поверх migration-WIP
+Статус: OBSERVED.
+
+CHAT-039 показывает рабочий contribution pattern для уже функционирующего kernel port: старые два больших migration commits не правятся бесконечными fixup'ами. Вместо этого итоговое дерево перечитывается, изменения классифицируются, затем функционально эквивалентная clean series собирается заново от parent platform branch.
+
+Hardware-proven semantics сохраняются; unrelated cleanup и ошибочные промежуточные гипотезы в финальную серию не попадают. Новые behavior-changing deltas получают отдельный статус и retest gate.
+
+### I-142 — Kconfig/board naming описывает физическую capability, а не retail SKU
+Статус: OBSERVED.
+
+Kernel option FH8626V100_AJL33PQ0866_MMC заменяется на hardware-neutral FH8626V100_SD0_1BIT. Retail camera выбирает этот symbol выше по стеку, но Linux source описывает SoC/board electrical capability.
+
+Так generic kernel не захватывает ownership конкретной камеры, а Builder/Firmware остаются местом product selection.
+
+### I-143 — Одинаковый failure в stock и native ограничивает blame, но не доказывает отсутствие hardware
+Статус: OBSERVED.
+
+RTC/TSENSOR на AJL одинаково timeout'ится в stock и native 4.9.129; stock config также использует hw_rtc=no. Это сильное доказательство, что проблема не внесена OpenIPC port'ом.
+
+Но из этого нельзя выводить, что RTC/TSENSOR IP физически отсутствует или неисправен. Правильный next step — отдельная bounded research task по PMU/clock/reset/analog init. Capability не публикуется до реальных изменяющихся physical samples.
+
+
 ## Исходные этапы, ещё не подтверждённые
 
 `CHAT-010` является прямым acceptance-тестом этого принципа: новый агент по handoff сразу продолжает с dequeue boundary, не повторяет sensor/ISP/H.264 bring-up и использует указанные checkpoint paths/constraints. Handoff реально переносит инженерное состояние между чатами.

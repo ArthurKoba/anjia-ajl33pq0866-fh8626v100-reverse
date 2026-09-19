@@ -953,3 +953,28 @@ Target acceptance показал другую картину. Bootstrap до ISP
 Source/build self-validation закрыта, но OpenIPC-native cold-boot ещё не повышен до hardware PASS до сборки подходящего 2 MiB kernel/rootfs и контролируемой migration.
 
 Параллельно Koba MCP Bridge впервые становится реальным Git mutation/review layer: App identity, history rewrite, reserved-ref administration и независимая Reviewer verification используются на живом repository.
+
+
+## D35 — Curated FH8626 Linux series
+
+Источник: CHAT-039, 2026-09-18.
+
+Kernel agent начинает с уже работающей FH8626 branch, но обнаруживает, что migration history тематически смешана. Итоговая series пересобирается от fullhan-fh8852v200 и разделяет generic fixes и FH8626 enablement.
+
+Содержательные deltas:
+- corrected clock phase mask/get/set semantics;
+- pinctrl lifetime fix вместо stack-backed state;
+- PWM v2 Makefile wiring и runtime hardening;
+- отдельные FH8626 SoC/machine/enabled platform layers;
+- standard OpenIPC MTD layout;
+- neutral SD0 1-bit Kconfig;
+- non-DT AXI DMA registration;
+- JL1101/RMII support;
+- U-Boot ethaddr → GMAC platform propagation;
+- checksum flag correction;
+- RTC error propagation;
+- DWC2 no-VBUS-GPIO semantics.
+
+Исторически hardware-proven paths сохраняются. AXI-DMA registration и другие новые behavior changes остаются SOURCE_CONFIRMED до повторного hardware gate.
+
+RTC/TSENSOR выделяется в отдельную non-blocking research task: stock/native parity доказывает только отсутствие regression OpenIPC port'а, но не физическую неисправность блока.

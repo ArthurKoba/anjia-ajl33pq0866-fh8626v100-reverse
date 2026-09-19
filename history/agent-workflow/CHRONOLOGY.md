@@ -376,6 +376,18 @@ Fullhan-specific boot container остаётся внутренней board/SoC 
 Подробнее: [D34](CHRONOLOGY_DETAILS.md#d34--openipc-native-u-boot-curation).
 
 
+### 35. Curated Linux series: migration dump превращается в reviewable platform support
+Источник: CHAT-039, 2026-09-18.
+
+Два исторических FH8626 kernel commits разбираются по содержимому и пересобираются от Fullhan FH8852 base в 13 логических commits. В чистую серию входят platform/SoC data, machine support, clock/pinctrl fixes, PWM wiring/hardening, AXI DMA registration, JL1101/RMII, MAC propagation, checksum cleanup, RTC error handling и DWC2 VBUS semantics.
+
+OpenIPC MTD layout закладывается сразу, retail-specific MMC symbol заменяется физическим SD0_1BIT, а unrelated SADC cleanup исключается. Аппаратно проверенный static RMII path не переписывается ради «красоты».
+
+**Переход:** kernel из preservation/migration snapshot превращается в reviewable upstream-oriented source series; каждый новый behavior delta отделяется от уже hardware-proven платформы.
+
+Подробнее: [D35](CHRONOLOGY_DETAILS.md#d35--curated-fh8626-linux-series).
+
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.

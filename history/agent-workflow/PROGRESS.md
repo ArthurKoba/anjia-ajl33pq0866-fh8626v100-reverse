@@ -5,8 +5,8 @@
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **38**
-- Последний источник: `CHAT-038`
+- Обработано исторических файлов: **39**
+- Последний источник: `CHAT-039`
 - Период последнего источника: **2026-09-17 — 2026-09-18**
 - Следующее действие: получить следующий уникальный исторический источник
 - Raw chat exports в Git **не сохраняются**
@@ -14,12 +14,12 @@
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-038 |
+| Направление | Файл | Состояние после CHAT-039 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 38/?? sources обработано |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 39/?? sources обработано |
 | Ошибки/нарушения агентов | `ERRORS.md` | 55 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 140 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D34: OpenIPC-native U-Boot curation |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 143 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D35: curated FH8626 Linux series |
 | Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.27: Koba Bridge Git authority + Agent/Reviewer identities |
 
 ## Обязательный цикл для каждого следующего файла
@@ -100,6 +100,8 @@
 | 37 | `CHAT-037` | 2026-09-12 — 2026-09-14 | `DONE` | Divinus regression audit finds stale AWB bank/barrier/RTSP ownership mistakes; native Divinus frozen as reference/fallback while Majestic FH8852-family becomes product target. Google Drive becomes real persistent workspace; local tree is normalized by moving Ghidra/tool DB/build bulk out and reconciling archive-only unique reverse corpus. Source #37 was not provided; source #39 maps directly to CHAT-037. |
 
 | 38 | `CHAT-038` | 2026-09-17 — 2026-09-18 | `DONE` | Repository-native transition: Koba MCP Bridge becomes normal Git mutation/review surface; history identity sanitation and reserved-ref admin flow are exercised; U-Boot is re-architected from stock-compatible preservation into standard OpenIPC-native 8 MiB layout with board-scoped boot container and external artifact policy |
+
+| 39 | `CHAT-039` | 2026-09-18 | `DONE` | Kernel/Linux curation: old two-commit migration is decomposed into a clean 13-commit series over FH8852 base; MTD/OpenIPC layout, clock/pinctrl/PWM/AXI-DMA/GMAC/JL1101/RTC/DWC2 are reconciled while hardware-proven behavior is preserved; RTC/TSENSOR becomes a separate bounded research task |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -1111,3 +1113,10 @@ Divinus hardening advances independently of owner integration, preserving single
 - Новые E-053..E-055: branch sprawl, leakage coordination metadata into component repos, preservation architecture mistaken for target product architecture.
 - Новые I-134..I-140: PR-facing branch discipline, repository ownership/live upstream rules, external artifact policy, standard-target-over-stock migration, browser/API permission discipline, Agent/Reviewer separation и controlled history rewrite.
 - D34 фиксирует OpenIPC-native U-Boot; A4.27 — фактический переход на Koba Bridge как штатную Git engineering surface.
+
+
+## Что CHAT-039 добавил
+
+- Новых error IDs нет: branch sprawl, misplaced coordination metadata и heavy-browser-work уже покрыты E-053/E-054/E-014.
+- Новые I-141..I-143: clean thematic series from hardware-proven tree, physical-capability Kconfig naming, negative parity bounds without overclaiming hardware absence.
+- D35 фиксирует curated Linux platform series и отделяет source/build acceptance от hardware retest новых deltas.
