@@ -978,3 +978,22 @@ Kernel agent начинает с уже работающей FH8626 branch, но
 Исторически hardware-proven paths сохраняются. AXI-DMA registration и другие новые behavior changes остаются SOURCE_CONFIRMED до повторного hardware gate.
 
 RTC/TSENSOR выделяется в отдельную non-blocking research task: stock/native parity доказывает только отсутствие regression OpenIPC port'а, но не физическую неисправность блока.
+
+
+## D36 — Cross-repo ownership sanitation
+
+Источник: CHAT-040, 2026-09-18.
+
+Firmware pass начинает с clean integration вокруг curated Linux series и быстро обнаруживает, что historical fh8626v100-platform branch является preservation snapshot: там смешаны kernel patches, board policy, Divinus migration, proprietary media payloads и source experiments.
+
+Вместо продолжения snapshot выполняется ownership split:
+- Linux остаётся владельцем kernel/platform;
+- Firmware — generic FH8626 config/packages/runtime integration;
+- Builder — ANJIA profile/device policy;
+- Divinus — open streamer/HAL;
+- Majestic — отдельный compatibility path;
+- factory blobs — evidence/transitional dependencies до source/SDK replacement.
+
+Firmware получает streamer-neutral work line плюс отдельные Divinus/Majestic directions. Builder staging также отделяется от старого Majestic WIP и начинает ссылаться на соответствующую Firmware direction.
+
+Источник заканчивается созданием трёх параллельных repository-native задач: Divinus стабилизирует native implementation, Builder чистит device layer, Majestic строит compatibility adapter поверх общей FH8626 knowledge base.

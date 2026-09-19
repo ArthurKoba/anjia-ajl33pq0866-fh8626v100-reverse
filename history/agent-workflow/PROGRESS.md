@@ -5,8 +5,8 @@
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **39**
-- Последний источник: `CHAT-039`
+- Обработано исторических файлов: **40**
+- Последний источник: `CHAT-040`
 - Период последнего источника: **2026-09-17 — 2026-09-18**
 - Следующее действие: получить следующий уникальный исторический источник
 - Raw chat exports в Git **не сохраняются**
@@ -14,13 +14,13 @@
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-039 |
+| Направление | Файл | Состояние после CHAT-040 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 39/?? sources обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 55 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 143 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D35: curated FH8626 Linux series |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.27: Koba Bridge Git authority + Agent/Reviewer identities |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 40/?? sources обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 56 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 147 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D36: cross-repo ownership sanitation |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.28: repository-native parallel implementation lanes |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -102,6 +102,8 @@
 | 38 | `CHAT-038` | 2026-09-17 — 2026-09-18 | `DONE` | Repository-native transition: Koba MCP Bridge becomes normal Git mutation/review surface; history identity sanitation and reserved-ref admin flow are exercised; U-Boot is re-architected from stock-compatible preservation into standard OpenIPC-native 8 MiB layout with board-scoped boot container and external artifact policy |
 
 | 39 | `CHAT-039` | 2026-09-18 | `DONE` | Kernel/Linux curation: old two-commit migration is decomposed into a clean 13-commit series over FH8852 base; MTD/OpenIPC layout, clock/pinctrl/PWM/AXI-DMA/GMAC/JL1101/RTC/DWC2 are reconciled while hardware-proven behavior is preserved; RTC/TSENSOR becomes a separate bounded research task |
+
+| 40 | `CHAT-040` | 2026-09-18 | `DONE` | Firmware/orchestrator sanitation: preservation WIP is decomposed by repository ownership; clean streamer-neutral Firmware core is separated from Divinus/Majestic variants, factory blobs are classified as evidence/transitional dependencies, and three repository-native agents are launched in parallel for Divinus, Builder and Majestic |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -1120,3 +1122,11 @@ Divinus hardening advances independently of owner integration, preserving single
 - Новых error IDs нет: branch sprawl, misplaced coordination metadata и heavy-browser-work уже покрыты E-053/E-054/E-014.
 - Новые I-141..I-143: clean thematic series from hardware-proven tree, physical-capability Kconfig naming, negative parity bounds without overclaiming hardware absence.
 - D35 фиксирует curated Linux platform series и отделяет source/build acceptance от hardware retest новых deltas.
+
+
+## Что CHAT-040 добавил
+
+- Новый E-056: cross-repository ownership mixing — kernel patches, board policy, streamer implementation и factory blobs в одном Firmware snapshot.
+- Новые I-144..I-147: ownership-by-layer, preservation snapshot as inventory not architecture, streamer-neutral core + runtime overlays, source/SDK provenance requirement for final binary dependencies.
+- D36 фиксирует Firmware ownership sanitation; A4.28 — переход к repository-native parallel implementation lanes, синхронизируемым через authority repo.
+- После CHAT-040 выполнен плановый live-state refresh текущих main/work refs; современный anchor согласуется с историей.

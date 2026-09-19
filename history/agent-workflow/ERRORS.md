@@ -972,6 +972,26 @@ Evidence: CHAT-038.
 
 Evidence: CHAT-038.
 
+### E-056 — Cross-repository ownership смешивается в одном implementation snapshot
+Статус: OBSERVED.
+
+В CHAT-040 preservation Firmware WIP одновременно содержит kernel patches, AJL board support, большой Divinus patch, proprietary Fullhan modules/libs, media owner, ISP/AE/AWB sources и tests. Такой snapshot полезен как спасённое состояние, но ошибочен как целевая архитектура.
+
+Почему мешает:
+- один repository начинает владеть чужими компонентами;
+- upstream contribution невозможно review'ить по естественным границам;
+- исправление streamer/kernel/device-layer приходится копировать между местами;
+- cleanup одного слоя легко удаляет dependency другого.
+
+Правильный паттерн:
+- Linux → kernel/platform source;
+- Firmware → shared SoC build/runtime integration;
+- Builder → device-specific ANJIA policy;
+- Divinus/Majestic → streamer-specific code;
+- factory bytes → evidence/transitional package, не canonical source.
+
+Evidence: CHAT-040.
+
 ## Пока не подтверждено этим чатом
 
 - исходная гипотеза о специальном env-паттерне для значений, которые «съедает» консоль — в `CHAT-001` недостаточно чистого доказательства; оставить на следующие файлы;

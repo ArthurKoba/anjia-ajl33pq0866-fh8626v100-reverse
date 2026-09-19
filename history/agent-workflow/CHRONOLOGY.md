@@ -388,6 +388,18 @@ OpenIPC MTD layout закладывается сразу, retail-specific MMC sy
 Подробнее: [D35](CHRONOLOGY_DETAILS.md#d35--curated-fh8626-linux-series).
 
 
+### 36. Cross-repo ownership sanitation: Firmware становится shared core, streamer/device work расходится по владельцам
+Источник: CHAT-040, 2026-09-18.
+
+Старый Firmware preservation WIP разбирается как инвентарь, а не как основа production. Чистый Firmware core начинает брать curated Linux source напрямую, использует стандартную OpenIPC layout и не хранит AJL-specific board code, Divinus implementation или factory media blobs как canonical source.
+
+Параллельно создаются Divinus и Majestic runtime directions, а Builder получает только device assembly/profile responsibility. Все binary dependencies получают ownership/provenance/disposition.
+
+**Переход:** проект окончательно переходит от одного монолитного «порт камеры» дерева к нескольким normal OpenIPC repositories с явными owner boundaries.
+
+Подробнее: [D36](CHRONOLOGY_DETAILS.md#d36--cross-repo-ownership-sanitation).
+
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.

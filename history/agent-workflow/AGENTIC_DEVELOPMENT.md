@@ -510,6 +510,19 @@ Koba MCP Bridge даёт browser-agent штатную mutation surface. Реал
 Роль пользователя смещается ещё дальше от file/context router к owner hardware/build/permission gates. Если API чего-то не умеет, агент формулирует Bridge gap вместо обхода через другой connector или GitHub Actions.
 
 
+### A4.28 — Repository-native parallel implementation lanes
+Статус после CHAT-040: OBSERVED.
+
+После GitHub-authority перехода parallelism больше не требует раздавать master archives. Orchestrator создаёт/фиксирует независимые long-lived implementation lanes прямо в component repositories:
+- Divinus native platform;
+- Majestic compatibility;
+- Builder device composition.
+
+Все они читают один camera-level reverse authority и возвращают новые platform facts туда же. Shared facts должны попадать в neutral authority/contracts, а не передаваться вручную из чата в чат.
+
+Пользователь остаётся owner решений, hardware/build gates и приоритетов, но перестаёт быть обязательным file router между специалистами.
+
+
 ### A5 — Специализированные MCP/агенты
 Статус: `BOOTSTRAP`.
 

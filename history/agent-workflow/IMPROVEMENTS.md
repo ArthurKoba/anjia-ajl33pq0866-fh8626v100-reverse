@@ -1874,6 +1874,40 @@ RTC/TSENSOR на AJL одинаково timeout'ится в stock и native 4.9.
 Но из этого нельзя выводить, что RTC/TSENSOR IP физически отсутствует или неисправен. Правильный next step — отдельная bounded research task по PMU/clock/reset/analog init. Capability не публикуется до реальных изменяющихся physical samples.
 
 
+### I-144 — Repository ownership определяется архитектурным слоем, а не историческим местом файла
+Статус: OBSERVED.
+
+CHAT-040 превращает informal rules OpenIPC в реальную migration matrix: kernel source/patches уходят в Linux, camera-specific profile — Builder, streamer behavior — его repository, Firmware оставляет shared SoC-family integration.
+
+Файл не остаётся в Firmware только потому, что когда-то был туда скопирован для bring-up.
+
+### I-145 — Preservation snapshot сначала инвентаризируется, потом разбирается
+Статус: OBSERVED.
+
+Большой Firmware WIP сохраняется как evidence/checkpoint, но не продолжается как target branch. Перед очисткой состав классифицируется по ownership/provenance и только затем переносится в соответствующие repos.
+
+Это предотвращает потерю единственной копии work-in-progress при архитектурном cleanup.
+
+### I-146 — Streamer-neutral core + runtime-specific overlays
+Статус: OBSERVED.
+
+Firmware получает общий FH8626 core, а Divinus и Majestic существуют как отдельные directions поверх него. Shared platform fixes должны сначала попадать в core; runtime-specific compatibility/packages не текут обратно в core автоматически.
+
+Эта же модель позже переносится в Builder composed variants.
+
+### I-147 — Factory-extracted binaries допустимы как evidence, но не как final product dependency
+Статус: OBSERVED.
+
+Для каждого .ko/.so/.bin фиксируется intended disposition:
+1. найти полноценный SDK/source/build input;
+2. если source найден — собирать воспроизводимо;
+3. если source отсутствует — reverse/reconstruct replacement;
+4. identical ready-made blob из SDK без source не закрывает source-replacement goal;
+5. factory-extracted object остаётся reference/evidence.
+
+Runtime data/tuning blobs рассматриваются отдельно от executable code, но также требуют provenance.
+
+
 ## Исходные этапы, ещё не подтверждённые
 
 `CHAT-010` является прямым acceptance-тестом этого принципа: новый агент по handoff сразу продолжает с dequeue boundary, не повторяет sensor/ISP/H.264 bring-up и использует указанные checkpoint paths/constraints. Handoff реально переносит инженерное состояние между чатами.
