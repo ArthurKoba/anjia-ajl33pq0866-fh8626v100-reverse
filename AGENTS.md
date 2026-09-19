@@ -2,6 +2,21 @@
 
 These rules apply to every automated agent or assistant working in this repository.
 
+## Universal workflow and optional historical context
+
+Universal AI engineering workflow library:
+
+https://github.com/ArthurKoba/ai-agent-workflow
+
+For ordinary implementation, follow the injected account/Project instructions and this repository's current authority. Do **not** read the full historical workflow audit by default.
+
+Optional project-history entrypoint:
+- `history/agent-workflow/README.md` — evolution of the FH8626 reverse/porting workflow and source registry;
+- `history/agent-workflow/CHRONOLOGY.md` — compact historical map;
+- `history/agent-workflow/CHRONOLOGY_DETAILS.md` — detailed history.
+
+Read these when auditing workflow, onboarding into historical decisions, investigating a dead end, or extracting reusable lessons. Generalized agent rules belong in `ArthurKoba/ai-agent-workflow`, not here.
+
 ## Git workflow
 
 - Agents MUST NOT create pull requests. Pull requests are created manually by the repository owner only.

@@ -71,3 +71,14 @@ Exact engineering refs are recorded in `docs/process/upstream-integration.md`.
 8. `evidence/README.md` and `evidence/MANIFEST.tsv` — external evidence rules and index.
 
 Agents must not create pull requests. See `AGENTS.md`.
+
+
+## Optional workflow/history background
+
+Universal AI engineering workflow library:
+
+https://github.com/ArthurKoba/ai-agent-workflow
+
+The detailed FH8626 agent/reverse workflow history is retained under `history/agent-workflow/`.
+
+It is background/audit material, **not** a normal startup dependency. Read it when the historical reasoning, old dead ends, workflow evolution or agent-quality audit is relevant.

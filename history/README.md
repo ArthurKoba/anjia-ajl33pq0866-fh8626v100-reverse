@@ -22,3 +22,19 @@ Historical reverse provenance may remain here when it explains the origin of a d
 Heavy primary evidence remains in the Google Drive evidence store and selected current objects are addressed from Git through `evidence/MANIFEST.tsv` by SHA-256 and locator. Git history preserves human-readable provenance; primary bytes remain external.
 
 A historical file may preserve a SHA-256 identity for an object that is no longer part of the selected current manifest. Such an identity is **provenance-only**: it documents what was used at that historical point, but it must not be treated as a currently retrievable evidence dependency unless a current `evidence/MANIFEST.tsv` row provides a durable locator.
+
+
+## Agent workflow case study
+
+`agent-workflow/` contains the consolidated historical case study of how the FH8626 reverse/porting workflow evolved across 43 unique historical chat sources.
+
+Use it for:
+- historical project decisions and dead ends;
+- workflow/agent-quality audit;
+- onboarding into why the current engineering model exists.
+
+Do not treat it as current project state. Current state remains in `STATE.md`, `TASKS.md` and current `docs/`.
+
+Reusable/generalized workflow rules are maintained separately in:
+
+https://github.com/ArthurKoba/ai-agent-workflow
