@@ -4,6 +4,10 @@ Project-specific operating policy for agents working on ANJIA AJL33PQ0866 / FH86
 
 Universal interaction, terminal, review and reverse methodology lives in `ArthurKoba/ai-agent-workflow`; do not duplicate it here.
 
+Project local-context policy: `local_context: OPTIONAL`.
+
+Repository/API/reverse work should proceed without local machine context. If a task requires owner WSL paths, target transport/address, local toolchain or other machine-specific values and they are unavailable, report degraded context once and do not guess them.
+
 ## Git workflow
 
 - Agents do not create pull requests. Repository owner creates PRs unless the owner explicitly changes this policy.

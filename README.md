@@ -71,4 +71,4 @@ Exact engineering refs are recorded in `docs/process/upstream-integration.md`.
 8. `evidence/README.md` and `evidence/MANIFEST.tsv` — external evidence rules and index.
 9. `docs/process/agent-operation.md` — project-specific Git/tool/build/coordination policy.
 
-Agents must not create pull requests. See `AGENTS.md`.
+Agents must not create pull requests. See `docs/process/agent-operation.md`.
