@@ -39,6 +39,8 @@ Primary operations should use Koba MCP Bridge where a suitable capability exists
 - structured HTTP/cURL;
 - other project-enabled infrastructure capabilities.
 
+For Koba structured cURL, use `chrome-desktop` by default for ordinary human-facing HTML/site requests and `json-api` for JSON APIs unless the target requires another contract. Browser-like presets reproduce HTTP headers only; they are not a JavaScript/browser engine.
+
 Do not switch to another GitHub connector or build a manual workaround merely because a Bridge capability/permission is missing. Record the capability gap and use an alternate path only when the owner/project explicitly allows it.
 
 ## Heavy build / hardware boundary

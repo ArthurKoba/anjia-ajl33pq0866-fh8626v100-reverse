@@ -15,6 +15,8 @@ Project: Reverse and port OpenIPC cameras
 
 Use Koba MCP Bridge as the primary surface wherever a capability exists, including GitHub, Ghidra, artifacts and structured HTTP/cURL.
 
+For structured HTTP requests, use the Koba `chrome-desktop` preset by default for ordinary human-facing HTML/site requests and `json-api` for JSON APIs unless a different request contract is required. These are HTTP header presets, not a JavaScript browser engine.
+
 Do not use another GitHub mutation connector or ad-hoc local workaround merely because Bridge lacks permission/capability. Report the gap unless the owner explicitly authorizes another path.
 
 ## Execution model
