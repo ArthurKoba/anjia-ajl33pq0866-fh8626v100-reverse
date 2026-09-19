@@ -1010,6 +1010,26 @@ Evidence: CHAT-040.
 
 Evidence: CHAT-041.
 
+### E-058 — Architecture cleanup удаляет runtime-critical dependency до появления нового owner/replacement
+Статус: OBSERVED.
+
+В CHAT-043 pre-deploy audit обнаруживает, что после правильного удаления factory blobs из active Firmware/Builder образ больше не имел build-time owner для vmm.ko, xbus_rpc.ko, media_process.ko, isp.ko, enc.ko, jpeg.ko, bgm.ko, gpio_wave.ko и rtthread_arc.bin.
+
+Сам cleanup по ownership был концептуально верным, но dependency closure не была доведена: красивый rootfs мог загрузиться без media device nodes.
+
+Почему мешает:
+- архитектурная чистота создаёт функционально неполный product image;
+- source-retirement debt ошибочно принимается за уже выполненный replacement;
+- проблема проявилась бы только после build/flash.
+
+Правильный паттерн:
+- перед удалением legacy runtime dependency определить replacement owner;
+- если open replacement ещё не готов — использовать явно transitional pinned package из immutable evidence/artifact storage;
+- active Git хранит package/hashes/load order, а не сами factory bytes;
+- blob retirement остаётся OPEN до source replacement и hardware acceptance.
+
+Evidence: CHAT-043.
+
 ## Пока не подтверждено этим чатом
 
 - исходная гипотеза о специальном env-паттерне для значений, которые «съедает» консоль — в `CHAT-001` недостаточно чистого доказательства; оставить на следующие файлы;

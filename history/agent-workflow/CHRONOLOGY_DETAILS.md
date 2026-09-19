@@ -1033,3 +1033,29 @@ Firmware generic fh8626v100_lite_defconfig → ANJIA base.config → runtime ove
 Divinus, Majestic и diag становятся короткими variants с .firmware metadata. Device-specific packages локализуются внутри ANJIA tree. Отдельная Majestic Builder branch архивируется и удаляется.
 
 Builder mechanics также убирает self-git-pull/destructive branch switching, получает locking, robust ref resolution и build provenance files. CI/build/hardware PASS сознательно остаются внешними gates.
+
+
+## D39 — Majestic FH8852→FH8626 compatibility closure
+
+Источник: CHAT-043, 2026-09-18.
+
+Majestic staging начинает с уже доказанного HTTP-only baseline и строит совместимость не через второй reverse FH8626, а через translation boundary. Старый crash после выбора libgc1054_mipi локализуется до реального ABI mismatch: FH8852 sensor callback table и FH8626 callback table имеют разные размеры/offsets.
+
+Дальше source facades последовательно закрывают:
+- FH8852-shaped GC1054 callback API поверх FH8626 source sensor;
+- VMM record translation;
+- SYS/VPSS ioctls и lifecycle;
+- VENC create/config/RC/realtime RC/readback/IDR;
+- 0x170 FH8626 stream descriptor → FH8852 public stream object и balanced lease/release;
+- multi-stream main/sub/analytics routing;
+- JPEG/MJPEG native path;
+- RTX audio facade и board speaker mute hook;
+- selected motion/OSD/day-night boundaries.
+
+Ghidra direct verification исправляет ошибки старого Divinus-derived contract: VPU Enable payload является channel id, Disable/CloseChn отдельны, frame-control имеет exact record, VENC public capability record нельзя игнорировать.
+
+Во время coverage audit прежнее «100% offline» по базовому media path понижается и расширяется до full feature matrix. H.265 честно остаётся unsupported по current hardware/driver evidence.
+
+Pre-deploy pass обнаруживает missing owner для proprietary media modules после cleanup. Решение — transitional pinned Firmware package из immutable evidence/artifact storage, а не возврат blobs в source Git. Source replacement debt остаётся открытым.
+
+К концу источника software/Builder composition готовы к build gate, но image sizes, module load и hardware functionality ещё не проверены.

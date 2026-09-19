@@ -424,6 +424,18 @@ ANJIA Builder refactor отделяет camera policy от generic FH8626 platfo
 Подробнее: [D38](CHRONOLOGY_DETAILS.md#d38--composed-builder-device-layer).
 
 
+### 39. Majestic compatibility closure: FH8852 public ABI переводится на FH8626 source platform
+Источник: CHAT-043, 2026-09-18.
+
+Экспериментальный FH8852 Majestic перестаёт быть просто donor-binary bring-up. По Ghidra восстанавливаются реальные public ABI boundaries и строятся source facades для GC1054 sensor, MIPI, VMM, SYS/VPSS/VENC, encoded stream, JPEG/MJPEG и RTX audio. H.264 расширяется до multi-stream, RC modes, realtime changes, IDR/readback; day/night и board audio hooks связываются с доказанными contracts.
+
+Donor libraries постепенно удаляются там, где source replacement закрыт; оставшиеся используются только при доказанной совместимости. Full-feature coverage проходит отдельный audit после преждевременного «offline 100%».
+
+**Переход:** Majestic становится самостоятельным adapter поверх общей FH8626 platform knowledge, а не запускаемым FH8852 blob-stack. Следующий gate — owner build/flash/hardware acceptance.
+
+Подробнее: [D39](CHRONOLOGY_DETAILS.md#d39--majestic-fh8852-to-fh8626-compatibility-closure).
+
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.

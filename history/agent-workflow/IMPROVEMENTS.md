@@ -1962,6 +1962,43 @@ Builder archive получает build-info.txt, input OpenIPC defconfig и reso
 В AGENTS закрепляется правило: изменение active SHA, branch topology, ownership, runtime target, composition model или validation gate в связанном repo должно в той же рабочей итерации обновить camera authority. Иначе следующий агент получает устаревший router.
 
 
+### I-155 — Compatibility facade строится слоями: safe stubs → stateful facade → real hardware adapters
+Статус: OBSERVED.
+
+Majestic port не создаёт одну гигантскую fake lib. ABI разделяется по sensor/VMM/DSP/ISP/audio families. Optional harmless calls могут быть bounded stubs, stateful calls обязаны хранить ожидаемое состояние, hardware-owning calls сразу переводятся на proven FH8626 contracts.
+
+Strict mode превращает неизвестную функцию в ENOSYS/stop, а не silent success.
+
+### I-156 — Closed-streamer port триангулирует donor ABI, canonical target reverse и current source
+Статус: OBSERVED.
+
+Рабочая схема CHAT-043:
+Majestic/FH8852 public call → donor Ghidra/wrapper semantics → canonical FH8626 Apollo/kernel/module evidence → source adapter.
+
+Divinus используется только как вторичная реализация и источник hypotheses. Если Divinus расходится с Ghidra/target contract, исправляется Divinus, а не Majestic подгоняется под старую ошибку.
+
+### I-157 — ABI/capability closure должен быть fail-closed на build/runtime boundary
+Статус: OBSERVED.
+
+Majestic branch добавляет прямые и транзитивные import guards: retained donor libs не должны тихо начать использовать unsupported SDK symbol. Future moving Majestic build, который расширит ABI, должен сломать build/guard и потребовать явной реализации.
+
+Unsupported hardware capability, например H.265 на текущем FH8626 stock encoder stack, возвращает честный unsupported вместо fake success.
+
+### I-158 — Один shared contract issue может быть realtime-шиной между parallel implementation agents
+Статус: OBSERVED.
+
+Divinus и Majestic читают свежие commits друг друга и пишут platform-level расхождения в один coordination issue authority repo. Majestic передаёт VPSS/VENC/OSD/audio findings в Divinus; Divinus отдаёт проверенные RTX/JPEG/lifecycle details обратно.
+
+Issue не заменяет canonical docs/source, но служит low-latency contract bus, чтобы специалисты не ждали следующего orchestrator handoff.
+
+### I-159 — Pre-deploy dependency closure audit обязателен после ownership cleanup
+Статус: OBSERVED.
+
+Перед первым product build проверяется не только source compile surface, но полный runtime dependency graph: package owner, immutable payload/source locator, module vermagic/ABI, load order, expected device nodes и image-size budget.
+
+В CHAT-043 это приводит к generic fullhan-media-fh8626v100 transitional package без возврата raw blobs в active Git. Источник bytes pinned, hashes проверяются, а source-retirement debt остаётся явно OPEN.
+
+
 ## Исходные этапы, ещё не подтверждённые
 
 `CHAT-010` является прямым acceptance-тестом этого принципа: новый агент по handoff сразу продолжает с dequeue boundary, не повторяет sensor/ISP/H.264 bring-up и использует указанные checkpoint paths/constraints. Handoff реально переносит инженерное состояние между чатами.

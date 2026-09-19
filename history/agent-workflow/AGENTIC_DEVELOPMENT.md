@@ -523,6 +523,19 @@ Koba MCP Bridge даёт browser-agent штатную mutation surface. Реал
 Пользователь остаётся owner решений, hardware/build gates и приоритетов, но перестаёт быть обязательным file router между специалистами.
 
 
+### A4.29 — Shared contract issue + cross-agent code review
+Статус после CHAT-043: OBSERVED.
+
+Parallel Divinus и Majestic lanes переходят от orchestrator-only fan-in к ограниченному прямому сотрудничеству:
+- читают последние commits друг друга;
+- сверяют общие platform contracts;
+- публикуют расхождения в одном issue authority repo;
+- переиспользуют доказанные findings в обе стороны;
+- не редактируют чужую implementation branch как свою.
+
+Orchestrator/authority всё ещё определяет canonical facts и merge policy, но low-latency knowledge transfer больше не требует пользователя как посредника. Это заметный шаг к настоящей multi-agent engineering system.
+
+
 ### A5 — Специализированные MCP/агенты
 Статус: `BOOTSTRAP`.
 

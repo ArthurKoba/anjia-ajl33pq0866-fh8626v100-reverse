@@ -5,8 +5,8 @@
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **42**
-- Последний источник: `CHAT-042`
+- Обработано исторических файлов: **43**
+- Последний источник: `CHAT-043`
 - Период последнего источника: **2026-09-17 — 2026-09-18**
 - Следующее действие: получить следующий уникальный исторический источник
 - Raw chat exports в Git **не сохраняются**
@@ -14,13 +14,13 @@
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-042 |
+| Направление | Файл | Состояние после CHAT-043 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 42/?? sources обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 57 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 154 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D38: composed Builder device layer |
-| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.28: repository-native parallel implementation lanes |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 43/?? sources обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 58 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 159 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D39: Majestic FH8852→FH8626 compatibility closure |
+| Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.29: shared contract issue + cross-agent code review |
 
 ## Обязательный цикл для каждого следующего файла
 
@@ -108,6 +108,8 @@
 | 41 | `CHAT-041` | 2026-09-18 | `DONE` | Divinus repair lane: duplicate sensor Ghidra project is discovered and merged into canonical Apollo project; vendor sensor/MIPI blobs are replaced with source reconstruction; VPSS/VENC/JPEG/live-RC/teardown contracts are corrected via Ghidra and Majestic findings; work expands from MVP fixes to full exposed-feature parity |
 
 | 42 | `CHAT-042` | 2026-09-18 | `DONE` | Builder productization: ANJIA board support is reduced to device policy, stock-like PTZ calibration is archived, one Builder work line composes Divinus/Majestic/diag variants from Firmware generic config + device base + runtime overlay, packages become device-local, build provenance is embedded and coordination authority is synchronized immediately |
+
+| 43 | `CHAT-043` | 2026-09-18 | `DONE` | Majestic compatibility lane: FH8852 public ABI is translated into FH8626 source adapters using donor/Ghidra/native contracts; sensor/VMM/VPSS/VENC/stream/JPEG/audio/day-night/full-feature coverage reaches offline build gate; a pre-deploy audit catches missing proprietary media runtime packaging; Divinus and Majestic begin sharing contracts through one coordination issue |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -1148,3 +1150,11 @@ Divinus hardening advances independently of owner integration, preserving single
 - Новых error IDs нет: отдельная Majestic Builder branch подтверждает E-053, а отставшая coordination docs — E-049 в обратном направлении.
 - Новые I-150..I-154: composed device variants, device-local package scope, minimal capability backend over stock parity, build provenance inside artifacts, same-iteration coordination sync.
 - D38 фиксирует Builder как тонкий device/composition layer; A4.28 усиливается прямой cross-repo ref synchronization.
+
+
+## Что CHAT-043 добавил
+
+- Новый E-058: repository cleanup removed runtime-critical proprietary modules before a replacement/pinned package owner existed.
+- E-028/E-031/E-036/E-057 усилены: web-proxy detour, premature offline 100%, scoped-percentage correction и initial wrong Ghidra discovery.
+- Новые I-155..I-159: layered ABI facade, Ghidra triangulation over secondary implementation, fail-closed ABI/capability guards, shared cross-agent contract issue, pre-deploy dependency closure with pinned external runtime.
+- D39 фиксирует Majestic compatibility closure до owner build gate; A4.29 — фактическую shared-contract collaboration между parallel agents.
