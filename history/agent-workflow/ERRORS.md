@@ -865,10 +865,10 @@ Evidence: `CHAT-033` — пользователь инициирует смен�
 
 Evidence: `CHAT-035`; позднее `CHAT-036/037` дополнительно уточняют canonical-workspace/checkpoint модель.
 
-### E-049 — Документация/индекс опережают фактический filesystem/source state
+### E-049 — Документация/индекс расходятся с фактическим filesystem/source state
 Статус: `OBSERVED`.
 
-В `CHAT-036` несколько документов утверждали `COMPLETE` или описывали уже «внесённые» RC/VMM изменения, тогда как повторный filesystem audit показывал более ранние C/H. В одном документе одновременно встречались «реализовано» и старое TODO.
+В CHAT-036 несколько документов утверждали COMPLETE или описывали уже «внесённые» RC/VMM изменения, тогда как filesystem audit показывал более ранние C/H. CHAT-042 показывает обратный drift: Builder уже перешёл на composed variants и удалил отдельную Majestic branch, а coordination repo ещё описывал старую topology.
 
 Это шире `E-045`: проблема не одного claimed fix, а расхождения всего canonical narrative/index layer с физическим деревом.
 
@@ -879,7 +879,7 @@ Evidence: `CHAT-035`; позднее `CHAT-036/037` дополнительно �
 - docs не могут быть authoritative поверх отсутствующих bytes;
 - при расхождении сначала inventory/reconciliation, затем новые изменения.
 
-Evidence: `CHAT-036`.
+Evidence: CHAT-036; CHAT-042.
 
 ### E-050 — Machine startup/check script подменяет обязательное чтение и смысловой аудит контекста
 Статус: `OBSERVED`.

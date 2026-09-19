@@ -1926,6 +1926,42 @@ CHAT-041 показывает безопасную correction procedure: sensor 
 Silent no-op, guessed ioctl или fixed constant, притворяющийся configurable feature, считаются незавершённостью. Такой audit приводит к отдельной проверке GOP, RC modes, JPEG/MJPEG, mirror/flip+Bayer, audio gain, OSD, grayscale/night, antiflicker и same-boot teardown.
 
 
+### I-150 — Builder variant = generic Firmware config → device base → runtime overlay
+Статус: OBSERVED.
+
+CHAT-042 убирает три копии device defconfig. Generic architecture/toolchain/kernel/filesystem приходят из выбранной Firmware line; ANJIA base содержит только board delta; Divinus/Majestic/diag overlays выбирают runtime-specific packages/config.
+
+Так shared device fixes существуют один раз, а streamer variants становятся дешёвыми composed targets.
+
+### I-151 — Device-specific Buildroot packages должны быть device-local
+Статус: OBSERVED.
+
+ANJIA PTZ/lens/illumination/runtime config переносится из глобального package namespace в devices/.../general/package и регистрируется только для выбранного device tree.
+
+Это не даёт camera-only packages случайно влиять на другие boards и делает ownership визуально очевидным.
+
+### I-152 — Working stock behavior не обязано быть product requirement
+Статус: OBSERVED.
+
+Stock-like PTZ controller с startup calibration, persistent coordinates, home/goto и boot movement работал, но Builder audit задаёт другой вопрос: что реально требуется OpenIPC product.
+
+Production path сокращается до stateless relative /dev/fh_pwm backend; сложная calibration/state implementation сохраняется archive/reference. Аналогично illumination helper отвечает за electrical board operations, а AUTO/DAY/NIGHT policy остаётся media/runtime layer.
+
+### I-153 — Build artifact должен нести воспроизводимый input provenance
+Статус: OBSERVED.
+
+Builder archive получает build-info.txt, input OpenIPC defconfig и resolved Buildroot config. Фиксируются Builder SHA, Firmware repo/requested ref/resolved SHA, target и normalized config identity.
+
+Это связывает hardware acceptance с конкретным составом image, а не только filename.
+
+### I-154 — Cross-repo topology/ownership change требует same-iteration authority sync
+Статус: OBSERVED.
+
+После composed-variant refactor Builder ушёл вперёд coordination docs. Пользователь требует немедленно синхронизировать reverse authority.
+
+В AGENTS закрепляется правило: изменение active SHA, branch topology, ownership, runtime target, composition model или validation gate в связанном repo должно в той же рабочей итерации обновить camera authority. Иначе следующий агент получает устаревший router.
+
+
 ## Исходные этапы, ещё не подтверждённые
 
 `CHAT-010` является прямым acceptance-тестом этого принципа: новый агент по handoff сразу продолжает с dequeue boundary, не повторяет sensor/ISP/H.264 bring-up и использует указанные checkpoint paths/constraints. Handoff реально переносит инженерное состояние между чатами.

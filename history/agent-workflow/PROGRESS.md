@@ -5,8 +5,8 @@
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **41**
-- Последний источник: `CHAT-041`
+- Обработано исторических файлов: **42**
+- Последний источник: `CHAT-042`
 - Период последнего источника: **2026-09-17 — 2026-09-18**
 - Следующее действие: получить следующий уникальный исторический источник
 - Raw chat exports в Git **не сохраняются**
@@ -14,12 +14,12 @@
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-041 |
+| Направление | Файл | Состояние после CHAT-042 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 41/?? sources обработано |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 42/?? sources обработано |
 | Ошибки/нарушения агентов | `ERRORS.md` | 57 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 149 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D37: Divinus source-first feature-parity repair |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 154 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D38: composed Builder device layer |
 | Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.28: repository-native parallel implementation lanes |
 
 ## Обязательный цикл для каждого следующего файла
@@ -106,6 +106,8 @@
 | 40 | `CHAT-040` | 2026-09-18 | `DONE` | Firmware/orchestrator sanitation: preservation WIP is decomposed by repository ownership; clean streamer-neutral Firmware core is separated from Divinus/Majestic variants, factory blobs are classified as evidence/transitional dependencies, and three repository-native agents are launched in parallel for Divinus, Builder and Majestic |
 
 | 41 | `CHAT-041` | 2026-09-18 | `DONE` | Divinus repair lane: duplicate sensor Ghidra project is discovered and merged into canonical Apollo project; vendor sensor/MIPI blobs are replaced with source reconstruction; VPSS/VENC/JPEG/live-RC/teardown contracts are corrected via Ghidra and Majestic findings; work expands from MVP fixes to full exposed-feature parity |
+
+| 42 | `CHAT-042` | 2026-09-18 | `DONE` | Builder productization: ANJIA board support is reduced to device policy, stock-like PTZ calibration is archived, one Builder work line composes Divinus/Majestic/diag variants from Firmware generic config + device base + runtime overlay, packages become device-local, build provenance is embedded and coordination authority is synchronized immediately |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -1139,3 +1141,10 @@ Divinus hardening advances independently of owner integration, preserving single
 - Новый E-057: mutable reverse work продолжался в неканоническом Ghidra project, создавая competing reverse authority.
 - Новые I-148/I-149: migrate analysis state into canonical project and delete duplicate; feature surface must map every exposed setting to a proven contract or explicit unsupported state.
 - D37 фиксирует source-first Divinus repair; A4.23 semantic Ghidra workspace повышается до CONSOLODIDATED практикой канонического project ownership.
+
+
+## Что CHAT-042 добавил
+
+- Новых error IDs нет: отдельная Majestic Builder branch подтверждает E-053, а отставшая coordination docs — E-049 в обратном направлении.
+- Новые I-150..I-154: composed device variants, device-local package scope, minimal capability backend over stock parity, build provenance inside artifacts, same-iteration coordination sync.
+- D38 фиксирует Builder как тонкий device/composition layer; A4.28 усиливается прямой cross-repo ref synchronization.

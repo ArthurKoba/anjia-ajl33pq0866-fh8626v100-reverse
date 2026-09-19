@@ -1018,3 +1018,18 @@ Firmware получает streamer-neutral work line плюс отдельные
 - same-boot teardown восстанавливает recycle/uninit ordering.
 
 Чат заканчивается до полного OSD/grayscale/night/audio-gain closure и без target build/hardware PASS. Это deliberate feature-parity work, а не объявленный production release.
+
+
+## D38 — Composed Builder device layer
+
+Источник: CHAT-042, 2026-09-18.
+
+Builder audit начинает с ANJIA board-support/PTZ/illumination и обнаруживает, что часть working stock-like behavior не должна автоматически становиться production architecture.
+
+PTZ упрощается до stateless relative /dev/fh_pwm backend. WIDE/TELE lens selector отделяется от PTZ и media lifecycle. Illumination helper владеет только board GPIO/pinmux operations; streamer/night policy не возвращается в Builder. Generic OpenIPC mdev остаётся owner storage hotplug.
+
+Затем структура переводится на composed targets:
+Firmware generic fh8626v100_lite_defconfig → ANJIA base.config → runtime overlay.
+Divinus, Majestic и diag становятся короткими variants с .firmware metadata. Device-specific packages локализуются внутри ANJIA tree. Отдельная Majestic Builder branch архивируется и удаляется.
+
+Builder mechanics также убирает self-git-pull/destructive branch switching, получает locking, robust ref resolution и build provenance files. CI/build/hardware PASS сознательно остаются внешними gates.

@@ -661,3 +661,8 @@ Koba MCP Bridge даёт browser-agent штатную mutation surface. Реал
 ## Подтверждение после CHAT-034
 
 Расширенный orchestrator-thread не требует нового A-этапа: он делает устойчивыми уже описанные A4.14/A4.16/A4.17/A4.18. Parallel workers стартуют от frozen master, evidence-agent закрывает named physical gaps, reverse-agent получает normalized delta, productization работает независимо, а orchestrator единолично делает fan-in. Двухуровневый MASTER_CORE/REVERSE_HEAVY перестаёт быть только storage proposal и становится физической рабочей схемой.
+
+
+## Подтверждение после CHAT-042
+
+A4.28 получает operational detail: repository-native specialists обязаны синхронизировать camera authority не по окончании большой фазы, а сразу после изменения topology/ownership/active refs. Coordination repo становится активным routing registry между параллельными implementation lanes, а не ретроспективным отчётом.

@@ -412,6 +412,18 @@ Same-boot teardown дополнительно восстанавливается
 Подробнее: [D37](CHRONOLOGY_DETAILS.md#d37--divinus-source-first-feature-parity-repair).
 
 
+### 38. Builder становится тонким composed device layer
+Источник: CHAT-042, 2026-09-18.
+
+ANJIA Builder refactor отделяет camera policy от generic FH8626 platform и streamer implementations. Stock-like PTZ controller архивируется; production PTZ становится stateless relative backend без boot calibration. Lens selector, illumination, storage и env policy получают отдельные device-local boundaries.
+
+Одна Builder work line теперь собирает три composed targets — Divinus, Majestic и diagnostic — как Firmware generic defconfig + ANJIA base + runtime overlay. Отдельная Majestic Builder branch удаляется как лишняя.
+
+**Переход:** Builder перестаёт быть местом, куда копируют platform/runtime code, и становится нормальным OpenIPC device composition layer с явным build provenance.
+
+Подробнее: [D38](CHRONOLOGY_DETAILS.md#d38--composed-builder-device-layer).
+
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.
