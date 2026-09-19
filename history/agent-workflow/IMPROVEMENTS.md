@@ -1908,6 +1908,24 @@ Firmware получает общий FH8626 core, а Divinus и Majestic сущ�
 Runtime data/tuning blobs рассматриваются отдельно от executable code, но также требуют provenance.
 
 
+### I-148 — Ghidra analysis state мигрируется в canonical project, duplicate удаляется
+Статус: OBSERVED.
+
+CHAT-041 показывает безопасную correction procedure: sensor programs переносятся вместе с analysis state в Apollo project, проверяются ключевые reconstructed functions, старый sensor_libs project и временные transfer artifacts удаляются.
+
+После этого один project снова является source of truth для Apollo + sensor userspace contracts.
+
+### I-149 — Полнота streamer port измеряется его exposed feature surface
+Статус: OBSERVED.
+
+Пользователь явно отвергает минимально жизнеспособный Divinus port. Для каждого доступного YAML/API capability требуется одно из трёх:
+- реальный proven FH8626 implementation;
+- доказанно совместимый retained provider;
+- explicit unsupported/error.
+
+Silent no-op, guessed ioctl или fixed constant, притворяющийся configurable feature, считаются незавершённостью. Такой audit приводит к отдельной проверке GOP, RC modes, JPEG/MJPEG, mirror/flip+Bayer, audio gain, OSD, grayscale/night, antiflicker и same-boot teardown.
+
+
 ## Исходные этапы, ещё не подтверждённые
 
 `CHAT-010` является прямым acceptance-тестом этого принципа: новый агент по handoff сразу продолжает с dequeue boundary, не повторяет sensor/ISP/H.264 bring-up и использует указанные checkpoint paths/constraints. Handoff реально переносит инженерное состояние между чатами.

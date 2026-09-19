@@ -992,6 +992,24 @@ Evidence: CHAT-038.
 
 Evidence: CHAT-040.
 
+### E-057 — Mutable reverse продолжается в неканоническом Ghidra project
+Статус: OBSERVED.
+
+В CHAT-041 агент нашёл старый отдельный sensor_libs.gpr и ошибочно принял его за правильное место для продолжения reverse. Новые function names/comments/layout попали туда, хотя актуальный source of truth должен был быть общий Apollo Ghidra project.
+
+Почему мешает:
+- одинаковые binaries получают две расходящиеся mutable histories;
+- следующий агент может читать устаревшую разметку и повторять уже исправленные ошибки;
+- types/names/comments не распространяются в canonical call graph;
+- невозможно уверенно ответить, какой project authoritative.
+
+Правильный паттерн:
+- перед mutation найти canonical project по board/program authority, а не по похожему filename;
+- если полезный analysis уже сделан в duplicate — экспортировать/перенести state, проверить ключевые functions, затем удалить duplicate project;
+- project inventory должен быть частью startup preflight для reverse-agent.
+
+Evidence: CHAT-041.
+
 ## Пока не подтверждено этим чатом
 
 - исходная гипотеза о специальном env-паттерне для значений, которые «съедает» консоль — в `CHAT-001` недостаточно чистого доказательства; оставить на следующие файлы;

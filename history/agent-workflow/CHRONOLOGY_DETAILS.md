@@ -997,3 +997,24 @@ Firmware pass начинает с clean integration вокруг curated Linux s
 Firmware получает streamer-neutral work line плюс отдельные Divinus/Majestic directions. Builder staging также отделяется от старого Majestic WIP и начинает ссылаться на соответствующую Firmware direction.
 
 Источник заканчивается созданием трёх параллельных repository-native задач: Divinus стабилизирует native implementation, Builder чистит device layer, Majestic строит compatibility adapter поверх общей FH8626 knowledge base.
+
+
+## D37 — Divinus source-first feature-parity repair
+
+Источник: CHAT-041, 2026-09-18.
+
+После Majestic-led correction ledger Divinus re-audit возвращается к canonical FH8626 evidence. Сначала исправляется сама reverse authority: sensor libraries из старого standalone sensor_libs.gpr переносятся в Apollo project вместе с analysis state, duplicate project удаляется.
+
+Затем source implementation догоняет доказанные contracts:
+- VPU enable принимает channel id, disable и CloseChn отдельны;
+- VPSS/VI ownership отделяется от VENC;
+- vendor GC1054/MIPI runtime blobs заменяются reconstructed source;
+- ISP day profile трактуется как правильный raw profile;
+- native sensor geometry отделяется от output geometry;
+- FPS/profile/bitrate проводятся сквозь sensor→VPSS→PAE→RTP;
+- mirror/flip синхронизируется с Bayer selector;
+- JPEG/MJPEG config/RC/teardown исправляются;
+- VBR/AVBR live bitrate получает realtime ioctl;
+- same-boot teardown восстанавливает recycle/uninit ordering.
+
+Чат заканчивается до полного OSD/grayscale/night/audio-gain closure и без target build/hardware PASS. Это deliberate feature-parity work, а не объявленный production release.

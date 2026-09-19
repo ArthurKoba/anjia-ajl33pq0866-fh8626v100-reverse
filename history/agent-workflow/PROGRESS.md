@@ -5,8 +5,8 @@
 ## Текущее состояние
 
 - Рабочая ветка: `audit/agent-workflow-history`
-- Обработано исторических файлов: **40**
-- Последний источник: `CHAT-040`
+- Обработано исторических файлов: **41**
+- Последний источник: `CHAT-041`
 - Период последнего источника: **2026-09-17 — 2026-09-18**
 - Следующее действие: получить следующий уникальный исторический источник
 - Raw chat exports в Git **не сохраняются**
@@ -14,12 +14,12 @@
 
 ## Пять направлений
 
-| Направление | Файл | Состояние после CHAT-040 |
+| Направление | Файл | Состояние после CHAT-041 |
 |---|---|---|
-| Учёт файлов и непрерывность | `PROGRESS.md` | 40/?? sources обработано |
-| Ошибки/нарушения агентов | `ERRORS.md` | 56 tracked classes/directions |
-| Улучшения и best practices | `IMPROVEMENTS.md` | 147 tracked improvements/directions |
-| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D36: cross-repo ownership sanitation |
+| Учёт файлов и непрерывность | `PROGRESS.md` | 41/?? sources обработано |
+| Ошибки/нарушения агентов | `ERRORS.md` | 57 tracked classes/directions |
+| Улучшения и best practices | `IMPROVEMENTS.md` | 149 tracked improvements/directions |
+| История реверса/портирования | `CHRONOLOGY.md` + `CHRONOLOGY_DETAILS.md` | добавлена D37: Divinus source-first feature-parity repair |
 | Эволюция агентной разработки | `AGENTIC_DEVELOPMENT.md` | добавлена A4.28: repository-native parallel implementation lanes |
 
 ## Обязательный цикл для каждого следующего файла
@@ -104,6 +104,8 @@
 | 39 | `CHAT-039` | 2026-09-18 | `DONE` | Kernel/Linux curation: old two-commit migration is decomposed into a clean 13-commit series over FH8852 base; MTD/OpenIPC layout, clock/pinctrl/PWM/AXI-DMA/GMAC/JL1101/RTC/DWC2 are reconciled while hardware-proven behavior is preserved; RTC/TSENSOR becomes a separate bounded research task |
 
 | 40 | `CHAT-040` | 2026-09-18 | `DONE` | Firmware/orchestrator sanitation: preservation WIP is decomposed by repository ownership; clean streamer-neutral Firmware core is separated from Divinus/Majestic variants, factory blobs are classified as evidence/transitional dependencies, and three repository-native agents are launched in parallel for Divinus, Builder and Majestic |
+
+| 41 | `CHAT-041` | 2026-09-18 | `DONE` | Divinus repair lane: duplicate sensor Ghidra project is discovered and merged into canonical Apollo project; vendor sensor/MIPI blobs are replaced with source reconstruction; VPSS/VENC/JPEG/live-RC/teardown contracts are corrected via Ghidra and Majestic findings; work expands from MVP fixes to full exposed-feature parity |
 
 ## Что CHAT-001 изменил в исходных гипотезах
 
@@ -1130,3 +1132,10 @@ Divinus hardening advances independently of owner integration, preserving single
 - Новые I-144..I-147: ownership-by-layer, preservation snapshot as inventory not architecture, streamer-neutral core + runtime overlays, source/SDK provenance requirement for final binary dependencies.
 - D36 фиксирует Firmware ownership sanitation; A4.28 — переход к repository-native parallel implementation lanes, синхронизируемым через authority repo.
 - После CHAT-040 выполнен плановый live-state refresh текущих main/work refs; современный anchor согласуется с историей.
+
+
+## Что CHAT-041 добавил
+
+- Новый E-057: mutable reverse work продолжался в неканоническом Ghidra project, создавая competing reverse authority.
+- Новые I-148/I-149: migrate analysis state into canonical project and delete duplicate; feature surface must map every exposed setting to a proven contract or explicit unsupported state.
+- D37 фиксирует source-first Divinus repair; A4.23 semantic Ghidra workspace повышается до CONSOLODIDATED практикой канонического project ownership.

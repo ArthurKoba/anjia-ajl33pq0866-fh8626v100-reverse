@@ -400,6 +400,18 @@ OpenIPC MTD layout закладывается сразу, retail-specific MMC sy
 Подробнее: [D36](CHRONOLOGY_DETAILS.md#d36--cross-repo-ownership-sanitation).
 
 
+### 37. Divinus source-first repair: Ghidra truth вместо унаследованных HAL assumptions
+Источник: CHAT-041, 2026-09-18.
+
+Divinus lane перечитывает correction ledger, текущую ветку и Ghidra вместо доверия старому native HAL. Sensor/MIPI vendor libraries заменяются source reconstruction; исправляются VPSS/VENC ownership/lifecycle, output geometry/cadence, H.264 profile/RC, mirror/flip+Bayer transaction, JPEG/MJPEG wire semantics и live bitrate.
+
+Same-boot teardown дополнительно восстанавливается до PAE recycle/system uninit, VPU system uninit и owner-scoped VMM release. Неподтверждённые features не получают fake success.
+
+**Переход:** Divinus становится reference implementation, проверяемой против canonical reverse и полной configuration surface, а не набором bring-up hacks.
+
+Подробнее: [D37](CHRONOLOGY_DETAILS.md#d37--divinus-source-first-feature-parity-repair).
+
+
 ## Современный anchor
 
 Трёхфайловая live-state сверка подтверждает, что на 2026-09-18 текущая архитектура уже использует GitHub как engineering authority, Drive для heavy evidence и Ghidra MCP как mutable reverse workspace. Это современный anchor; следующие исторические файлы должны восстановить сам переход от handoff/checkpoint подхода к этой системе.

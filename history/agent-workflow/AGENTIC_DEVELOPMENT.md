@@ -442,7 +442,7 @@ Agent 7 впервые даёт особенно чистый пример то�
 
 
 ### A4.23 — Semantic Ghidra reverse workspace
-Статус после `CHAT-033`: `OBSERVED`.
+Статус после `CHAT-041`: `CONSOLIDATED`.
 
 После накопления ошибок flat-disassembly workflow проект меняет сам интерфейс между binary и агентом. Цель больше не «дать LLM больше ARM TXT», а построить machine-generated semantic substrate:
 - decompiled function bodies;
@@ -453,7 +453,7 @@ Agent 7 впервые даёт особенно чистый пример то�
 - confidence/provenance;
 - snapshot/delta exchange между чатами.
 
-Ghidra предлагается как локальный WSL analyzer/headless backend, а обычные файлы/knowledge index — как общий язык browser-agents. Это важный шаг к будущему Ghidra MCP: reverse knowledge начинает жить во внешней mutable model, а не в памяти одного чата.
+Ghidra предлагается как локальный WSL analyzer/headless backend, а обычные файлы/knowledge index — как общий язык browser-agents. CHAT-041 подтверждает модель практически: duplicate sensor project обнаружен, analysis state перенесён в canonical Apollo project, duplicate удалён. Reverse knowledge действительно живёт во внешней mutable model, а не в памяти одного чата.
 
 
 ### A4.24 — Analyst → integrator source handoff
