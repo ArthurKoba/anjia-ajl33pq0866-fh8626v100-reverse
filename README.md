@@ -61,7 +61,7 @@ Exact engineering refs are recorded in `docs/process/upstream-integration.md`.
 
 ## Start here
 
-1. `AGENTS.md` — repository rules.
+1. `AGENTS.md` — mandatory repository map/router.
 2. `STATE.md` — current camera state.
 3. `TASKS.md` — actionable work.
 4. `ROADMAP.md` — staged project direction.
@@ -69,5 +69,6 @@ Exact engineering refs are recorded in `docs/process/upstream-integration.md`.
 6. `docs/architecture/reverse-analysis.md` — Ghidra MCP reverse boundary.
 7. `docs/process/openipc-upstream-rules.md` — cached OpenIPC ownership/contribution rules, mandatory live-source links and refresh procedure before related-repository work.
 8. `evidence/README.md` and `evidence/MANIFEST.tsv` — external evidence rules and index.
+9. `docs/process/agent-operation.md` — project-specific Git/tool/build/coordination policy.
 
 Agents must not create pull requests. See `AGENTS.md`.
